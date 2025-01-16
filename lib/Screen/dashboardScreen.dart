@@ -21,6 +21,8 @@ class _dashboardScreen extends State<dashboardScreen>{
   String? textErrorName;
   bool isLoadingCreateNewFolder = false;
 
+  String amountTopic = "0 Topic";
+
 
   Future<Map<String, List<Map<String, dynamic>>>> hanldeGetData() async {
     final db = await DatabaseHelper.instance;
@@ -29,11 +31,11 @@ class _dashboardScreen extends State<dashboardScreen>{
       "folder": await db.getAllFolder()
     };
 
-    print(await db.getAllWordbyTopic("Travel"));
     return data;
   }
 
   Future<void> reload() async {
+    await Future.delayed(Duration(seconds: 2));
     dataDashBoards = await hanldeGetData();
     setState(() {});
   }
@@ -314,7 +316,8 @@ class _dashboardScreen extends State<dashboardScreen>{
                                     });
                                   }else{
                                     //tranfer to screen add word
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => addWordScreen(topicName: nameTopicInput.text)));
+                                    Navigator.pop(context);
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => addWordScreen(topicName: nameTopicInput.text, reload: () { setState((){});  },)));
                                   }
 
                                   setState((){
@@ -367,155 +370,164 @@ class _dashboardScreen extends State<dashboardScreen>{
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Container(
-          child: Text(
-              "日本語",
-            style: TextStyle(fontFamily: "aboshione", fontSize: 20, color: Colors.white),
-          ),
-        ),
-        actions: const [
-          Center(
-            child: Padding(
-              padding: EdgeInsets.only(right: 10),
+    return FutureBuilder(
+      future: hanldeGetData(),
+      builder: (ctx, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        }
+
+        if (snapshot.hasError) {
+          return Center(child: Text("Error: ${snapshot.error}"));
+        }
+
+        if (!snapshot.hasData || snapshot.data == null) {
+          return Center(child: Text("No data available."));
+        }
+
+        dataDashBoards = snapshot.data as Map<String, List<Map<String, dynamic>>>;
+
+        amountTopic = "${dataDashBoards["topic"]!.length} Topic";
+
+        return Scaffold(
+          appBar: AppBar(
+            automaticallyImplyLeading: false,
+            title: Container(
               child: Text(
-                "4 Topic",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                "日本語",
+                style: TextStyle(fontFamily: "aboshione", fontSize: 20, color: Colors.white),
+              ),
+            ),
+            actions: [
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.only(right: 10),
+                  child: Text(
+                    amountTopic,
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+            ],
+            backgroundColor: Color.fromRGBO(20, 195, 142, 1.0),
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(
+                bottom: Radius.circular(20),
               ),
             ),
           ),
-        ],
-        backgroundColor: Color.fromRGBO(20, 195, 142, 1.0),
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(20),
-          ),
-        ),
-      ),
-      body: Container(
-        width: double.infinity,
-        height: MediaQuery.of(context).size.height,
-        child: FutureBuilder(
-          future: hanldeGetData(),
-          builder: (ctx, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
-            }
-
-            if (snapshot.hasError) {
-              return Center(child: Text("Error: ${snapshot.error}"));
-            }
-
-            if (!snapshot.hasData || snapshot.data == null) {
-              return Center(child: Text("No data available."));
-            }
-
-            dataDashBoards = snapshot.data as Map<String, List<Map<String, dynamic>>>;
-
-
-            return SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 20),
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 10, left: 10, right: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "Folder",
-                          style: TextStyle(fontFamily: "indieflower", fontSize: 30),
-                        ),
-                        GestureDetector(
-                            onTap: (){
-                              showPopupAddFolder();
-                            },
-                            child: Container(
-                              width: 100,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                color: Color.fromRGBO(184, 241, 176, 1),
-                                borderRadius: BorderRadius.all(Radius.circular(10)),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  "+ ADD",
-                                  style: TextStyle(fontFamily: "indieflower", fontWeight: FontWeight.bold),
-                                  textAlign: TextAlign.center,
+          body: Container(
+              width: double.infinity,
+              height: MediaQuery.of(context).size.height,
+              child: RefreshIndicator(
+                  child: ListView.builder(
+                      itemCount: 1,
+                      itemBuilder: (ctx, index){
+                        return SingleChildScrollView(
+                          scrollDirection: Axis.vertical,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 20),
+                              Padding(
+                                padding: EdgeInsets.only(bottom: 10, left: 10, right: 10),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text(
+                                      "Folder",
+                                      style: TextStyle(fontFamily: "indieflower", fontSize: 30),
+                                    ),
+                                    GestureDetector(
+                                      onTap: (){
+                                        showPopupAddFolder();
+                                      },
+                                      child: Container(
+                                        width: 100,
+                                        height: 50,
+                                        decoration: BoxDecoration(
+                                          color: Color.fromRGBO(184, 241, 176, 1),
+                                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            "+ ADD",
+                                            style: TextStyle(fontFamily: "indieflower", fontWeight: FontWeight.bold),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  dataDashBoards["folder"]!.isEmpty? Center(
-                    child: Text("No Data", style: TextStyle(fontSize: 20),),
-                  ) : SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        for (Map<String, dynamic> folder in dataDashBoards["folder"]!)
-                          folderWidget(nameFolder: folder["namefolder"]!),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "Topic",
-                          style: TextStyle(fontFamily: "indieflower", fontSize: 30),
-                        ),
-                        GestureDetector(
-                          onTap: (){
-                            showPopupAddTopic();
-                          },
-                          child: Container(
-                            width: 100,
-                            height: 50,
-                            decoration: const BoxDecoration(
-                              color: Color.fromRGBO(184, 241, 176, 1),
-                              borderRadius: BorderRadius.all(Radius.circular(10)),
-                            ),
-                            child: const Center(
-                              child: Text(
-                                "+ ADD",
-                                style: TextStyle(fontFamily: "indieflower", fontWeight: FontWeight.bold),
-                                textAlign: TextAlign.center,
+                              dataDashBoards["folder"]!.isEmpty? Center(
+                                child: Text("No Data", style: TextStyle(fontSize: 20),),
+                              ) : SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: [
+                                    for (Map<String, dynamic> folder in dataDashBoards["folder"]!)
+                                      folderWidget(nameFolder: folder["namefolder"]!),
+                                  ],
+                                ),
                               ),
-                            ),
+                              SizedBox(height: 20),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text(
+                                      "Topic",
+                                      style: TextStyle(fontFamily: "indieflower", fontSize: 30),
+                                    ),
+                                    GestureDetector(
+                                      onTap: (){
+                                        showPopupAddTopic();
+                                      },
+                                      child: Container(
+                                        width: 100,
+                                        height: 50,
+                                        decoration: const BoxDecoration(
+                                          color: Color.fromRGBO(184, 241, 176, 1),
+                                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                                        ),
+                                        child: const Center(
+                                          child: Text(
+                                            "+ ADD",
+                                            style: TextStyle(fontFamily: "indieflower", fontWeight: FontWeight.bold),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              SizedBox(height: 10,),
+                              Container(
+                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                child: GridView.count(
+                                  shrinkWrap: true,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  crossAxisSpacing: 5,
+                                  mainAxisSpacing: 5,
+                                  crossAxisCount: 2,
+                                  childAspectRatio: 4 / 3,
+                                  children: dataDashBoards["topic"]!.map((topic) => topicWidget(nameTopic: topic["name"])).toList(),
+                                ),
+                              ),
+                            ],
                           ),
-                        )
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 10,),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: GridView.count(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      crossAxisSpacing: 5,
-                      mainAxisSpacing: 5,
-                      crossAxisCount: 2,
-                      childAspectRatio: 4 / 3,
-                      children: dataDashBoards["topic"]!.map((topic) => topicWidget(nameTopic: topic["name"])).toList(),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-        ),
-      ),
+                        );
+                      }),
+                  onRefresh: reload)
+
+
+          ),
+        );
+      },
     );
   }
 }

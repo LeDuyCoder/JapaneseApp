@@ -26,7 +26,7 @@ class _topicWidget extends State<topicWidget>{
       }
     }
 
-    return dataWords.isNotEmpty ? sumComplitted / (7*dataWords.length) : 0;
+    return dataWords.isNotEmpty ? sumComplitted / (28*dataWords.length) : 0;
   }
 
   @override

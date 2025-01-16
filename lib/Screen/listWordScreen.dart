@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:japaneseapp/Config/dataHelper.dart';
+import 'package:japaneseapp/Module/word.dart';
+import 'package:japaneseapp/Screen/learnScreen.dart';
 import 'package:japaneseapp/Widget/wordWidget.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -17,6 +19,7 @@ class _listWordScreen extends State<listWordScreen>{
   Future<List<Map<String, dynamic>>> hanldeDataWords(String topic) async {
     DatabaseHelper db = DatabaseHelper.instance;
     List<Map<String, dynamic>> dataWords = await db.getAllWordbyTopic(topic);
+    print(dataWords.toString());
     return dataWords;
   }
 
@@ -50,6 +53,10 @@ class _listWordScreen extends State<listWordScreen>{
         ),
       ),
       body: FutureBuilder(future: hanldeDataWords(widget.topicName), builder: (ctx, snapshot){
+        if(!snapshot.hasData){
+          return Center();
+        }
+
         return Container(
           height: double.infinity,
           child: Column(
@@ -78,17 +85,35 @@ class _listWordScreen extends State<listWordScreen>{
               SizedBox(height: 20,),
               Align(
                 alignment: Alignment.bottomCenter,
-                child: Container(
-                  width: 250,
-                  height: 80,
-                  decoration: BoxDecoration(
-                      color: Color.fromRGBO(20, 195, 142, 1.0),
-                      borderRadius: BorderRadius.all(Radius.circular(20))
+                child: GestureDetector(
+                  onTap: (){
+
+                    List<word> dataWords = [];
+                    for(Map<String, dynamic> wordData in snapshot.data!){
+                      dataWords.add(
+                        word(
+                          wordData["word"],
+                          wordData["wayread"],
+                          wordData["mean"],
+                          wordData["topic"],
+                          wordData["level"]
+                        )
+                      );
+                    }
+                    Navigator.push(context, MaterialPageRoute(builder: (ctx)=>learnScreen(dataWords: dataWords, topic: widget.topicName, reload: () {setState(() {});  },)));
+                  },
+                  child: Container(
+                      width: 250,
+                      height: 80,
+                      decoration: BoxDecoration(
+                          color: Color.fromRGBO(20, 195, 142, 1.0),
+                          borderRadius: BorderRadius.all(Radius.circular(20))
+                      ),
+                      child: Center(
+                        child: Text("勉強", style: TextStyle(color: Colors.white, fontSize: 25),),
+                      )
                   ),
-                  child: Center(
-                    child: Text("勉強", style: TextStyle(color: Colors.white, fontSize: 25),),
-                  )
-                ),
+                )
               )
             ],
           ),

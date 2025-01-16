@@ -56,9 +56,9 @@ class _wordWidget extends State<wordWidget>{
                       )
                   ),
                   child: LinearProgressIndicator(
-                    value: widget.level/7, // 50% progress
+                    value: widget.level/28, // 50% progress
                     backgroundColor: Colors.white,
-                    color: widget.level==7?Color.fromRGBO(255, 196, 0, 1.0):Color.fromRGBO(0, 255, 171, 1.0),
+                    color: widget.level==28?Color.fromRGBO(255, 196, 0, 1.0):Color.fromRGBO(0, 255, 171, 1.0),
                     minHeight: 10.0,
                     borderRadius: BorderRadius.all(Radius.circular(20)),
                   ),

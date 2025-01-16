@@ -38,6 +38,12 @@ dependencies:
   sqflite: ^2.2.0
   path: ^1.8.3
   flutter_popup: ^3.3.0
+  uuid: ^4.5.1
+  device_info_plus: ^11.2.0
+  flutter_tts: ^4.2.1
+  icons_plus: ^5.0.0
+  audioplayers: ^6.1.0
+  auto_size_text: ^3.0.0
 
 dev_dependencies:
   flutter_test:
@@ -64,6 +70,8 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/
+    - assets/character/
+    - assets/sound/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'package:uuid/v4.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._init();
@@ -66,7 +68,6 @@ class DatabaseHelper {
 
     // Sử dụng truy vấn SQL thô
     final List<Map<String, dynamic>> result = await db.rawQuery('SELECT * FROM folders');
-    print(result);
     return result;
   }
 
@@ -109,7 +110,44 @@ class DatabaseHelper {
     return result;
   }
 
+  Future<void> insertDataTopic(List<Map<String, dynamic>> dataInsert) async {
+    final db = await instance.database;
+    try {
+      print(dataInsert);
+      await db.transaction((txn) async {
+        for (var topic in dataInsert) {
+          await txn.insert(
+            'words', // Tên bảng
+            topic, // Dữ liệu cần chèn
+            conflictAlgorithm: ConflictAlgorithm.replace, // Ghi đè nếu dữ liệu trùng
+          );
+        }
+      });
+    } catch (e) {
+      print("Lỗi khi chèn dữ liệu: $e");
+    }
+  }
 
+  Future<void> insertTopic(String nameTopic) async {
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+
+
+    final db = await instance.database;
+    UuidV4 uuidV4 = UuidV4();
+    await db.insert("topic", {"id":"${uuidV4.generate()}-${androidInfo.model}","name":nameTopic});
+  }
+
+  Future<List<Map<String, dynamic>>> getDataTopicbyNameFolder(String nameFolder) async {
+    final db = await instance.database;
+    List<Map<String, dynamic>> result = await db.rawQuery("SELECT * FROM folders WHERE namefolder = '$nameFolder'");
+    return result;
+  }
+
+  Future<void> updateDatabase(String nameTable, Map<String, dynamic> data, String whereUpdate) async {
+    final db = await instance.database;
+    await db.update(nameTable, data, where: whereUpdate);
+  }
 
   Future<void> close() async {
     final db = await instance.database;
