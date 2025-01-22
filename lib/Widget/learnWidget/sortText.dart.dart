@@ -232,7 +232,7 @@ class _SortTextState extends State<sortText> {
                         .map(
                           (item) => GestureDetector(
                         onTap: () {
-                          if(widget.typeTest == typeSort.VietNamToJapan)
+                          if (widget.typeTest == typeSort.VietNamToJapan)
                             readText(item.text);
                           setState(() {
                             dataBoxText!.remove(item);
@@ -242,16 +242,22 @@ class _SortTextState extends State<sortText> {
                         child: Draggable<boxText>(
                           key: ValueKey(item.text),
                           data: item,
-                          feedback: Center(child: item.buildWidget()),
+                          feedback: Center(child: Material(
+                            type: MaterialType.transparency,
+                            child: item.buildWidget(),
+                          )),
                           childWhenDragging: item.buildWidget(),
-                          child: item.buildWidget(),
+                          child: AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 300),
+                            child: item.buildWidget(),
+                          ),
                         ),
                       ),
                     )
                         .toList(),
                   ),
                 ),
-              ),
+              )
             ],
           ),
         ),
@@ -320,7 +326,7 @@ class _SortTextState extends State<sortText> {
                 },
                 child: Container(
                   width: MediaQuery.sizeOf(context).width - 20,
-                  height: 80,
+                  height: MediaQuery.sizeOf(context).width*0.15,
                   decoration: dataInput.isEmpty
                       ? const BoxDecoration(
                     color: Color.fromRGBO(223, 223, 223, 1.0),

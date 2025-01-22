@@ -6,9 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:japaneseapp/Module/word.dart';
 import 'package:japaneseapp/Screen/congraculationScreen.dart';
+import 'package:japaneseapp/Widget/learnWidget/choseTest.dart';
 import 'package:japaneseapp/Widget/learnWidget/combinationTest.dart';
 import 'package:japaneseapp/Widget/learnWidget/listenTest.dart';
 import 'package:japaneseapp/Widget/learnWidget/sortText.dart.dart';
+import 'package:japaneseapp/Widget/quitTab.dart';
 
 import '../Config/timeService.dart';
 
@@ -84,12 +86,20 @@ class _learnScreen extends State<learnScreen> {
         nextLearned: (isRight) {
           handleNext(isRight);
         }
-      ) : combinationTest(
+      ) : feature == "combination" ? combinationTest(
           listColumA: dataMap[numberCount]["listColumA"],
           listColumB: dataMap[numberCount]["listColumB"],
           nextQuestion: () {
             handleNext(true);
           }
+      ) : choseTest(data:  {
+      "word": dataMap[numberCount]["word"],
+      "anwser": dataMap[numberCount]["anwser"],
+      "listAnwserWrong": dataMap[numberCount]["listAnwserWrong"],
+      "numberRight": dataMap[numberCount]["numberRight"],
+      }, nextQuestion: () {
+        handleNext(true);
+      },
       );
     });
   }
@@ -105,7 +115,19 @@ class _learnScreen extends State<learnScreen> {
         if (numberCount < dataMap.length) {
           updateView(dataMap[numberCount]["feture"]);
         } else {
-          view = const Text("Finished");
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (ctx) => congraculationScreen(
+                listWordsTest: listWordsTest,
+                listWordsWrong: wrongWords,
+                timeTest: _currentSeconds,
+                topic: widget.topic, reload: () {
+                widget.reload();
+              },
+              ),
+            ),
+          );
         }
       });
     });
@@ -114,137 +136,190 @@ class _learnScreen extends State<learnScreen> {
   void generateQuestion(List<word> dataWords) {
     if (dataMap.isEmpty) {
       int i = 0;
+      String fetureChose = "";
       while(i < maxQuestion){
-        List<String> feture = ["sort", "listen", "combination"];
-        String fetureChose = "";
-        // if(dataMap.isNotEmpty){
-        //   while (dataMap.last["feture"] == fetureChose){
-        //     print("text");
-        //     fetureChose = feture[randomInRange(0, feture.length)];
-        //     if(fetureChose == "sort" || fetureChose == "listen") {
-        //       break;
-        //     }
-        //   }
-        // }else {
-        //   fetureChose = feture[randomInRange(0, feture.length)];
-        // }
+        List<String> feture = ["sort", "listen", "combination", "chose"];
+        String newQuestion = feture[randomInRange(0, feture.length)];
+        if(fetureChose != newQuestion){
+          fetureChose = newQuestion;
+          if(fetureChose == "sort" || fetureChose == "listen") {
+            typeSort ranType = randomInRange(0, 2) == 0
+                ? typeSort.VietNamToJapan
+                : typeSort.JapanToVietNam;
+            word wordRandom = dataWords[randomInRange(
+                0, widget.dataWords.length)];
+            if(dataMap.isEmpty  || dataMap.last["feture"] != fetureChose) {
+              if (dataMap.isEmpty || (dataMap.last[word] != wordRandom)) {
+                dataMap.add(
+                  {
+                    "feture": fetureChose,
+                    "type": "translate",
+                    "typeTranslate": ranType,
+                    "word": wordRandom,
+                    "listChose": ranType == typeSort.JapanToVietNam
+                        ? hanldStringChoseVN("${wordRandom.mean} ${dataWords[randomInRange(0, widget.dataWords.length)].mean}.")
+                        : handleJapaneseString("${wordRandom.vocabulary}${dataWords[randomInRange(0, widget.dataWords.length)].vocabulary}"),
+                  },
+                );
 
-        fetureChose = feture[randomInRange(0, feture.length)];
-        if(fetureChose == "sort" || fetureChose == "listen") {
-          typeSort ranType = randomInRange(0, 2) == 0
-              ? typeSort.VietNamToJapan
-              : typeSort.JapanToVietNam;
-          word wordRandom = dataWords[randomInRange(
-              0, widget.dataWords.length)];
-          if(dataMap.isEmpty  || dataMap.last["feture"] != fetureChose) {
-            if (dataMap.isEmpty || (dataMap.last[word] != wordRandom)) {
-              dataMap.add(
-                {
-                  "feture": fetureChose,
-                  "type": "translate",
-                  "typeTranslate": ranType,
-                  "word": wordRandom,
-                  "listChose": ranType == typeSort.JapanToVietNam
-                      ? hanldStringChoseVN(wordRandom.mean)
-                      : handleJapaneseString(wordRandom.vocabulary),
+                // Kiểm tra nếu từ chưa tồn tại trong listWordsTest mới thêm
+                if (!listWordsTest.any((wordCheck) => wordCheck == wordRandom)) {
+                  listWordsTest.add(wordRandom); // Chỉ thêm nếu từ chưa tồn tại
+                }
+
+                i++;
+              }
+            }
+          }
+          else if(fetureChose == "combination"){
+            List<word> wordsRandom = [];
+            int numberWord = 0;
+
+            if(widget.dataWords.length == 4){
+              wordsRandom = List.from(widget.dataWords);
+            }else{
+              while (numberWord < 4) {
+                word wordRandom = widget.dataWords[randomInRange(0, widget.dataWords.length - 1)];
+                if (!wordsRandom.contains(wordRandom)) {
+                  wordsRandom.add(wordRandom);
+                  numberWord++;
+                }
+              }
+            }
+
+
+            List<Map<String, dynamic>> dataWordsTest = [];
+            List<String> listAwnser = [];
+            List<String> dataType = ["JapToVN", "JapToWayRead", "WayReadToJap"];
+            String type = dataType[randomInRange(0, 3)];
+            for(word wordCheck in wordsRandom){
+              dataWordsTest.add(
+                type == "JapToVN" ? {
+                  "word":wordCheck.vocabulary,
+                  "awnser": wordCheck.mean,
+                  "wayread": wordCheck.wayread
+                }:type == "JapToWayRead" ?{
+                  "word":wordCheck.vocabulary,
+                  "awnser": wordCheck.wayread,
+                  "wayread": wordCheck.wayread
+                }:{
+                  "word":wordCheck.wayread,
+                  "awnser": wordCheck.vocabulary,
+                  "wayread": wordCheck.wayread
                 },
               );
-
-              // Kiểm tra nếu từ chưa tồn tại trong listWordsTest mới thêm
-              if (!listWordsTest.any((wordCheck) => wordCheck == wordRandom)) {
-                listWordsTest.add(wordRandom); // Chỉ thêm nếu từ chưa tồn tại
+              if(listWordsTest.any((wordTest) => wordTest != wordCheck)){
+                listWordsTest.add(wordCheck);
               }
-
-              i++;
+              type == "JapToVN" ? listAwnser.add(wordCheck.mean) :
+              type == "JapToWayRead" ? listAwnser.add(wordCheck.wayread) :
+              listAwnser.add(wordCheck.vocabulary);
             }
-          }
-        }else if(fetureChose == "combination"){
-          List<word> wordsRandom = [];
-          int numberWord = 0;
 
-          if(widget.dataWords.length == 4){
-            wordsRandom = List.from(widget.dataWords);
-          }else{
-            while (numberWord < 4) {
-              word wordRandom = widget.dataWords[randomInRange(0, widget.dataWords.length - 1)];
-              if (!wordsRandom.contains(wordRandom)) {
-                wordsRandom.add(wordRandom);
-                numberWord++;
-              }
-            }
-          }
-
-
-          List<Map<String, dynamic>> dataWordsTest = [];
-          List<String> listAwnser = [];
-          List<String> dataType = ["JapToVN", "JapToWayRead", "WayReadToJap"];
-          String type = dataType[randomInRange(0, 3)];
-          for(word wordCheck in wordsRandom){
-            dataWordsTest.add(
-              type == "JapToVN" ? {
-                "word":wordCheck.vocabulary,
-                "awnser": wordCheck.mean,
-                "wayread": wordCheck.wayread
-              }:type == "JapToWayRead" ?{
-                "word":wordCheck.vocabulary,
-                "awnser": wordCheck.wayread,
-                "wayread": wordCheck.wayread
-              }:{
-                "word":wordCheck.wayread,
-                "awnser": wordCheck.vocabulary,
-                "wayread": wordCheck.wayread
+            dataMap.add(
+              {
+                "feture": fetureChose,
+                "listColumA": dataWordsTest,
+                "listColumB": listAwnser,
               },
             );
-            if(listWordsTest.any((wordTest) => wordTest != wordCheck)){
-              listWordsTest.add(wordCheck);
-            }
-            type == "JapToVN" ? listAwnser.add(wordCheck.mean) :
-            type == "JapToWayRead" ? listAwnser.add(wordCheck.wayread) :
-            listAwnser.add(wordCheck.vocabulary);
           }
+          else if(fetureChose == "chose") {
+            // Select a random word for the question
+            word wordCheckRandom = widget.dataWords[randomInRange(0, widget.dataWords.length)];
 
-          dataMap.add(
-            {
-              "feture": fetureChose,
-              "listColumA": dataWordsTest,
-              "listColumB": listAwnser,
-            },
-          );
+            List<String> wordsWrong = [];
+
+            // List of question types
+            List<String> dataType = ["JapToVN", "JapToWayRead", "WayReadToJap"];
+            String type = dataType[randomInRange(0, 3)];
+
+            // Set to track used words for incorrect answers
+            Set<String> usedWords = {wordCheckRandom.vocabulary};  // Start with the correct answer already used
+
+            // Loop to select incorrect words
+            while (wordsWrong.length < 3) {
+              // Pick a random word
+              word wordRandom = widget.dataWords[randomInRange(0, widget.dataWords.length)];
+
+              // Ensure word is not the same as the correct answer and hasn't been used already
+              if (!usedWords.contains(wordRandom.vocabulary)) {
+                usedWords.add(wordRandom.vocabulary);
+
+                // Add incorrect answer based on the type
+                if (type == "JapToVN") {
+                  wordsWrong.add(wordRandom.mean);
+                } else if (type == "JapToWayRead") {
+                  wordsWrong.add(wordRandom.wayread);
+                } else {
+                  wordsWrong.add(wordRandom.vocabulary);
+                }
+              }
+            }
+
+            // Add the data for the current question to the map
+            dataMap.add(
+              type == "JapToVN"
+                  ? {
+                "feture": fetureChose,
+                "word": wordCheckRandom.vocabulary,
+                "anwser": wordCheckRandom.mean,
+                "listAnwserWrong": wordsWrong,
+                "numberRight": randomInRange(1, 5),
+              }
+                  : type == "JapToWayRead"
+                  ? {
+                "feture": fetureChose,
+                "word": wordCheckRandom.vocabulary,
+                "anwser": wordCheckRandom.wayread,
+                "listAnwserWrong": wordsWrong,
+                "numberRight": randomInRange(1, 5),
+              }
+                  : {
+                "feture": fetureChose,
+                "word": wordCheckRandom.wayread,
+                "anwser": wordCheckRandom.vocabulary,
+                "listAnwserWrong": wordsWrong,
+                "numberRight": randomInRange(1, 5),
+              },
+            );
+          }
         }
       }
-    }
 
-    if (numberCount < dataMap.length) {
-      switch (dataMap[numberCount]["feture"]) {
-        case "sort":
-          updateView("sort");
-          break;
-        case "listen":
-          updateView("listen");
-          break;
-        case "combination":
-          updateView("combination");
-          break;
-      }
+      if (numberCount < dataMap.length) {
+        switch (dataMap[numberCount]["feture"]) {
+          case "sort":
+            updateView("sort");
+            break;
+          case "listen":
+            updateView("listen");
+            break;
+          case "combination":
+            updateView("combination");
+            break;
+        }
 
-    } else {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _timerService.stopTimer();
+      } else {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _timerService.stopTimer();
 
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (ctx) => congraculationScreen(
-              listWordsTest: listWordsTest,
-              listWordsWrong: wrongWords,
-              timeTest: _currentSeconds,
-              topic: widget.topic, reload: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (ctx) => congraculationScreen(
+                listWordsTest: listWordsTest,
+                listWordsWrong: wrongWords,
+                timeTest: _currentSeconds,
+                topic: widget.topic, reload: () {
                 widget.reload();
-            },
+              },
+              ),
             ),
-          ),
-        );
-      });
+          );
+        });
+        }
+
     }
   }
 
@@ -265,7 +340,9 @@ class _learnScreen extends State<learnScreen> {
             Row(
               children: [
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    showModalBottomSheet(context: context, builder: (ctx)=>quitTab());
+                  },
                   icon: const Icon(Icons.close, size: 50),
                 ),
                 Container(
@@ -293,3 +370,4 @@ class _learnScreen extends State<learnScreen> {
     );
   }
 }
+

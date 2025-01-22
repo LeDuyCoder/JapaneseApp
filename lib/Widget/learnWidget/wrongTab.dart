@@ -13,7 +13,8 @@ class wrongTab extends StatelessWidget{
         height: 250,
         width: MediaQuery.sizeOf(context).width,
         decoration: BoxDecoration(
-            color: Color.fromRGBO(255, 152, 161, 1.0),
+            color: Colors.red[100],
+
             borderRadius: BorderRadius.vertical(
                 top: Radius.circular(20)
             )
@@ -37,7 +38,7 @@ class wrongTab extends StatelessWidget{
                   Text(rightAwnser, style: TextStyle(color: Colors.red, fontSize: 20, fontWeight: FontWeight.bold),),
                 ],
               ),
-              SizedBox(height: 10,),
+              SizedBox(height: 20,),
               Align(
                 alignment: Alignment.bottomLeft,
                 child: GestureDetector(
@@ -47,7 +48,7 @@ class wrongTab extends StatelessWidget{
                   },
                   child: Container(
                     width: MediaQuery.sizeOf(context).width - 40,
-                    height: 80,
+                    height: MediaQuery.sizeOf(context).width*0.15,
                     decoration: const BoxDecoration(
                         color: Color.fromRGBO(255, 103, 103, 1.0),
                         borderRadius: BorderRadius.all(Radius.circular(20)),

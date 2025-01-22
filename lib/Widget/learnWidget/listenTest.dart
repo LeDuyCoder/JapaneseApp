@@ -35,7 +35,6 @@ class _ListenTextState extends State<listenTest> {
   List<boxText> dataInput = [];
   final FlutterTts _flutterTts = FlutterTts();
   bool isFirst = true;
-
   bool loadBoxText = true;
 
   final AudioPlayer _audioPlayer = AudioPlayer();
@@ -117,7 +116,7 @@ class _ListenTextState extends State<listenTest> {
                   Container(
                     padding: const EdgeInsets.all(10),
                     margin: const EdgeInsets.symmetric(vertical: 5),
-                    width: 200,
+                    width: MediaQuery.sizeOf(context).width*0.5,
                     height: 120,
                     decoration: const BoxDecoration(
                       color: Colors.white,
@@ -245,7 +244,10 @@ class _ListenTextState extends State<listenTest> {
                         child: Draggable<boxText>(
                           key: ValueKey(item.text),
                           data: item,
-                          feedback: Center(child: item.buildWidget()),
+                          feedback: Center(child: Material(
+                            type: MaterialType.transparency,
+                            child: item.buildWidget(),
+                          )),
                           childWhenDragging: item.buildWidget(),
                           child: item.buildWidget(),
                         ),
@@ -323,7 +325,7 @@ class _ListenTextState extends State<listenTest> {
                 },
                 child: Container(
                   width: MediaQuery.sizeOf(context).width - 20,
-                  height: 80,
+                  height: MediaQuery.sizeOf(context).width*0.15,
                   decoration: dataInput.isEmpty
                       ? const BoxDecoration(
                     color: Color.fromRGBO(223, 223, 223, 1.0),

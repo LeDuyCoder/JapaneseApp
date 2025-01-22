@@ -1,9 +1,15 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:japaneseapp/Screen/addWordScreen.dart';
+import 'package:japaneseapp/Screen/qrScreen.dart';
 import 'package:japaneseapp/Widget/folerWidget.dart';
 
 import '../Config/dataHelper.dart';
+import '../Module/word.dart';
 import '../Widget/topicWidget.dart';
 
 class dashboardScreen extends StatefulWidget{
@@ -15,13 +21,12 @@ class dashboardScreen extends StatefulWidget{
 class _dashboardScreen extends State<dashboardScreen>{
 
   Map<String, List<Map<String, dynamic>>> dataDashBoards = {};
-
   TextEditingController nameFolderInput = TextEditingController();
   TextEditingController nameTopicInput = TextEditingController();
   String? textErrorName;
   bool isLoadingCreateNewFolder = false;
-
   String amountTopic = "0 Topic";
+  String? _fileContent;
 
 
   Future<Map<String, List<Map<String, dynamic>>>> hanldeGetData() async {
@@ -39,6 +44,341 @@ class _dashboardScreen extends State<dashboardScreen>{
     dataDashBoards = await hanldeGetData();
     setState(() {});
   }
+
+  void showDialogSuccessSaveData(){
+    showDialog(
+      barrierDismissible: true,
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.white,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(10),
+              bottomRight: Radius.circular(10),
+            ), // Bo góc popup
+          ),
+          child: StatefulBuilder(
+            builder: (BuildContext context, void Function(void Function()) setState) {
+              return Container(
+                decoration: const BoxDecoration(
+                  border: Border(
+                    top: BorderSide(
+                      color: Color.fromRGBO(20, 195, 142, 1.0), // Màu xanh cạnh trên ngoài cùng
+                      width: 10.0, // Độ dày của cạnh trên
+                    ),
+                  ),
+                ),
+                child: Stack(
+                  children: [
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.only(left: 16, right: 16, top: 5),
+                          child: Text(
+                            'Successfully Save ✔️',
+                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.only(left: 16, right: 16, top: 5),
+                          child: Text(
+                            'Save data vocabulay success',
+                            style: TextStyle(fontSize: 15),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                  reload();
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: Container(
+                                    width: 100,
+                                    height: 50,
+                                    decoration: const BoxDecoration(
+                                      color: Color.fromRGBO(184, 241, 176, 1),
+                                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                                    ),
+                                    child: const Center(
+                                      child: Text(
+                                        "Save",
+                                        style: TextStyle(color: Colors.black, fontSize: 15),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  void showDialogErrorSaveData(){
+    showDialog(
+      barrierDismissible: true,
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.white,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(10),
+              bottomRight: Radius.circular(10),
+            ), // Bo góc popup
+          ),
+          child: StatefulBuilder(
+            builder: (BuildContext context, void Function(void Function()) setState) {
+              return Container(
+                decoration: const BoxDecoration(
+                  border: Border(
+                    top: BorderSide(
+                      color: Colors.red, // Màu xanh cạnh trên ngoài cùng
+                      width: 10.0, // Độ dày của cạnh trên
+                    ),
+                  ),
+                ),
+                child: Stack(
+                  children: [
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.only(left: 16, right: 16, top: 5),
+                          child: Text(
+                            'Successfully Failse ❌',
+                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.only(left: 16, right: 16, top: 5),
+                          child: Text(
+                            'Save data vocabulay failed becausse it is created',
+                            style: TextStyle(fontSize: 15),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: Container(
+                                    width: 100,
+                                    height: 50,
+                                    decoration: const BoxDecoration(
+                                      color: Colors.red,
+                                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                                    ),
+                                    child: const Center(
+                                      child: Text(
+                                        "ok",
+                                        style: TextStyle(color: Colors.white, fontSize: 15),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  void showDialogDataFromQR(Map<String, dynamic> data){
+    showDialog(
+      barrierDismissible: true,
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.white,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(10),
+              bottomRight: Radius.circular(10),
+            ), // Bo góc popup
+          ),
+          child: StatefulBuilder(
+            builder: (BuildContext context, void Function(void Function()) setState) {
+              return Container(
+                decoration: const BoxDecoration(
+                  border: Border(
+                    top: BorderSide(
+                      color: Color.fromRGBO(20, 195, 142, 1.0), // Màu xanh cạnh trên ngoài cùng
+                      width: 10.0, // Độ dày của cạnh trên
+                    ),
+                  ),
+                ),
+                child: Stack(
+                  children: [
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const Center(
+                          child: Text("List Word Shared", style: TextStyle(fontFamily: "indieflower", fontSize: 25)),
+                        ),
+                        Row(
+                          children: [
+                            const Text("Device's Name: ", style: TextStyle(fontFamily: "indieflower"),),
+                            Text((data["id"] as String).split("-").last, style: TextStyle(fontFamily: "indieflower", fontWeight: FontWeight.bold),)
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            const Text("Amount word: ", style: TextStyle(fontFamily: "indieflower"),),
+                            Text("${(data["listWords"] as List<dynamic>).length} Words", style: TextStyle(fontFamily: "indieflower", fontWeight: FontWeight.bold),)
+                          ],
+                        ),
+                        const SizedBox(height: 10,),
+                        const Text("Do You Add List Word ?", style: TextStyle(fontFamily: "indieflower"),),
+                        const SizedBox(height: 20,),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            GestureDetector(
+                              onTap: (){
+                                Navigator.pop(context);
+                              },
+                              child: Container(
+                                width: MediaQuery.sizeOf(context).width*0.3,
+                                height: MediaQuery.sizeOf(context).height*0.05,
+                                decoration: const BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                                    boxShadow: [
+                                    ]
+                                ),
+                                child: Center(
+                                  child: Text("CANCLE", style: TextStyle(color: Colors.red, fontSize: 15, fontWeight: FontWeight.bold),),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width:10,),
+                            GestureDetector(
+                              onTap: () async {
+                                DatabaseHelper db = DatabaseHelper.instance;
+                                String nameTopic = "${data["name"]} - ${(data["id"] as String).split("-").last}";
+
+                                if(!(await db.hasTopicName(nameTopic))) {
+                                  await db.insertTopic(nameTopic);
+
+                                  List<dynamic> listWords = data["listWords"];
+                                  List<Map<String, dynamic>> dataInsert = [];
+                                  for (dynamic data in listWords) {
+                                    dataInsert.add(
+                                        word(data["word"], data["wayread"],
+                                            data["mean"], nameTopic, 0).toMap()
+                                    );
+                                  }
+                                  await db.insertDataTopic(dataInsert);
+                                  showDialogSuccessSaveData();
+                                }else{
+                                  showDialogErrorSaveData();
+                                }
+                              },
+                              child: Container(
+                                width: MediaQuery.sizeOf(context).width*0.3,
+                                height: MediaQuery.sizeOf(context).height*0.05,
+                                decoration: const BoxDecoration(
+                                    color: Color.fromRGBO(97, 213, 88, 1.0),
+                                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: Colors.green,
+                                          offset: Offset(6, 6)
+                                      )
+                                    ]
+                                ),
+                                child: Center(
+                                  child: Text("CONFIRM", style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width:10,),
+                          ],
+                        ),
+                        SizedBox(height: 20,),
+                      ],
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _pickFile() async {
+    try {
+      // Hiển thị trình chọn file
+      FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+      if (result != null) {
+        // Lấy file được chọn
+        File file = File(result.files.single.path!);
+
+        // Đọc nội dung file
+        String content = await file.readAsString();
+
+        // Cập nhật giao diện
+        setState(() {
+          _fileContent = content;
+        });
+
+        showDialogDataFromQR(jsonDecode(_fileContent!));
+      }
+    } catch (e) {
+      // Xử lý lỗi
+      print("Có lỗi xảy ra: $e");
+    }
+  }
+
 
   void showPopupAddFolder() {
     showDialog(
@@ -368,6 +708,120 @@ class _dashboardScreen extends State<dashboardScreen>{
     );
   }
 
+  void showPopupInput() {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.white,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(10),
+              bottomRight: Radius.circular(10),
+            ), // Bo góc popup
+          ),
+          child: StatefulBuilder(
+            builder: (BuildContext context, void Function(void Function()) setState) {
+              return Container(
+                decoration: const BoxDecoration(
+                  border: Border(
+                    top: BorderSide(
+                      color: Color.fromRGBO(20, 195, 142, 1.0), // Màu xanh cạnh trên ngoài cùng
+                      width: 10.0, // Độ dày của cạnh trên
+                    ),
+                  ),
+                ),
+                child: Stack(
+                  children: [
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: Text(
+                            'Type Input',
+                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.center,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              GestureDetector(
+                                onTap: () async {
+                                  await _pickFile();
+                                },
+                                child: Padding(
+                                  padding: EdgeInsets.only(top: 10, bottom: 10, right: 5),
+                                  child: Container(
+                                    width: MediaQuery.sizeOf(context).width*0.3,
+                                    height: MediaQuery.sizeOf(context).width*0.1,
+                                    decoration: const BoxDecoration(
+                                      color: Colors.blue,
+                                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                                    ),
+                                    child: const Center(
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Icon(Icons.file_upload_outlined, color: Colors.black,size: 20,),
+                                          SizedBox(width: 10,),
+                                          Text(
+                                            "File",
+                                            style: TextStyle(color: Colors.white, fontSize: 15),
+                                          ),
+                                        ],
+                                      )
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () async {
+                                  Navigator.push(context, MaterialPageRoute(builder: (ctx)=>qrScreen()));
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: Container(
+                                    width: MediaQuery.sizeOf(context).width*0.3,
+                                    height: MediaQuery.sizeOf(context).width*0.1,
+                                    decoration: const BoxDecoration(
+                                      color: Color.fromRGBO(184, 241, 176, 1),
+                                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                                    ),
+                                    child: const Center(
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Icon(Icons.qr_code, color: Colors.black,size: 20,),
+                                          SizedBox(width: 10,),
+                                          Text(
+                                            "QR",
+                                            style: TextStyle(color: Colors.black, fontSize: 15),
+                                          ),
+                                        ],
+                                      )
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -393,7 +847,7 @@ class _dashboardScreen extends State<dashboardScreen>{
           appBar: AppBar(
             automaticallyImplyLeading: false,
             title: Container(
-              child: Text(
+              child: const Text(
                 "日本語",
                 style: TextStyle(fontFamily: "aboshione", fontSize: 20, color: Colors.white),
               ),
@@ -404,7 +858,7 @@ class _dashboardScreen extends State<dashboardScreen>{
                   padding: EdgeInsets.only(right: 10),
                   child: Text(
                     amountTopic,
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, fontFamily: "itim"),
                   ),
                 ),
               ),
@@ -417,9 +871,11 @@ class _dashboardScreen extends State<dashboardScreen>{
             ),
           ),
           body: Container(
+              color: Colors.white,
               width: double.infinity,
               height: MediaQuery.of(context).size.height,
               child: RefreshIndicator(
+                  onRefresh: reload,
                   child: ListView.builder(
                       itemCount: 1,
                       itemBuilder: (ctx, index){
@@ -436,55 +892,11 @@ class _dashboardScreen extends State<dashboardScreen>{
                                   children: [
                                     const Text(
                                       "Folder",
-                                      style: TextStyle(fontFamily: "indieflower", fontSize: 30),
+                                      style: TextStyle(fontFamily: "itim", fontSize: 30),
                                     ),
                                     GestureDetector(
                                       onTap: (){
                                         showPopupAddFolder();
-                                      },
-                                      child: Container(
-                                        width: 100,
-                                        height: 50,
-                                        decoration: BoxDecoration(
-                                          color: Color.fromRGBO(184, 241, 176, 1),
-                                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                                        ),
-                                        child: Center(
-                                          child: Text(
-                                            "+ ADD",
-                                            style: TextStyle(fontFamily: "indieflower", fontWeight: FontWeight.bold),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              dataDashBoards["folder"]!.isEmpty? Center(
-                                child: Text("No Data", style: TextStyle(fontSize: 20),),
-                              ) : SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Row(
-                                  children: [
-                                    for (Map<String, dynamic> folder in dataDashBoards["folder"]!)
-                                      folderWidget(nameFolder: folder["namefolder"]!),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(height: 20),
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 10),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Text(
-                                      "Topic",
-                                      style: TextStyle(fontFamily: "indieflower", fontSize: 30),
-                                    ),
-                                    GestureDetector(
-                                      onTap: (){
-                                        showPopupAddTopic();
                                       },
                                       child: Container(
                                         width: 100,
@@ -500,7 +912,85 @@ class _dashboardScreen extends State<dashboardScreen>{
                                             textAlign: TextAlign.center,
                                           ),
                                         ),
-                                      ),
+                                      )
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              dataDashBoards["folder"]!.isEmpty? Center(
+                                child: Text("No Data", style: TextStyle(fontSize: 20),),
+                              ) : SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: [
+                                    for (Map<String, dynamic> folder in dataDashBoards["folder"]!)
+                                      folderWidget(nameFolder: folder["namefolder"]!, reloadDashboard: () {
+                                        reload();
+                                      },),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(height: 20),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text(
+                                      "Topic",
+                                      style: TextStyle(fontFamily: "itim", fontSize: 30),
+                                    ),
+                                    Row(
+                                      children: [
+                                        GestureDetector(
+                                          onTap: (){
+                                            showPopupInput();
+                                          },
+                                          child: Container(
+                                            width: 100,
+                                            height: 50,
+                                            decoration: const BoxDecoration(
+                                              color: Color.fromRGBO(184, 241, 176, 1),
+                                              borderRadius: BorderRadius.all(Radius.circular(10)),
+                                            ),
+                                            child: const Center(
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: [
+                                                    Icon(Icons.insert_page_break, color: Colors.black,size: 20,),
+                                                    SizedBox(width: 10,),
+                                                    Text(
+                                                      "Input",
+                                                      style: TextStyle(fontFamily: "indieflower", fontWeight: FontWeight.bold),
+                                                      textAlign: TextAlign.center,
+                                                    ),
+                                                  ],
+                                                )
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(width: 20,),
+                                        GestureDetector(
+                                          onTap: (){
+                                            showPopupAddTopic();
+                                          },
+                                          child: Container(
+                                            width: 100,
+                                            height: 50,
+                                            decoration: const BoxDecoration(
+                                              color: Color.fromRGBO(184, 241, 176, 1),
+                                              borderRadius: BorderRadius.all(Radius.circular(10)),
+                                            ),
+                                            child: const Center(
+                                              child: Text(
+                                                "+ ADD",
+                                                style: TextStyle(fontFamily: "indieflower", fontWeight: FontWeight.bold),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      ],
                                     )
                                   ],
                                 ),
@@ -515,14 +1005,16 @@ class _dashboardScreen extends State<dashboardScreen>{
                                   mainAxisSpacing: 5,
                                   crossAxisCount: 2,
                                   childAspectRatio: 4 / 3,
-                                  children: dataDashBoards["topic"]!.map((topic) => topicWidget(nameTopic: topic["name"])).toList(),
+                                  children: dataDashBoards["topic"]!.map((topic) => topicWidget(nameTopic: topic["name"], reloadDashBoard: () {
+                                    reload();
+                                  },)).toList(),
                                 ),
                               ),
                             ],
                           ),
                         );
-                      }),
-                  onRefresh: reload)
+                      })
+              )
 
 
           ),

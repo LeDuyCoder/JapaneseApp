@@ -130,13 +130,6 @@ class _combinationTest extends State<combinationTest>{
                                     columeB_Chose = null;
                                     columeA_Chose = null;
                                   });
-
-                                  if(listComplete.length >= 4){
-                                    playSound("sound/correct.mp3");
-                                    showModalBottomSheet(enableDrag: false,isDismissible: false, context: context, builder: (ctx) => rightTab(nextQuestion: (){
-                                      widget.nextQuestion();
-                                    }));
-                                  }
                                 });
                               }else{
                                 choseWrongA = columeA_Chose!["awnser"];
@@ -157,7 +150,40 @@ class _combinationTest extends State<combinationTest>{
                       ,)
                     ],
                   ),
-                )
+                ),
+
+              SizedBox(height: 50,),
+              GestureDetector(
+                onTap: (){
+                  if(listComplete.length == 4){
+                    if(listComplete.length >= 4){
+                      playSound("sound/correct.mp3");
+                      showModalBottomSheet(enableDrag: false,isDismissible: false, context: context, builder: (ctx) => rightTab(nextQuestion: (){
+                        widget.nextQuestion();
+                      }));
+                    }
+                  }
+                },
+                child: Container(
+                  width: MediaQuery.sizeOf(context).width - 40,
+                  height: MediaQuery.sizeOf(context).width * 0.15,
+                  decoration: BoxDecoration(
+                      color: listComplete.length == 4 ? const Color.fromRGBO(97, 213, 88, 1.0) : Color.fromRGBO(
+                          195, 195, 195, 1.0),
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                      boxShadow: [
+                        BoxShadow(
+                            color: listComplete.length == 4 ? Colors.green : const Color.fromRGBO(
+                                177, 177, 177, 1.0),
+                            offset: Offset(6, 6)
+                        )
+                      ]
+                  ),
+                  child: Center(
+                    child: Text("CHECK", style: TextStyle(color: listComplete.length == 4 ? Colors.white : Colors.grey, fontSize: 20, fontWeight: FontWeight.bold),),
+                  ),
+                ),
+              ),
             ],
           ),
         )

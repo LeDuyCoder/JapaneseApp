@@ -11,9 +11,10 @@ class rightTab extends StatelessWidget{
     return Container(
       height: 250,
       width: MediaQuery.sizeOf(context).width,
-      decoration: const BoxDecoration(
-        color: Color.fromRGBO(178, 255, 152, 1.0),
-        borderRadius: BorderRadius.vertical(
+      decoration: BoxDecoration(
+        color: Colors.green[100],
+
+        borderRadius: const BorderRadius.vertical(
           top: Radius.circular(20)
         )
       ),
@@ -31,7 +32,7 @@ class rightTab extends StatelessWidget{
               ],
             ),
             const Text("This time you perfect, continues try hard!", style: TextStyle(color: Colors.green, fontSize: 20),),
-            SizedBox(height: 10,),
+            SizedBox(height: 20,),
             Align(
               alignment: Alignment.bottomLeft,
               child: GestureDetector(
@@ -41,8 +42,8 @@ class rightTab extends StatelessWidget{
                 },
                 child: Container(
                   width: MediaQuery.sizeOf(context).width - 40,
-                  height: 80,
-                  decoration: BoxDecoration(
+                  height: MediaQuery.sizeOf(context).width*0.15,
+                  decoration: const BoxDecoration(
                       color: Color.fromRGBO(97, 213, 88, 1.0),
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                       boxShadow: [

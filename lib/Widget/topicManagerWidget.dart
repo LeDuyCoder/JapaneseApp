@@ -7,14 +7,17 @@ import '../Module/topic.dart';
 class topicManagerWidget extends StatelessWidget{
   final topic dataTopic;
   final void Function() removeTopic;
+  final void Function() reloadDashboard;
 
-  const topicManagerWidget({super.key, required this.dataTopic, required this.removeTopic});
+  const topicManagerWidget({super.key, required this.dataTopic, required this.removeTopic, required this.reloadDashboard});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (ctx) => listWordScreen(topicName: dataTopic.name)));
+        Navigator.push(context, MaterialPageRoute(builder: (ctx) => listWordScreen(topicName: dataTopic.name, reloadDashboard: () {
+          reloadDashboard();
+        },)));
       },
       child: Container(
           width: MediaQuery.of(context).size.width-20,

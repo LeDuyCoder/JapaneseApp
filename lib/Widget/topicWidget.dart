@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:japaneseapp/Config/dataHelper.dart';
@@ -5,8 +6,9 @@ import 'package:japaneseapp/Screen/listWordScreen.dart';
 
 class topicWidget extends StatefulWidget{
   final String nameTopic;
+  final void Function() reloadDashBoard;
 
-  const topicWidget({super.key, required this.nameTopic});
+  const topicWidget({super.key, required this.nameTopic, required this.reloadDashBoard});
 
   @override
   State<StatefulWidget> createState() => _topicWidget();
@@ -36,7 +38,9 @@ class _topicWidget extends State<topicWidget>{
           padding: EdgeInsets.only(left: 10),
           child: GestureDetector(
             onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder: (ctx) => listWordScreen(topicName: widget.nameTopic,)));
+              Navigator.push(context, MaterialPageRoute(builder: (ctx) => listWordScreen(topicName: widget.nameTopic, reloadDashboard: () {
+                widget.reloadDashBoard();
+              },)));
             },
             child: Container(
               child: Stack(
@@ -50,15 +54,8 @@ class _topicWidget extends State<topicWidget>{
                           ),
                           borderRadius: BorderRadius.vertical(top: Radius.circular(20))
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(left: 5),
-                            child: Text(widget.nameTopic, style: TextStyle(fontFamily: "indieflower", fontSize: 30),),
-                          )
-                        ],
+                      child: Center(
+                        child: AutoSizeText(widget.nameTopic, style: TextStyle(fontFamily: "indieflower", fontSize: 20),),
                       )
                   ),
                   Container(

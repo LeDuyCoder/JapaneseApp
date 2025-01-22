@@ -8,8 +8,9 @@ import 'package:japaneseapp/Widget/topicManagerWidget.dart';
 
 class folderManagerScreen extends StatefulWidget{
   final String nameFolder;
+  final void Function() reloadDashBoard;
 
-  const folderManagerScreen({super.key, required this.nameFolder});
+  const folderManagerScreen({super.key, required this.nameFolder, required this.reloadDashBoard});
 
   @override
   State<StatefulWidget> createState() => _folderMangerScreen();
@@ -294,6 +295,7 @@ class _folderMangerScreen extends State<folderManagerScreen>{
       body: FutureBuilder(future: hanldeDataTopic(), builder: (ctx, snapshot){
         if(snapshot.hasData){
           return Container(
+            color: Colors.white,
             width: MediaQuery.sizeOf(context).width,
             height: double.infinity,
             child: SingleChildScrollView(
@@ -308,6 +310,8 @@ class _folderMangerScreen extends State<folderManagerScreen>{
                         padding: EdgeInsets.only(bottom: 20),
                         child: topicManagerWidget(dataTopic: dataTopic, removeTopic: () {
                           removeTopic(dataTopic);
+                        }, reloadDashboard: () {
+                          widget.reloadDashBoard();
                         },),
                       )
                   else

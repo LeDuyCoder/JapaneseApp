@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:japaneseapp/Config/dataHelper.dart';
 import 'package:japaneseapp/Module/word.dart';
-import 'package:japaneseapp/Screen/listWordScreen.dart';
 import 'package:japaneseapp/Widget/addWordWidget.dart';
-import 'package:japaneseapp/Widget/wordWidget.dart';
 
 class addWordScreen extends StatefulWidget{
   final String topicName;

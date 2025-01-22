@@ -78,7 +78,6 @@ class DatabaseHelper {
   }
 
   Future<bool> hasFolderName(String nameFolder) async {
-    final db = await instance.database;
     List<Map<String, dynamic>> dataFolderTable = await getAllFolder();
     for(Map<String, dynamic> dataFolder in dataFolderTable){
       if(nameFolder == dataFolder["namefolder"]){
@@ -109,6 +108,17 @@ class DatabaseHelper {
     List<Map<String, dynamic>> result = await db.rawQuery("SELECT * FROM words WHERE topic = '$topic'");
     return result;
   }
+
+  Future<void> deleteData(String nameTable, String whereUpdate) async {
+    final db = await instance.database;
+
+    // Xóa dữ liệu từ bảng dựa trên điều kiện (where)
+    await db.delete(
+      nameTable,      // Tên bảng
+      where: whereUpdate,  // Điều kiện xóa (ví dụ: "id = 1")
+    );
+  }
+
 
   Future<void> insertDataTopic(List<Map<String, dynamic>> dataInsert) async {
     final db = await instance.database;
