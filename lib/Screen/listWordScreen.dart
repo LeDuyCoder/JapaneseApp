@@ -1,7 +1,5 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
-import 'dart:isolate';
 
 import 'package:archive/archive.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -14,6 +12,7 @@ import 'package:japaneseapp/Widget/wordWidget.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:japaneseapp/Module/word.dart' as wordModule;
 
 class listWordScreen extends StatefulWidget{
   final String topicName;
@@ -510,6 +509,10 @@ class _listWordScreen extends State<listWordScreen>{
     });
   }
 
+  void reloadScreen(){
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -536,80 +539,106 @@ class _listWordScreen extends State<listWordScreen>{
           ),
         ),
       ),
-      body: FutureBuilder(future: hanldeDataWords(widget.topicName), builder: (ctx, snapshot){
-        if(!snapshot.hasData){
-          return Center();
-        }
+      body: FutureBuilder(
+        future: hanldeDataWords(widget.topicName),
+        builder: (ctx, snapshot) {
+          if (!snapshot.hasData) {
+            return Center();
+          }
 
-        amountWord = snapshot.data!.length;
+          amountWord = snapshot.data!.length;
 
-        return Container(
-          color: Colors.white,
-          height: double.infinity,
-          child: Column(
-            children: [
-              Container(
-                height: MediaQuery.sizeOf(context).height - AppBar().preferredSize.height - 150,
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  child: Column(
-                    children: [
-                      GridView.count(
+          return Container(
+            color: Colors.white,
+            height: MediaQuery.sizeOf(context).height - AppBar().preferredSize.height - 30,
+            width: MediaQuery.sizeOf(context).width,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Column(
+                children: [
+                  Container(
+                    height: MediaQuery.sizeOf(context).height - AppBar().preferredSize.height - 150,
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      child: GridView.count(
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
                         crossAxisSpacing: 1,
                         mainAxisSpacing: 5,
                         crossAxisCount: 3,
                         childAspectRatio: 3 / 3,
-                        children: snapshot.data!.map((word) {
-                          return Center(  // Thêm Center để căn giữa mỗi phần tử
-                            child: wordWidget(word: word["word"], level: word["level"], wayread: word["wayread"],),
+                        children: snapshot.data!.map<Widget>((word) {
+                          return Center(
+                            child: wordWidget(
+                              topicName: widget.topicName,
+                              wordText: wordModule.word(
+                                  word["word"],
+                                  word["wayread"],
+                                  word["mean"],
+                                  widget.topicName,
+                                  word["level"]
+                              ), reloadScreenListWord: () {
+                                reloadScreen();
+                              },
+                            ),
                           );
                         }).toList(),
                       ),
-                    ],
+                    ),
                   ),
-                ),
-              ),
-              SizedBox(height: 20,),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: GestureDetector(
-                  onTap: (){
-                    List<word> dataWords = [];
-                    for(Map<String, dynamic> wordData in snapshot.data!){
-                      dataWords.add(
-                        word(
-                          wordData["word"],
-                          wordData["wayread"],
-                          wordData["mean"],
-                          wordData["topic"],
-                          wordData["level"]
-                        )
-                      );
-                    }
-                    Navigator.push(context, MaterialPageRoute(builder: (ctx)=>learnScreen(dataWords: dataWords, topic: widget.topicName, reload: () {setState(() {});  },)));
-                  },
-
-                  child: Container(
-                      width: 250,
-                      height: MediaQuery.sizeOf(context).width*0.15,
-                      decoration: const BoxDecoration(
+                  SizedBox(height: 20),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: GestureDetector(
+                      onTap: () {
+                        List<word> dataWords = [];
+                        for (Map<String, dynamic> wordData in snapshot.data!) {
+                          dataWords.add(
+                            word(
+                              wordData["word"],
+                              wordData["wayread"],
+                              wordData["mean"],
+                              wordData["topic"],
+                              wordData["level"],
+                            ),
+                          );
+                        }
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (ctx) => learnScreen(
+                              dataWords: dataWords,
+                              topic: widget.topicName,
+                              reload: () {
+                                setState(() {});
+                              },
+                            ),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        width: 250,
+                        height: MediaQuery.sizeOf(context).width * 0.15,
+                        decoration: const BoxDecoration(
                           color: Color.fromRGBO(20, 195, 142, 1.0),
-                          borderRadius: BorderRadius.all(Radius.circular(20))
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                        ),
+                        child: Center(
+                          child: Text(
+                            "勉強",
+                            style: TextStyle(color: Colors.white, fontSize: 25),
+                          ),
+                        ),
                       ),
-                      child: Center(
-                        child: Text("勉強", style: TextStyle(color: Colors.white, fontSize: 25),),
-                      )
+                    ),
                   ),
-                )
-              )
-            ],
-          ),
-        );
-      })
+                ],
+              ),
+            ),
+          );
+        },
+      )
     );
   }
-
 }

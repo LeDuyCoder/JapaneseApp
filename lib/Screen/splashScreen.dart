@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:japaneseapp/Config/dataHelper.dart';
 import 'package:japaneseapp/Screen/dashboardScreen.dart';
 import 'package:japaneseapp/Screen/tutorialScreen.dart';
@@ -20,7 +21,7 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
   late Animation<Offset> _animation;
 
   String version_check = "", message_old_version = "";
-  String version = "1.0.2";
+  String version = "1.0.3";
   @override
   void initState() {
     super.initState();
@@ -162,27 +163,34 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
     final db = await DatabaseHelper.instance.database;
     print("Database initialized successfully.");
     await Future.delayed(Duration(seconds: 3));
-    await fetchData();
 
-
-    if(version_check == version) {
-      if (!(await checkFlag("firstJoint"))) {
-        await setFlag("firstJoint", true);
-        Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => tutorialScreen())
-        );
-      } else {
-        Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => dashboardScreen())
-        );
+    bool isConnected = await InternetConnectionChecker.instance.hasConnection;
+    if(isConnected) {
+      await fetchData();
+      if(version_check == version) {
+        sendToScreen();
+      }else{
+        showDialogNotificationVersion();
       }
     }else{
-      showDialogNotificationVersion();
+      sendToScreen();
     }
   }
 
+  void sendToScreen() async {
+    if (!(await checkFlag("firstJoint"))) {
+      await setFlag("firstJoint", true);
+      Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => tutorialScreen())
+      );
+    } else {
+      Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => dashboardScreen())
+      );
+    }
+  }
 
   Future<void> fetchData() async {
     const String apiUrl = 'https://api.npoint.io/e00f658fac808c7f708d';
