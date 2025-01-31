@@ -46,6 +46,7 @@ class _choseWordWidgetState extends State<choseWordWidget> {
               fontSize: 40,
               color: widget.isChose ? Colors.blue : Colors.black,
             ),
+            textAlign: TextAlign.center,
           ),
         ),
       ),

@@ -1,10 +1,28 @@
+import 'dart:math';
+
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class rightTab extends StatelessWidget{
   final void Function() nextQuestion;
 
-  const rightTab({super.key, required this.nextQuestion});
+  List<String> motivationalPhrasesVN = [
+    "Tiếp tục cố gắng, bạn đang làm rất tốt!",
+    "Lần này bạn đã hoàn hảo, hãy tiếp tục cố gắng!",
+    "Mỗi bước tiến lên đều là một sự tiến bộ!",
+    "Hãy tin vào bản thân và tiếp tục nỗ lực!",
+    "Bạn có thể làm được, đừng bao giờ bỏ cuộc!",
+    "Thành công đến với những ai không ngừng cố gắng!",
+    "Tiếp tục cải thiện, từng bước một!",
+    "Hãy mạnh mẽ, tập trung và tiếp tục tiến lên!",
+    "Nỗ lực tuyệt vời! Hãy tiếp tục đặt mục tiêu cao hơn!",
+    "Sự chăm chỉ của bạn sẽ sớm được đền đáp!"
+  ];
+
+
+  rightTab({super.key, required this.nextQuestion});
+
 
   @override
   Widget build(BuildContext context) {
@@ -24,14 +42,17 @@ class rightTab extends StatelessWidget{
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Row(
+            Row(
               children: [
                 Icon(Icons.check_circle, color: Colors.green, size: 40,),
                 SizedBox(width: 10,),
-                Text("Your Awnser Is Correct", style: TextStyle(color: Colors.green, fontSize: 30, fontWeight: FontWeight.bold),)
+                Container(
+                  width: MediaQuery.sizeOf(context).width*0.7,
+                  child: AutoSizeText("Trả Lời Chính Xác", style: TextStyle(color: Colors.green, fontSize: 30, fontWeight: FontWeight.bold),),
+                )
               ],
             ),
-            const Text("This time you perfect, continues try hard!", style: TextStyle(color: Colors.green, fontSize: 20),),
+            Text(motivationalPhrasesVN[Random().nextInt(motivationalPhrasesVN.length)], style: TextStyle(color: Colors.green, fontSize: 20),),
             SizedBox(height: 20,),
             Align(
               alignment: Alignment.bottomLeft,

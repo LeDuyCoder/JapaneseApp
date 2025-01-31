@@ -55,16 +55,22 @@ class _learnScreen extends State<learnScreen> {
   }
 
   List<String> hanldStringChoseVN(String mean) {
-    List<String> newListString = mean.split(" ");
+    List<String> newListString = mean.split(" ")
+        .map((e) => e.trim())
+        .where((e) => e.isNotEmpty)
+        .toList();
     newListString.shuffle();
     return newListString;
   }
 
   List<String> handleJapaneseString(String input) {
-    List<String> characters = input.split('');
+    List<String> characters = input.split('')
+        .where((e) => e.trim().isNotEmpty)
+        .toList();
     characters.shuffle(Random());
     return characters;
   }
+
 
   void updateView(String feature) {
     setState(() {
@@ -133,6 +139,21 @@ class _learnScreen extends State<learnScreen> {
     });
   }
 
+  String generateWrongAwnser(String typeAwnser, String rightAwnser, List<word> dataWords){
+    word RanWord;
+
+    do{
+      RanWord = dataWords[randomInRange(0, widget.dataWords.length)] as word;
+    }while(rightAwnser == RanWord.mean || rightAwnser == RanWord.vocabulary);
+
+
+    if(typeAwnser == "JapToVN"){
+      return RanWord.mean;
+    }
+
+    return RanWord.vocabulary;
+  }
+
   void generateQuestion(List<word> dataWords) {
     if (dataMap.isEmpty) {
       int i = 0;
@@ -157,8 +178,8 @@ class _learnScreen extends State<learnScreen> {
                     "typeTranslate": ranType,
                     "word": wordRandom,
                     "listChose": ranType == typeSort.JapanToVietNam
-                        ? hanldStringChoseVN("${wordRandom.mean} ${dataWords[randomInRange(0, widget.dataWords.length)].mean}.")
-                        : handleJapaneseString("${wordRandom.vocabulary}${dataWords[randomInRange(0, widget.dataWords.length)].vocabulary}"),
+                        ? hanldStringChoseVN("${wordRandom.mean} ${generateWrongAwnser("JapToVN", wordRandom.mean, dataWords)}")
+                        : handleJapaneseString("${wordRandom.vocabulary} ${generateWrongAwnser("VNToJap", wordRandom.mean, dataWords)}"),
                   },
                 );
 

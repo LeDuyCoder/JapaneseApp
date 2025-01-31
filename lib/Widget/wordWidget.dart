@@ -325,7 +325,7 @@ class _wordWidget extends State<wordWidget>{
                     child: LinearProgressIndicator(
                       value: widget.wordText.level/28, // 50% progress
                       backgroundColor: Colors.white,
-                      color: widget.wordText.level==28?Color.fromRGBO(255, 196, 0, 1.0):Color.fromRGBO(0, 255, 171, 1.0),
+                      color: _getProgressColor(widget.wordText.level),
                       minHeight: 10.0,
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                     ),
@@ -338,5 +338,18 @@ class _wordWidget extends State<wordWidget>{
       )
     );
   }
+
+  Color _getProgressColor(int level) {
+    double progress = level / 28;
+
+    if (progress <= 0.3571) { // Tương đương với 10/28
+      return Color.fromRGBO(0, 255, 171, 1.0); // Xanh (0 - 10)
+    } else if (progress <= 0.7143) { // Tương đương với 20/28
+      return Color.fromRGBO(255, 196, 0, 1.0); // Tím (10 - 20)
+    } else {
+      return Color.fromRGBO(255, 69, 0, 1.0); // Đỏ (20 - 28)
+    }
+  }
+
 
 }

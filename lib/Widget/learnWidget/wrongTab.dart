@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -29,12 +30,15 @@ class wrongTab extends StatelessWidget{
                 children: [
                   Icon(Icons.cancel, color: Colors.red, size: 40,),
                   SizedBox(width: 10,),
-                  Text("Your Awnser Is Incorrect", style: TextStyle(color: Colors.red, fontSize: 25, fontWeight: FontWeight.bold),)
+                  Container(
+                    width: MediaQuery.sizeOf(context).width*0.7,
+                    child: const AutoSizeText("Không Chính Xác", style: TextStyle(color: Colors.red, fontSize: 30, fontWeight: FontWeight.bold),),
+                  )
                 ],
               ),
               Row(
                 children: [
-                  Text("Awnser right is: ", style: TextStyle(color: Colors.red, fontSize: 20),),
+                  const Text("Câu trả lời đúng là: ", style: TextStyle(color: Colors.red, fontSize: 20),),
                   Text(rightAwnser, style: TextStyle(color: Colors.red, fontSize: 20, fontWeight: FontWeight.bold),),
                 ],
               ),

@@ -21,7 +21,7 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
   late Animation<Offset> _animation;
 
   String version_check = "", message_old_version = "";
-  String version = "1.0.3";
+  String version = "1.0.4";
   @override
   void initState() {
     super.initState();
