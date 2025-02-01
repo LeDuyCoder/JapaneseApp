@@ -94,10 +94,13 @@ class _choseTestState extends State<choseTest> {
                 padding: EdgeInsets.only(left: 20),
                 child: Row(
                   children: [
-                    AutoSizeText(
-                      "What mean of ${widget.data["word"]}",
-                      style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
-                    ),
+                    Container(
+                      width: MediaQuery.sizeOf(context).width*0.9,
+                      child: AutoSizeText(
+                        "What mean of ${widget.data["word"]}",
+                        style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
+                      ),
+                    )
                   ],
                 ),
               ),

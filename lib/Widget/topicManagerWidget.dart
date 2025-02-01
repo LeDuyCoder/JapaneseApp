@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:japaneseapp/Screen/listWordScreen.dart';
@@ -39,7 +40,10 @@ class topicManagerWidget extends StatelessWidget{
                   children: [
                     Icon(Icons.topic_outlined, size: 30),
                     SizedBox(width: 20,),
-                    Text(dataTopic.name, style: TextStyle(fontSize: 20, fontFamily: "indieflower"),)
+                    Container(
+                      width: MediaQuery.sizeOf(context).width*0.65,
+                      child: AutoSizeText(dataTopic.name, style: TextStyle(fontSize: 20, fontFamily: "indieflower"),),
+                    )
                   ],
                 ),
               ),

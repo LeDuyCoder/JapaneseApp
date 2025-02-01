@@ -21,7 +21,7 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
   late Animation<Offset> _animation;
 
   String version_check = "", message_old_version = "";
-  String version = "1.0.4";
+  String version = "1.0.5";
   @override
   void initState() {
     super.initState();
@@ -220,6 +220,7 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
   Widget build(BuildContext context) {
 
     return MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Japanese App',
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),

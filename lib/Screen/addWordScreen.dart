@@ -197,10 +197,10 @@ class _addWordScreen extends State<addWordScreen>{
                             children: [
                               GestureDetector(
                                 onTap: () {
-
                                   Navigator.pop(contextOrigin);
                                   Navigator.pop(contextOrigin);
                                   Navigator.pop(contextOrigin);
+                                  widget.reload();
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.all(10),
@@ -284,6 +284,7 @@ class _addWordScreen extends State<addWordScreen>{
                 Container(
                     width: MediaQuery.sizeOf(context).width,
                     height: double.infinity,
+                    color: Colors.white,
                     child: SingleChildScrollView(
                       scrollDirection: Axis.vertical,
                       child: listVocabulary.isEmpty ? const Center(
@@ -300,7 +301,8 @@ class _addWordScreen extends State<addWordScreen>{
                               child: addWordWidget(context: context, word: vocabulary.vocabulary, wayRead: vocabulary.wayread, mean: vocabulary.mean, removeVocabulary: (){
                                 deleteVocalary(vocabulary);
                               },),
-                            )
+                            ),
+                          SizedBox(height: 200,),
                         ],
                       ),
                     )
