@@ -139,9 +139,6 @@ class congraculationScreen extends StatelessWidget{
             SizedBox(height: 20,),
             GestureDetector(
                 onTap: () async {
-                  // Sử dụng Set để tăng hiệu quả kiểm tra
-                  final Set<word> wrongWordsSet = listWordsWrong.toSet();
-
                   // Lọc danh sách với điều kiện
                   final List<word> filteredWords = listWordsTest.where((word wordCheck) {
                     final int wrongCount = listWordsWrong.where((wordWrongCheck) => wordWrongCheck == wordCheck).length;

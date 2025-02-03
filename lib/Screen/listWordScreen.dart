@@ -316,7 +316,7 @@ class _listWordScreen extends State<listWordScreen>{
                                   boxShadow: [
                                   ]
                               ),
-                              child: Center(
+                              child: const Center(
                                 child: Text("Delete", style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),),
                               ),
                             ),
@@ -334,16 +334,14 @@ class _listWordScreen extends State<listWordScreen>{
                                     // Gọi hàm bất đồng bộ
                                     final data = await hanldDataWordsQr(
                                         widget.topicName);
-                                    if (data != null) {
-                                      // Hiển thị dialog khi có dữ liệu
-                                      showDialogQR(
-                                          QrImageView(
-                                            data: gzipCompress(data),
-                                            size: 150, // Đảm bảo kích thước bên trong widget QrImageView
-                                          )
-                                      );
-                                    }
-                                  } catch (e) {
+                                    // Hiển thị dialog khi có dữ liệu
+                                    showDialogQR(
+                                        QrImageView(
+                                          data: gzipCompress(data),
+                                          size: 150, // Đảm bảo kích thước bên trong widget QrImageView
+                                        )
+                                    );
+                                                                    } catch (e) {
                                     print("Error: $e");
                                   }
                                 }

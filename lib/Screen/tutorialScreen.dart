@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:japaneseapp/Screen/dashboardScreen.dart';
+import 'package:japaneseapp/Screen/tabScreen.dart';
 
 class tutorialScreen extends StatefulWidget {
   @override
@@ -84,14 +85,14 @@ class _tutorialScreen extends State<tutorialScreen>{
           // Khi nhấn "Done", chuyển tới màn hình chính của ứng dụng
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (_) => dashboardScreen()),
+            MaterialPageRoute(builder: (_) => TabScreen()),
           );
         },
         onSkip: () {
           // Khi nhấn "Skip", chuyển tới màn hình chính của ứng dụng
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (_) => dashboardScreen()),
+            MaterialPageRoute(builder: (_) => TabScreen()),
           );
         },
         showSkipButton: true,

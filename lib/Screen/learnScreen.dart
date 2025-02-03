@@ -1,9 +1,7 @@
-import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:japaneseapp/Module/word.dart';
 import 'package:japaneseapp/Screen/congraculationScreen.dart';
 import 'package:japaneseapp/Widget/learnWidget/choseTest.dart';

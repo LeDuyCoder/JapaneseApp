@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:japaneseapp/Config/dataHelper.dart';
 import 'package:japaneseapp/Screen/dashboardScreen.dart';
+import 'package:japaneseapp/Screen/tabScreen.dart';
 import 'package:japaneseapp/Screen/tutorialScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -13,7 +14,6 @@ import 'package:http/http.dart' as http;
 class splashScreen extends StatefulWidget{
   @override
   State<StatefulWidget> createState() => _splashScreen();
-
 }
 
 class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMixin {
@@ -21,7 +21,7 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
   late Animation<Offset> _animation;
 
   String version_check = "", message_old_version = "";
-  String version = "1.0.5";
+  String version = "1.2.0";
   @override
   void initState() {
     super.initState();
@@ -153,6 +153,15 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
     return prefs.getBool(flagKey) ?? false; // Nếu flag không tồn tại, trả về false
   }
 
+  Future<void> createDataLevel() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    if(!prefs.containsKey("level")){
+      await prefs.setInt("level", 1);
+      await prefs.setInt("exp", 0);
+      await prefs.setInt("nextExp", 100);
+    }
+  }
+
   Future<void> setFlag(String flagKey, bool value) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool(flagKey, value);
@@ -161,7 +170,7 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
   Future<void> _initializeDatabase() async {
     // Khởi tạo cơ sở dữ liệu và gọi await để chờ cơ sở dữ liệu được tạo
     final db = await DatabaseHelper.instance.database;
-    print("Database initialized successfully.");
+    await createDataLevel();
     await Future.delayed(Duration(seconds: 3));
 
     bool isConnected = await InternetConnectionChecker.instance.hasConnection;
@@ -187,7 +196,7 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
     } else {
       Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => dashboardScreen())
+          MaterialPageRoute(builder: (context) => TabScreen())
       );
     }
   }
@@ -218,7 +227,6 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
 
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Japanese App',
@@ -228,6 +236,7 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
         ),
         home: Scaffold(
           body: Container(
+            color: Colors.white,
             width: MediaQuery.sizeOf(context).width,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,

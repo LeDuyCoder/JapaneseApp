@@ -88,10 +88,10 @@ class _SortTextState extends State<sortText> {
 
       readText(widget.WordTest.wayread);
     }
-
     return Stack(
       children: [
         Container(
+          color: Colors.white,
           width: MediaQuery.sizeOf(context).width,
           height: MediaQuery.sizeOf(context).height -
               AppBar().preferredSize.height -
