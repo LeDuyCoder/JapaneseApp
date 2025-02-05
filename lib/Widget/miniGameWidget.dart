@@ -44,7 +44,15 @@ class _miniGameWidget extends State<miniGameWidget>{
 
   Future<int> getDataTime() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getInt(widget.dbTimeName) ?? 0; // Trả về thời gian bắt đầu lưu trữ
+    int time = prefs.getInt(widget.dbTimeName) ?? 0;
+    int timeCheck = ((time + timeDefaultWait*1000 ~/1000) - (DateTime.now().millisecondsSinceEpoch ~/ 1000));
+    print(timeCheck);
+    if(prefs.containsKey(widget.dbTimeName)){
+      if(timeCheck <= 0){
+        isJoin = false;
+      }
+    }
+    return time; // Trả về thời gian bắt đầu lưu trữ
   }
 
 

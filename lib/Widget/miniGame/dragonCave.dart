@@ -24,7 +24,7 @@ class dragonCave extends StatefulWidget{
 
 class _dragonCave extends State<dragonCave>{
 
-  int healthDragon = 500;
+  int healthDragon = 200;
   int health = 100;
   final AudioPlayer _audioPlayer = AudioPlayer();
   List<double> positionKnight = [];
@@ -261,7 +261,7 @@ class _dragonCave extends State<dragonCave>{
                           width: MediaQuery.sizeOf(context).width*0.9,
                           height: MediaQuery.sizeOf(context).width*0.05,
                           child: LinearProgressIndicator(
-                            value: healthDragon / 100, // 50% progress
+                            value: healthDragon / 200, // 50% progress
                             backgroundColor: Colors.white,
                             color: Colors.red,
                             minHeight: 10.0,
@@ -270,7 +270,7 @@ class _dragonCave extends State<dragonCave>{
                         ),
                       ),
                       Center(
-                        child: Text("${healthDragon}/100", style: TextStyle(color: healthDragon<=40?Colors.black:Colors.white, fontFamily: "Itim", fontSize: 15),),
+                        child: Text("${healthDragon}/200", style: TextStyle(color: healthDragon<=40?Colors.black:Colors.white, fontFamily: "Itim", fontSize: 15),),
                       )
                     ],
                   )
