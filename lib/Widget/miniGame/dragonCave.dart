@@ -270,7 +270,7 @@ class _dragonCave extends State<dragonCave>{
                         ),
                       ),
                       Center(
-                        child: Text("${healthDragon}/200", style: TextStyle(color: healthDragon<=40?Colors.black:Colors.white, fontFamily: "Itim", fontSize: 15),),
+                        child: Text("${healthDragon}/200", style: TextStyle(color: healthDragon<=110?Colors.black:Colors.white, fontFamily: "Itim", fontSize: 15),),
                       )
                     ],
                   )

@@ -107,10 +107,10 @@ class _SortTextState extends State<sortText> {
                     SizedBox(width: 10,),
                     Text("Mistake", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.orange),),
                   ],
-                  ) : const Row(
+                  ) : Row(
                   children: [
-                    Icon(Icons.translate, size: 40,),
-                    Text("Translate This Sentence", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
+                    Icon(Icons.translate, size: MediaQuery.sizeOf(context).width*0.07,),
+                    Text("Dịch Câu Bên Dưới", style: TextStyle(fontSize: MediaQuery.sizeOf(context).width*0.05, fontWeight: FontWeight.bold),),
                   ],
                 ),
               ),
@@ -174,7 +174,7 @@ class _SortTextState extends State<sortText> {
                 builder: (context, candidateData, rejectedData) {
                   return Container(
                     width: MediaQuery.sizeOf(context).width,
-                    height: 200,
+                    height: MediaQuery.sizeOf(context).height*0.2,
                     color: Colors.white,
                     child: Center(
                       child: Stack(
@@ -221,7 +221,7 @@ class _SortTextState extends State<sortText> {
                   );
                 },
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: MediaQuery.sizeOf(context).height*0.01,),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Center(
@@ -346,7 +346,7 @@ class _SortTextState extends State<sortText> {
                     child: Text(
                       "CHECK",
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: MediaQuery.sizeOf(context).height*0.025,
                         color: dataInput.isEmpty
                             ? const Color.fromRGBO(166, 166, 166, 1.0)
                             : Colors.white,

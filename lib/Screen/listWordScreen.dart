@@ -341,8 +341,8 @@ class _listWordScreen extends State<listWordScreen>{
                                           size: 150, // Đảm bảo kích thước bên trong widget QrImageView
                                         )
                                     );
-                                                                    } catch (e) {
-                                    print("Error: $e");
+                                  } catch (e) {
+                                      print("Error: $e");
                                   }
                                 }
                                 else {
@@ -499,7 +499,7 @@ class _listWordScreen extends State<listWordScreen>{
       ),
     );
 
-    overlay?.insert(overlayEntry);
+    overlay.insert(overlayEntry);
 
     Future.delayed(Duration(seconds: 3), () {
       overlayEntry.remove();
@@ -616,7 +616,7 @@ class _listWordScreen extends State<listWordScreen>{
                         );
                       },
                       child: Container(
-                        width: 250,
+                        width: MediaQuery.sizeOf(context).width*0.5,
                         height: MediaQuery.sizeOf(context).width * 0.15,
                         decoration: const BoxDecoration(
                           color: Color.fromRGBO(20, 195, 142, 1.0),
@@ -624,8 +624,8 @@ class _listWordScreen extends State<listWordScreen>{
                         ),
                         child: Center(
                           child: Text(
-                            "勉強",
-                            style: TextStyle(color: Colors.white, fontSize: 25),
+                            "Học Từ",
+                            style: TextStyle(color: Colors.white, fontSize: MediaQuery.sizeOf(context).height*0.025, fontFamily: "Itim"),
                           ),
                         ),
                       ),

@@ -11,68 +11,95 @@ class wrongTab extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 250,
-        width: MediaQuery.sizeOf(context).width,
-        decoration: BoxDecoration(
-            color: Colors.red[100],
-
-            borderRadius: BorderRadius.vertical(
-                top: Radius.circular(20)
-            )
+      constraints: BoxConstraints(
+        minHeight: MediaQuery.sizeOf(context).height * 0.2, // Độ cao tối thiểu
+      ),
+      height: MediaQuery.sizeOf(context).height * 0.25,
+      width: MediaQuery.sizeOf(context).width,
+      decoration: BoxDecoration(
+        color: Colors.red[100],
+        borderRadius: const BorderRadius.vertical(
+          top: Radius.circular(20),
         ),
-        child: Padding(
-          padding: EdgeInsets.all(20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Icon(Icons.cancel, color: Colors.red, size: 40,),
-                  SizedBox(width: 10,),
-                  Container(
-                    width: MediaQuery.sizeOf(context).width*0.7,
-                    child: const AutoSizeText("Không Chính Xác", style: TextStyle(color: Colors.red, fontSize: 30, fontWeight: FontWeight.bold),),
-                  )
-                ],
-              ),
-              Row(
-                children: [
-                  const Text("Câu trả lời đúng là: ", style: TextStyle(color: Colors.red, fontSize: 20),),
-                  Text(rightAwnser, style: TextStyle(color: Colors.red, fontSize: 20, fontWeight: FontWeight.bold),),
-                ],
-              ),
-              SizedBox(height: 20,),
-              Align(
-                alignment: Alignment.bottomLeft,
-                child: GestureDetector(
-                  onTap: (){
-                    nextQuestion();
-                    Navigator.pop(context);
-                  },
-                  child: Container(
-                    width: MediaQuery.sizeOf(context).width - 40,
-                    height: MediaQuery.sizeOf(context).width*0.15,
-                    decoration: const BoxDecoration(
-                        color: Color.fromRGBO(255, 103, 103, 1.0),
-                        borderRadius: BorderRadius.all(Radius.circular(20)),
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.red,
-                              offset: Offset(6, 6)
-                          )
-                        ]
-                    ),
-                    child: Center(
-                      child: Text("CONTINUE", style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min, // Đảm bảo không chiếm hết không gian
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Icon(Icons.cancel, color: Colors.red, size: 40),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: AutoSizeText(
+                    "Không Chính Xác",
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontSize: MediaQuery.sizeOf(context).width * 0.07,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
-              )
-            ],
-          ),
-        )
+              ],
+            ),
+            const SizedBox(height: 10), // Khoảng cách nhỏ
+            Row(
+              children: [
+                Text(
+                  "Câu trả lời đúng là: ",
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontSize: MediaQuery.sizeOf(context).width * 0.045,
+                  ),
+                ),
+                Text(
+                  rightAwnser,
+                  style: const TextStyle(
+                    color: Colors.red,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const Spacer(), // Đẩy nút xuống dưới
+            GestureDetector(
+              onTap: () {
+                nextQuestion();
+                Navigator.pop(context);
+              },
+              child: Container(
+                width: MediaQuery.sizeOf(context).width - 40,
+                height: MediaQuery.sizeOf(context).width * 0.15,
+                decoration: const BoxDecoration(
+                  color: Color.fromRGBO(255, 103, 103, 1.0),
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.red,
+                      offset: Offset(6, 6),
+                    ),
+                  ],
+                ),
+                child: Center(
+                  child: Text(
+                    "CONTINUE",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: MediaQuery.sizeOf(context).width * 0.04,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
+
 
 }

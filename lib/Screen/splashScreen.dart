@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:japaneseapp/Config/dataHelper.dart';
-import 'package:japaneseapp/Screen/dashboardScreen.dart';
 import 'package:japaneseapp/Screen/tabScreen.dart';
 import 'package:japaneseapp/Screen/tutorialScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,7 +20,7 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
   late Animation<Offset> _animation;
 
   String version_check = "", message_old_version = "";
-  String version = "1.2.0";
+  String version = "1.2.3";
   @override
   void initState() {
     super.initState();
@@ -111,11 +110,11 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
                                   await setFlag("firstJoint", true);
                                   Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => tutorialScreen()));
+                                  MaterialPageRoute(builder: (context) => TabScreen()));
                                 } else {
                                   Navigator.push(
                                     context,
-                                    MaterialPageRoute(builder: (context) => dashboardScreen())
+                                    MaterialPageRoute(builder: (context) => TabScreen())
                                   );
                                 }
                               },
@@ -169,7 +168,6 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
 
   Future<void> _initializeDatabase() async {
     // Khởi tạo cơ sở dữ liệu và gọi await để chờ cơ sở dữ liệu được tạo
-    final db = await DatabaseHelper.instance.database;
     await createDataLevel();
     await Future.delayed(Duration(seconds: 3));
 
@@ -195,8 +193,21 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
       );
     } else {
       Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => TabScreen())
+        context,
+        PageRouteBuilder(
+          transitionDuration: const Duration(milliseconds: 800), // Tăng thời gian chuyển đổi
+          pageBuilder: (context, animation, secondaryAnimation) => TabScreen(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            var tween = Tween(begin: const Offset(1.0, 0.0), end: Offset.zero)
+                .chain(CurveTween(curve: Curves.easeInOut));
+            var offsetAnimation = animation.drive(tween);
+
+            return SlideTransition(
+              position: offsetAnimation,
+              child: child,
+            );
+          },
+        ),
       );
     }
   }

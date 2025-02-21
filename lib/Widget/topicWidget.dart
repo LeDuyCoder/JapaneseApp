@@ -38,9 +38,28 @@ class _topicWidget extends State<topicWidget>{
           padding: EdgeInsets.only(left: 10),
           child: GestureDetector(
             onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder: (ctx) => listWordScreen(topicName: widget.nameTopic, reloadDashboard: () {
-                widget.reloadDashBoard();
-              },)));
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  transitionDuration: const Duration(milliseconds: 500),
+                  pageBuilder: (context, animation, secondaryAnimation) => listWordScreen(
+                    topicName: widget.nameTopic,
+                    reloadDashboard: () {
+                      widget.reloadDashBoard();
+                    },
+                  ),
+                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                    var scaleAnimation = Tween(begin: 0.0, end: 1.0).animate(
+                      CurvedAnimation(parent: animation, curve: Curves.easeInOut),
+                    );
+
+                    return ScaleTransition(
+                      scale: scaleAnimation,
+                      child: child,
+                    );
+                  },
+                ),
+              );
             },
             child: Container(
               child: Stack(

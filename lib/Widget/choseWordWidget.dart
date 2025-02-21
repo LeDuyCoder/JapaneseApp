@@ -43,7 +43,7 @@ class _choseWordWidgetState extends State<choseWordWidget> {
             widget.textShow,
             style: TextStyle(
               fontFamily: "indieflower",
-              fontSize: 40,
+              fontSize: MediaQuery.sizeOf(context).height*0.03,
               color: widget.isChose ? Colors.blue : Colors.black,
             ),
             textAlign: TextAlign.center,

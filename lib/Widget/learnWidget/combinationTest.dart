@@ -75,11 +75,11 @@ class _combinationTest extends State<combinationTest>{
           child: Column(
             children: [
 
-              const Padding(
+              Padding(
                 padding: EdgeInsets.only(left: 10),
                 child: Row(
                   children: [
-                    Text("Match Colume A To Colume B", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
+                    Text("Match Colume A To Colume B", style: TextStyle(fontSize: MediaQuery.sizeOf(context).width*0.05, fontWeight: FontWeight.bold),),
                   ],
                 ),
               ),
@@ -180,7 +180,7 @@ class _combinationTest extends State<combinationTest>{
                       ]
                   ),
                   child: Center(
-                    child: Text("CHECK", style: TextStyle(color: listComplete.length == 4 ? Colors.white : Colors.grey, fontSize: 20, fontWeight: FontWeight.bold),),
+                    child: Text("CHECK", style: TextStyle(color: listComplete.length == 4 ? Colors.white : Colors.grey, fontSize: MediaQuery.sizeOf(context).width*0.045, fontWeight: FontWeight.bold),),
                   ),
                 ),
               ),

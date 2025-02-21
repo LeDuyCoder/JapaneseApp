@@ -45,18 +45,20 @@ class _dashboardScreen extends State<dashboardScreen>{
     setState(() {});
   }
 
-  void showDialogSuccessSaveData(){
-    showDialog(
+  void showDialogSuccessSaveData() {
+    showGeneralDialog(
       barrierDismissible: true,
       context: context,
-      builder: (BuildContext context) {
+      barrierLabel: '',
+      transitionDuration: const Duration(milliseconds: 500), // Thời gian animation
+      pageBuilder: (context, animation, secondaryAnimation) {
         return Dialog(
           backgroundColor: Colors.white,
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(10),
               bottomRight: Radius.circular(10),
-            ), // Bo góc popup
+            ),
           ),
           child: StatefulBuilder(
             builder: (BuildContext context, void Function(void Function()) setState) {
@@ -64,8 +66,8 @@ class _dashboardScreen extends State<dashboardScreen>{
                 decoration: const BoxDecoration(
                   border: Border(
                     top: BorderSide(
-                      color: Color.fromRGBO(20, 195, 142, 1.0), // Màu xanh cạnh trên ngoài cùng
-                      width: 10.0, // Độ dày của cạnh trên
+                      color: Color.fromRGBO(20, 195, 142, 1.0),
+                      width: 10.0,
                     ),
                   ),
                 ),
@@ -87,7 +89,7 @@ class _dashboardScreen extends State<dashboardScreen>{
                         const Padding(
                           padding: EdgeInsets.only(left: 16, right: 16, top: 5),
                           child: Text(
-                            'Save data vocabulay success',
+                            'Save data vocabulary success',
                             style: TextStyle(fontSize: 15),
                           ),
                         ),
@@ -131,6 +133,19 @@ class _dashboardScreen extends State<dashboardScreen>{
               );
             },
           ),
+        );
+      },
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        var begin = const Offset(0.0, -1.0);  // Vị trí ban đầu (ngoài màn hình, trên cùng)
+        var end = Offset.zero;
+        var curve = Curves.easeInOut;
+
+        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+        var offsetAnimation = animation.drive(tween);
+
+        return SlideTransition(
+          position: offsetAnimation,
+          child: child,
         );
       },
     );
@@ -379,444 +394,472 @@ class _dashboardScreen extends State<dashboardScreen>{
     }
   }
 
-
   void showPopupAddFolder() {
+    AnimationController controller = AnimationController(
+      duration: const Duration(milliseconds: 500),
+      vsync: Navigator.of(context), // Cần đảm bảo context này hỗ trợ TickerProvider
+    );
+
+    Animation<Offset> animation = Tween<Offset>(
+      begin: const Offset(0, -1), // Xuất hiện từ trên xuống
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: controller,
+      curve: Curves.easeOut,
+    ));
+
+    controller.forward();
+
     showDialog(
       barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
-        return Dialog(
-          backgroundColor: Colors.white,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(10),
-              bottomRight: Radius.circular(10),
-            ), // Bo góc popup
-          ),
-          child: StatefulBuilder(
-            builder: (BuildContext context, void Function(void Function()) setState) {
-              return Container(
-                decoration: const BoxDecoration(
-                  border: Border(
-                    top: BorderSide(
-                      color: Color.fromRGBO(20, 195, 142, 1.0), // Màu xanh cạnh trên ngoài cùng
-                      width: 10.0, // Độ dày của cạnh trên
-                    ),
+        return StatefulBuilder(
+          builder: (BuildContext context, void Function(void Function()) setState) {
+            return SlideTransition(
+              position: animation,
+              child: Dialog(
+                backgroundColor: Colors.white,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(10),
+                    bottomRight: Radius.circular(10),
                   ),
                 ),
-                child: Stack(
-                  children: [
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.all(16.0),
-                          child: Text(
-                            'Add New Folder',
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.all(16.0),
-                          width: MediaQuery.sizeOf(context).width - 100,
-                          height: 100,
-                          child: TextField(
-                            controller: nameFolderInput,
-                            decoration: InputDecoration(
-                              hintText: "Name folder",
-                              hintStyle: TextStyle(color: Colors.grey), // Màu chữ gợi ý
-                              filled: true,
-                              fillColor: Colors.white,
-                              contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 12.0,
-                                vertical: 20.0,
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(
-                                  color: Colors.grey,
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              errorBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(
-                                  color: Colors.red,
-                                  width: 3.0,
-                                ),
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              errorText: textErrorName,
+                child: Container(
+                  decoration: const BoxDecoration(
+                    border: Border(
+                      top: BorderSide(
+                        color: Color.fromRGBO(20, 195, 142, 1.0),
+                        width: 10.0,
+                      ),
+                    ),
+                  ),
+                  child: Stack(
+                    children: [
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: Text(
+                              'Add New Folder',
+                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                             ),
                           ),
-                        ),
-                        Align(
-                          alignment: Alignment.bottomRight,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    textErrorName = null;
-                                    nameFolderInput.text = "";
-                                  });
-                                  Navigator.of(context).pop();
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.only(top: 10, bottom: 10, right: 5),
-                                  child: Container(
-                                    width: 100,
-                                    height: 50,
-                                    decoration: const BoxDecoration(
-                                      color: Color.fromRGBO(255, 32, 32, 1.0),
-                                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                                    ),
-                                    child: const Center(
-                                      child: Text(
-                                        "Cancel",
-                                        style: TextStyle(color: Colors.white, fontSize: 15),
-                                      ),
-                                    ),
-                                  ),
+                          Container(
+                            padding: const EdgeInsets.all(16.0),
+                            width: MediaQuery.sizeOf(context).width - 100,
+                            height: 100,
+                            child: TextField(
+                              controller: nameFolderInput,
+                              decoration: InputDecoration(
+                                hintText: "Name folder",
+                                hintStyle: TextStyle(color: Colors.grey),
+                                filled: true,
+                                fillColor: Colors.white,
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 12.0,
+                                  vertical: 20.0,
                                 ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: const BorderSide(color: Colors.grey, width: 2.0),
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                  borderSide: const BorderSide(color: Colors.red, width: 3.0),
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                errorText: textErrorName,
                               ),
-                              GestureDetector(
-                                onTap: () async {
-                                  setState((){
-                                    isLoadingCreateNewFolder = !isLoadingCreateNewFolder;
-                                  });
-
-                                  if(await DatabaseHelper.instance.hasFolderName(nameFolderInput.text)){
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.bottomRight,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
                                     setState(() {
-                                      textErrorName = "Name Folder Exist";
+                                      textErrorName = null;
+                                      nameFolderInput.text = "";
                                     });
-                                  }else{
-                                    await DatabaseHelper.instance.insertNewFolder(nameFolderInput.text);
-                                    await reload();
+                                    controller.dispose();
                                     Navigator.of(context).pop();
-                                  }
-
-                                  setState((){
-                                    isLoadingCreateNewFolder = !isLoadingCreateNewFolder;
-                                  });
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10),
-                                  child: Container(
-                                    width: 100,
-                                    height: 50,
-                                    decoration: const BoxDecoration(
-                                      color: Color.fromRGBO(184, 241, 176, 1),
-                                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                                    ),
-                                    child: const Center(
-                                      child: Text(
-                                        "Create",
-                                        style: TextStyle(color: Colors.black, fontSize: 15),
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(top: 10, bottom: 10, right: 5),
+                                    child: Container(
+                                      width: 100,
+                                      height: 50,
+                                      decoration: const BoxDecoration(
+                                        color: Color.fromRGBO(255, 32, 32, 1.0),
+                                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                                      ),
+                                      child: const Center(
+                                        child: Text(
+                                          "Cancel",
+                                          style: TextStyle(color: Colors.white, fontSize: 15),
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              )
-                            ],
+                                GestureDetector(
+                                  onTap: () async {
+                                    setState(() {
+                                      isLoadingCreateNewFolder = true;
+                                    });
+
+                                    if (await DatabaseHelper.instance.hasFolderName(nameFolderInput.text)) {
+                                      setState(() {
+                                        textErrorName = "Name Folder Exist";
+                                        isLoadingCreateNewFolder = false;
+                                      });
+                                    } else {
+                                      await DatabaseHelper.instance.insertNewFolder(nameFolderInput.text);
+                                      await reload();
+                                      controller.dispose();
+                                      Navigator.of(context).pop();
+                                    }
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10),
+                                    child: Container(
+                                      width: 100,
+                                      height: 50,
+                                      decoration: const BoxDecoration(
+                                        color: Color.fromRGBO(184, 241, 176, 1),
+                                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                                      ),
+                                      child: const Center(
+                                        child: Text(
+                                          "Create",
+                                          style: TextStyle(color: Colors.black, fontSize: 15),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      if (isLoadingCreateNewFolder)
+                        Container(
+                          height: 250,
+                          color: const Color.fromRGBO(145, 145, 145, 0.3),
+                          child: const Center(
+                            child: CircularProgressIndicator(color: Colors.green),
                           ),
                         ),
-                      ],
-                    ),
-                    isLoadingCreateNewFolder
-                        ? Container(
-                      height: 250,
-                      color: const Color.fromRGBO(145, 145, 145, 0.3),
-                      child: const Center(
-                        child: CircularProgressIndicator(
-                          color: Colors.green,
-                        ),
-                      ),
-                    )
-                        : const SizedBox(),
-                  ],
+                    ],
+                  ),
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          },
         );
       },
     );
   }
 
   void showPopupAddTopic() {
+    AnimationController controller = AnimationController(
+      duration: const Duration(milliseconds: 500),
+      vsync: Navigator.of(context),
+    );
+
+    Animation<Offset> animation = Tween<Offset>(
+      begin: const Offset(0, -1), // Animation xuất hiện từ trên xuống
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: controller,
+      curve: Curves.easeOut,
+    ));
+
+    controller.forward(); // Khởi chạy animation
+
     showDialog(
-      barrierDismissible: false,
+      barrierDismissible: true,
       context: context,
       builder: (BuildContext context) {
-        return Dialog(
-          backgroundColor: Colors.white,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(10),
-              bottomRight: Radius.circular(10),
-            ), // Bo góc popup
-          ),
-          child: StatefulBuilder(
-            builder: (BuildContext context, void Function(void Function()) setState) {
-              return Container(
-                decoration: const BoxDecoration(
-                  border: Border(
-                    top: BorderSide(
-                      color: Color.fromRGBO(20, 195, 142, 1.0), // Màu xanh cạnh trên ngoài cùng
-                      width: 10.0, // Độ dày của cạnh trên
-                    ),
+        return StatefulBuilder(
+          builder: (BuildContext context, void Function(void Function()) setState) {
+            return SlideTransition(
+              position: animation,
+              child: Dialog(
+                backgroundColor: Colors.white,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(10),
+                    bottomRight: Radius.circular(10),
                   ),
                 ),
-                child: Stack(
-                  children: [
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.all(16.0),
-                          child: Text(
-                            'Add New Topic',
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.all(16.0),
-                          width: MediaQuery.sizeOf(context).width - 100,
-                          height: 100,
-                          child: TextField(
-                            controller: nameTopicInput,
-                            decoration: InputDecoration(
-                              hintText: "Name Topic",
-                              hintStyle: TextStyle(color: Colors.grey), // Màu chữ gợi ý
-                              filled: true,
-                              fillColor: Colors.white,
-                              contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 12.0,
-                                vertical: 20.0,
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(
-                                  color: Colors.grey,
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              errorBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(
-                                  color: Colors.red,
-                                  width: 3.0,
-                                ),
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              errorText: textErrorName,
+                child: Container(
+                  decoration: const BoxDecoration(
+                    border: Border(
+                      top: BorderSide(
+                        color: Color.fromRGBO(20, 195, 142, 1.0),
+                        width: 10.0,
+                      ),
+                    ),
+                  ),
+                  child: Stack(
+                    children: [
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: Text(
+                              'Add New Topic',
+                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                             ),
                           ),
-                        ),
-                        Align(
-                          alignment: Alignment.bottomRight,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    textErrorName = null;
-                                    nameFolderInput.text = "";
-                                  });
-                                  Navigator.of(context).pop();
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.only(top: 10, bottom: 10, right: 5),
-                                  child: Container(
-                                    width: 100,
-                                    height: 50,
-                                    decoration: const BoxDecoration(
-                                      color: Color.fromRGBO(255, 32, 32, 1.0),
-                                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                                    ),
-                                    child: const Center(
-                                      child: Text(
-                                        "Cancel",
-                                        style: TextStyle(color: Colors.white, fontSize: 15),
-                                      ),
-                                    ),
-                                  ),
+                          Container(
+                            padding: const EdgeInsets.all(16.0),
+                            width: MediaQuery.sizeOf(context).width - 100,
+                            height: 100,
+                            child: TextField(
+                              controller: nameTopicInput,
+                              decoration: InputDecoration(
+                                hintText: "Name Topic",
+                                hintStyle: const TextStyle(color: Colors.grey),
+                                filled: true,
+                                fillColor: Colors.white,
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 12.0,
+                                  vertical: 20.0,
                                 ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: const BorderSide(color: Colors.grey, width: 2.0),
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                  borderSide: const BorderSide(color: Colors.red, width: 3.0),
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                errorText: textErrorName,
                               ),
-                              GestureDetector(
-                                onTap: () async {
-                                  setState((){
-                                    isLoadingCreateNewFolder = !isLoadingCreateNewFolder;
-                                  });
-
-                                  if(await DatabaseHelper.instance.hasTopicName(nameTopicInput.text)){
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.bottomRight,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
                                     setState(() {
-                                      textErrorName = "Name Topic Exist";
+                                      textErrorName = null;
+                                      nameFolderInput.text = "";
                                     });
-                                  }else{
-                                    //tranfer to screen add word
-                                    Navigator.pop(context);
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => addWordScreen(topicName: nameTopicInput.text, reload: () { setState((){});  },)));
-                                  }
 
-                                  setState((){
-                                    isLoadingCreateNewFolder = !isLoadingCreateNewFolder;
-                                  });
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10),
-                                  child: Container(
-                                    width: 100,
-                                    height: 50,
-                                    decoration: const BoxDecoration(
-                                      color: Color.fromRGBO(184, 241, 176, 1),
-                                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                                    ),
-                                    child: const Center(
-                                      child: Text(
-                                        "Create",
-                                        style: TextStyle(color: Colors.black, fontSize: 15),
+                                    controller.dispose(); // Hủy controller trước khi đóng
+                                    Navigator.pop(context);
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(top: 10, bottom: 10, right: 5),
+                                    child: Container(
+                                      width: 100,
+                                      height: 50,
+                                      decoration: const BoxDecoration(
+                                        color: Color.fromRGBO(255, 32, 32, 1.0),
+                                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                                      ),
+                                      child: const Center(
+                                        child: Text(
+                                          "Cancel",
+                                          style: TextStyle(color: Colors.white, fontSize: 15),
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              )
-                            ],
+                                GestureDetector(
+                                  onTap: () async {
+                                    setState(() {
+                                      isLoadingCreateNewFolder = true;
+                                    });
+
+                                    if (await DatabaseHelper.instance.hasTopicName(nameTopicInput.text)) {
+                                      setState(() {
+                                        textErrorName = "Name Topic Exist";
+                                        isLoadingCreateNewFolder = false;
+                                      });
+                                    } else {
+                                      isLoadingCreateNewFolder = false;
+                                      controller.dispose();
+                                      Navigator.pop(context);
+                                    }
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10),
+                                    child: Container(
+                                      width: 100,
+                                      height: 50,
+                                      decoration: const BoxDecoration(
+                                        color: Color.fromRGBO(184, 241, 176, 1),
+                                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                                      ),
+                                      child: const Center(
+                                        child: Text(
+                                          "Create",
+                                          style: TextStyle(color: Colors.black, fontSize: 15),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      if (isLoadingCreateNewFolder)
+                        Container(
+                          height: 250,
+                          color: const Color.fromRGBO(145, 145, 145, 0.3),
+                          child: const Center(
+                            child: CircularProgressIndicator(color: Colors.green),
                           ),
                         ),
-                      ],
-                    ),
-                    isLoadingCreateNewFolder
-                        ? Container(
-                      height: 250,
-                      color: const Color.fromRGBO(145, 145, 145, 0.3),
-                      child: const Center(
-                        child: CircularProgressIndicator(
-                          color: Colors.green,
-                        ),
-                      ),
-                    )
-                        : const SizedBox(),
-                  ],
+                    ],
+                  ),
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          },
         );
       },
     );
   }
 
   void showPopupInput() {
-    showDialog(
-      barrierDismissible: false,
+    showGeneralDialog(
+      barrierDismissible: true,
       context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          backgroundColor: Colors.white,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(10),
-              bottomRight: Radius.circular(10),
-            ), // Bo góc popup
-          ),
-          child: StatefulBuilder(
-            builder: (BuildContext context, void Function(void Function()) setState) {
-              return Container(
-                decoration: const BoxDecoration(
-                  border: Border(
-                    top: BorderSide(
-                      color: Color.fromRGBO(20, 195, 142, 1.0), // Màu xanh cạnh trên ngoài cùng
-                      width: 10.0, // Độ dày của cạnh trên
+      barrierLabel: "",
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return StatefulBuilder(
+          builder: (BuildContext context, void Function(void Function()) setState) {
+            return Align(
+              alignment: Alignment.topCenter,
+              child: SlideTransition(
+                position: Tween<Offset>(
+                  begin: const Offset(0, -1), // Bắt đầu từ bên ngoài phía trên
+                  end: Offset.zero,           // Đến vị trí giữa màn hình
+                ).animate(CurvedAnimation(
+                  parent: animation,
+                  curve: Curves.easeInOut,
+                )),
+                child: Dialog(
+                  backgroundColor: Colors.white,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(10),
+                      bottomRight: Radius.circular(10),
                     ),
                   ),
-                ),
-                child: Stack(
-                  children: [
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.all(16.0),
-                          child: Text(
-                            'Type Input',
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      border: Border(
+                        top: BorderSide(
+                          color: Color.fromRGBO(20, 195, 142, 1.0),
+                          width: 10.0,
                         ),
-                        Align(
-                          alignment: Alignment.center,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              GestureDetector(
-                                onTap: () async {
-                                  await _pickFile();
-                                },
-                                child: Padding(
-                                  padding: EdgeInsets.only(top: 10, bottom: 10, right: 5),
-                                  child: Container(
-                                    width: MediaQuery.sizeOf(context).width*0.3,
-                                    height: MediaQuery.sizeOf(context).width*0.1,
-                                    decoration: const BoxDecoration(
-                                      color: Colors.blue,
-                                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                                    ),
-                                    child: const Center(
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Icon(Icons.file_upload_outlined, color: Colors.black,size: 20,),
-                                          SizedBox(width: 10,),
-                                          Text(
-                                            "File",
-                                            style: TextStyle(color: Colors.white, fontSize: 15),
-                                          ),
-                                        ],
-                                      )
-                                    ),
-                                  ),
-                                ),
+                      ),
+                    ),
+                    child: Stack(
+                      children: [
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.all(16.0),
+                              child: Text(
+                                'Type Input',
+                                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                               ),
-                              GestureDetector(
-                                onTap: () async {
-                                  Navigator.push(context, MaterialPageRoute(builder: (ctx)=>qrScreen()));
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10),
-                                  child: Container(
-                                    width: MediaQuery.sizeOf(context).width*0.3,
-                                    height: MediaQuery.sizeOf(context).width*0.1,
-                                    decoration: const BoxDecoration(
-                                      color: Color.fromRGBO(184, 241, 176, 1),
-                                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                                    ),
-                                    child: const Center(
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Icon(Icons.qr_code, color: Colors.black,size: 20,),
-                                          SizedBox(width: 10,),
-                                          Text(
-                                            "QR",
-                                            style: TextStyle(color: Colors.black, fontSize: 15),
+                            ),
+                            Align(
+                              alignment: Alignment.center,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () async {
+                                      await _pickFile();
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(top: 10, bottom: 10, right: 5),
+                                      child: Container(
+                                        width: MediaQuery.sizeOf(context).width * 0.3,
+                                        height: MediaQuery.sizeOf(context).width * 0.1,
+                                        decoration: const BoxDecoration(
+                                          color: Colors.blue,
+                                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                                        ),
+                                        child: const Center(
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Icon(Icons.file_upload_outlined, color: Colors.black, size: 20),
+                                              SizedBox(width: 10),
+                                              Text(
+                                                "File",
+                                                style: TextStyle(color: Colors.white, fontSize: 15),
+                                              ),
+                                            ],
                                           ),
-                                        ],
-                                      )
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
-                              )
-                            ],
-                          ),
+                                  GestureDetector(
+                                    onTap: () async {
+                                      Navigator.push(context, MaterialPageRoute(builder: (ctx) => qrScreen()));
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10),
+                                      child: Container(
+                                        width: MediaQuery.sizeOf(context).width * 0.3,
+                                        height: MediaQuery.sizeOf(context).width * 0.1,
+                                        decoration: const BoxDecoration(
+                                          color: Color.fromRGBO(184, 241, 176, 1),
+                                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                                        ),
+                                        child: const Center(
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Icon(Icons.qr_code, color: Colors.black, size: 20),
+                                              SizedBox(width: 10),
+                                              Text(
+                                                "QR",
+                                                style: TextStyle(color: Colors.black, fontSize: 15),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ],
+                  ),
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          },
         );
       },
     );

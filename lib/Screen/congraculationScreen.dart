@@ -63,9 +63,10 @@ class congraculationScreen extends StatelessWidget{
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset("assets/character/character2.png", scale: 0.8,),
-            SizedBox(height: 20,),
-            Text("Perfect Lesson", style: TextStyle(fontFamily: "indieflower", fontSize: 40, color: Color.fromRGBO(20, 195, 142, 1.0)),),
-            Text("You make no mistake in lesson", style: TextStyle(fontFamily: "indieflower", fontSize: 20, color: Colors.black),),
+            SizedBox(height: MediaQuery.sizeOf(context).height*0.02,),
+            Text("Hoàn Thành", style: TextStyle(fontFamily: "indieflower", fontSize: MediaQuery.sizeOf(context).height*0.04, color: Color.fromRGBO(20, 195, 142, 1.0)),),
+            Text("Bạn Thật Tuyệt Vời", style: TextStyle(fontFamily: "indieflower", fontSize: MediaQuery.sizeOf(context).height*0.02, color: Colors.black),),
+            SizedBox(height: MediaQuery.sizeOf(context).height*0.02,),
             Container(
               width: double.infinity,
               child:Padding(
@@ -74,18 +75,18 @@ class congraculationScreen extends StatelessWidget{
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                      width: 180,
-                      height: 130,
+                      width: MediaQuery.sizeOf(context).width*0.4,
+                      height: MediaQuery.sizeOf(context).width*0.30,
                       decoration: BoxDecoration(
                           color: Color.fromRGBO(20, 195, 142, 1.0),
                           borderRadius: BorderRadius.circular(20)
                       ),
                       child: Column(
                         children: [
-                          Text("Commited", style: TextStyle(fontFamily: "indieflower", color: Colors.white, fontSize: 18),),
+                          Text("Commited", style: TextStyle(fontFamily: "indieflower", color: Colors.white, fontSize: MediaQuery.sizeOf(context).width*0.04),),
                           Container(
-                            width: 170,
-                            height: 100,
+                            width: MediaQuery.sizeOf(context).width*0.38,
+                            height: MediaQuery.sizeOf(context).width*0.225,
                             decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(20)
@@ -95,7 +96,7 @@ class congraculationScreen extends StatelessWidget{
                               children: [
                                 Icon(Icons.timer_sharp, color: Color.fromRGBO(20, 195, 142, 1.0), size: 60,),
                                 SizedBox(width: 10,),
-                                Text(formatTime(timeTest*1.0), style: TextStyle(fontSize: 40, fontFamily: "indieflower", color: Color.fromRGBO(20, 195, 142, 1.0))),
+                                Text(formatTime(timeTest*1.0), style: TextStyle(fontSize: MediaQuery.sizeOf(context).height*0.030, fontFamily: "indieflower", color: Color.fromRGBO(20, 195, 142, 1.0))),
                               ],
                             ),
                           )
@@ -104,18 +105,18 @@ class congraculationScreen extends StatelessWidget{
                     ),
                     SizedBox(width: 10,),
                     Container(
-                      width: 180,
-                      height: 130,
+                      width: MediaQuery.sizeOf(context).width*0.4,
+                      height: MediaQuery.sizeOf(context).width*0.30,
                       decoration: BoxDecoration(
                           color: Color.fromRGBO(255, 174, 9, 1.0),
                           borderRadius: BorderRadius.circular(20)
                       ),
                       child: Column(
                         children: [
-                          const Text("Amazing", style: TextStyle(fontFamily: "indieflower", color: Colors.white, fontSize: 18),),
+                          Text("Amazing", style: TextStyle(fontFamily: "indieflower", color: Colors.white, fontSize: MediaQuery.sizeOf(context).width*0.04),),
                           Container(
-                            width: 170,
-                            height: 100,
+                            width: MediaQuery.sizeOf(context).width*0.38,
+                            height: MediaQuery.sizeOf(context).width*0.225,
                             decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(20)
@@ -125,7 +126,7 @@ class congraculationScreen extends StatelessWidget{
                               children: [
                                 const Icon(MingCute.target_line, color: Color.fromRGBO(255, 174, 9, 1.0), size: 60,),
                                 SizedBox(width: 10,),
-                                Text("${persentAmazing}%", style: TextStyle(fontSize: 40, fontFamily: "indieflower", color: Color.fromRGBO(255, 174, 9, 1.0))),
+                                Text("${persentAmazing}%", style: TextStyle(fontSize: MediaQuery.sizeOf(context).height*0.030, fontFamily: "indieflower", color: Color.fromRGBO(255, 174, 9, 1.0))),
                               ],
                             ),
                           )
@@ -136,7 +137,7 @@ class congraculationScreen extends StatelessWidget{
                 ),
               ),
             ),
-            SizedBox(height: 20,),
+            SizedBox(height: MediaQuery.sizeOf(context).height*0.03,),
             GestureDetector(
                 onTap: () async {
                   // Lọc danh sách với điều kiện
@@ -171,7 +172,7 @@ class congraculationScreen extends StatelessWidget{
                 },
                 child: Container(
                 width: MediaQuery.sizeOf(context).width - 40,
-                height: 80,
+                height: MediaQuery.sizeOf(context).width * 0.15,
                 decoration: const BoxDecoration(
                     color: Color.fromRGBO(97, 213, 88, 1.0),
                     borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -183,7 +184,7 @@ class congraculationScreen extends StatelessWidget{
                     ]
                 ),
                 child: Center(
-                  child: Text("CONTINUE", style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),),
+                  child: Text("CONTINUE", style: TextStyle(color: Colors.white, fontSize: MediaQuery.sizeOf(context).width*0.05, fontWeight: FontWeight.bold),),
                 ),
               ),
             ),

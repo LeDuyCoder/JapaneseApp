@@ -301,9 +301,8 @@ class _wordWidget extends State<wordWidget>{
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Padding(
-                        padding: EdgeInsets.only(left: 5),
-                        child: Text(widget.wordText.vocabulary, style: TextStyle(fontFamily: "aoboshione", fontSize: 20,), textAlign: TextAlign.center,),
+                      Center(
+                        child: Text(widget.wordText.vocabulary, style: TextStyle(fontFamily: "aoboshione", fontSize: MediaQuery.sizeOf(context).height*0.02,), textAlign: TextAlign.center,),
                       )
                     ],
                   )

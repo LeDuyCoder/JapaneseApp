@@ -97,8 +97,8 @@ class _choseTestState extends State<choseTest> {
                     Container(
                       width: MediaQuery.sizeOf(context).width*0.9,
                       child: AutoSizeText(
-                        "What mean of ${widget.data["word"]}",
-                        style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
+                        "Nghĩa của từ ${widget.data["word"]}",
+                        style: TextStyle(fontSize: MediaQuery.sizeOf(context).height*0.03, fontWeight: FontWeight.bold),
                       ),
                     )
                   ],
@@ -131,7 +131,7 @@ class _choseTestState extends State<choseTest> {
                 ),
               ),
 
-              SizedBox(height: 50,),
+              SizedBox(height: MediaQuery.sizeOf(context).height*0.05,),
 
               AnimatedContainer(
                 duration: const Duration(milliseconds: 1000), // Thời gian chuyển đổi
@@ -169,7 +169,7 @@ class _choseTestState extends State<choseTest> {
                             ]
                         ),
                         child: Center(
-                          child: Text("CHECK", style: TextStyle(color: positionChose == 0 ? Colors.grey: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),),
+                          child: Text("CHECK", style: TextStyle(color: positionChose == 0 ? Colors.grey: Colors.white, fontSize: MediaQuery.sizeOf(context).height*0.025, fontWeight: FontWeight.bold),),
                         ),
                     ),
                   ),

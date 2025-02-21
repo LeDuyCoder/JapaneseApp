@@ -131,16 +131,16 @@ class _miniGameWidget extends State<miniGameWidget>{
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(widget.title, style: TextStyle(fontSize: 30, fontFamily: "Itim", color: Colors.white),),
-                        Text(widget.descrition, style: TextStyle(fontSize: 20, fontFamily: "Itim", color: Colors.white),),
+                        Text(widget.title, style: TextStyle(fontSize: MediaQuery.sizeOf(context).height*0.03, fontFamily: "Itim", color: Colors.white),),
+                        Text(widget.descrition, style: TextStyle(fontSize: MediaQuery.sizeOf(context).height*0.02, fontFamily: "Itim", color: Colors.white),),
                         data.data! == 0 || !data.hasData ? Text(
                           "Trạng Thái: ${widget.lock ? "Chưa Mở" : "Mở"}",
-                          style: const TextStyle(fontSize: 20, fontFamily: "Itim", color: Colors.white),
+                          style: TextStyle(fontSize: MediaQuery.sizeOf(context).height*0.02, fontFamily: "Itim", color: Colors.white),
                         ) : StreamBuilder<int>(
                           stream: timeStream(data.data??0), // Nhận dữ liệu từ Stream
                           builder: (context, snapshot) {
                             if (snapshot.connectionState == ConnectionState.waiting) {
-                              return const Text("Đang tải...", style: TextStyle(fontSize: 20));
+                              return Text("Đang tải...", style: TextStyle(fontSize: MediaQuery.sizeOf(context).height*0.02));
                             }
                             else if (snapshot.hasError) {
                               return Text("Lỗi: ${snapshot.error}");

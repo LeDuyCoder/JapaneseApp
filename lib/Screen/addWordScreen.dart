@@ -8,8 +8,9 @@ import 'package:japaneseapp/Widget/addWordWidget.dart';
 class addWordScreen extends StatefulWidget{
   final String topicName;
   final void Function() reload;
+  final void Function() setIsLoad;
 
-  const addWordScreen({super.key, required this.topicName, required this.reload});
+  const addWordScreen({super.key, required this.topicName, required, required this.setIsLoad, required this.reload});
 
   @override
   State<StatefulWidget> createState() => _addWordScreen();
@@ -260,11 +261,12 @@ class _addWordScreen extends State<addWordScreen>{
         Scaffold(
             resizeToAvoidBottomInset: true,
             appBar: AppBar(
-              title: Container(
-                child: Text(
-                  widget.topicName,
-                  style: TextStyle(fontFamily: "aboshione", fontSize: 20, color: Colors.white),
-                ),
+              leading: IconButton(onPressed: () {
+                Navigator.pop(context);
+              }, icon: const Icon(Icons.arrow_back)),
+              title: Text(
+                widget.topicName,
+                style: TextStyle(fontFamily: "aboshione", fontSize: 20, color: Colors.white),
               ),
               actions: [
                 IconButton(onPressed: (){

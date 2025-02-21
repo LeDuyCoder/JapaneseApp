@@ -98,26 +98,20 @@ class _ListenTextState extends State<listenTest> {
             children: [
               Padding(
                 padding: EdgeInsets.only(left: 10),
-                child: widget.isRetest ? const Row(
+                child: Row(
                   children: [
-                    Icon(Icons.repeat_outlined, size: 30,),
-                    SizedBox(width: 10,),
-                    Text("Mistake", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.orange),),
-                  ],
-                ) : const Row(
-                  children: [
-                    Text("What You Hear", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
+                    Text("What You Hear", style: TextStyle(fontSize: MediaQuery.sizeOf(context).height*0.025, fontWeight: FontWeight.bold),),
                   ],
                 ),
               ),
               Row(
                 children: [
-                  Image.asset("assets/character/character3.png", width: 200),
+                  Image.asset("assets/character/character3.png", width: MediaQuery.sizeOf(context).height*0.2),
                   Container(
                     padding: const EdgeInsets.all(10),
                     margin: const EdgeInsets.symmetric(vertical: 5),
                     width: MediaQuery.sizeOf(context).width*0.5,
-                    height: 120,
+                    height: MediaQuery.sizeOf(context).height*0.12,
                     decoration: const BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
@@ -176,7 +170,7 @@ class _ListenTextState extends State<listenTest> {
                 builder: (context, candidateData, rejectedData) {
                   return Container(
                     width: MediaQuery.sizeOf(context).width,
-                    height: 200,
+                    height: MediaQuery.sizeOf(context).height*0.25,
                     color: Colors.white,
                     child: Center(
                       child: Stack(
@@ -223,7 +217,7 @@ class _ListenTextState extends State<listenTest> {
                   );
                 },
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: MediaQuery.sizeOf(context).height*0.01),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Center(
