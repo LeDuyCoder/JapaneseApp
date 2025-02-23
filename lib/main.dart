@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:japaneseapp/Screen/splashScreen.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 void main() {
   runApp(const MyApp());
@@ -7,7 +8,6 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
 
   // This widget is the root of your application.
   @override

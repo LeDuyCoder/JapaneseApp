@@ -20,6 +20,7 @@ class _choseTestState extends State<choseTest> {
   late Map<int, String> positionAnswer; // Biến lưu trữ vị trí đáp án cố định
   int positionChose = 0;
   final AudioPlayer _audioPlayer = AudioPlayer();
+  bool isPress = false;
 
   @override
   void initState() {
@@ -139,29 +140,54 @@ class _choseTestState extends State<choseTest> {
                 width: MediaQuery.sizeOf(context).width - 40,
                 height: MediaQuery.sizeOf(context).width*0.15,
                 child: GestureDetector(
-                    onTap: (){
-                      if(positionChose == widget.data["numberRight"]){
+                  onTapDown: (_) {
+                    setState(() {
+                      isPress = true;
+                    });
+                  },
+                  onTapUp: (_) {
+                    setState(() {
+                      isPress = false;
+                    });
+                    if (positionChose != 0) {
+                      if (positionChose == widget.data["numberRight"]) {
                         playSound("sound/correct.mp3");
-                        showModalBottomSheet(enableDrag: false,isDismissible: false, context: context, builder: (ctx) => rightTab(nextQuestion: (){
-                          widget.nextQuestion();
-                        }));
-                      }else{
+                        showModalBottomSheet(enableDrag: false,
+                            isDismissible: false,
+                            context: context,
+                            builder: (ctx) =>
+                                rightTab(nextQuestion: () {
+                                  widget.nextQuestion();
+                                }));
+                      } else {
                         playSound("sound/wrong.mp3");
-                        showModalBottomSheet(enableDrag: false,isDismissible: false, context: context, builder: (ctx) => wrongTab(nextQuestion: (){
-                          widget.nextQuestion();
-                        }, rightAwnser: widget.data["anwser"]));
+                        showModalBottomSheet(enableDrag: false,
+                            isDismissible: false,
+                            context: context,
+                            builder: (ctx) =>
+                                wrongTab(nextQuestion: () {
+                                  widget.nextQuestion();
+                                }, rightAwnser: widget.data["anwser"]));
                       }
-                    },
-                    child: Container(
+                    }
+                  },
+                  onTapCancel: () {
+                    setState(() {
+                      isPress = false;
+                    });
+                  },
+                    child: AnimatedContainer(
+                      duration: Duration(milliseconds: 100),
+                      curve: Curves.easeInOut,
+                      transform: Matrix4.translationValues(0, isPress ? 4 : 0, 0),
                         width: MediaQuery.sizeOf(context).width - 40,
                         height: MediaQuery.sizeOf(context).width*0.15,
                         decoration: BoxDecoration(
                             color: positionChose == 0 ? const Color.fromRGBO(
                                 209, 209, 209, 1.0) : const Color.fromRGBO(97, 213, 88, 1.0),
                             borderRadius: BorderRadius.all(Radius.circular(20)),
-                            boxShadow: [
+                            boxShadow: isPress ? [] : [
                               BoxShadow(
-
                                   color: positionChose == 0 ? const Color.fromRGBO(
                                       204, 204, 204, 1.0) : Colors.green,
                                   offset: Offset(6, 6)

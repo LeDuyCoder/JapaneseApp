@@ -37,8 +37,8 @@ class _SortTextState extends State<sortText> {
   List<boxText> dataInput = [];
   final FlutterTts _flutterTts = FlutterTts();
   bool isFirst = true;
-
   bool loadBoxText = true;
+  bool isPress = false;
 
   final AudioPlayer _audioPlayer = AudioPlayer();
 
@@ -271,7 +271,16 @@ class _SortTextState extends State<sortText> {
             child: Align(
               alignment: Alignment.bottomCenter,
               child: GestureDetector(
-                onTap: () async {
+
+                onTapDown: (_) {
+                  setState(() {
+                    isPress = true;
+                  });
+                },
+                onTapUp: (_) async {
+                  setState(() {
+                    isPress = false;
+                  });
                   if(dataInput.isNotEmpty){
                     StringBuffer dataWord = StringBuffer();
                     for (boxText box in dataInput) {
@@ -324,7 +333,15 @@ class _SortTextState extends State<sortText> {
                     }
                   }
                 },
-                child: Container(
+                onTapCancel: () {
+                  setState(() {
+                    isPress = false;
+                  });
+                },
+                child: AnimatedContainer(
+                  duration: Duration(milliseconds: 100),
+                  curve: Curves.easeInOut,
+                  transform: Matrix4.translationValues(0, isPress ? 4 : 0, 0),
                   width: MediaQuery.sizeOf(context).width - 20,
                   height: MediaQuery.sizeOf(context).width*0.15,
                   decoration: dataInput.isEmpty
@@ -332,11 +349,11 @@ class _SortTextState extends State<sortText> {
                     color: Color.fromRGBO(223, 223, 223, 1.0),
                     borderRadius: BorderRadius.all(Radius.circular(20)),
                   )
-                      : const BoxDecoration(
+                      :  BoxDecoration(
                     color: Color.fromRGBO(49, 230, 62, 1.0),
                     borderRadius: BorderRadius.all(Radius.circular(20)),
-                    boxShadow: [
-                      BoxShadow(
+                    boxShadow: isPress ? [] : [
+                      const BoxShadow(
                         color: Colors.green,
                         offset: Offset(6, 6),
                       ),

@@ -26,6 +26,7 @@ class listWordScreen extends StatefulWidget{
 class _listWordScreen extends State<listWordScreen>{
   int amountWord = 0;
   bool isButtonDisabled = true;
+  bool isPressButton = false;
 
 
   Future<List<Map<String, dynamic>>> hanldeDataWords(String topic) async {
@@ -589,7 +590,16 @@ class _listWordScreen extends State<listWordScreen>{
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: GestureDetector(
-                      onTap: () {
+                      onTapDown: (event) {
+                        setState(() {
+                          isPressButton = true;
+                        });
+                      },
+                      onTapUp: (event) {
+                        setState(() {
+                          isPressButton = false;
+                        });
+
                         List<word> dataWords = [];
                         for (Map<String, dynamic> wordData in snapshot.data!) {
                           dataWords.add(
@@ -615,21 +625,41 @@ class _listWordScreen extends State<listWordScreen>{
                           ),
                         );
                       },
-                      child: Container(
-                        width: MediaQuery.sizeOf(context).width*0.5,
+                      onTapCancel: () {
+                        setState(() {
+                          isPressButton = false;
+                        });
+                      },
+                      child: AnimatedContainer(
+                        duration: Duration(milliseconds: 100),
+                        curve: Curves.easeInOut,
+                        transform: Matrix4.translationValues(0, isPressButton ? 4 : 0, 0),
+                        width: MediaQuery.sizeOf(context).width * 0.5,
                         height: MediaQuery.sizeOf(context).width * 0.15,
-                        decoration: const BoxDecoration(
-                          color: Color.fromRGBO(20, 195, 142, 1.0),
+                        decoration: BoxDecoration(
+                          color: Color.fromRGBO(19, 213, 47, 1.0),
                           borderRadius: BorderRadius.all(Radius.circular(20)),
+                          boxShadow: isPressButton
+                              ? [] // Khi nhấn, không có boxShadow
+                              : [
+                            BoxShadow(
+                              color: Colors.green,
+                              offset: Offset(5, 6),
+                            ),
+                          ],
                         ),
                         child: Center(
                           child: Text(
                             "Học Từ",
-                            style: TextStyle(color: Colors.white, fontSize: MediaQuery.sizeOf(context).height*0.025, fontFamily: "Itim"),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: MediaQuery.sizeOf(context).height * 0.025,
+                              fontFamily: "Itim",
+                            ),
                           ),
                         ),
                       ),
-                    ),
+                    )
                   ),
                 ],
               ),

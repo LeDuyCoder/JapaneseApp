@@ -22,13 +22,11 @@ class _combinationTest extends State<combinationTest>{
 
   List<Map<String, dynamic>> listColumA_State = [];
   List<String> listColumB_State = [];
-
    Map<String, dynamic>? columeA_Chose;
    String? columeB_Chose;
-
    String? choseWrongA, choseWrongB;
-
    List<Map<String, dynamic>> listComplete = [];
+   bool isPress = false;
 
   final AudioPlayer _audioPlayer = AudioPlayer();
   final FlutterTts _flutterTts = FlutterTts();
@@ -154,7 +152,15 @@ class _combinationTest extends State<combinationTest>{
 
               SizedBox(height: 50,),
               GestureDetector(
-                onTap: (){
+                onTapDown: (_) {
+                  setState(() {
+                    isPress = true;
+                  });
+                },
+                onTapUp: (_) {
+                  setState(() {
+                    isPress = false;
+                  });
                   if(listComplete.length == 4){
                     if(listComplete.length >= 4){
                       playSound("sound/correct.mp3");
@@ -164,14 +170,24 @@ class _combinationTest extends State<combinationTest>{
                     }
                   }
                 },
-                child: Container(
+                onTapCancel: () {
+                  setState(() {
+                    isPress = false;
+                  });
+                },
+                child: AnimatedContainer(
+                  duration: Duration(milliseconds: 100),
+                  curve: Curves.easeInOut,
+                  transform: Matrix4.translationValues(0, isPress ? 4 : 0, 0),
                   width: MediaQuery.sizeOf(context).width - 40,
                   height: MediaQuery.sizeOf(context).width * 0.15,
                   decoration: BoxDecoration(
                       color: listComplete.length == 4 ? const Color.fromRGBO(97, 213, 88, 1.0) : Color.fromRGBO(
                           195, 195, 195, 1.0),
                       borderRadius: BorderRadius.all(Radius.circular(20)),
-                      boxShadow: [
+                      boxShadow: isPress
+                          ? [] // Khi nhấn, không có boxShadow
+                          :[
                         BoxShadow(
                             color: listComplete.length == 4 ? Colors.green : const Color.fromRGBO(
                                 177, 177, 177, 1.0),

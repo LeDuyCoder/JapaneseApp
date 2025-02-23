@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:japaneseapp/Screen/addWordScreen.dart';
 import 'package:japaneseapp/Screen/qrScreen.dart';
+import 'package:japaneseapp/Screen/serchWordScreen.dart';
 import 'package:japaneseapp/Widget/folerWidget.dart';
 
 import '../Config/dataHelper.dart';
@@ -23,6 +24,7 @@ class _dashboardScreen extends State<dashboardScreen>{
   Map<String, List<Map<String, dynamic>>> dataDashBoards = {};
   TextEditingController nameFolderInput = TextEditingController();
   TextEditingController nameTopicInput = TextEditingController();
+  TextEditingController searchWord = TextEditingController();
   String? textErrorName;
   bool isLoadingCreateNewFolder = false;
   String amountTopic = "0 Topic";
@@ -927,6 +929,55 @@ class _dashboardScreen extends State<dashboardScreen>{
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              SizedBox(height: 10,),
+                              Padding(
+                                padding: EdgeInsets.all(10),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      width: MediaQuery.sizeOf(context).width * 0.80,
+                                      height: MediaQuery.sizeOf(context).width*0.11,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: Colors.grey,
+                                          width: 1.0,
+                                        ),
+                                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                                      ),
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(horizontal: 10),
+                                        child: TextField(
+                                          controller: searchWord,
+                                          decoration: const InputDecoration(
+                                            icon: Icon(Icons.translate),
+                                            border: InputBorder.none, // Ẩn border mặc định
+                                            hintText: "Từ bạn muốn tra...",
+                                            hintStyle: TextStyle(color: Colors.grey)
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: (){
+                                        if(searchWord.text.isNotEmpty) {
+                                          Navigator.push(context, MaterialPageRoute(builder: (ctx)=>searchWordScreen(wordSearch: searchWord.text)));
+                                        }
+                                      },
+                                      child: Container(
+                                        width: MediaQuery.sizeOf(context).width*0.11,
+                                        height: MediaQuery.sizeOf(context).width*0.11,
+                                        decoration: const BoxDecoration(
+                                          color: Color.fromRGBO(184, 241, 176, 1),
+                                          borderRadius: BorderRadius.all(Radius.circular(15)),
+                                        ),
+                                        child: Icon(Icons.search),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+
                               SizedBox(height: 20),
                               Padding(
                                 padding: EdgeInsets.only(bottom: 10, left: 10, right: 10),

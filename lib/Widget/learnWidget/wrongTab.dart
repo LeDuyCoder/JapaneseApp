@@ -2,19 +2,27 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class wrongTab extends StatelessWidget{
+class wrongTab extends StatefulWidget{
+  @override
+  State<StatefulWidget> createState() => _wrongTab();
+
   final void Function() nextQuestion;
   final String rightAwnser;
 
   const wrongTab({super.key, required this.nextQuestion, required this.rightAwnser});
+}
+
+class _wrongTab extends State<wrongTab>{
+
+  bool isPressed = false;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       constraints: BoxConstraints(
-        minHeight: MediaQuery.sizeOf(context).height * 0.2, // Độ cao tối thiểu
+        minHeight: MediaQuery.sizeOf(context).height * 0.25, // Độ cao tối thiểu
       ),
-      height: MediaQuery.sizeOf(context).height * 0.25,
+      height: MediaQuery.sizeOf(context).height * 0.3,
       width: MediaQuery.sizeOf(context).width,
       decoration: BoxDecoration(
         color: Colors.red[100],
@@ -55,7 +63,7 @@ class wrongTab extends StatelessWidget{
                   ),
                 ),
                 Text(
-                  rightAwnser,
+                  widget.rightAwnser,
                   style: const TextStyle(
                     color: Colors.red,
                     fontSize: 20,
@@ -66,22 +74,40 @@ class wrongTab extends StatelessWidget{
             ),
             const Spacer(), // Đẩy nút xuống dưới
             GestureDetector(
-              onTap: () {
-                nextQuestion();
+              onTapDown: (_) {
+                setState(() {
+                  isPressed = true;
+                });
+              },
+              onTapUp: (_) {
+                setState(() {
+                  isPressed = false;
+                });
+                widget.nextQuestion();
                 Navigator.pop(context);
               },
-              child: Container(
+              onTapCancel: () {
+                setState(() {
+                  isPressed = false;
+                });
+              },
+              child: AnimatedContainer(
+                duration: Duration(milliseconds: 100),
+                curve: Curves.easeInOut,
+                transform: Matrix4.translationValues(0, isPressed ? 4 : 0, 0),
                 width: MediaQuery.sizeOf(context).width - 40,
                 height: MediaQuery.sizeOf(context).width * 0.15,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   color: Color.fromRGBO(255, 103, 103, 1.0),
                   borderRadius: BorderRadius.all(Radius.circular(20)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.red,
-                      offset: Offset(6, 6),
-                    ),
-                  ],
+                  boxShadow: isPressed
+                      ? []
+                      : [
+                        BoxShadow(
+                          color: Colors.red,
+                          offset: Offset(6, 6),
+                        ),
+                      ],
                 ),
                 child: Center(
                   child: Text(
@@ -95,6 +121,7 @@ class wrongTab extends StatelessWidget{
                 ),
               ),
             ),
+            const SizedBox(height: 10),
           ],
         ),
       ),

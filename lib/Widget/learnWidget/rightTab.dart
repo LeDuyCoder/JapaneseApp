@@ -4,9 +4,10 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class rightTab extends StatelessWidget{
+class rightTab extends StatefulWidget{
+  @override
+  State<StatefulWidget> createState() => _rightTab();
   final void Function() nextQuestion;
-
   List<String> motivationalPhrasesVN = [
     "Tiếp tục cố gắng, bạn đang làm rất tốt!",
     "Lần này bạn đã hoàn hảo, hãy tiếp tục cố gắng!",
@@ -19,18 +20,21 @@ class rightTab extends StatelessWidget{
     "Nỗ lực tuyệt vời! Hãy tiếp tục đặt mục tiêu cao hơn!",
     "Sự chăm chỉ của bạn sẽ sớm được đền đáp!"
   ];
-
-
+  String? PhrasesVN;
   rightTab({super.key, required this.nextQuestion});
+}
 
+class _rightTab extends State<rightTab>{
+  bool isPressed = false;
 
   @override
   Widget build(BuildContext context) {
+    widget.PhrasesVN ??= widget.motivationalPhrasesVN[Random().nextInt(widget.motivationalPhrasesVN.length)];
     return Container(
       constraints: BoxConstraints(
-        minHeight: MediaQuery.sizeOf(context).height * 0.2, // Độ cao tối thiểu
+        minHeight: MediaQuery.sizeOf(context).height * 0.25, // Độ cao tối thiểu
       ),
-      height: MediaQuery.sizeOf(context).height*0.25,
+      height: MediaQuery.sizeOf(context).height*0.3,
       width: MediaQuery.sizeOf(context).width,
       decoration: BoxDecoration(
         color: Colors.green[100],
@@ -62,7 +66,7 @@ class rightTab extends StatelessWidget{
             ),
             const SizedBox(height: 10), // Khoảng cách nhỏ để tránh dính
             Text(
-              motivationalPhrasesVN[Random().nextInt(motivationalPhrasesVN.length)],
+              widget.PhrasesVN!,
               style: TextStyle(
                 color: Colors.green,
                 fontSize: MediaQuery.sizeOf(context).width * 0.045,
@@ -70,18 +74,36 @@ class rightTab extends StatelessWidget{
             ),
             const Spacer(), // Đẩy nút xuống dưới
             GestureDetector(
-              onTap: () {
-                nextQuestion();
+              onTapDown: (_) {
+                setState(() {
+                  isPressed = true;
+                });
+              },
+              onTapUp: (_) {
+                setState(() {
+                  isPressed = false;
+                });
+                widget.nextQuestion();
                 Navigator.pop(context);
               },
-              child: Container(
+              onTapCancel: () {
+                setState(() {
+                  isPressed = false;
+                });
+              },
+              child: AnimatedContainer(
+                duration: Duration(milliseconds: 100),
+                curve: Curves.easeInOut,
+                transform: Matrix4.translationValues(0, isPressed ? 4 : 0, 0),
                 width: MediaQuery.sizeOf(context).width - 40,
                 height: MediaQuery.sizeOf(context).width * 0.15,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   color: Color.fromRGBO(97, 213, 88, 1.0),
                   borderRadius: BorderRadius.all(Radius.circular(20)),
-                  boxShadow: [
-                    BoxShadow(
+                  boxShadow: isPressed
+                      ? [] // Khi nhấn, không có boxShadow
+                      :[
+                    const BoxShadow(
                       color: Colors.green,
                       offset: Offset(6, 6),
                     ),
@@ -99,6 +121,7 @@ class rightTab extends StatelessWidget{
                 ),
               ),
             ),
+            const SizedBox(height: 10),
           ],
         ),
       ),

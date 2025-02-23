@@ -36,6 +36,7 @@ class _ListenTextState extends State<listenTest> {
   final FlutterTts _flutterTts = FlutterTts();
   bool isFirst = true;
   bool loadBoxText = true;
+  bool isPress = false;
 
   final AudioPlayer _audioPlayer = AudioPlayer();
 
@@ -264,7 +265,15 @@ class _ListenTextState extends State<listenTest> {
             child: Align(
               alignment: Alignment.bottomCenter,
               child: GestureDetector(
-                onTap: () async {
+                onTapDown: (_) {
+                  setState(() {
+                    isPress = true;
+                  });
+                },
+                onTapUp: (_) async {
+                  setState(() {
+                    isPress = false;
+                  });
                   if(dataInput.isNotEmpty){
                     StringBuffer dataWord = StringBuffer();
                     for (boxText box in dataInput) {
@@ -317,7 +326,15 @@ class _ListenTextState extends State<listenTest> {
                     }
                   }
                 },
-                child: Container(
+                onTapCancel: () {
+                  setState(() {
+                    isPress = false;
+                  });
+                },
+                child: AnimatedContainer(
+                  duration: Duration(milliseconds: 100),
+                  curve: Curves.easeInOut,
+                  transform: Matrix4.translationValues(0, isPress ? 4 : 0, 0),
                   width: MediaQuery.sizeOf(context).width - 20,
                   height: MediaQuery.sizeOf(context).width*0.15,
                   decoration: dataInput.isEmpty
@@ -325,11 +342,11 @@ class _ListenTextState extends State<listenTest> {
                     color: Color.fromRGBO(223, 223, 223, 1.0),
                     borderRadius: BorderRadius.all(Radius.circular(20)),
                   )
-                      : const BoxDecoration(
-                    color: Color.fromRGBO(49, 230, 62, 1.0),
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
-                    boxShadow: [
-                      BoxShadow(
+                      : BoxDecoration(
+                    color: const Color.fromRGBO(49, 230, 62, 1.0),
+                    borderRadius: const BorderRadius.all(Radius.circular(20)),
+                    boxShadow: isPress ? [] : [
+                      const BoxShadow(
                         color: Colors.green,
                         offset: Offset(6, 6),
                       ),
