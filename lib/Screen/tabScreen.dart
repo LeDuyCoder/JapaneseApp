@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:japaneseapp/Screen/charactersScreen.dart';
 import 'package:japaneseapp/Screen/dashboardScreen.dart';
 import 'package:japaneseapp/Screen/miniGameScreen.dart';
 import 'package:japaneseapp/Screen/profileScreen.dart';
+import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 class TabScreen extends StatefulWidget {
   @override
@@ -16,6 +18,7 @@ class _TabScreenState extends State<TabScreen> {
   final List<Widget> _screens = [
     dashboardScreen(),
     miniGameScreen(),
+    charactersScreen(),
     profileScreen()
   ];
 
@@ -23,60 +26,68 @@ class _TabScreenState extends State<TabScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _screens[_selectedIndex],
-      bottomNavigationBar: Padding(
-        padding: EdgeInsets.only(bottom: 10, right: 10, left: 10),
-        child: Container(
-          decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.all(Radius.circular(60)),
-              boxShadow: [
-                BoxShadow(
-                    color: Colors.grey,
-                    offset: Offset(0, -4),
-                    blurRadius: 10
-                )
-              ]
+      bottomNavigationBar: Container(height: 80,
+        decoration: BoxDecoration(
+            color: Colors.white,
+          border: Border(
+            top: BorderSide(color: Colors.grey.shade300, width: 3),  // Chỉnh màu viền trên
           ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-            child: GNav(
-              rippleColor: Colors.grey.shade800,
-              hoverColor: Colors.grey.shade700,
-              haptic: true,
-              tabBorderRadius: 20,
-              tabActiveBorder: Border.all(color: Colors.grey, width: 1),
-              tabBorder: Border.all(color: Colors.grey, width: 1),
-              //tabShadow: [BoxShadow(color: Colors.grey.withOpacity(0.5), blurRadius: 8)],
-              curve: Curves.easeOutExpo,
-              duration: Duration(milliseconds: 900),
-              gap: 8,
-              color: Colors.grey[800],
-              activeColor: Colors.green,
-              iconSize: 24,
-              tabBackgroundColor: Colors.white,
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-              tabs: const [
-                GButton(
-                  icon: Icons.home,
-                  text: 'Home',
+        ),
+        child: SalomonBottomBar(
+          margin: EdgeInsets.only(left: 10, right: 10),
+          currentIndex: _selectedIndex,
+          onTap: (i) => setState(() => _selectedIndex = i),
+          items: [
+            /// Home
+            SalomonBottomBarItem(
+              selectedColor: Colors.green,
+              icon: Container(
+                width: 30,
+                height: 30,
+                child: Center(
+                  child: Image.asset("assets/tabbar/home.png", scale: 10.0,),
                 ),
-                GButton(
-                  icon: Icons.videogame_asset_outlined,
-                  text: 'Mini Game',
-                ),
-                GButton(
-                  icon: Icons.person,
-                  text: 'Profile',
-                ),
-              ],
-              selectedIndex: _selectedIndex,
-              onTabChange: (index) {
-                setState(() {
-                  _selectedIndex = index;
-                });
-              },
+              ),
+              title: Text("Trang Chính"),
             ),
-          ),
+
+            SalomonBottomBarItem(
+              selectedColor: Colors.green,
+              icon: Container(
+                width: 30,
+                height: 30,
+                child: Center(
+                  child: Image.asset("assets/tabbar/minigame.png", scale: 10.0,),
+                ),
+              ),
+              title: Text("game"),
+            ),
+
+
+            SalomonBottomBarItem(
+              selectedColor: Colors.green,
+              icon: Container(
+                width: 30,
+                height: 30,
+                child: Center(
+                  child: Image.asset("assets/tabbar/alphabet.png", scale: 10.0,),
+                ),
+              ),
+              title: Text("Bảng Chữ Cái"),
+            ),
+            /// Profile
+            SalomonBottomBarItem(
+              selectedColor: Colors.green,
+              icon: Container(
+                width: 30,
+                height: 30,
+                child: Center(
+                  child: Image.asset("assets/tabbar/wizard.png", scale: 10.0,),
+                ),
+              ),
+              title: Text("Thông Tin"),
+            ),
+          ],
         ),
       )
     );

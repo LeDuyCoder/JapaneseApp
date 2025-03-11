@@ -23,6 +23,7 @@ class _wordWidget extends State<wordWidget>{
 
   final FlutterTts _flutterTts = FlutterTts();
   bool isButtonDisabled = false;
+  bool isPressed = false;
 
   TextEditingController vocabularyEdit = TextEditingController(),
                         wayReadEdit = TextEditingController(),
@@ -270,10 +271,16 @@ class _wordWidget extends State<wordWidget>{
     return Padding(
       padding: EdgeInsets.only(bottom: 0),
       child: GestureDetector(
-        onLongPress: (){
-          showPopupEditWord();
+
+        onTapDown: (_) {
+          setState(() {
+            isPressed = true;
+          });
         },
-        onTap: () async {
+        onTapUp: (_) async {
+          setState(() {
+            isPressed = false;
+          });
           if(!isButtonDisabled){
             final volume = await FlutterVolumeController.getVolume();
 
@@ -285,44 +292,74 @@ class _wordWidget extends State<wordWidget>{
             }
           }
         },
-        child: Container(
+        onTapCancel: () {
+          setState(() {
+            isPressed = false;
+          });
+        },
+
+        onLongPress: (){
+          setState(() {
+            isPressed = false;
+          });
+          showPopupEditWord();
+        },
+
+        child: AnimatedContainer(
+          duration: Duration(milliseconds: 100),
+          curve: Curves.easeInOut,
+          transform: Matrix4.translationValues(0, isPressed ? 4 : 0, 0),
+          height: 120,
+          width: 120,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(20)),
+            color: Colors.white,
+            boxShadow: isPressed
+                ? [] // Khi nhấn, không có boxShadow
+                :[
+              BoxShadow(
+                color: Colors.grey.shade400,
+                offset: Offset(4, 4),
+              )
+            ]
+          ),
           child: Stack(
             children: [
               Container(
-                  width: 120,
-                  height: 100,
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                          color: Colors.grey
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: const BorderRadius.all(Radius.circular(15)),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Center(
+                      child: Text(
+                        widget.wordText.vocabulary,
+                        style: TextStyle(
+                          fontFamily: "aoboshione",
+                          fontSize: MediaQuery.sizeOf(context).height * 0.02,
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                      borderRadius: BorderRadius.vertical(top: Radius.circular(10))
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Center(
-                        child: Text(widget.wordText.vocabulary, style: TextStyle(fontFamily: "aoboshione", fontSize: MediaQuery.sizeOf(context).height*0.02,), textAlign: TextAlign.center,),
-                      )
-                    ],
-                  )
+                    )
+                  ],
+                ),
               ),
-              Container(
-                width: 120,
-                height: 100,
-                child: Align(
-                  alignment: Alignment.bottomLeft,
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: 10),
                   child: Container(
-                    width: 200,
+                    width: 100, // Điều chỉnh kích thước
                     height: 10,
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(20)),
-                        border: Border.all(
-                            color: Colors.grey
-                        )
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                      border: Border.all(color: Colors.grey),
                     ),
                     child: LinearProgressIndicator(
-                      value: widget.wordText.level/28, // 50% progress
+                      value: widget.wordText.level / 28,
                       backgroundColor: Colors.white,
                       color: _getProgressColor(widget.wordText.level),
                       minHeight: 10.0,

@@ -19,15 +19,33 @@ class choseWordWidget extends StatefulWidget {
 }
 
 class _choseWordWidgetState extends State<choseWordWidget> {
+
+  bool isPressed = false;
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
+      onTapDown: (_) {
+        setState(() {
+          isPressed = true;
+        });
+      },
+      onTapUp: (_) {
+        setState(() {
+          isPressed = false;
+        });
         widget.choseItem();
       },
+      onTapCancel: () {
+        setState(() {
+          isPressed = false;
+        });
+      },
+
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300), // Thời gian chuyển đổi
-        curve: Curves.easeInOutSine, // Hiệu ứng mượt mà
+        duration: Duration(milliseconds: 100),
+        curve: Curves.easeInOut,
+        transform: Matrix4.translationValues(0, isPressed ? 4 : 0, 0),
         width: MediaQuery.sizeOf(context).width / 2 - 30,
         height: MediaQuery.sizeOf(context).width / 2 - 30,
         decoration: BoxDecoration(
@@ -37,6 +55,14 @@ class _choseWordWidgetState extends State<choseWordWidget> {
           ),
           borderRadius: const BorderRadius.all(Radius.circular(20)),
           color: widget.isChose ? Colors.blue[100] : Colors.white,
+          boxShadow: isPressed
+              ? [] // Khi nhấn, không có boxShadow
+              :[
+            BoxShadow(
+              color: widget.isChose ? Colors.blue.shade400 : Colors.grey,
+              offset: Offset(3, 3)
+            )
+          ]
         ),
         child: Center(
           child: AutoSizeText(

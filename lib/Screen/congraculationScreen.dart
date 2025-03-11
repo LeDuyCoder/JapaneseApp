@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:japaneseapp/Config/dataHelper.dart';
 import 'package:japaneseapp/Module/word.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../Config/FunctionService.dart';
 
 class congraculationScreen extends StatefulWidget{
   final List<word> listWordsTest, listWordsWrong;
@@ -28,6 +31,7 @@ class _congraculationScreen extends State<congraculationScreen>{
   Future<void> playSound(String filePath) async {
     try {
       await _audioPlayer.play(AssetSource(filePath));
+      await FunctionService.setDay();
       print("Đang phát âm thanh: $filePath");
     } catch (e) {
       print("Lỗi khi phát âm thanh: $e");
@@ -42,6 +46,25 @@ class _congraculationScreen extends State<congraculationScreen>{
     } catch (e) {
       print("Lỗi khi dừng âm thanh: $e");
     }
+  }
+
+  Future<void> flusExp(int expplus) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    int level = await prefs.getInt("level")??0;
+    int exp = await prefs.getInt("exp")??0;
+    int nextExp = prefs.getInt("nextExp")??0;
+
+    exp += expplus;
+
+    while(exp >= nextExp){
+      level++;
+      exp -= nextExp;
+      nextExp = 10*(level*level)+50*level+100;
+    }
+
+    await prefs.setInt("level", level);
+    await prefs.setInt("exp", exp);
+    await prefs.setInt("nextExp", nextExp);
   }
 
   @override
@@ -150,7 +173,6 @@ class _congraculationScreen extends State<congraculationScreen>{
             ),
             SizedBox(height: MediaQuery.sizeOf(context).height*0.03,),
             GestureDetector(
-
                 onTapDown: (_) {
                   setState(() {
                     isPress = true;
@@ -183,6 +205,8 @@ class _congraculationScreen extends State<congraculationScreen>{
                       "word = '${data["word"]}' and topic = '${widget.topic}'",
                     );
                   }
+
+                  flusExp(1);
 
                   widget.reload();
 

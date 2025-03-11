@@ -7,8 +7,12 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:japaneseapp/Config/dataHelper.dart';
 import 'package:japaneseapp/Screen/tabScreen.dart';
 import 'package:japaneseapp/Screen/tutorialScreen.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:workmanager/workmanager.dart';
+
+import '../main.dart';
 
 class splashScreen extends StatefulWidget{
   @override
@@ -20,7 +24,7 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
   late Animation<Offset> _animation;
 
   String version_check = "", message_old_version = "";
-  String version = "1.3.0";
+  String version = "1.4.1";
   @override
   void initState() {
     super.initState();
@@ -40,9 +44,39 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
       curve: Curves.easeInOut, // Đường cong hiệu ứng
     ));
 
+    requestPermissions();
+
     // Bắt đầu hoạt ảnh
     _controller.forward();
     _initializeDatabase();
+
+    initNotifications(); // Khởi tạo thông báo
+    setupWorkManager();
+
+  }
+
+  void setupWorkManager() {
+    Workmanager().registerPeriodicTask(
+      "nightly_notification",
+      "show_notification",
+      frequency: Duration(days: 1), // Lặp lại mỗi ngày
+      initialDelay: getDelayUntilNext11PM(), // Chạy vào lúc 11h tối
+    );
+
+    print("✅ WorkManager: Đã đăng ký task vào 11h tối.");
+  }
+
+
+  Duration getDelayUntilNext11PM() {
+    DateTime now = DateTime.now();
+    DateTime next11PM = DateTime(now.year, now.month, now.day, 23, 0, 0);
+
+    if (now.isAfter(next11PM)) {
+      // Nếu đã qua 23:00, đặt lịch cho ngày hôm sau
+      next11PM = next11PM.add(Duration(days: 1));
+    }
+
+    return next11PM.difference(now);
   }
 
   void showDialogNotificationVersion() {
@@ -158,6 +192,41 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
       await prefs.setInt("level", 1);
       await prefs.setInt("exp", 0);
       await prefs.setInt("nextExp", 100);
+    }
+
+    if(!prefs.containsKey("Streak")){
+      await prefs.setInt("Streak", 0);
+      await prefs.setString("lastCheckIn", '');
+      await prefs.setStringList("checkInHistoryTreak", <String>[]);
+      await prefs.setStringList("checkInHistory", <String>[]);
+    }
+
+    if(!prefs.containsKey("achivement")){
+      await prefs.setStringList("achivement", <String>[]);
+    }
+
+    Map<String, dynamic> data = {
+      "levelSet": 1,
+      "level": 0,
+    };
+
+    if(!prefs.containsKey("hiragana")){
+      await prefs.setString("hiragana", jsonEncode(data));
+    }
+
+    if(!prefs.containsKey("katakana")){
+      await prefs.setString("katakana", jsonEncode(data));
+    }
+  }
+
+
+  Future<void> requestPermissions() async {
+    if (await Permission.notification.isDenied) {
+      await Permission.notification.request();
+    }
+
+    if (await Permission.ignoreBatteryOptimizations.isDenied) {
+      await Permission.ignoreBatteryOptimizations.request();
     }
   }
 

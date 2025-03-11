@@ -12,14 +12,16 @@ class boxText{
     return Container(
       width: textWidth + 20, // Cộng thêm padding ngang (10 bên trái + 10 bên phải)
       height: 50,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.all(Radius.circular(10)),
-        boxShadow: [
+        border: Border.all(
+          color: Colors.grey
+        ),
+        boxShadow: const [
           BoxShadow(
             color: Colors.grey,
-            offset: Offset(-4, 4),
-            blurRadius: 10,
+            offset: Offset(4, 4),
           ),
         ],
       ),

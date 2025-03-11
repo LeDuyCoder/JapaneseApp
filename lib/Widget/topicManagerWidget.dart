@@ -24,12 +24,19 @@ class topicManagerWidget extends StatelessWidget{
           width: MediaQuery.of(context).size.width-20,
           height: 100,
           decoration: BoxDecoration(
+              color: Colors.white,
               border: Border.all(
                 color: Colors.grey,
               ),
-              borderRadius: BorderRadius.all(
+              borderRadius: const BorderRadius.all(
                   Radius.circular(15)
-              )
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.shade500,
+                  offset: Offset(4, 4)
+                )
+              ]
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

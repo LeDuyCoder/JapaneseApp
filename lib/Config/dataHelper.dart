@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:uuid/v4.dart';
@@ -21,18 +22,83 @@ class DatabaseHelper {
     final path = join(dbPath, 'app_database.db');
     print("path: $path");
 
+
     // Đảm bảo rằng phiên bản đã được tăng lên để gọi lại onCreate nếu cần thiết
     return await openDatabase(
       path,
-      version: 1,
+      version: 10,
       onCreate: _createDB,
+      onUpgrade: _onUpgradeDB
     );
+  }
+
+  Future<void> _onUpgradeDB(Database db, int oldVersion, int newVersion) async {
+    print("Upgrading database from version $oldVersion to $newVersion...");
+
+    try {
+      if(oldVersion < 7) {
+        // Kiểm tra nếu cột datefolder chưa tồn tại thì thêm vào
+        var columns = await db.rawQuery("PRAGMA table_info(folders);");
+        bool columnExists = columns.any((column) =>
+        column["name"] == "datefolder");
+
+        if (!columnExists) {
+          // Bước 1: Thêm cột nhưng không có DEFAULT
+          await db.execute('''
+          ALTER TABLE folders ADD COLUMN datefolder TEXT;
+        ''');
+          print("Column 'datefolder' added.");
+
+          // Bước 2: Cập nhật giá trị mặc định cho cột mới
+          await db.execute('''
+          UPDATE folders SET datefolder = strftime('%d/%m/%Y %H:%M', 'now') WHERE datefolder IS NULL;
+        ''');
+          print("Updated existing rows with default date.");
+        } else {
+          print("Column 'datefolder' already exists.");
+        }
+
+        await db.execute('''
+          CREATE TABLE IF NOT EXISTS characterjp (
+            charName TEXT NOT NULL,
+            level INTEGER,
+            setLevel INTEGER,
+            typeword TEXT NOT NULL
+          );
+        ''');
+      }else{
+        if(newVersion == 10){
+          await db.execute('''
+          CREATE TABLE IF NOT EXISTS characterjp (
+            charName TEXT NOT NULL,
+            level INTEGER,
+            setLevel INTEGER,
+            typeword TEXT NOT NULL
+          );
+        ''');
+        }
+      }
+      print("Database upgraded successfully.");
+    } catch (e) {
+      print("Error upgrading database: $e");
+    }
   }
 
   Future<void> _createDB(Database db, int version) async {
     print("Creating tables...");
 
     try {
+      // Tạo bảng characterjp
+      await db.execute('''
+      CREATE TABLE IF NOT EXISTS characterjp (
+        charName TEXT NOT NULL,
+        level INTEGER,
+        setLevel INTEGER,
+        typeword TEXT NOT NULL
+      );
+    ''');
+
+      // Tạo bảng topic
       await db.execute('''
       CREATE TABLE IF NOT EXISTS topic (
         id TEXT PRIMARY KEY,
@@ -40,28 +106,33 @@ class DatabaseHelper {
       );
     ''');
 
-      await db.execute("""
-        CREATE TABLE IF NOT EXISTS words (
-          word TEXT NOT NULL,
-          mean TEXT NOT NULL,
-          wayread TEXT NOT NULL,
-          topic TEXT NOT NULL,
-          level INTEGER
-        );
-      """);
+      // Tạo bảng words
+      await db.execute('''
+      CREATE TABLE IF NOT EXISTS words (
+        word TEXT NOT NULL,
+        mean TEXT NOT NULL,
+        wayread TEXT NOT NULL,
+        topic TEXT NOT NULL,
+        level INTEGER
+      );
+    ''');
 
-      await db.execute("""
+      await db.execute('''
         CREATE TABLE IF NOT EXISTS folders (
           namefolder TEXT NOT NULL,
-          topics TEXT
+          topics TEXT,
+          datefolder TEXT
         );
-      """);
+      ''');
 
-      print("Tables created successfully.");
+      var tables = await db.rawQuery("SELECT name FROM sqlite_master WHERE type='table';");
+      print(tables);
+      print("Tables created/updated successfully.");
     } catch (e) {
-      print("Error creating tables: $e");
+      print("Error creating/updating tables: $e");
     }
   }
+
 
   Future<List<Map<String, dynamic>>> getAllFolder() async {
     final db = await instance.database;
@@ -98,9 +169,16 @@ class DatabaseHelper {
     return false;
   }
 
+  String getFormattedDateTime() {
+    DateTime now = DateTime.now();
+    String formattedDate = DateFormat('dd/MM/yyyy hh:mm a').format(now);
+    return formattedDate;
+  }
+
+
   Future<void> insertNewFolder(String nameFolder) async{
     final db = await instance.database;
-    await db.insert("folders", {"namefolder":nameFolder});
+    await db.insert("folders", {"namefolder":nameFolder, "datefolder":getFormattedDateTime()});
   }
 
   Future<List<Map<String, dynamic>>> getAllWordbyTopic(String topic) async {
@@ -162,5 +240,114 @@ class DatabaseHelper {
   Future<void> close() async {
     final db = await instance.database;
     db.close();
+  }
+
+  Future<bool> isTopicCompleted(String topic) async {
+    final db = await instance.database;
+    List<Map<String, dynamic>> result = await db.rawQuery(
+        "SELECT COUNT(*) as total, SUM(CASE WHEN level = 28 THEN 1 ELSE 0 END) as completed FROM words WHERE topic = ?", [topic]);
+
+    if (result.isNotEmpty) {
+      int total = result[0]["total"] as int;
+      int completed = result[0]["completed"] as int;
+      return total > 0 && total == completed;
+    }
+
+    return false;
+  }
+
+  Future<int> countCompletedTopics() async {
+    final db = await instance.database;
+    List<Map<String, dynamic>> result = await db.rawQuery("""
+    SELECT COUNT(*) as completedTopics FROM topic 
+    WHERE id IN (
+      SELECT topic FROM words 
+      GROUP BY topic 
+      HAVING COUNT(*) = SUM(CASE WHEN level = 28 THEN 1 ELSE 0 END)
+    )
+  """);
+
+    if (result.isNotEmpty) {
+      return result[0]["completedTopics"] as int;
+    }
+
+    return 0;
+  }
+
+  Future<Map<String, Map>> getDataCharacter(String typeset) async {
+    final db = await instance.database;
+    List<Map<String, dynamic>> result = await db.rawQuery('''
+    SELECT setLevel, *
+    FROM characterjp
+    WHERE typeword = ?
+    AND setLevel IN (1, 2, 3, 4, 5)
+  ''', [typeset]);
+
+    // Khởi tạo Map với danh sách rỗng cho mỗi cấp độ
+    Map<String, Map<dynamic, dynamic>> data = {
+      "1": {},
+      "2": {},
+      "3": {},
+      "4": {},
+      "5": {}
+    };
+
+    // Duyệt qua kết quả truy vấn và đưa vào danh sách tương ứng
+    for (var row in result) {
+      String levelKey = row['setLevel'].toString(); // Chuyển setLevel thành String để làm key
+      if (data.containsKey(levelKey)) {
+        data[levelKey]!.putIfAbsent(row["charName"], () => [row]);
+      }
+    }
+
+    return data;
+  }
+
+  Future<void> insertCharacter(
+      String charName, int level, int setLevel, String typeword) async {
+    final db = await instance.database;
+    await db.insert(
+      'characterjp',
+      {
+        'charName': charName,
+        'level': level,
+        'setLevel': setLevel,
+        'typeword': typeword,
+      },
+      conflictAlgorithm: ConflictAlgorithm.replace, // Tránh lỗi trùng key
+    );
+  }
+
+  Future<bool> isCharacterExist(String charName) async {
+    final db = await instance.database;
+    final result = await db.query(
+      'characterjp',
+      where: 'charName = ?',
+      whereArgs: [charName],
+    );
+    return result.isNotEmpty;
+  }
+
+  Future<void> increaseCharacterLevel(String charName, int increaseBy, int level, String typeChar) async {
+    final db = await instance.database;
+
+    // Kiểm tra nhân vật có tồn tại không
+    bool exists = await isCharacterExist(charName);
+
+    if (exists) {
+      // Nếu tồn tại, tăng level
+      await db.rawUpdate(
+        'UPDATE characterjp SET level = level + ? WHERE charName = ?',
+        [increaseBy, charName],
+      );
+    } else {
+      // Nếu chưa tồn tại, thêm mới nhân vật với level mặc định là increaseBy
+      await insertCharacter(charName, increaseBy, level, typeChar);
+    }
+  }
+
+  Future<Batch> getBatch() async {
+    final db = _database; // Đảm bảo database đã khởi tạo
+    return db!.batch(); // Trả về Batch để sử dụng sau này
   }
 }

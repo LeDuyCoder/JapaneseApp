@@ -27,12 +27,29 @@ class _listWordScreen extends State<listWordScreen>{
   int amountWord = 0;
   bool isButtonDisabled = true;
   bool isPressButton = false;
+  AutoSizeGroup textGroup = AutoSizeGroup();
 
 
-  Future<List<Map<String, dynamic>>> hanldeDataWords(String topic) async {
+  Future<double> handledComplited (String topic) async {
+    int sumComplitted = 0;
+
     DatabaseHelper db = DatabaseHelper.instance;
     List<Map<String, dynamic>> dataWords = await db.getAllWordbyTopic(topic);
-    return dataWords;
+
+    if(dataWords.isNotEmpty) {
+      for (Map<String, dynamic> word in dataWords) {
+        sumComplitted += word['level'] as int ?? 0;
+      }
+    }
+
+    return dataWords.isNotEmpty ? sumComplitted / (28*dataWords.length) : 0;
+  }
+
+  Future<List<dynamic>> hanldeDataWords(String topic) async {
+    DatabaseHelper db = DatabaseHelper.instance;
+    List<Map<String, dynamic>> dataWords = await db.getAllWordbyTopic(topic);
+    double wordComplited = await handledComplited(topic);
+    return [dataWords, wordComplited, dataWords.length];
   }
 
   Future<String> saveCustomFile(String fileName, String content) async {
@@ -545,7 +562,7 @@ class _listWordScreen extends State<listWordScreen>{
             return Center();
           }
 
-          amountWord = snapshot.data!.length;
+          amountWord = snapshot.data![0].length;
 
           return Container(
             color: Colors.white,
@@ -555,19 +572,58 @@ class _listWordScreen extends State<listWordScreen>{
               scrollDirection: Axis.vertical,
               child: Column(
                 children: [
+                  SizedBox(height: 10,),
                   Container(
-                    height: MediaQuery.sizeOf(context).height - AppBar().preferredSize.height - 150,
+                    width: MediaQuery.sizeOf(context).width,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Flexible(
+                          child: AutoSizeText(
+                            "Hoàn Thành ${(snapshot.data![1] as num).toInt()}",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontFamily: "Itim",
+                              color: Colors.green,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            minFontSize: 10,
+                            maxLines: 1,
+                            group: textGroup, // Đồng bộ kích thước chữ
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Flexible(
+                          child: AutoSizeText(
+                            "Chưa Hoàn Thành ${(snapshot.data![2] - snapshot.data![1] as num).toInt()}",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontFamily: "Itim",
+                              color: Colors.red,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            minFontSize: 10,
+                            maxLines: 1,
+                            group: textGroup, // Đồng bộ kích thước chữ
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 10,),
+                  Container(
+                    height: MediaQuery.sizeOf(context).height - AppBar().preferredSize.height - 180,
                     padding: EdgeInsets.symmetric(horizontal: 10),
                     child: SingleChildScrollView(
                       scrollDirection: Axis.vertical,
                       child: GridView.count(
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
-                        crossAxisSpacing: 1,
-                        mainAxisSpacing: 5,
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
                         crossAxisCount: 3,
-                        childAspectRatio: 3 / 3,
-                        children: snapshot.data!.map<Widget>((word) {
+                        childAspectRatio: 1,
+                        children: snapshot.data![0].map<Widget>((word) {
                           return Center(
                             child: wordWidget(
                               topicName: widget.topicName,
@@ -601,7 +657,7 @@ class _listWordScreen extends State<listWordScreen>{
                         });
 
                         List<word> dataWords = [];
-                        for (Map<String, dynamic> wordData in snapshot.data!) {
+                        for (Map<String, dynamic> wordData in snapshot.data![0]) {
                           dataWords.add(
                             word(
                               wordData["word"],
@@ -634,8 +690,8 @@ class _listWordScreen extends State<listWordScreen>{
                         duration: Duration(milliseconds: 100),
                         curve: Curves.easeInOut,
                         transform: Matrix4.translationValues(0, isPressButton ? 4 : 0, 0),
-                        width: MediaQuery.sizeOf(context).width * 0.5,
-                        height: MediaQuery.sizeOf(context).width * 0.15,
+                        width: MediaQuery.sizeOf(context).width * 0.8,
+                        height: MediaQuery.sizeOf(context).width * 0.13,
                         decoration: BoxDecoration(
                           color: Color.fromRGBO(19, 213, 47, 1.0),
                           borderRadius: BorderRadius.all(Radius.circular(20)),

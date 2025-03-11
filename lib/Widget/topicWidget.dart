@@ -16,7 +16,9 @@ class topicWidget extends StatefulWidget{
 
 class _topicWidget extends State<topicWidget>{
 
-  Future<double> handledComplited () async {
+  AutoSizeGroup textGroup = AutoSizeGroup();
+
+  Future<List<dynamic>> handledComplited () async {
     int sumComplitted = 0;
 
     DatabaseHelper db = DatabaseHelper.instance;
@@ -28,86 +30,200 @@ class _topicWidget extends State<topicWidget>{
       }
     }
 
-    return dataWords.isNotEmpty ? sumComplitted / (28*dataWords.length) : 0;
+    List<dynamic> dataResult = [dataWords.isNotEmpty ? sumComplitted / (28*dataWords.length) : 0, sumComplitted, dataWords.length];
+
+    return dataResult;
   }
+
+
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(future: handledComplited(), builder: (context, snapshot){
-      return Padding(
-          padding: EdgeInsets.only(left: 10),
-          child: GestureDetector(
-            onTap: (){
-              Navigator.push(
-                context,
-                PageRouteBuilder(
-                  transitionDuration: const Duration(milliseconds: 500),
-                  pageBuilder: (context, animation, secondaryAnimation) => listWordScreen(
-                    topicName: widget.nameTopic,
-                    reloadDashboard: () {
-                      widget.reloadDashBoard();
+      if(snapshot.hasData){
+        return Padding(
+            padding: EdgeInsets.only(left: 10),
+            child: GestureDetector(
+              onTap: (){
+                Navigator.push(
+                  context,
+                  PageRouteBuilder(
+                    transitionDuration: const Duration(milliseconds: 500),
+                    pageBuilder: (context, animation, secondaryAnimation) => listWordScreen(
+                      topicName: widget.nameTopic,
+                      reloadDashboard: () {
+                        widget.reloadDashBoard();
+                      },
+                    ),
+                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                      var scaleAnimation = Tween(begin: 0.0, end: 1.0).animate(
+                        CurvedAnimation(parent: animation, curve: Curves.easeInOut),
+                      );
+
+                      return ScaleTransition(
+                        scale: scaleAnimation,
+                        child: child,
+                      );
                     },
                   ),
-                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                    var scaleAnimation = Tween(begin: 0.0, end: 1.0).animate(
-                      CurvedAnimation(parent: animation, curve: Curves.easeInOut),
-                    );
-
-                    return ScaleTransition(
-                      scale: scaleAnimation,
-                      child: child,
-                    );
-                  },
-                ),
-              );
-            },
-            child: Container(
-              child: Stack(
-                children: [
-                  Container(
-                      width: 200,
-                      height: 120,
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                              color: Colors.grey
-                          ),
-                          borderRadius: BorderRadius.vertical(top: Radius.circular(20))
-                      ),
-                      child: Center(
-                        child: AutoSizeText(widget.nameTopic, style: TextStyle(fontFamily: "indieflower", fontSize: 20),),
-                      )
-                  ),
-                  Container(
-                    width: 200,
-                    height: 125,
-                    child: Align(
-                      alignment: Alignment.bottomLeft,
-                      child: Container(
-                        width: 200,
-                        height: 10,
+                );
+              },
+              child: Container(
+                child: Stack(
+                  children: [
+                    Container(
+                        width: MediaQuery.sizeOf(context).width,
+                        height: 120,
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(20)),
                             border: Border.all(
                                 color: Colors.grey
+                            ),
+                            borderRadius: BorderRadius.all(Radius.circular(20))
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SizedBox(width: MediaQuery.sizeOf(context).width*0.01,),
+                            Stack(
+                              alignment: Alignment.center, // Căn giữa tất cả phần tử trong Stack
+                              children: [
+                                SizedBox(
+                                  width: MediaQuery.sizeOf(context).width*0.18,
+                                  height: MediaQuery.sizeOf(context).width*0.18,
+                                  child: CustomPaint(
+                                    painter: _CircularProgressPainter(
+                                      progress: snapshot.data![0] ?? 0,
+                                      backgroundColor: Colors.grey,
+                                      progressColor: Colors.green,
+                                    ),
+                                  ),
+                                ),
+                                Text(
+                                  "${((snapshot.data![0] ?? 0)*100).toInt()}%",
+                                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, fontFamily: "Itim"),
+                                ),
+                              ],
+                            ),
+                            SizedBox(width: MediaQuery.sizeOf(context).width*0.02,),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  width: MediaQuery.sizeOf(context).width*0.65,
+                                  child: AutoSizeText(widget.nameTopic, style: TextStyle(fontFamily: "Itim", fontSize: MediaQuery.sizeOf(context).width*0.045), maxLines: 1,),
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      "Số Lượng Từ: ${snapshot.data![2]}",
+                                      style:
+                                      TextStyle(fontSize: MediaQuery.sizeOf(context).width*0.04, fontWeight: FontWeight.bold,fontFamily: "Itim"),
+                                    ),
+                                  ],
+                                ),
+                                Container(
+                                  width: MediaQuery.sizeOf(context).width * 0.65,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Flexible(
+                                        child: AutoSizeText(
+                                          "Hoàn Thành: ${snapshot.data![0].toInt()}",
+                                          style: TextStyle(
+                                            fontSize: MediaQuery.sizeOf(context).width * 0.035,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.green,
+                                            fontFamily: "Itim",
+                                          ),
+                                          minFontSize: 8,
+                                          maxLines: 1,
+                                          wrapWords: false,
+                                          group: textGroup, // Đồng bộ kích thước
+                                        ),
+                                      ),
+                                      SizedBox(width: 10),
+                                      Flexible(
+                                        child: AutoSizeText(
+                                          "Chưa Hoàn Thành: ${(snapshot.data![2] - snapshot.data![0]).toInt()}",
+                                          style: TextStyle(
+                                            fontSize: MediaQuery.sizeOf(context).width * 0.035,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.red,
+                                            fontFamily: "Itim",
+                                          ),
+                                          minFontSize: 8,
+                                          maxLines: 1,
+                                          wrapWords: false,
+                                          group: textGroup, // Đồng bộ kích thước
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
                             )
-                        ),
-                        child: LinearProgressIndicator(
-                          value: snapshot.data ?? 0, // 50% progress
-                          backgroundColor: Colors.white,
-                          color: snapshot.data != null && snapshot.data as double <= 0.95 ? Color.fromRGBO(0, 255, 171, 1.0) : Color.fromRGBO(
-                              221, 113, 0, 1.0),
-                          minHeight: 10.0,
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
-                        ),
-                      ),
+                          ],
+                        )
                     ),
-                  )
-                ],
+                  ],
+                ),
               ),
-            ),
-          )
-      );
+            )
+        );
+      }
+
+      return const Center();
+
     });
   }
+}
 
+class _CircularProgressPainter extends CustomPainter {
+  final double progress;
+  final Color backgroundColor;
+  final Color progressColor;
+
+  _CircularProgressPainter({
+    required this.progress,
+    required this.backgroundColor,
+    required this.progressColor,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    Paint backgroundPaint = Paint()
+      ..color = backgroundColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 8.0
+      ..strokeCap = StrokeCap.round;
+
+    Paint progressPaint = Paint()
+      ..color = progressColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 8.0
+      ..strokeCap = StrokeCap.round;
+
+    Offset center = Offset(size.width / 2, size.height / 2);
+    double radius = size.width / 2 - 8;
+
+    // Vẽ đường tròn nền
+    canvas.drawCircle(center, radius, backgroundPaint);
+
+    // Vẽ đường tiến trình
+    double startAngle = -3.14 / 2;
+    double sweepAngle = 2 * 3.14 * progress;
+    canvas.drawArc(
+      Rect.fromCircle(center: center, radius: radius),
+      startAngle,
+      sweepAngle,
+      false,
+      progressPaint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return true;
+  }
 }

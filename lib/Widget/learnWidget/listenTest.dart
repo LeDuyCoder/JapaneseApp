@@ -101,7 +101,7 @@ class _ListenTextState extends State<listenTest> {
                 padding: EdgeInsets.only(left: 10),
                 child: Row(
                   children: [
-                    Text("What You Hear", style: TextStyle(fontSize: MediaQuery.sizeOf(context).height*0.025, fontWeight: FontWeight.bold),),
+                    Text("Bạn Nghe Được Gì", style: TextStyle(fontSize: MediaQuery.sizeOf(context).height*0.025, fontWeight: FontWeight.bold, fontFamily: "Itim"),),
                   ],
                 ),
               ),

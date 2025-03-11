@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:japaneseapp/Screen/addWordScreen.dart';
 import 'package:japaneseapp/Screen/qrScreen.dart';
 import 'package:japaneseapp/Screen/serchWordScreen.dart';
 import 'package:japaneseapp/Widget/folerWidget.dart';
@@ -1020,7 +1019,7 @@ class _dashboardScreen extends State<dashboardScreen>{
                                     for (Map<String, dynamic> folder in dataDashBoards["folder"]!)
                                       folderWidget(nameFolder: folder["namefolder"]!, reloadDashboard: () {
                                         reload();
-                                      },),
+                                      }, dateCreated: folder["datefolder"],),
                                   ],
                                 ),
                               ),
@@ -1090,27 +1089,39 @@ class _dashboardScreen extends State<dashboardScreen>{
                                 ),
                               ),
                               SizedBox(height: 10,),
-                              Container(
-                                padding: EdgeInsets.symmetric(horizontal: 10),
-                                child: GridView.count(
-                                  shrinkWrap: true,
-                                  physics: NeverScrollableScrollPhysics(),
-                                  crossAxisSpacing: 5,
-                                  mainAxisSpacing: 5,
-                                  crossAxisCount: 2,
-                                  childAspectRatio: 4 / 3,
-                                  children: dataDashBoards["topic"]!.map((topic) => topicWidget(nameTopic: topic["name"], reloadDashBoard: () {
-                                    reload();
-                                  },)).toList(),
-                                ),
+                              dataDashBoards["topic"]!.length == 0 ? 
+                                 Center(
+                                   child: Container(
+                                     height: MediaQuery.sizeOf(context).width*0.8,
+                                     width: MediaQuery.sizeOf(context).width*0.8,
+                                     child: Image.asset("assets/storyset/nodata2.png",),
+                                   ),
+                                 ) : Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 10),
+                                  child: ListView.builder(
+                                    shrinkWrap: true,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    itemCount: dataDashBoards["topic"]!.length,
+                                    itemBuilder: (context, index) {
+                                      var topic = dataDashBoards["topic"]![index];
+                                        
+                                      return Padding(
+                                        padding: EdgeInsets.only(bottom: 10),
+                                        child: topicWidget(
+                                          nameTopic: topic["name"],
+                                          reloadDashBoard: () {
+                                            reload();
+                                          },
+                                        ),
+                                      );
+                                    },
+                                  )
                               ),
                             ],
                           ),
                         );
                       })
               )
-
-
           ),
         );
       },

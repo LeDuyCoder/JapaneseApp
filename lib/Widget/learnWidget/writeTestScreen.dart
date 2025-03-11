@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,17 @@ class _WriteTestScreenState extends State<WriteTestScreen> {
   static const platform = MethodChannel('keyboard_check');
   static const MethodChannel _channel = MethodChannel('keyboard_check');
   FocusNode textFieldFocusNode = FocusNode();
+  final AudioPlayer _audioPlayer = AudioPlayer();
+
+  // Hàm chạy file MP3 từ đường dẫn
+  Future<void> playSound(String filePath) async {
+    try {
+      await _audioPlayer.play(AssetSource(filePath));
+      print("Đang phát âm thanh: $filePath");
+    } catch (e) {
+      print("Lỗi khi phát âm thanh: $e");
+    }
+  }
 
 // Kiểm tra xem Gboard có được cài chưa
   Future<bool> isGboardInstalled() async {
@@ -114,6 +126,7 @@ class _WriteTestScreenState extends State<WriteTestScreen> {
               });
 
               if (dataInput.text == widget.testData) {
+                await playSound("sound/correct.mp3");
                 showModalBottomSheet(
                     context: context,
                     barrierColor: Color.fromRGBO(0, 0, 0, 0.1),
@@ -124,6 +137,7 @@ class _WriteTestScreenState extends State<WriteTestScreen> {
                           widget.nextLearned(true);
                         },));
               } else {
+                await playSound("sound/wrong.mp3");
                 showModalBottomSheet(
                     context: context,
                     barrierColor: Color.fromRGBO(0, 0, 0, 0.1),
@@ -153,7 +167,7 @@ class _WriteTestScreenState extends State<WriteTestScreen> {
                     ? []
                     : [BoxShadow(color: Colors.green, offset: Offset(6, 6))],
               ),
-              child: Center(
+              child: const Center(
                 child: Text(
                   "CHECK",
                   style: TextStyle(

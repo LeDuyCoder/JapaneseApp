@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:japaneseapp/Config/dataHelper.dart';
@@ -6,9 +7,10 @@ import 'package:japaneseapp/Screen/folderManagerScreen.dart';
 class folderWidget extends StatelessWidget{
 
   final String nameFolder;
+  final String dateCreated;
   final void Function() reloadDashboard;
 
-  const folderWidget({super.key, required this.nameFolder, required this.reloadDashboard});
+  const folderWidget({super.key, required this.nameFolder, required this.reloadDashboard, required this.dateCreated});
 
   void removeFolder(BuildContext context) async {
     DatabaseHelper db = DatabaseHelper.instance;
@@ -155,11 +157,34 @@ class folderWidget extends StatelessWidget{
               ),
               child: Padding(
                 padding: EdgeInsets.only(left: 10, top: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Icon(Icons.folder_open_outlined, color: Colors.grey, size: 40,),
-                    Text(this.nameFolder, style: TextStyle(fontFamily: "indieflower", fontSize: 20),)
+                    SizedBox(width: 10),
+                    Image.asset("assets/folder.png", scale: 12),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          AutoSizeText(
+                            this.nameFolder,
+                            style: TextStyle(fontFamily: "Itim", fontSize: 20),
+                            maxLines: 1,
+                            minFontSize: 12,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          AutoSizeText(
+                            this.dateCreated,
+                            style: TextStyle(fontFamily: "Itim", fontSize: 15),
+                            maxLines: 1,
+                            minFontSize: 10,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               )
