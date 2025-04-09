@@ -355,10 +355,10 @@ class _QRViewExampleState extends State<qrScreen> {
                             GestureDetector(
                               onTap: () async {
                                 DatabaseHelper db = DatabaseHelper.instance;
-                                String nameTopic = "${data["name"]} - ${(data["id"] as String).split("-").last}";
+                                String nameTopic = "${data["name"]}";
 
                                 if(!(await db.hasTopicName(nameTopic))) {
-                                  await db.insertTopic(nameTopic);
+                                  await db.insertTopic(nameTopic, (data["id"] as String).split("-").last);
 
                                   List<dynamic> listWords = data["listWords"];
                                   List<Map<String, dynamic>> dataInsert = [];

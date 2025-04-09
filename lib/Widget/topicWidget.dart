@@ -23,14 +23,14 @@ class _topicWidget extends State<topicWidget>{
 
     DatabaseHelper db = DatabaseHelper.instance;
     List<Map<String, dynamic>> dataWords = await db.getAllWordbyTopic(widget.nameTopic);
-
+    List<Map<String, dynamic>> dataTopic = await db.getAllTopicByName(widget.nameTopic);
     if(dataWords.isNotEmpty) {
       for (Map<String, dynamic> word in dataWords) {
         sumComplitted += word['level'] as int ?? 0;
       }
     }
 
-    List<dynamic> dataResult = [dataWords.isNotEmpty ? sumComplitted / (28*dataWords.length) : 0, sumComplitted, dataWords.length];
+    List<dynamic> dataResult = [dataWords.isNotEmpty ? sumComplitted / (28*dataWords.length) : 0, sumComplitted, dataWords.length, dataTopic[0]["user"]];
 
     return dataResult;
   }
@@ -160,7 +160,22 @@ class _topicWidget extends State<topicWidget>{
                                       ),
                                     ],
                                   ),
-                                )
+                                ),
+                                Flexible(
+                                  child: AutoSizeText(
+                                    "Tạo bởi: ${snapshot.data![3]}",
+                                    style: TextStyle(
+                                      fontSize: MediaQuery.sizeOf(context).width * 0.035,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blue,
+                                      fontFamily: "Itim",
+                                    ),
+                                    minFontSize: 8,
+                                    maxLines: 1,
+                                    wrapWords: false,
+                                    group: textGroup, // Đồng bộ kích thước
+                                  ),
+                                ),
                               ],
                             )
                           ],

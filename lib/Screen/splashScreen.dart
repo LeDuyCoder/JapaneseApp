@@ -1,16 +1,17 @@
 import 'dart:convert';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:japaneseapp/Config/dataHelper.dart';
+import 'package:japaneseapp/Screen/controllScreen.dart';
+import 'package:japaneseapp/Screen/loginScreen.dart';
 import 'package:japaneseapp/Screen/tabScreen.dart';
-import 'package:japaneseapp/Screen/tutorialScreen.dart';
+
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-import 'package:workmanager/workmanager.dart';
 
 import '../main.dart';
 
@@ -51,19 +52,6 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
     _initializeDatabase();
 
     initNotifications(); // Khởi tạo thông báo
-    setupWorkManager();
-
-  }
-
-  void setupWorkManager() {
-    Workmanager().registerPeriodicTask(
-      "nightly_notification",
-      "show_notification",
-      frequency: Duration(days: 1), // Lặp lại mỗi ngày
-      initialDelay: getDelayUntilNext11PM(), // Chạy vào lúc 11h tối
-    );
-
-    print("✅ WorkManager: Đã đăng ký task vào 11h tối.");
   }
 
 
@@ -148,7 +136,7 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
                                 } else {
                                   Navigator.push(
                                     context,
-                                    MaterialPageRoute(builder: (context) => TabScreen())
+                                    MaterialPageRoute(builder: (context) => loginScreen())
                                   );
                                 }
                               },
@@ -254,36 +242,27 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
   }
 
   void sendToScreen() async {
-    if (!(await checkFlag("firstJoint"))) {
-      await setFlag("firstJoint", true);
-      Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => tutorialScreen())
-      );
-    } else {
-      Navigator.push(
-        context,
-        PageRouteBuilder(
-          transitionDuration: const Duration(milliseconds: 800), // Tăng thời gian chuyển đổi
-          pageBuilder: (context, animation, secondaryAnimation) => TabScreen(),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            var tween = Tween(begin: const Offset(1.0, 0.0), end: Offset.zero)
-                .chain(CurveTween(curve: Curves.easeInOut));
-            var offsetAnimation = animation.drive(tween);
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        transitionDuration: const Duration(milliseconds: 800), // Tăng thời gian chuyển đổi
+        pageBuilder: (context, animation, secondaryAnimation) => controllScreen(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          var tween = Tween(begin: const Offset(1.0, 0.0), end: Offset.zero)
+              .chain(CurveTween(curve: Curves.easeInOut));
+          var offsetAnimation = animation.drive(tween);
 
-            return SlideTransition(
-              position: offsetAnimation,
-              child: child,
-            );
-          },
-        ),
-      );
-    }
+          return SlideTransition(
+            position: offsetAnimation,
+            child: child,
+          );
+        },
+      ),
+    );
   }
 
   Future<void> fetchData() async {
     const String apiUrl = 'https://api.npoint.io/e00f658fac808c7f708d';
-
     try {
       final response = await http.get(Uri.parse(apiUrl));
 

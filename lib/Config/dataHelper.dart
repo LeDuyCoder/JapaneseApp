@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
@@ -102,7 +103,8 @@ class DatabaseHelper {
       await db.execute('''
       CREATE TABLE IF NOT EXISTS topic (
         id TEXT PRIMARY KEY,
-        name TEXT NOT NULL
+        name TEXT NOT NULL,
+        user Text NOT NULL
       );
     ''');
 
@@ -145,6 +147,15 @@ class DatabaseHelper {
   Future<List<Map<String, dynamic>>> getAllTopic() async {
     final db = await instance.database;
     final List<Map<String, dynamic>> result = await db.rawQuery('SELECT * FROM topic');
+    return result;
+  }
+
+  Future<List<Map<String, dynamic>>> getAllTopicByName(String topic) async {
+    final db = await instance.database;
+    final List<Map<String, dynamic>> result = await db.rawQuery(
+      'SELECT * FROM topic WHERE name = ?',
+      [topic],
+    );
     return result;
   }
 
@@ -216,14 +227,10 @@ class DatabaseHelper {
     }
   }
 
-  Future<void> insertTopic(String nameTopic) async {
-    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-
-
+  Future<void> insertTopic(String nameTopic, String userName) async {
     final db = await instance.database;
-    UuidV4 uuidV4 = UuidV4();
-    await db.insert("topic", {"id":"${uuidV4.generate()}-${androidInfo.model}","name":nameTopic});
+    UuidV4 uuidV4 = const UuidV4();
+    await db.insert("topic", {"id":uuidV4.generate(),"name":nameTopic,"user":userName});
   }
 
   Future<List<Map<String, dynamic>>> getDataTopicbyNameFolder(String nameFolder) async {
@@ -236,6 +243,56 @@ class DatabaseHelper {
     final db = await instance.database;
     await db.update(nameTable, data, where: whereUpdate);
   }
+
+  Future<String> getAllSynchronyData() async {
+    final db = await instance.database;
+
+    // Lấy danh sách tất cả các bảng (trừ bảng hệ thống)
+    final List<Map<String, dynamic>> tables = await db.rawQuery(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%';"
+    );
+
+    Map<String, dynamic> allData = {};
+
+    for (var table in tables) {
+      String tableName = table['name'];
+      List<Map<String, dynamic>> tableData = await db.query(tableName);
+      allData[tableName] = tableData;
+    }
+
+    return jsonEncode(allData);
+  }
+
+  Future<void> importSynchronyData(String jsonData) async {
+    final db = await instance.database;
+
+    // Step 1: Clear all tables
+    final List<Map<String, dynamic>> tables = await db.rawQuery(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%';"
+    );
+
+    // Delete all rows from each table
+    for (var table in tables) {
+      String tableName = table['name'];
+      await db.delete(tableName);
+    }
+
+    // Step 2: Import the new data from JSON
+    Map<String, dynamic> importedData = jsonDecode(jsonData);
+
+    // Insert data into each table
+    for (String tableName in importedData.keys) {
+      List<Map<String, dynamic>> tableData = List<Map<String, dynamic>>.from(importedData[tableName]);
+
+      // Insert all rows for this table
+      for (var row in tableData) {
+        await db.insert(tableName, row);
+      }
+    }
+
+    print("Data imported successfully.");
+  }
+
 
   Future<void> close() async {
     final db = await instance.database;

@@ -83,7 +83,8 @@ class _listWordScreen extends State<listWordScreen>{
   Future<String> hanldDataWordsQr(String topic) async {
     String idTopic = "";
     String nameTopic = "";
-    
+    String user = "";
+
     DatabaseHelper db = DatabaseHelper.instance;
     List<Map<String, dynamic>> dataWords = await db.getAllWordbyTopic(topic);
     List<Map<String, dynamic>> dataTopics = await db.getAllTopic();
@@ -91,6 +92,7 @@ class _listWordScreen extends State<listWordScreen>{
       if(dataTopic["name"] == topic){
         idTopic = dataTopic["id"];
         nameTopic = dataTopic["name"];
+        user = dataTopic["user"];
       }
     }
 
@@ -109,6 +111,7 @@ class _listWordScreen extends State<listWordScreen>{
     String dataShare = jsonEncode(
         {
           "id": idTopic,
+          "user": user,
           "name": nameTopic,
           "listWords": dataWordsQr
         });
@@ -120,7 +123,6 @@ class _listWordScreen extends State<listWordScreen>{
     String filePath = await saveCustomFile("${widget.topicName}.jpdb", data);
     shareFile(filePath);
     return const Icon(Icons.share, color: Colors.black, size: 20,);
-
   }
 
   void showDialogDelete() async {
@@ -343,33 +345,28 @@ class _listWordScreen extends State<listWordScreen>{
                           SizedBox(width:10,),
                           GestureDetector(
                             onTap: () async {
-                              if(widget.topicName.split("-").length >= 2 && isButtonDisabled){
-                                showOverlay(context, "This is a shared file that you can't share");
-                                isButtonDisabled = false;
-                              }else {
-                                if (amountWord < 15) {
-                                  try {
-                                    // Gọi hàm bất đồng bộ
-                                    final data = await hanldDataWordsQr(
-                                        widget.topicName);
-                                    // Hiển thị dialog khi có dữ liệu
-                                    showDialogQR(
-                                        QrImageView(
-                                          data: gzipCompress(data),
-                                          size: 150, // Đảm bảo kích thước bên trong widget QrImageView
-                                        )
-                                    );
-                                  } catch (e) {
-                                      print("Error: $e");
-                                  }
-                                }
-                                else {
+                              if (amountWord < 15) {
+                                try {
+                                  // Gọi hàm bất đồng bộ
                                   final data = await hanldDataWordsQr(
                                       widget.topicName);
-                                  String path = await saveCustomFile(
-                                      "${widget.topicName}.jpdb", data);
-                                  shareFile(path);
+                                  // Hiển thị dialog khi có dữ liệu
+                                  showDialogQR(
+                                      QrImageView(
+                                        data: gzipCompress(data),
+                                        size: 150, // Đảm bảo kích thước bên trong widget QrImageView
+                                      )
+                                  );
+                                } catch (e) {
+                                  print("Error: $e");
                                 }
+                              }
+                              else {
+                                final data = await hanldDataWordsQr(
+                                    widget.topicName);
+                                String path = await saveCustomFile(
+                                    "${widget.topicName}.jpdb", data);
+                                shareFile(path);
                               }
                             },
                             child: Container(

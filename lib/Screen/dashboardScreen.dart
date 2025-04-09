@@ -4,8 +4,10 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:japaneseapp/Screen/addWordScreen.dart';
 import 'package:japaneseapp/Screen/qrScreen.dart';
 import 'package:japaneseapp/Screen/serchWordScreen.dart';
+import 'package:japaneseapp/Screen/tutorialScreen.dart';
 import 'package:japaneseapp/Widget/folerWidget.dart';
 
 import '../Config/dataHelper.dart';
@@ -274,22 +276,28 @@ class _dashboardScreen extends State<dashboardScreen>{
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         const Center(
-                          child: Text("List Word Shared", style: TextStyle(fontFamily: "indieflower", fontSize: 25)),
+                          child: Text("Danh Sách Từ Chia Sẽ", style: TextStyle(fontFamily: "Itim", fontSize: 25)),
                         ),
-                        Row(
-                          children: [
-                            const Text("Device's Name: ", style: TextStyle(fontFamily: "indieflower"),),
-                            Text((data["id"] as String).split("-").last, style: TextStyle(fontFamily: "indieflower", fontWeight: FontWeight.bold),)
-                          ],
+                        Padding(
+                          padding: EdgeInsets.only(left: 10),
+                          child: Row(
+                            children: [
+                              const Text("Tạo Bởi: ", style: TextStyle(fontFamily: "Itim", fontSize: 20),),
+                              Text(data["user"], style: TextStyle(fontFamily: "IslandMoments",),)
+                            ],
+                          ),
                         ),
-                        Row(
-                          children: [
-                            const Text("Amount word: ", style: TextStyle(fontFamily: "indieflower"),),
-                            Text("${(data["listWords"] as List<dynamic>).length} Words", style: TextStyle(fontFamily: "indieflower", fontWeight: FontWeight.bold),)
-                          ],
+                        Padding(
+                          padding: EdgeInsets.only(left: 10),
+                          child: Row(
+                            children: [
+                              const Text("Số Lượng Từ: ", style: TextStyle(fontFamily: "Itim", fontSize: 20),),
+                              Text("${(data["listWords"] as List<dynamic>).length} Words", style: TextStyle(fontFamily: "IslandMoments"),)
+                            ],
+                          ),
                         ),
                         const SizedBox(height: 10,),
-                        const Text("Do You Add List Word ?", style: TextStyle(fontFamily: "indieflower"),),
+                        const Text("Bạn Có Muốn Thêm Vao Danh Sách Từ Không ?", style: TextStyle(fontFamily: "Itim"),),
                         const SizedBox(height: 20,),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.end,
@@ -309,7 +317,7 @@ class _dashboardScreen extends State<dashboardScreen>{
                                     ]
                                 ),
                                 child: Center(
-                                  child: Text("CANCLE", style: TextStyle(color: Colors.red, fontSize: 15, fontWeight: FontWeight.bold),),
+                                  child: Text("Hủy", style: TextStyle(color: Colors.red, fontSize: 15, fontWeight: FontWeight.bold),),
                                 ),
                               ),
                             ),
@@ -317,10 +325,10 @@ class _dashboardScreen extends State<dashboardScreen>{
                             GestureDetector(
                               onTap: () async {
                                 DatabaseHelper db = DatabaseHelper.instance;
-                                String nameTopic = "${data["name"]} - ${(data["id"] as String).split("-").last}";
+                                String nameTopic = "${data["name"]}";
 
                                 if(!(await db.hasTopicName(nameTopic))) {
-                                  await db.insertTopic(nameTopic);
+                                  await db.insertTopic(nameTopic, data["user"]);
 
                                   List<dynamic> listWords = data["listWords"];
                                   List<Map<String, dynamic>> dataInsert = [];
@@ -350,7 +358,7 @@ class _dashboardScreen extends State<dashboardScreen>{
                                     ]
                                 ),
                                 child: Center(
-                                  child: Text("CONFIRM", style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),),
+                                  child: Text("Xác Nhận", style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),),
                                 ),
                               ),
                             ),
@@ -693,8 +701,14 @@ class _dashboardScreen extends State<dashboardScreen>{
                                       });
                                     } else {
                                       isLoadingCreateNewFolder = false;
-                                      controller.dispose();
                                       Navigator.pop(context);
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => addWordScreen(topicName: nameTopicInput.text, setIsLoad: (){
+                                        setState((){
+                                          isLoadingCreateNewFolder = false;
+                                        });
+                                      }, reload: (){
+                                        setState((){});
+                                      })));
                                     }
                                   },
                                   child: Padding(
@@ -897,15 +911,17 @@ class _dashboardScreen extends State<dashboardScreen>{
               ),
             ),
             actions: [
-              Center(
-                child: Padding(
-                  padding: EdgeInsets.only(right: 10),
-                  child: Text(
-                    amountTopic,
-                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, fontFamily: "itim"),
+              GestureDetector(
+                onTap: (){
+                  Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>tutorialScreen()));
+                },
+                child: Center(
+                  child: Padding(
+                      padding: EdgeInsets.only(right: 20),
+                      child: Icon(Icons.help, color: Colors.black45,)
                   ),
                 ),
-              ),
+              )
             ],
             backgroundColor: Color.fromRGBO(20, 195, 142, 1.0),
             shape: const RoundedRectangleBorder(

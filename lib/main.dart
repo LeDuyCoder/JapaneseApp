@@ -1,34 +1,21 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:japaneseapp/Screen/splashScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher_string.dart';
-import 'package:workmanager/workmanager.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
-  // Đăng ký công việc chạy mỗi ngày
-  Workmanager().registerPeriodicTask(
-    "uniqueTaskId",  // ID duy nhất của task
-    "simpleTask",
-    frequency: Duration(minutes: 15), // WorkManager chỉ hỗ trợ tối thiểu 15 phút
-    initialDelay: Duration(seconds: 5), // Delay ban đầu
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(MyApp());
 }
 
-// Hàm chạy ngầm kiểm tra điều kiện và gửi thông báo
-void callbackDispatcher() {
-
-  Workmanager().executeTask((task, inputData) async {
-    bool shouldSendNotification = await checkCondition();
-    if (shouldSendNotification) {
-      showNotification();
-    }
-    return Future.value(true);
-  });
-}
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 FlutterLocalNotificationsPlugin();

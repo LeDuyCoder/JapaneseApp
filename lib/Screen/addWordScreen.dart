@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -250,7 +251,7 @@ class _addWordScreen extends State<addWordScreen>{
       dataWords.add(vocabulary.toMap());
     }
 
-    await db.insertTopic(widget.topicName);
+    await db.insertTopic(widget.topicName, FirebaseAuth.instance.currentUser!.displayName!);
     await db.insertDataTopic(dataWords);
   }
 

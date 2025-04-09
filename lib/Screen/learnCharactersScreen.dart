@@ -316,7 +316,7 @@ class _learnCharactersScreen extends State<learnCharactersScreen> {
               dataColumeA.add({
                 "word": characterJapanese,
                 "awnser": wayRead,
-                "wayread": wayRead
+                "wayread": characterJapanese
               });
               dataColumeB.add(wayRead);
             }
@@ -328,7 +328,7 @@ class _learnCharactersScreen extends State<learnCharactersScreen> {
               dataColumeA.add({
                 "word": exampleCharacter,
                 "awnser": coverWayReadExample,
-                "wayread": coverWayReadExample
+                "wayread": exampleCharacter
               });
               dataColumeB.add(coverWayReadExample);
             }

@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "720695532060",
+    "project_id": "japaneseapplearning",
+    "storage_bucket": "japaneseapplearning.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:720695532060:android:3c86971f9f297753dd5dd9",
+        "android_client_info": {
+          "package_name": "kiradev.studio.japaneseapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "720695532060-c6g62anc14mavl3hqun3it476q44pl5r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBnYGDaL86KpK-9xwA_pFj2u6pjQXjnS_k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "720695532060-c6g62anc14mavl3hqun3it476q44pl5r.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "720695532060-uu9gut9uln382k0p6293cejc3ui4f5o7.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "kiradev.studio.japaneseapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,2 @@
+/home/kiradev/project/JapnaeseApp/android/app/.cxx/Debug/244y2z2c/armeabi-v7a/CMakeFiles/rebuild_cache.dir
+/home/kiradev/project/JapnaeseApp/android/app/.cxx/Debug/244y2z2c/armeabi-v7a/CMakeFiles/edit_cache.dir
