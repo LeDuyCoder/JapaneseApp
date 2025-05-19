@@ -143,7 +143,7 @@ class _WriteTestCharacterScreenState extends State<WriteTestCharacterScreen> {
                     builder: (ctx) =>
                         rightTab(nextQuestion: () {
                           widget.nextLearned(true);
-                        },));
+                        }, isMean: false,));
               } else {
                 await playSound("sound/wrong.mp3");
                 showModalBottomSheet(

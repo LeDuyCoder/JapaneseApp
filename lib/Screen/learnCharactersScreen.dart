@@ -254,7 +254,7 @@ class _learnCharactersScreen extends State<learnCharactersScreen> {
 
     List<String> charactersTest = [];
     int typeSection = widget.typeCharacter == "hiragana" ? 2 : 3;
-    int levelSet = dataCharacterUser["levelSet"] ?? 1;
+    int levelSet = dataCharacterUser["levelSet"] ?? 0;
     int level = dataCharacterUser["level"] ?? 0;
 
     if(level >= 0 && level < 2){
@@ -295,6 +295,7 @@ class _learnCharactersScreen extends State<learnCharactersScreen> {
                 finishTest(jsonData);
               }
             },
+            readText: true,
           ),
         );
       }

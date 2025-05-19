@@ -33,7 +33,7 @@ class _registerScreen extends State<registerScreen>{
       }else{
         // Validate password match
         if (passController.text != rePassController.text) {
-          String msg = 'Passwords do not match';
+          String msg = 'Hai mật khẩu không giống nhau';
           setState(() {
             err_Password = msg;
             err_RePass = msg;
@@ -41,7 +41,7 @@ class _registerScreen extends State<registerScreen>{
           });
         }else{
           if (passController.text.length < 6) {
-            String msg = 'Password must be at least 6 characters';
+            String msg = 'Mật khẩu phải có ít nhất 6 ký tự';
             err_Password = msg;
             _isLoading = false;
           }else{
@@ -78,19 +78,19 @@ class _registerScreen extends State<registerScreen>{
       String errorMessage;
       switch (e.code) {
         case 'email-already-in-use':
-          errorMessage = 'This email is already registered.';
+          errorMessage = 'Email này đã được đăng ký.';
           break;
         case 'invalid-email':
-          errorMessage = 'The email address is invalid.';
+          errorMessage = 'Địa chỉ email không hợp lệ.';
           break;
         case 'operation-not-allowed':
-          errorMessage = 'Email/password accounts are not enabled.';
+          errorMessage = 'Tài khoản email/mật khẩu chưa được kích hoạt.';
           break;
         case 'weak-password':
-          errorMessage = 'The password is too weak.';
+          errorMessage = 'Mật khẩu quá yếu.';
           break;
         default:
-          errorMessage = 'An unknown error occurred.';
+          errorMessage = 'Đã xảy ra lỗi không xác định.';
       }
       setState(() {
         err_Username = errorMessage;
@@ -219,7 +219,7 @@ class _registerScreen extends State<registerScreen>{
                     child: Container(
                       height: MediaQuery.sizeOf(context).height*0.1,
                       width: MediaQuery.sizeOf(context).width,
-                      child: AutoSizeText("Hello, Register to get started", style: TextStyle(fontSize: MediaQuery.sizeOf(context).width*0.8, fontFamily: "Itim"),),
+                      child: AutoSizeText("Xin chào, Đăng kí để bắt đầu trải nghiệm", style: TextStyle(fontSize: MediaQuery.sizeOf(context).width*0.8, fontFamily: "Itim"),),
                     ),
                   ),
                   const SizedBox(height: 10,),
@@ -229,7 +229,7 @@ class _registerScreen extends State<registerScreen>{
                       controller: mailController,
                       decoration: InputDecoration(
                         labelText: 'Email',
-                        hintText: 'Enter your Email',
+                        hintText: 'Nhập email của bạn',
                         prefixIcon: Icon(Icons.mail),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10.0),
@@ -250,8 +250,8 @@ class _registerScreen extends State<registerScreen>{
                     child: TextField(
                       controller: userController,
                       decoration: InputDecoration(
-                        labelText: 'User Name',
-                        hintText: 'Enter your User Name',
+                        labelText: 'Tên Người Dùng',
+                        hintText: 'Nhập Tên Người Dùng',
                         prefixIcon: const Icon(Icons.person),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10.0),
@@ -272,8 +272,8 @@ class _registerScreen extends State<registerScreen>{
                     child: TextField(
                       controller: passController,
                       decoration: InputDecoration(
-                        labelText: 'Password',
-                        hintText: 'Enter your password',
+                        labelText: 'Mật Khẩu',
+                        hintText: 'Nhập Mật Khẩu',
                         prefixIcon: Icon(Icons.lock),
                         suffixIcon: IconButton(
                           icon: Icon(_isShowPass ? Icons.visibility : Icons.visibility_off),
@@ -303,8 +303,8 @@ class _registerScreen extends State<registerScreen>{
                     child: TextField(
                       controller: rePassController,
                       decoration: InputDecoration(
-                        labelText: 'Re_Password',
-                        hintText: 'Enter your password',
+                        labelText: 'Nhập Lại Mật Khẩu',
+                        hintText: 'Nhập Mật Khẩu Lần Nữa',
                         prefixIcon: Icon(Icons.lock),
                         suffixIcon: IconButton(
                           icon: Icon(_isShowPass ? Icons.visibility : Icons.visibility_off),
@@ -346,7 +346,7 @@ class _registerScreen extends State<registerScreen>{
                               borderRadius: BorderRadius.all(Radius.circular(15))
                           ),
                           child: Center(
-                            child: Text("REGISTER", style: TextStyle(color: Colors.white, fontSize: 20, fontFamily: "Itim")),
+                            child: Text("Đăng Kí", style: TextStyle(color: Colors.white, fontSize: 20, fontFamily: "Itim")),
                           )
                       ),
                     ),
@@ -359,9 +359,9 @@ class _registerScreen extends State<registerScreen>{
                     child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("Don't have an account? ", style: TextStyle(fontFamily: "Itim"),),
-                        SizedBox(width: 2,),
-                        Text("Register Now ", style: TextStyle(color: CupertinoColors.activeBlue, fontFamily: "Itim"),),
+                        Text("Đã có tài khoảng", style: TextStyle(fontFamily: "Itim"),),
+                        SizedBox(width: 5,),
+                        Text("Đăng Nhập", style: TextStyle(color: CupertinoColors.activeBlue, fontFamily: "Itim"),),
                       ],
                     ),
                   ),

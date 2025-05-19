@@ -1,0 +1,2 @@
+/home/kiradev/project/JapnaeseApp/android/app/.cxx/RelWithDebInfo/3u165c2o/x86_64/CMakeFiles/rebuild_cache.dir
+/home/kiradev/project/JapnaeseApp/android/app/.cxx/RelWithDebInfo/3u165c2o/x86_64/CMakeFiles/edit_cache.dir

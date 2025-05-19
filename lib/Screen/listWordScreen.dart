@@ -276,7 +276,7 @@ class _listWordScreen extends State<listWordScreen>{
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 const AutoSizeText(
-                                  "Topic's Name: ",
+                                  "Tên chủ đề: ",
                                   style: TextStyle(fontFamily: "indieflower"),
                                 ),
                                 Flexible(
@@ -298,7 +298,7 @@ class _listWordScreen extends State<listWordScreen>{
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              AutoSizeText("Amount word: ", style: TextStyle(fontFamily: "indieflower")),
+                              AutoSizeText("Số Lượng Từ: ", style: TextStyle(fontFamily: "indieflower")),
                               AutoSizeText(
                                 "$amountWord",
                                 style: TextStyle(fontFamily: "indieflower", fontWeight: FontWeight.bold),
@@ -308,7 +308,7 @@ class _listWordScreen extends State<listWordScreen>{
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              AutoSizeText("State: ", style: TextStyle(fontFamily: "indieflower")),
+                              AutoSizeText("Loại: ", style: TextStyle(fontFamily: "indieflower")),
                               AutoSizeText(
                                 amountWord < 15 ? "QR Code" : "Share File",
                                 style: TextStyle(fontFamily: "indieflower", fontWeight: FontWeight.bold, fontSize: 10),
@@ -337,7 +337,7 @@ class _listWordScreen extends State<listWordScreen>{
                                   ]
                               ),
                               child: const Center(
-                                child: Text("Delete", style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),),
+                                child: Text("Xóa", style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),),
                               ),
                             ),
 
@@ -378,7 +378,7 @@ class _listWordScreen extends State<listWordScreen>{
                               ),
                               child: const Center(
                                 child: Text(
-                                  "Share",
+                                  "Chia Sẽ",
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 15,

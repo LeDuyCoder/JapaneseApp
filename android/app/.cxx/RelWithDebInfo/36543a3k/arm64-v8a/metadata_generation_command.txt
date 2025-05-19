@@ -1,0 +1,20 @@
+                    -H/home/kiradev/snap/flutter/common/flutter/packages/flutter_tools/gradle/src/main/groovy
+-DCMAKE_SYSTEM_NAME=Android
+-DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+-DCMAKE_SYSTEM_VERSION=23
+-DANDROID_PLATFORM=android-23
+-DANDROID_ABI=arm64-v8a
+-DCMAKE_ANDROID_ARCH_ABI=arm64-v8a
+-DANDROID_NDK=/home/kiradev/Android/Sdk/ndk/26.3.11579264
+-DCMAKE_ANDROID_NDK=/home/kiradev/Android/Sdk/ndk/26.3.11579264
+-DCMAKE_TOOLCHAIN_FILE=/home/kiradev/Android/Sdk/ndk/26.3.11579264/build/cmake/android.toolchain.cmake
+-DCMAKE_MAKE_PROGRAM=/home/kiradev/Android/Sdk/cmake/3.18.1/bin/ninja
+-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=/home/kiradev/project/JapnaeseApp/build/app/intermediates/cxx/RelWithDebInfo/36543a3k/obj/arm64-v8a
+-DCMAKE_RUNTIME_OUTPUT_DIRECTORY=/home/kiradev/project/JapnaeseApp/build/app/intermediates/cxx/RelWithDebInfo/36543a3k/obj/arm64-v8a
+-DCMAKE_BUILD_TYPE=RelWithDebInfo
+-B/home/kiradev/project/JapnaeseApp/android/app/.cxx/RelWithDebInfo/36543a3k/arm64-v8a
+-GNinja
+-Wno-dev
+--no-warn-unused-cli
+                    Build command args: []
+                    Version: 2

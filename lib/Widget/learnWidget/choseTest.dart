@@ -2,6 +2,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:japaneseapp/Widget/choseWordWidget.dart';
 import 'package:japaneseapp/Widget/learnWidget/rightTab.dart';
 import 'package:japaneseapp/Widget/learnWidget/wrongTab.dart';
@@ -9,8 +10,9 @@ import 'package:japaneseapp/Widget/learnWidget/wrongTab.dart';
 class choseTest extends StatefulWidget {
   final Map<String, dynamic> data;
   final void Function() nextQuestion;
+  final bool readText;
 
-  const choseTest({super.key, required this.data, required this.nextQuestion});
+  const choseTest({super.key, required this.data, required this.nextQuestion, required this.readText});
 
   @override
   State<StatefulWidget> createState() => _choseTestState();
@@ -20,12 +22,19 @@ class _choseTestState extends State<choseTest> {
   late Map<int, String> positionAnswer; // Biến lưu trữ vị trí đáp án cố định
   int positionChose = 0;
   final AudioPlayer _audioPlayer = AudioPlayer();
+  final FlutterTts _flutterTts = FlutterTts();
   bool isPress = false;
 
   @override
   void initState() {
     super.initState();
     positionAnswer = _generateQuestion();
+  }
+
+  Future<void> readText(String text, double speed) async {
+    await _flutterTts.setLanguage("ja-JP");
+    await _flutterTts.setSpeechRate(speed);
+    await _flutterTts.speak(text);
   }
 
   Future<void> playSound(String filePath) async {
@@ -66,7 +75,12 @@ class _choseTestState extends State<choseTest> {
     return positionAnswer;
   }
 
-  void choseItem(int position){
+  void choseItem(int position, String text){
+
+    if(widget.readText == true){
+      readText(text, 1.0);
+    }
+
     setState(() {
       if(position == positionChose){
         positionChose = 0;
@@ -115,8 +129,8 @@ class _choseTestState extends State<choseTest> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    choseWordWidget(textShow: positionAnswer[1] ?? "", isChose: positionChose == 1, choseItem: () { choseItem(1); },),
-                    choseWordWidget(textShow: positionAnswer[2] ?? "", isChose:  positionChose == 2, choseItem: () { choseItem(2); },),
+                    choseWordWidget(textShow: positionAnswer[1] ?? "", isChose: positionChose == 1, choseItem: () { choseItem(1, positionAnswer[1]!); },),
+                    choseWordWidget(textShow: positionAnswer[2] ?? "", isChose:  positionChose == 2, choseItem: () { choseItem(2, positionAnswer[2]!); },),
                   ],
                 ),
               ),
@@ -126,8 +140,8 @@ class _choseTestState extends State<choseTest> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    choseWordWidget(textShow: positionAnswer[3] ?? "", isChose:  positionChose == 3, choseItem: () { choseItem(3); },),
-                    choseWordWidget(textShow: positionAnswer[4] ?? "", isChose:  positionChose == 4, choseItem: () { choseItem(4); },),
+                    choseWordWidget(textShow: positionAnswer[3] ?? "", isChose:  positionChose == 3, choseItem: () { choseItem(3, positionAnswer[3]!); },),
+                    choseWordWidget(textShow: positionAnswer[4] ?? "", isChose:  positionChose == 4, choseItem: () { choseItem(4, positionAnswer[4]!); },),
                   ],
                 ),
               ),
@@ -158,7 +172,7 @@ class _choseTestState extends State<choseTest> {
                             builder: (ctx) =>
                                 rightTab(nextQuestion: () {
                                   widget.nextQuestion();
-                                }));
+                                }, isMean: false,));
                       } else {
                         playSound("sound/wrong.mp3");
                         showModalBottomSheet(enableDrag: false,

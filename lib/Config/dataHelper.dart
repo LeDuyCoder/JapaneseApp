@@ -21,69 +21,18 @@ class DatabaseHelper {
   Future<Database> _initDatabase() async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, 'app_database.db');
+    
     print("path: $path");
 
 
     // Đảm bảo rằng phiên bản đã được tăng lên để gọi lại onCreate nếu cần thiết
     return await openDatabase(
       path,
-      version: 10,
+      version: 1,
       onCreate: _createDB,
-      onUpgrade: _onUpgradeDB
     );
   }
 
-  Future<void> _onUpgradeDB(Database db, int oldVersion, int newVersion) async {
-    print("Upgrading database from version $oldVersion to $newVersion...");
-
-    try {
-      if(oldVersion < 7) {
-        // Kiểm tra nếu cột datefolder chưa tồn tại thì thêm vào
-        var columns = await db.rawQuery("PRAGMA table_info(folders);");
-        bool columnExists = columns.any((column) =>
-        column["name"] == "datefolder");
-
-        if (!columnExists) {
-          // Bước 1: Thêm cột nhưng không có DEFAULT
-          await db.execute('''
-          ALTER TABLE folders ADD COLUMN datefolder TEXT;
-        ''');
-          print("Column 'datefolder' added.");
-
-          // Bước 2: Cập nhật giá trị mặc định cho cột mới
-          await db.execute('''
-          UPDATE folders SET datefolder = strftime('%d/%m/%Y %H:%M', 'now') WHERE datefolder IS NULL;
-        ''');
-          print("Updated existing rows with default date.");
-        } else {
-          print("Column 'datefolder' already exists.");
-        }
-
-        await db.execute('''
-          CREATE TABLE IF NOT EXISTS characterjp (
-            charName TEXT NOT NULL,
-            level INTEGER,
-            setLevel INTEGER,
-            typeword TEXT NOT NULL
-          );
-        ''');
-      }else{
-        if(newVersion == 10){
-          await db.execute('''
-          CREATE TABLE IF NOT EXISTS characterjp (
-            charName TEXT NOT NULL,
-            level INTEGER,
-            setLevel INTEGER,
-            typeword TEXT NOT NULL
-          );
-        ''');
-        }
-      }
-      print("Database upgraded successfully.");
-    } catch (e) {
-      print("Error upgrading database: $e");
-    }
-  }
 
   Future<void> _createDB(Database db, int version) async {
     print("Creating tables...");

@@ -25,7 +25,7 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
   late Animation<Offset> _animation;
 
   String version_check = "", message_old_version = "";
-  String version = "1.4.1";
+  String version = "1.4.2";
   @override
   void initState() {
     super.initState();
@@ -50,8 +50,6 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
     // Bắt đầu hoạt ảnh
     _controller.forward();
     _initializeDatabase();
-
-    initNotifications(); // Khởi tạo thông báo
   }
 
 
@@ -194,7 +192,7 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
     }
 
     Map<String, dynamic> data = {
-      "levelSet": 1,
+      "levelSet": 0,
       "level": 0,
     };
 

@@ -9,9 +9,10 @@ import 'package:url_launcher/url_launcher.dart';
 
 class WriteTestScreen extends StatefulWidget {
   final String testData;
+  final String? mean;
   final void Function(bool isRight) nextLearned;
 
-  const WriteTestScreen({super.key, required this.testData, required this.nextLearned});
+  const WriteTestScreen({super.key, required this.testData, required this.nextLearned, this.mean});
   @override
 
   State<StatefulWidget> createState() => _WriteTestScreenState();
@@ -135,7 +136,7 @@ class _WriteTestScreenState extends State<WriteTestScreen> {
                     builder: (ctx) =>
                         rightTab(nextQuestion: () {
                           widget.nextLearned(true);
-                        },));
+                        }, isMean: true, mean: widget.mean,));
               } else {
                 await playSound("sound/wrong.mp3");
                 showModalBottomSheet(

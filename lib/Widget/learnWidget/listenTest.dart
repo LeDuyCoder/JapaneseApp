@@ -106,58 +106,56 @@ class _ListenTextState extends State<listenTest> {
                 ),
               ),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Image.asset("assets/character/character3.png", width: MediaQuery.sizeOf(context).height*0.2),
                   Container(
-                    padding: const EdgeInsets.all(10),
-                    margin: const EdgeInsets.symmetric(vertical: 5),
                     width: MediaQuery.sizeOf(context).width*0.5,
-                    height: MediaQuery.sizeOf(context).height*0.12,
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(15),
-                        topRight: Radius.circular(15),
-                        bottomRight: Radius.circular(15),
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey,
-                          offset: Offset(4, -4),
-                          blurRadius: 10,
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        GestureDetector(
-                          onTap: () async {
-                            await readText(widget.WordTest.wayread, 0.5);
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 10),
-                            child: Icon(Icons.volume_down_sharp,
-                                color: Colors.blue, size: 50),
-                          )
-                        ),
-                        SizedBox(width: 10,),
-                        CustomPaint(
-                          size: Size(10, 100), // Kích thước của khu vực vẽ
-                          painter: LinePainter(),
-                        ),
-                        GestureDetector(
-                          onTap: () async {
-                            await readText(widget.WordTest.wayread, 0.1);
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.only(right: 20),
-                            child: Text("🐢", style: TextStyle(color: Colors.blue, fontSize: 40),)
-                          )
-                        ),
-                      ],
-                    ),
+                    child: Image.asset("assets/character/character3.png", width: MediaQuery.sizeOf(context).height*0.2),
                   ),
+                  Container(
+                    width: MediaQuery.sizeOf(context).width*0.5,
+                    child: Center(
+                      child: GestureDetector(
+                        onTapDown: (_) {
+                          setState(() {
+                            isPress = true;
+                          });
+                        },
+                        onTapUp: (_) async {
+                          setState(() {
+                            isPress = false;
+                          });
+                          await readText(widget.WordTest.wayread, 0.1);
+
+                        },
+                        onTapCancel: () {
+                          setState(() {
+                            isPress = false;
+                          });
+                        },
+                        child: AnimatedContainer(
+                          duration: Duration(milliseconds: 100),
+                          curve: Curves.easeInOut,
+                          transform: Matrix4.translationValues(0, isPress ? 4 : 0, 0),
+                          height: MediaQuery.sizeOf(context).width*0.3,
+                          width: MediaQuery.sizeOf(context).width*0.3,
+                          decoration: BoxDecoration(
+                              color: Colors.blue.shade200,
+                              borderRadius: BorderRadius.all(Radius.circular(20)),
+                              boxShadow: [
+                                if(!isPress)
+                                  BoxShadow(
+                                      color: Colors.blue.shade400,
+                                      offset: Offset(6, 6)
+                                  )
+                              ]
+                          ),
+                          child: Icon(Icons.volume_up_rounded, color: Colors.white, size:50,),
+                        ),
+                      ),
+                    ),
+                  )
+
                 ],
               ),
               DragTarget<boxText>(
@@ -301,7 +299,7 @@ class _ListenTextState extends State<listenTest> {
                               dataBoxText!.add(boxText(text));
                             }
                             loadBoxText = true;
-                          },));
+                          }, isMean: false,));
                     }else{
                       await playSound("sound/wrong.mp3");
 

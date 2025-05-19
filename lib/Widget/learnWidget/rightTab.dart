@@ -8,6 +8,8 @@ class rightTab extends StatefulWidget{
   @override
   State<StatefulWidget> createState() => _rightTab();
   final void Function() nextQuestion;
+  final bool isMean;
+  final String? mean;
   List<String> motivationalPhrasesVN = [
     "Tiếp tục cố gắng, bạn đang làm rất tốt!",
     "Lần này bạn đã hoàn hảo, hãy tiếp tục cố gắng!",
@@ -21,7 +23,7 @@ class rightTab extends StatefulWidget{
     "Sự chăm chỉ của bạn sẽ sớm được đền đáp!"
   ];
   String? PhrasesVN;
-  rightTab({super.key, required this.nextQuestion});
+  rightTab({super.key, required this.nextQuestion, required this.isMean, this.mean});
 }
 
 class _rightTab extends State<rightTab>{
@@ -66,7 +68,7 @@ class _rightTab extends State<rightTab>{
             ),
             const SizedBox(height: 10), // Khoảng cách nhỏ để tránh dính
             Text(
-              widget.PhrasesVN!,
+              widget.isMean ? "Nghĩa của từ là: ${widget.mean}" : widget.PhrasesVN!,
               style: TextStyle(
                 color: Colors.green,
                 fontSize: MediaQuery.sizeOf(context).width * 0.045,

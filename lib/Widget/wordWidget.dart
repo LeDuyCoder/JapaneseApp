@@ -5,6 +5,7 @@ import 'package:flutter_tts/flutter_tts.dart';
 import 'package:flutter_volume_controller/flutter_volume_controller.dart';
 import 'package:japaneseapp/Config/dataHelper.dart';
 import 'package:japaneseapp/Module/word.dart';
+import 'package:japaneseapp/Widget/FlashCardWidget.dart';
 
 class wordWidget extends StatefulWidget{
 
@@ -265,6 +266,18 @@ class _wordWidget extends State<wordWidget>{
     });
   }
 
+  void showFlashCardDialog(BuildContext context, String word, String mean, String wayread) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          insetPadding: EdgeInsets.all(20),
+          child: FlashCardWidget(word: word, mean: mean, wayread: wayread,),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -286,6 +299,9 @@ class _wordWidget extends State<wordWidget>{
 
             if(volume != 0){
               readText(widget.wordText.wayread, 0.5);
+
+              showFlashCardDialog(context, widget.wordText.vocabulary, widget.wordText.mean, widget.wordText.wayread);
+
             }else{
               isButtonDisabled = !isButtonDisabled;
               showOverlay(context);

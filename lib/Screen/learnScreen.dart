@@ -112,6 +112,7 @@ class _learnScreen extends State<learnScreen> {
                           nextLearned: (bool isRight) {
                             handleNext(true);
                           },
+                          mean: dataMap[numberCount]["mean"],
                         )
                       : choseTest(
                           data: {
@@ -124,6 +125,7 @@ class _learnScreen extends State<learnScreen> {
                           nextQuestion: () {
                             handleNext(true);
                           },
+                          readText: false,
                         );
     });
   }
@@ -353,6 +355,7 @@ class _learnScreen extends State<learnScreen> {
             dataMap.add({
               "feture": fetureChose,
               "word": wordCheckRandom.vocabulary,
+              "mean": wordCheckRandom.mean
             });
           }
         }

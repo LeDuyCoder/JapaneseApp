@@ -21,6 +21,16 @@ android {
         jvmTarget = JavaVersion.VERSION_1_8
     }
 
+
+    signingConfigs {
+        release {
+            storeFile file("japneseappkeystore.jks")  // Đường dẫn tới file keystore
+            storePassword "2822005"       // Password của keystore
+            keyAlias "kiradev"                 // Alias (thường là 'my-alias' nếu bạn dùng hướng dẫn trước)
+            keyPassword "2822005"           // Password của key
+        }
+    }
+
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "kiradev.studio.japaneseapp"
@@ -36,7 +46,7 @@ android {
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.debug
+            signingConfig = signingConfigs.release
         }
     }
 

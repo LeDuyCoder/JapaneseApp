@@ -196,7 +196,7 @@ class _dashboardScreen extends State<dashboardScreen>{
                         const Padding(
                           padding: EdgeInsets.only(left: 16, right: 16, top: 5),
                           child: Text(
-                            'Save data vocabulay failed becausse it is created',
+                            'Lưu dữ liệu từ vựng không thành công vì đã tồn tại',
                             style: TextStyle(fontSize: 15),
                           ),
                         ),
@@ -463,7 +463,7 @@ class _dashboardScreen extends State<dashboardScreen>{
                             child: TextField(
                               controller: nameFolderInput,
                               decoration: InputDecoration(
-                                hintText: "Name folder",
+                                hintText: "Tên thư mục",
                                 hintStyle: TextStyle(color: Colors.grey),
                                 filled: true,
                                 fillColor: Colors.white,
@@ -508,7 +508,7 @@ class _dashboardScreen extends State<dashboardScreen>{
                                       ),
                                       child: const Center(
                                         child: Text(
-                                          "Cancel",
+                                          "Hủy",
                                           style: TextStyle(color: Colors.white, fontSize: 15),
                                         ),
                                       ),
@@ -523,7 +523,7 @@ class _dashboardScreen extends State<dashboardScreen>{
 
                                     if (await DatabaseHelper.instance.hasFolderName(nameFolderInput.text)) {
                                       setState(() {
-                                        textErrorName = "Name Folder Exist";
+                                        textErrorName = "Tên Thư Mục Đã Tồn Tại";
                                         isLoadingCreateNewFolder = false;
                                       });
                                     } else {
@@ -544,7 +544,7 @@ class _dashboardScreen extends State<dashboardScreen>{
                                       ),
                                       child: const Center(
                                         child: Text(
-                                          "Create",
+                                          "Tạo",
                                           style: TextStyle(color: Colors.black, fontSize: 15),
                                         ),
                                       ),
@@ -635,7 +635,7 @@ class _dashboardScreen extends State<dashboardScreen>{
                             child: TextField(
                               controller: nameTopicInput,
                               decoration: InputDecoration(
-                                hintText: "Name Topic",
+                                hintText: "Tên Chủ Đề",
                                 hintStyle: const TextStyle(color: Colors.grey),
                                 filled: true,
                                 fillColor: Colors.white,
@@ -681,7 +681,7 @@ class _dashboardScreen extends State<dashboardScreen>{
                                       ),
                                       child: const Center(
                                         child: Text(
-                                          "Cancel",
+                                          "Hủy",
                                           style: TextStyle(color: Colors.white, fontSize: 15),
                                         ),
                                       ),
@@ -722,7 +722,7 @@ class _dashboardScreen extends State<dashboardScreen>{
                                       ),
                                       child: const Center(
                                         child: Text(
-                                          "Create",
+                                          "Tạo",
                                           style: TextStyle(color: Colors.black, fontSize: 15),
                                         ),
                                       ),
@@ -886,7 +886,7 @@ class _dashboardScreen extends State<dashboardScreen>{
       future: hanldeGetData(),
       builder: (ctx, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         }
 
         if (snapshot.hasError) {
@@ -894,7 +894,7 @@ class _dashboardScreen extends State<dashboardScreen>{
         }
 
         if (!snapshot.hasData || snapshot.data == null) {
-          return Center(child: Text("No data available."));
+          return const Center(child: Text("Không có dữ liệu", style: TextStyle(color: Colors.grey),));
         }
 
         dataDashBoards = snapshot.data as Map<String, List<Map<String, dynamic>>>;
@@ -1000,7 +1000,7 @@ class _dashboardScreen extends State<dashboardScreen>{
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     const Text(
-                                      "Folder",
+                                      "Thư Mục",
                                       style: TextStyle(fontFamily: "itim", fontSize: 30),
                                     ),
                                     GestureDetector(
@@ -1008,7 +1008,7 @@ class _dashboardScreen extends State<dashboardScreen>{
                                         showPopupAddFolder();
                                       },
                                       child: Container(
-                                        width: 100,
+                                        width: 150,
                                         height: 50,
                                         decoration: const BoxDecoration(
                                           color: Color.fromRGBO(184, 241, 176, 1),
@@ -1016,8 +1016,8 @@ class _dashboardScreen extends State<dashboardScreen>{
                                         ),
                                         child: const Center(
                                           child: Text(
-                                            "+ ADD",
-                                            style: TextStyle(fontFamily: "indieflower", fontWeight: FontWeight.bold),
+                                            "+ Thêm Thư Mục",
+                                            style: TextStyle(fontFamily: "Itim", fontWeight: FontWeight.bold, fontSize: 16),
                                             textAlign: TextAlign.center,
                                           ),
                                         ),
@@ -1027,7 +1027,7 @@ class _dashboardScreen extends State<dashboardScreen>{
                                 ),
                               ),
                               dataDashBoards["folder"]!.isEmpty? Center(
-                                child: Text("No Data", style: TextStyle(fontSize: 20),),
+                                child: Text("Không có dữ liệu", style: TextStyle(fontSize: 20, color: Colors.grey),),
                               ) : SingleChildScrollView(
                                 scrollDirection: Axis.horizontal,
                                 child: Row(
@@ -1046,7 +1046,7 @@ class _dashboardScreen extends State<dashboardScreen>{
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     const Text(
-                                      "Topic",
+                                      "Chủ Đề",
                                       style: TextStyle(fontFamily: "itim", fontSize: 30),
                                     ),
                                     Row(
@@ -1069,8 +1069,8 @@ class _dashboardScreen extends State<dashboardScreen>{
                                                     Icon(Icons.insert_page_break, color: Colors.black,size: 20,),
                                                     SizedBox(width: 10,),
                                                     Text(
-                                                      "Input",
-                                                      style: TextStyle(fontFamily: "indieflower", fontWeight: FontWeight.bold),
+                                                      "Nhập",
+                                                      style: TextStyle(fontFamily: "Itim", fontWeight: FontWeight.bold, fontSize: 16),
                                                       textAlign: TextAlign.center,
                                                     ),
                                                   ],
@@ -1084,7 +1084,7 @@ class _dashboardScreen extends State<dashboardScreen>{
                                             showPopupAddTopic();
                                           },
                                           child: Container(
-                                            width: 100,
+                                            width: 120,
                                             height: 50,
                                             decoration: const BoxDecoration(
                                               color: Color.fromRGBO(184, 241, 176, 1),
@@ -1092,8 +1092,8 @@ class _dashboardScreen extends State<dashboardScreen>{
                                             ),
                                             child: const Center(
                                               child: Text(
-                                                "+ ADD",
-                                                style: TextStyle(fontFamily: "indieflower", fontWeight: FontWeight.bold),
+                                                "+ Thêm Chủ Đề",
+                                                style: TextStyle(fontFamily: "Itim", fontWeight: FontWeight.bold, fontSize: 16),
                                                 textAlign: TextAlign.center,
                                               ),
                                             ),

@@ -308,7 +308,7 @@ class _SortTextState extends State<sortText> {
                               dataBoxText!.add(boxText(text));
                             }
                             loadBoxText = true;
-                          },));
+                          }, isMean: false,));
                     }else{
                       await playSound("sound/wrong.mp3");
 

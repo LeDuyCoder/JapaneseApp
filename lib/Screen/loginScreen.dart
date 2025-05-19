@@ -149,7 +149,7 @@ class _loginScreen extends State<loginScreen>{
               child: Container(
                 height: MediaQuery.sizeOf(context).height*0.1,
                 width: MediaQuery.sizeOf(context).width,
-                child: AutoSizeText("Welcome back, Gad to see you", style: TextStyle(fontSize: MediaQuery.sizeOf(context).width*0.8, fontFamily: "Itim"),),
+                child: AutoSizeText("Chào mừng trở lại, Rất vui được gặp bạn", style: TextStyle(fontSize: MediaQuery.sizeOf(context).width*0.8, fontFamily: "Itim"),),
               ),
             ),
 
@@ -160,7 +160,7 @@ class _loginScreen extends State<loginScreen>{
                 controller: mailController,
                 decoration: InputDecoration(
                   labelText: 'Email',
-                  hintText: 'Enter your email',
+                  hintText: 'Nhập email của bạn',
                   prefixIcon: Icon(Icons.mail),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
@@ -181,8 +181,8 @@ class _loginScreen extends State<loginScreen>{
               child: TextField(
                 controller: passController,
                 decoration: InputDecoration(
-                  labelText: 'Password',
-                  hintText: 'Enter your password',
+                  labelText: 'Mật Khẩu',
+                  hintText: 'Nhập Mật Khẩu',
                   prefixIcon: Icon(Icons.lock),
                   suffixIcon: IconButton(
                     icon: Icon(_isShowPass ? Icons.visibility : Icons.visibility_off),
@@ -221,7 +221,7 @@ class _loginScreen extends State<loginScreen>{
                         borderRadius: BorderRadius.all(Radius.circular(15))
                     ),
                     child: const Center(
-                      child: Text("LOGIN", style: TextStyle(color: Colors.white, fontSize: 20, fontFamily: "Itim")),
+                      child: Text("Đăng Nhập", style: TextStyle(color: Colors.white, fontSize: 20, fontFamily: "Itim")),
                     )
                 ),
               ),
@@ -234,9 +234,9 @@ class _loginScreen extends State<loginScreen>{
               child: const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Don't have an account? ", style: TextStyle(fontFamily: "Itim"),),
+                  Text("Không Có Mật Khẩu? ", style: TextStyle(fontFamily: "Itim"),),
                   SizedBox(width: 2,),
-                  Text("Register Now ", style: TextStyle(color: CupertinoColors.activeBlue, fontFamily: "Itim"),),
+                  Text("Đăng Kí ", style: TextStyle(color: CupertinoColors.activeBlue, fontFamily: "Itim"),),
                 ],
               ),
             ),
@@ -267,7 +267,7 @@ class _loginScreen extends State<loginScreen>{
                           children: [
                             Icon(Icons.facebook_outlined, color: Colors.blue,),
                             SizedBox(width: 10,),
-                            Text("Continue with Facebook", style: TextStyle(fontFamily: "Itim"),)
+                            Text("Đăng Nhập Với Facebook", style: TextStyle(fontFamily: "Itim"),)
                           ],
                         )
                     )
