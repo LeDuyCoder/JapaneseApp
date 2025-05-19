@@ -55,7 +55,7 @@ dependencies:
   file_picker: ^8.1.7
   shared_preferences: ^2.3.5
   introduction_screen: ^3.1.14
-  google_ml_kit: ^0.19.0
+  google_ml_kit: ^0.20.0
   internet_connection_checker: ^3.0.1
   google_nav_bar: ^5.0.7
   gif_view: ^1.0.0
