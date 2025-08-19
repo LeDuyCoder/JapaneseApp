@@ -16,7 +16,7 @@ class topicManagerWidget extends StatelessWidget{
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (ctx) => listWordScreen(topicName: dataTopic.name, reloadDashboard: () {
+        Navigator.push(context, MaterialPageRoute(builder: (ctx) => listWordScreen(id: dataTopic.id, topicName: dataTopic.name, reloadDashboard: () {
           reloadDashboard();
         },)));
       },

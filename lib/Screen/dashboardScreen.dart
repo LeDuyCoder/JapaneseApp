@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:japaneseapp/Module/topic.dart';
 import 'package:japaneseapp/Screen/addWordScreen.dart';
 import 'package:japaneseapp/Screen/qrScreen.dart';
 import 'package:japaneseapp/Screen/serchWordScreen.dart';
@@ -11,7 +12,10 @@ import 'package:japaneseapp/Screen/tutorialScreen.dart';
 import 'package:japaneseapp/Widget/folerWidget.dart';
 
 import '../Config/dataHelper.dart';
+import '../Config/databaseServer.dart';
+import '../Module/WordModule.dart';
 import '../Module/word.dart';
+import '../Widget/topicServerWidget.dart';
 import '../Widget/topicWidget.dart';
 
 class dashboardScreen extends StatefulWidget{
@@ -880,6 +884,16 @@ class _dashboardScreen extends State<dashboardScreen>{
     );
   }
 
+  Future<List<topic>> getDataTopic() async {
+    DatabaseServer db = new DatabaseServer("http://10.0.2.2:80/backendServer");
+    return db.getAllDataTopic(5).timeout(Duration(seconds: 5));
+  }
+
+  Future<bool> hastTopic(String id) async {
+    DatabaseHelper db = DatabaseHelper.instance;
+    return await db.hasTopicID(id);
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -1046,6 +1060,97 @@ class _dashboardScreen extends State<dashboardScreen>{
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     const Text(
+                                      "Cộng Đồng",
+                                      style: TextStyle(fontFamily: "itim", fontSize: 30),
+                                    ),
+                                    Row(
+                                      children: [
+                                        GestureDetector(
+                                          onTap: (){
+                                            showPopupAddTopic();
+                                          },
+                                          child: Container(
+                                            width: 120,
+                                            height: 50,
+                                            decoration: const BoxDecoration(
+                                              color: Color.fromRGBO(184, 241, 176, 1),
+                                              borderRadius: BorderRadius.all(Radius.circular(10)),
+                                            ),
+                                            child: const Center(
+                                              child: Text(
+                                                "Xem Thêm",
+                                                style: TextStyle(fontFamily: "Itim", fontWeight: FontWeight.bold, fontSize: 16),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                              SizedBox(height: 10,),
+                              FutureBuilder(
+                                future: getDataTopic(), // Hàm này phải trả về Future
+                                builder: (context, dataTopics) {
+                                  if(dataTopics.connectionState == ConnectionState.waiting){
+                                    return Container();
+                                  }
+
+                                  if(dataTopics.hasData){
+                                    if(dataTopics.data!.length == 0){
+                                      return const Center(
+                                        child: Text("Không Có Dữ Liệu"),
+                                      );
+                                    }else {
+                                      return Container(
+                                          padding: EdgeInsets.only(
+                                              left: 10, right: 10),
+                                          width: MediaQuery
+                                              .sizeOf(context)
+                                              .width,
+                                          child: SingleChildScrollView(
+                                            scrollDirection: Axis.horizontal,
+                                            child: Row(
+                                              children: [
+                                                for(topic item in dataTopics
+                                                    .data!)
+                                                  FutureBuilder(future: hastTopic(item.id), builder: (snapshot, data){
+                                                    if(data.connectionState == ConnectionState.waiting){
+                                                      return Container();
+                                                    }
+
+                                                    return topicServerWidget(
+                                                        name: item.name,
+                                                        owner: item.owner ?? '',
+                                                        amount: item.count!,
+                                                        isDowloaded: data.data!
+                                                    );
+                                                  })
+
+
+                                              ],
+                                            ),
+                                          )
+                                      );
+                                    }
+                                  }
+
+                                  return Center(
+                                    child: Text("Không Thể Kết Nối Đến Server", style: TextStyle(fontSize: 20, color: Colors.grey)),
+                                  );
+
+
+                                },
+                              ),
+                              SizedBox(height: 20,),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text(
                                       "Chủ Đề",
                                       style: TextStyle(fontFamily: "itim", fontSize: 30),
                                     ),
@@ -1124,6 +1229,7 @@ class _dashboardScreen extends State<dashboardScreen>{
                                       return Padding(
                                         padding: EdgeInsets.only(bottom: 10),
                                         child: topicWidget(
+                                          id: topic["id"],
                                           nameTopic: topic["name"],
                                           reloadDashBoard: () {
                                             reload();

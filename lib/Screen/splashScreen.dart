@@ -13,6 +13,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
+import '../Config/databaseServer.dart';
 import '../main.dart';
 
 class splashScreen extends StatefulWidget{
@@ -64,6 +65,7 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
 
     return next11PM.difference(now);
   }
+
 
   void showDialogNotificationVersion() {
     showDialog(
@@ -282,6 +284,8 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
     super.dispose();
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -308,8 +312,8 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
                 ),
                 const SizedBox(height: 10,),
                 const Text("日本語", style: TextStyle(fontFamily: "aboshione", fontSize: 50),),
-                const Text("Application", style: TextStyle(fontFamily: "islandmoment", fontSize: 50),)
-              ],
+                const Text("Application", style: TextStyle(fontFamily: "islandmoment", fontSize: 50),),
+            ],
             ),
           ),
         )

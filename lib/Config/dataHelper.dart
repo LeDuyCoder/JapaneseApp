@@ -99,6 +99,15 @@ class DatabaseHelper {
     return result;
   }
 
+  Future<Map<String, dynamic>> getTopicByID(String id) async{
+    final db = await instance.database;
+    final List<Map<String, dynamic>> result = await db.rawQuery(
+      'SELECT * FROM topic WHERE id = ?',
+      [id],
+    );
+    return result[0];
+  }
+
   Future<List<Map<String, dynamic>>> getAllTopicByName(String topic) async {
     final db = await instance.database;
     final List<Map<String, dynamic>> result = await db.rawQuery(
@@ -123,6 +132,16 @@ class DatabaseHelper {
     List<Map<String, dynamic>> dataTopics = await getAllTopic();
     for(Map<String, dynamic> dataTopic in dataTopics){
       if(nameTopic == dataTopic["name"]){
+        return true;
+      }
+    }
+    return false;
+  }
+
+  Future<bool> hasTopicID(String id) async {
+    List<Map<String, dynamic>> dataTopics = await getAllTopic();
+    for(Map<String, dynamic> dataTopic in dataTopics){
+      if(id == dataTopic["id"]){
         return true;
       }
     }

@@ -6,9 +6,10 @@ import 'package:japaneseapp/Screen/listWordScreen.dart';
 
 class topicWidget extends StatefulWidget{
   final String nameTopic;
+  final String id;
   final void Function() reloadDashBoard;
 
-  const topicWidget({super.key, required this.nameTopic, required this.reloadDashBoard});
+  const topicWidget({super.key, required this.nameTopic, required this.reloadDashBoard, required this.id});
 
   @override
   State<StatefulWidget> createState() => _topicWidget();
@@ -50,6 +51,7 @@ class _topicWidget extends State<topicWidget>{
                   PageRouteBuilder(
                     transitionDuration: const Duration(milliseconds: 500),
                     pageBuilder: (context, animation, secondaryAnimation) => listWordScreen(
+                      id: widget.id,
                       topicName: widget.nameTopic,
                       reloadDashboard: () {
                         widget.reloadDashBoard();

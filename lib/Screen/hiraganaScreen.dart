@@ -102,7 +102,7 @@ class _hiraganaScreen extends State<hiraganaScreen>{
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20,),
+                  const SizedBox(height: 18,),
                   SizedBox(
                     height: widget.width*0.740,
                     child: SingleChildScrollView(

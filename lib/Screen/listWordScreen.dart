@@ -3,9 +3,12 @@ import 'dart:io';
 
 import 'package:archive/archive.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:japaneseapp/Config/dataHelper.dart';
+import 'package:japaneseapp/Module/WordModule.dart';
+import 'package:japaneseapp/Module/topic.dart';
 import 'package:japaneseapp/Module/word.dart';
 import 'package:japaneseapp/Screen/learnScreen.dart';
 import 'package:japaneseapp/Widget/wordWidget.dart';
@@ -14,11 +17,14 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:japaneseapp/Module/word.dart' as wordModule;
 
+import '../Config/databaseServer.dart';
+
 class listWordScreen extends StatefulWidget{
   final String topicName;
+  final String id;
   final void Function() reloadDashboard;
 
-  const listWordScreen({super.key, required this.topicName, required this.reloadDashboard});
+  const listWordScreen({super.key, required this.topicName, required this.reloadDashboard, required this.id});
   @override
   State<StatefulWidget> createState() => _listWordScreen();
 }
@@ -27,6 +33,7 @@ class _listWordScreen extends State<listWordScreen>{
   int amountWord = 0;
   bool isButtonDisabled = true;
   bool isPressButton = false;
+  String owner = "";
   AutoSizeGroup textGroup = AutoSizeGroup();
 
 
@@ -526,6 +533,498 @@ class _listWordScreen extends State<listWordScreen>{
     setState(() {});
   }
 
+  void showDialogPulic() {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: "Barrier",
+      barrierColor: Colors.black.withOpacity(0.5), // Màu nền tối mờ
+      transitionDuration: const Duration(milliseconds: 300),
+      pageBuilder: (_, __, ___) {
+        return const SizedBox(); // Trả về rỗng vì dùng transitionBuilder
+      },
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        final curvedValue = Curves.easeInOut.transform(animation.value);
+
+        return Transform.translate(
+          offset: Offset(0, -300 + (300 * curvedValue)),
+          child: Opacity(
+            opacity: animation.value,
+            child: Center(
+              child: Dialog(
+                backgroundColor: Colors.white,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(10),
+                    bottomRight: Radius.circular(10),
+                  ),
+                ),
+                child: StatefulBuilder(
+                  builder: (BuildContext context, setState) {
+                    return Container(
+                        decoration: const BoxDecoration(
+                          border: Border(
+                            top: BorderSide(
+                              color: Color.fromRGBO(20, 195, 142, 1.0), // Màu xanh cạnh trên ngoài cùng
+                              width: 10.0, // Độ dày của cạnh trên
+                            ),
+                          ),
+                        ),
+                        child: Container(
+                          height: 300,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Image.asset("assets/character/character6.png", width: MediaQuery.sizeOf(context).width*0.3,),
+                              const Column(
+                                children: [
+                                  SizedBox(height: 20),
+                                  AutoSizeText(
+                                    "Bạn có muốn chia sẽ không",
+                                    style: TextStyle(fontFamily: "indieflower", fontSize: 15),
+                                  ),
+
+                                  AutoSizeText(
+                                    "Khi chia sẽ ai cũng có thể tải",
+                                    style: TextStyle(fontFamily: "indieflower"),
+                                  ),
+                                  SizedBox(height: 20),
+                                ],
+                              ),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () async {
+                                      await pulicTopic();
+                                    },
+                                    child: Container(
+                                      width: MediaQuery.sizeOf(context).width*0.3,
+                                      height: MediaQuery.sizeOf(context).height*0.05,
+                                      decoration: const BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                                          boxShadow: [
+                                          ]
+                                      ),
+                                      child: const Center(
+                                        child: Text("Công Khai", style: TextStyle(color: Colors.red, fontSize: 15, fontWeight: FontWeight.bold),),
+                                      ),
+                                    ),
+
+                                  ),
+                                  SizedBox(width:10,),
+                                  GestureDetector(
+                                    onTap: () async {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Container(
+                                      width: MediaQuery.sizeOf(context).width * 0.3,
+                                      height: MediaQuery.sizeOf(context).height * 0.05,
+                                      decoration: const BoxDecoration(
+                                        color: Colors.green,
+                                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                                      ),
+                                      child: const Center(
+                                        child: Text(
+                                          "Cancel",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
+                        )
+                    );
+                  },
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+  void showDialogPrivate() {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: "Barrier",
+      barrierColor: Colors.black.withOpacity(0.5), // Màu nền tối mờ
+      transitionDuration: const Duration(milliseconds: 300),
+      pageBuilder: (_, __, ___) {
+        return const SizedBox(); // Trả về rỗng vì dùng transitionBuilder
+      },
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        final curvedValue = Curves.easeInOut.transform(animation.value);
+
+        return Transform.translate(
+          offset: Offset(0, -300 + (300 * curvedValue)),
+          child: Opacity(
+            opacity: animation.value,
+            child: Center(
+              child: Dialog(
+                backgroundColor: Colors.white,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(10),
+                    bottomRight: Radius.circular(10),
+                  ),
+                ),
+                child: StatefulBuilder(
+                  builder: (BuildContext context, setState) {
+                    return Container(
+                        decoration: const BoxDecoration(
+                          border: Border(
+                            top: BorderSide(
+                              color: Color.fromRGBO(195, 20, 35, 1.0), // Màu xanh cạnh trên ngoài cùng
+                              width: 10.0, // Độ dày của cạnh trên
+                            ),
+                          ),
+                        ),
+                        child: Container(
+                          height: 300,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Image.asset("assets/character/character6.png", width: MediaQuery.sizeOf(context).width*0.3,),
+                              const Column(
+                                children: [
+                                  SizedBox(height: 20),
+                                  AutoSizeText(
+                                    "Bạn có muốn hủy chia sẽ không",
+                                    style: TextStyle(fontFamily: "indieflower", fontSize: 15),
+                                  ),
+                                  SizedBox(height: 20),
+                                ],
+                              ),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () async {
+                                      await priveTopic();
+                                    },
+                                    child: Container(
+                                      width: MediaQuery.sizeOf(context).width*0.3,
+                                      height: MediaQuery.sizeOf(context).height*0.05,
+                                      decoration: const BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                                          boxShadow: [
+                                          ]
+                                      ),
+                                      child: const Center(
+                                        child: Text("Hủy", style: TextStyle(color: Colors.red, fontSize: 15, fontWeight: FontWeight.bold),),
+                                      ),
+                                    ),
+
+                                  ),
+                                  SizedBox(width:10,),
+                                  GestureDetector(
+                                    onTap: () async {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Container(
+                                      width: MediaQuery.sizeOf(context).width * 0.3,
+                                      height: MediaQuery.sizeOf(context).height * 0.05,
+                                      decoration: const BoxDecoration(
+                                        color: Colors.green,
+                                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                                      ),
+                                      child: const Center(
+                                        child: Text(
+                                          "Không",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
+                        )
+                    );
+                  },
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void showDialogPulicSuccess() {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: "Barrier",
+      barrierColor: Colors.black.withOpacity(0.5), // Màu nền tối mờ
+      transitionDuration: const Duration(milliseconds: 300),
+      pageBuilder: (_, __, ___) {
+        return const SizedBox(); // Trả về rỗng vì dùng transitionBuilder
+      },
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        final curvedValue = Curves.easeInOut.transform(animation.value);
+
+        return Transform.translate(
+          offset: Offset(0, -300 + (300 * curvedValue)),
+          child: Opacity(
+            opacity: animation.value,
+            child: Center(
+              child: Dialog(
+                backgroundColor: Colors.white,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(10),
+                    bottomRight: Radius.circular(10),
+                  ),
+                ),
+                child: StatefulBuilder(
+                  builder: (BuildContext context, setState) {
+                    return Container(
+                        decoration: const BoxDecoration(
+                          border: Border(
+                            top: BorderSide(
+                              color: Color.fromRGBO(20, 195, 142, 1.0), // Màu xanh cạnh trên ngoài cùng
+                              width: 10.0, // Độ dày của cạnh trên
+                            ),
+                          ),
+                        ),
+                        child: Container(
+                          height: 300,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Image.asset("assets/character/character6.png", width: MediaQuery.sizeOf(context).width*0.3,),
+                              const Column(
+                                children: [
+                                  SizedBox(height: 20),
+                                  AutoSizeText(
+                                    "Công Khai Thành Công",
+                                    style: TextStyle(fontFamily: "indieflower", fontSize: 15),
+                                  ),
+
+                                  SizedBox(height: 20),
+                                ],
+                              ),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () async {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Container(
+                                      width: MediaQuery.sizeOf(context).width * 0.3,
+                                      height: MediaQuery.sizeOf(context).height * 0.05,
+                                      decoration: const BoxDecoration(
+                                        color: Colors.green,
+                                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                                      ),
+                                      child: const Center(
+                                        child: Text(
+                                          "OK",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
+                        )
+                    );
+                  },
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void showDialogPrivateSuccess() {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: "Barrier",
+      barrierColor: Colors.black.withOpacity(0.5), // Màu nền tối mờ
+      transitionDuration: const Duration(milliseconds: 300),
+      pageBuilder: (_, __, ___) {
+        return const SizedBox(); // Trả về rỗng vì dùng transitionBuilder
+      },
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        final curvedValue = Curves.easeInOut.transform(animation.value);
+
+        return Transform.translate(
+          offset: Offset(0, -300 + (300 * curvedValue)),
+          child: Opacity(
+            opacity: animation.value,
+            child: Center(
+              child: Dialog(
+                backgroundColor: Colors.white,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(10),
+                    bottomRight: Radius.circular(10),
+                  ),
+                ),
+                child: StatefulBuilder(
+                  builder: (BuildContext context, setState) {
+                    return Container(
+                        decoration: const BoxDecoration(
+                          border: Border(
+                            top: BorderSide(
+                              color: Color.fromRGBO(195, 20, 20, 1.0), // Màu xanh cạnh trên ngoài cùng
+                              width: 10.0, // Độ dày của cạnh trên
+                            ),
+                          ),
+                        ),
+                        child: Container(
+                          height: 300,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Image.asset("assets/character/character6.png", width: MediaQuery.sizeOf(context).width*0.3,),
+                              const Column(
+                                children: [
+                                  SizedBox(height: 20),
+                                  AutoSizeText(
+                                    "Hủy Công Khai Thành Công",
+                                    style: TextStyle(fontFamily: "indieflower", fontSize: 15),
+                                  ),
+
+                                  SizedBox(height: 20),
+                                ],
+                              ),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () async {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Container(
+                                      width: MediaQuery.sizeOf(context).width * 0.3,
+                                      height: MediaQuery.sizeOf(context).height * 0.05,
+                                      decoration: const BoxDecoration(
+                                        color: Colors.green,
+                                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                                      ),
+                                      child: const Center(
+                                        child: Text(
+                                          "OK",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
+                        )
+                    );
+                  },
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> isOwner() async{
+    DatabaseHelper db = DatabaseHelper.instance;
+    owner = (await db.getTopicByID(widget.id))["user"];
+  }
+
+  Future<topic> isExistTopic() async{
+    DatabaseServer db = new DatabaseServer("http://10.0.2.2:80/backendServer");
+    await isOwner();
+    topic isTopic = await db.getDataTopicbyID(widget.id).timeout(Duration(seconds: 10));
+    return isTopic;
+  }
+
+  Future<void> pulicTopic() async{
+    DatabaseHelper db = DatabaseHelper.instance;
+    DatabaseServer dbServer = new DatabaseServer("http://10.0.2.2:80/backendServer");
+    List<Map<String, dynamic>> data = await db.getAllWordbyTopic(widget.topicName);
+    User user = FirebaseAuth.instance.currentUser!;
+
+
+
+    topic TopicPulic = new topic(id: widget.id, name: widget.topicName, owner: user.providerData[0].displayName, count: 0);
+    await dbServer.insertTopic(TopicPulic);
+
+    List<Word> listWordPulics = [];
+    for(Map<String, dynamic> word in data){
+      listWordPulics.add(new Word(
+          word: word["word"],
+          mean: word["mean"],
+          wayread: word["wayread"],
+          level: 0,
+          topicID: widget.id
+      ));
+    }
+
+    bool execInsert = await dbServer.insertDataWord(listWordPulics);
+    if(execInsert){
+      print("Kiểm Tra");
+      Navigator.pop(context);
+      reloadScreen();
+      showDialogPulicSuccess();
+    }else{
+      print("Error");
+    }
+
+
+  }
+
+  Future<void> priveTopic() async{
+    DatabaseHelper db = DatabaseHelper.instance;
+    DatabaseServer dbServer = new DatabaseServer("http://10.0.2.2:80/backendServer");
+    dbServer.deleteTopic(widget.id);
+    Navigator.pop(context);
+    reloadScreen();
+    showDialogPrivateSuccess();
+
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -537,6 +1036,26 @@ class _listWordScreen extends State<listWordScreen>{
           ),
         ),
         actions: [
+          FutureBuilder(future: isExistTopic(), builder: (context, topic){
+            if(topic.connectionState == ConnectionState.waiting){
+              return Container();
+            }
+
+            if(owner == FirebaseAuth.instance.currentUser!.displayName){
+              if(topic.hasData){
+                print(topic.data);
+                return IconButton(onPressed: (){
+                  showDialogPrivate();
+                }, icon: Icon(Icons.public_sharp, color: Colors.yellow,));
+              }
+
+              return IconButton(onPressed: (){
+                showDialogPulic();
+              }, icon: Icon(Icons.public_sharp, color: Colors.white,));
+            }else{
+              return Container();
+            }
+          }),
           IconButton(
             onPressed: () {
               showDialogShareTopic();
@@ -578,7 +1097,7 @@ class _listWordScreen extends State<listWordScreen>{
                         Flexible(
                           child: AutoSizeText(
                             "Hoàn Thành ${(snapshot.data![1] as num).toInt()}",
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 20,
                               fontFamily: "Itim",
                               color: Colors.green,
@@ -593,7 +1112,7 @@ class _listWordScreen extends State<listWordScreen>{
                         Flexible(
                           child: AutoSizeText(
                             "Chưa Hoàn Thành ${(snapshot.data![2] - snapshot.data![1] as num).toInt()}",
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 20,
                               fontFamily: "Itim",
                               color: Colors.red,

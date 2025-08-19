@@ -4,6 +4,8 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:language_detector/language_detector.dart';
+import 'package:translator/translator.dart';
 
 class searchWordScreen extends StatefulWidget {
   final String wordSearch;
@@ -23,14 +25,33 @@ class _searchWordScreen extends State<searchWordScreen> {
   bool isLoad = false;
   bool isPress = false;
 
+  Future<String> detectLanguage(String word) async{
+    var code = await LanguageDetector.getLanguageCode(
+        content: word);
+    if(code == "vi"){
+      return (await translateEnglish(word));
+    }
+
+    return word;
+  }
+
+  Future<String> translateEnglish(String input) async{
+    final translator = GoogleTranslator();
+    String translation = (await translator.translate(input, to: 'en')).toString();
+    return translation;
+  }
+
   Future<Map<dynamic, dynamic>> fetchData(String word) async {
-    final String url = "https://jisho.org/api/v1/search/words?keyword=${word}"; // Thay URL API của bạn
+
+    String wordSearch = await detectLanguage(word);
+    final String url = "https://jisho.org/api/v1/search/words?keyword=${wordSearch.toLowerCase()}"; // Thay URL API của bạn
     try {
       final response = await http.get(Uri.parse(url));
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         sizeArgs = (data["data"] as List<dynamic>).length;
+
         return data;
       } else {
         return {};
