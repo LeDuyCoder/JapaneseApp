@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:japaneseapp/Module/topic.dart';
 import 'package:japaneseapp/Screen/addWordScreen.dart';
 import 'package:japaneseapp/Screen/qrScreen.dart';
+import 'package:japaneseapp/Screen/seeMoreTopic.dart';
 import 'package:japaneseapp/Screen/serchWordScreen.dart';
 import 'package:japaneseapp/Screen/tutorialScreen.dart';
 import 'package:japaneseapp/Widget/folerWidget.dart';
@@ -30,10 +32,13 @@ class _dashboardScreen extends State<dashboardScreen>{
   TextEditingController nameFolderInput = TextEditingController();
   TextEditingController nameTopicInput = TextEditingController();
   TextEditingController searchWord = TextEditingController();
+  TextEditingController renameTopicInput = TextEditingController();
   String? textErrorName;
+  String? textErrorTopicName;
   bool isLoadingCreateNewFolder = false;
   String amountTopic = "0 Topic";
   String? _fileContent;
+  String nameTopic = "";
 
 
   Future<Map<String, List<Map<String, dynamic>>>> hanldeGetData() async {
@@ -894,6 +899,289 @@ class _dashboardScreen extends State<dashboardScreen>{
     return await db.hasTopicID(id);
   }
 
+  Future<void> dowloadTopic(String id) async{
+    DatabaseServer dbServer = new DatabaseServer("http://10.0.2.2:80/backendServer");
+    DatabaseHelper db = DatabaseHelper.instance;
+
+    topic Topic = await dbServer.getDataTopicbyID(id);
+    nameTopic = Topic.name;
+    List<Map<String, dynamic>> dataWords = [];
+
+     if(await db.hasTopicName(nameTopic)){
+       await showDialogRenameTopic();
+     }
+
+    if(!await db.hasTopicName(nameTopic)){
+      List<Word> listWord = await dbServer.fetchWordsByTopicID(id);
+      for(Word wordDB in listWord){
+        dataWords.add(
+            new word(wordDB.word, wordDB.wayread, wordDB.mean, nameTopic==""?Topic.name:nameTopic, 0).toMap()
+        );
+      }
+
+      await db.insertTopicID(Topic.id, nameTopic==""?Topic.name:nameTopic, Topic.owner!);
+      await db.insertDataTopic(dataWords);
+      reload();
+    }
+
+     Navigator.pop(context);
+  }
+
+  Future<bool> showDialogRenameTopic() async {
+    await showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: "Barrier",
+      barrierColor: Colors.black.withOpacity(0.5), // Màu nền tối mờ
+      transitionDuration: const Duration(milliseconds: 300),
+      pageBuilder: (_, __, ___) {
+        return const SizedBox(); // Trả về rỗng vì dùng transitionBuilder
+      },
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        final curvedValue = Curves.easeInOut.transform(animation.value);
+
+        return Transform.translate(
+          offset: Offset(0, -300 + (300 * curvedValue)),
+          child: Opacity(
+            opacity: animation.value,
+            child: Center(
+              child: Dialog(
+                backgroundColor: Colors.white,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(10),
+                    bottomRight: Radius.circular(10),
+                  ),
+                ),
+                child: StatefulBuilder(
+                  builder: (BuildContext context, setState) {
+                    return Container(
+                        decoration: const BoxDecoration(
+                          border: Border(
+                            top: BorderSide(
+                              color: Color.fromRGBO(195, 20, 20, 1.0), // Màu xanh cạnh trên ngoài cùng
+                              width: 10.0, // Độ dày của cạnh trên
+                            ),
+                          ),
+                        ),
+                        child: Container(
+                          height: 350,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Image.asset("assets/character/character6.png", width: MediaQuery.sizeOf(context).width*0.3,),
+                              Column(
+                                children: [
+                                  SizedBox(height: 20),
+                                  AutoSizeText(
+                                    "Tên Topic Đã Tồn Tại Vui Lòng Đổi Tên",
+                                    style: TextStyle(fontFamily: "indieflower", fontSize: 15),
+                                  ),
+
+                                  Container(
+                                    padding: const EdgeInsets.all(16.0),
+                                    width: MediaQuery.sizeOf(context).width - 100,
+                                    height: 100,
+                                    child: TextField(
+                                      controller: renameTopicInput,
+                                      decoration: InputDecoration(
+                                        hintText: "Tên topic mới",
+                                        hintStyle: TextStyle(color: Colors.grey),
+                                        filled: true,
+                                        fillColor: Colors.white,
+                                        contentPadding: const EdgeInsets.symmetric(
+                                          horizontal: 12.0,
+                                          vertical: 20.0,
+                                        ),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide: const BorderSide(color: Colors.grey, width: 2.0),
+                                          borderRadius: BorderRadius.circular(8.0),
+                                        ),
+                                        errorBorder: OutlineInputBorder(
+                                          borderSide: const BorderSide(color: Colors.red, width: 3.0),
+                                          borderRadius: BorderRadius.circular(10.0),
+                                        ),
+                                        errorText: textErrorTopicName,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () async {
+                                      DatabaseHelper db = DatabaseHelper.instance;
+                                      if(await db.hasTopicName(renameTopicInput.text)){
+                                        setState((){
+                                          textErrorTopicName = "Tên mới đã tồn tại";
+                                        });
+                                      }else{
+                                        setState((){
+                                          nameTopic = renameTopicInput.text;
+                                          Navigator.pop(context);
+                                          textErrorTopicName = null;
+                                          renameTopicInput.text = "";
+                                        });
+                                      }
+                                    },
+                                    child: Container(
+                                      width: MediaQuery.sizeOf(context).width * 0.3,
+                                      height: MediaQuery.sizeOf(context).height * 0.05,
+                                      decoration: const BoxDecoration(
+                                        color: Colors.green,
+                                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                                      ),
+                                      child: const Center(
+                                        child: Text(
+                                          "Đổi Tên",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
+                        )
+                    );
+                  },
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+
+    return true;
+  }
+
+  void showDialogDowloadPulic(String id) {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: false,
+      barrierLabel: "Barrier",
+      barrierColor: Colors.black.withOpacity(0.5), // Màu nền tối mờ
+      transitionDuration: const Duration(milliseconds: 300),
+      pageBuilder: (_, __, ___) {
+        return const SizedBox(); // Trả về rỗng vì dùng transitionBuilder
+      },
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        final curvedValue = Curves.easeInOut.transform(animation.value);
+
+        return Transform.translate(
+          offset: Offset(0, -300 + (300 * curvedValue)),
+          child: Opacity(
+            opacity: animation.value,
+            child: Center(
+              child: Dialog(
+                backgroundColor: Colors.white,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(10),
+                    bottomRight: Radius.circular(10),
+                  ),
+                ),
+                child: StatefulBuilder(
+                  builder: (BuildContext context, setState) {
+                    return Container(
+                        decoration: const BoxDecoration(
+                          border: Border(
+                            top: BorderSide(
+                              color: Color.fromRGBO(20, 195, 142, 1.0), // Màu xanh cạnh trên ngoài cùng
+                              width: 10.0, // Độ dày của cạnh trên
+                            ),
+                          ),
+                        ),
+                        child: Container(
+                          height: 300,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Image.asset("assets/character/character6.png", width: MediaQuery.sizeOf(context).width*0.3,),
+                              const Column(
+                                children: [
+                                  SizedBox(height: 20),
+                                  AutoSizeText(
+                                    "Bạn có muốn tải xuống không ?",
+                                    style: TextStyle(fontFamily: "indieflower", fontSize: 15),
+                                  ),
+                                  SizedBox(height: 20),
+                                ],
+                              ),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () async {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Container(
+                                      width: MediaQuery.sizeOf(context).width*0.3,
+                                      height: MediaQuery.sizeOf(context).height*0.05,
+                                      decoration: const BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                                          boxShadow: [
+                                          ]
+                                      ),
+                                      child: const Center(
+                                        child: Text("Hủy", style: TextStyle(color: Colors.red, fontSize: 15, fontWeight: FontWeight.bold),),
+                                      ),
+                                    ),
+
+                                  ),
+                                  SizedBox(width:10,),
+                                  GestureDetector(
+                                    onTap: () async {
+                                      dowloadTopic(id);
+                                    },
+                                    child: Container(
+                                      width: MediaQuery.sizeOf(context).width * 0.3,
+                                      height: MediaQuery.sizeOf(context).height * 0.05,
+                                      decoration: const BoxDecoration(
+                                        color: Colors.green,
+                                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                                      ),
+                                      child: const Center(
+                                        child: Text(
+                                          "Tải",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
+                        )
+                    );
+                  },
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -1067,21 +1355,41 @@ class _dashboardScreen extends State<dashboardScreen>{
                                       children: [
                                         GestureDetector(
                                           onTap: (){
-                                            showPopupAddTopic();
+                                            Navigator.push(
+                                              context,
+                                              PageRouteBuilder(
+                                                pageBuilder: (context, animation, secondaryAnimation) => seeMoreTopic(),
+                                                transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                                  const begin = Offset(1.0, 0.0); // bắt đầu từ bên phải
+                                                  const end = Offset.zero;        // kết thúc ở chính giữa
+                                                  const curve = Curves.ease;
+
+                                                  var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                                                  var offsetAnimation = animation.drive(tween);
+
+                                                  return SlideTransition(
+                                                    position: offsetAnimation,
+                                                    child: child,
+                                                  );
+                                                },
+                                              ),
+                                            );
                                           },
                                           child: Container(
-                                            width: 120,
+                                            width: 100,
                                             height: 50,
-                                            decoration: const BoxDecoration(
-                                              color: Color.fromRGBO(184, 241, 176, 1),
-                                              borderRadius: BorderRadius.all(Radius.circular(10)),
-                                            ),
+                                            decoration: const BoxDecoration(),
                                             child: const Center(
-                                              child: Text(
-                                                "Xem Thêm",
-                                                style: TextStyle(fontFamily: "Itim", fontWeight: FontWeight.bold, fontSize: 16),
-                                                textAlign: TextAlign.center,
-                                              ),
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                    "Xem Thêm",
+                                                    style: TextStyle(fontFamily: "Itim", fontWeight: FontWeight.bold, fontSize: 16),
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                  Icon(Icons.arrow_right_alt)
+                                                ],
+                                              )
                                             ),
                                           ),
                                         )
@@ -1121,11 +1429,18 @@ class _dashboardScreen extends State<dashboardScreen>{
                                                       return Container();
                                                     }
 
-                                                    return topicServerWidget(
-                                                        name: item.name,
-                                                        owner: item.owner ?? '',
-                                                        amount: item.count!,
-                                                        isDowloaded: data.data!
+                                                    return GestureDetector(
+                                                      onTap: (){
+                                                        if(!data.data!){
+                                                          showDialogDowloadPulic(item.id);
+                                                        }
+                                                      },
+                                                      child: topicServerWidget(
+                                                          name: item.name,
+                                                          owner: item.owner ?? '',
+                                                          amount: item.count!,
+                                                          isDowloaded: data.data!
+                                                      ),
                                                     );
                                                   })
 

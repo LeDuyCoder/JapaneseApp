@@ -201,6 +201,11 @@ class DatabaseHelper {
     await db.insert("topic", {"id":uuidV4.generate(),"name":nameTopic,"user":userName});
   }
 
+  Future<void> insertTopicID(String id, String nameTopic, String userName) async {
+    final db = await instance.database;
+    await db.insert("topic", {"id":id,"name":nameTopic,"user":userName});
+  }
+
   Future<List<Map<String, dynamic>>> getDataTopicbyNameFolder(String nameFolder) async {
     final db = await instance.database;
     List<Map<String, dynamic>> result = await db.rawQuery("SELECT * FROM folders WHERE namefolder = '$nameFolder'");

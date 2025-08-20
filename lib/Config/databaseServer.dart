@@ -32,6 +32,29 @@ class DatabaseServer {
     }
   }
 
+  Future<List<topic>> getTopicsSearch(String keyword) async {
+    final url = Uri.parse('$baseUrl/searchTopic.php?nameTopic=$keyword');
+
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+
+        if (data is List) {
+          return data.map((jsonItem) => topic.fromJson(jsonItem)).toList();
+        } else {
+          throw Exception('Dữ liệu trả về không hợp lệ');
+        }
+      } else {
+        throw Exception('Lỗi từ server: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Lỗi khi kết nối đến server: $e');
+      rethrow; // hoặc return []; nếu bạn muốn tránh app crash
+    }
+  }
+
   /// Fetches a [Topic] object from the server using the given [id].
   ///
   /// Sends an HTTP GET request to the endpoint `/getDataTopicByTopicID.php`

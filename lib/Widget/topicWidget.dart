@@ -20,18 +20,19 @@ class _topicWidget extends State<topicWidget>{
   AutoSizeGroup textGroup = AutoSizeGroup();
 
   Future<List<dynamic>> handledComplited () async {
-    int sumComplitted = 0;
+    double sumComplitted = 0.0;
 
     DatabaseHelper db = DatabaseHelper.instance;
     List<Map<String, dynamic>> dataWords = await db.getAllWordbyTopic(widget.nameTopic);
     List<Map<String, dynamic>> dataTopic = await db.getAllTopicByName(widget.nameTopic);
     if(dataWords.isNotEmpty) {
+
       for (Map<String, dynamic> word in dataWords) {
-        sumComplitted += word['level'] as int ?? 0;
+        sumComplitted += (word['level'] * 1.0) ?? 0;
       }
     }
 
-    List<dynamic> dataResult = [dataWords.isNotEmpty ? sumComplitted / (28*dataWords.length) : 0, sumComplitted, dataWords.length, dataTopic[0]["user"]];
+    List<dynamic> dataResult = [dataWords.isNotEmpty ? sumComplitted / (28*dataWords.length) : 0.0, sumComplitted, dataWords.length, dataTopic[0]["user"]];
 
     return dataResult;
   }

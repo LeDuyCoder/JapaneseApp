@@ -8,8 +8,9 @@ class topicServerWidget extends StatefulWidget{
   final String name;
   final String owner;
   final int amount;
+  final double? width;
 
-  const topicServerWidget({super.key, required this.name, required this.owner, required this.amount, required this.isDowloaded});
+  const topicServerWidget({super.key, required this.name, required this.owner, required this.amount, required this.isDowloaded, this.width});
 
   @override
   State<StatefulWidget> createState() => _topicServerWidget();
@@ -19,8 +20,8 @@ class _topicServerWidget extends State<topicServerWidget>{
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(right: 10),
-      width: 300,
+      margin: EdgeInsets.only(right: widget.width == null ? 10 : 0),
+      width: widget.width ?? 300,
       height: 140,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(20)),
