@@ -973,7 +973,7 @@ class _listWordScreen extends State<listWordScreen>{
   }
 
   Future<topic> isExistTopic() async{
-    DatabaseServer db = new DatabaseServer("http://10.0.2.2:80/backendServer");
+    DatabaseServer db = new DatabaseServer();
     await isOwner();
     topic isTopic = await db.getDataTopicbyID(widget.id).timeout(Duration(seconds: 10));
     return isTopic;
@@ -981,7 +981,7 @@ class _listWordScreen extends State<listWordScreen>{
 
   Future<void> pulicTopic() async{
     DatabaseHelper db = DatabaseHelper.instance;
-    DatabaseServer dbServer = new DatabaseServer("http://10.0.2.2:80/backendServer");
+    DatabaseServer dbServer = new DatabaseServer();
     List<Map<String, dynamic>> data = await db.getAllWordbyTopic(widget.topicName);
     User user = FirebaseAuth.instance.currentUser!;
 
@@ -1016,7 +1016,7 @@ class _listWordScreen extends State<listWordScreen>{
 
   Future<void> priveTopic() async{
     DatabaseHelper db = DatabaseHelper.instance;
-    DatabaseServer dbServer = new DatabaseServer("http://10.0.2.2:80/backendServer");
+    DatabaseServer dbServer = new DatabaseServer();
     dbServer.deleteTopic(widget.id);
     Navigator.pop(context);
     reloadScreen();
@@ -1032,7 +1032,7 @@ class _listWordScreen extends State<listWordScreen>{
         title: Container(
           child: Text(
             widget.topicName,
-            style: TextStyle(fontFamily: "aboshione", fontSize: 20, color: Colors.white),
+            style: TextStyle(fontFamily: "aboshione", fontSize: 20, color: Color(0xFFF1F8F1)),
           ),
         ),
         actions: [
@@ -1064,7 +1064,7 @@ class _listWordScreen extends State<listWordScreen>{
           ),
           SizedBox(width: 10,),
         ],
-        backgroundColor: Color.fromRGBO(20, 195, 142, 1.0),
+        backgroundColor: Color(0xFF81C784),
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
             bottom: Radius.circular(20),
@@ -1158,7 +1158,7 @@ class _listWordScreen extends State<listWordScreen>{
                       ),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: 10),
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: GestureDetector(
@@ -1209,7 +1209,7 @@ class _listWordScreen extends State<listWordScreen>{
                         width: MediaQuery.sizeOf(context).width * 0.8,
                         height: MediaQuery.sizeOf(context).width * 0.13,
                         decoration: BoxDecoration(
-                          color: Color.fromRGBO(19, 213, 47, 1.0),
+                          color: Color.fromRGBO(97, 213, 88, 1.0),
                           borderRadius: BorderRadius.all(Radius.circular(20)),
                           boxShadow: isPressButton
                               ? [] // Khi nhấn, không có boxShadow

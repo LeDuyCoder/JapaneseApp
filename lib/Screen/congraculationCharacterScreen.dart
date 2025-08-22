@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:japaneseapp/Config/dataHelper.dart';
 import 'package:japaneseapp/Module/character.dart' as charHiKa;
@@ -41,12 +42,34 @@ class _congraculationChacterScreen extends State<congraculationChacterScreen>{
     "Nỗ lực không bao giờ phản bội bạn."
   ];
   String motivationQuotes = "";
+  late InterstitialAd _interstitialAd;
+  bool _isInterstitialAdReady = false;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     motivationQuotes = motivationalQuotes[Random().nextInt(motivationalQuotes.length)];
+    _loadInterstitialAd();
+  }
+
+  void _loadInterstitialAd() {
+    InterstitialAd.load(
+      adUnitId: 'ca-app-pub-3940256099942544/1033173712', // <-- ID test
+      request: AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (ad) {
+          _interstitialAd = ad;
+          _isInterstitialAdReady = true;
+
+          _interstitialAd.setImmersiveMode(true);
+        },
+        onAdFailedToLoad: (error) {
+          print('InterstitialAd failed to load: $error');
+          _isInterstitialAdReady = false;
+        },
+      ),
+    );
   }
 
   charHiKa.character? findCharacter(dynamic dataCharacter, String type, String targetSearch) {
@@ -141,7 +164,7 @@ class _congraculationChacterScreen extends State<congraculationChacterScreen>{
       print(char);
       if(await db.isCharacterExist(char)){
         batch.rawUpdate(
-            'UPDATE characterjp SET level = level + 27 WHERE charName = ? AND typeword = ?',
+            'UPDATE characterjp SET level = level + 1 WHERE charName = ? AND typeword = ?',
             [char, widget.topic]
         );
       }else{
@@ -154,6 +177,11 @@ class _congraculationChacterScreen extends State<congraculationChacterScreen>{
     await IncreaseLevelUser();// Thực hiện batch
   }
 
+
+  void _popTwoScreens(BuildContext context) {
+    Navigator.pop(context); // pop màn hiện tại
+    Navigator.pop(context); // pop màn trước đó
+  }
   
   @override
   Widget build(BuildContext context) {
@@ -269,13 +297,30 @@ class _congraculationChacterScreen extends State<congraculationChacterScreen>{
                   setState(() {
                     isPress = false;
                   });
-
                   await handleData();
-
+                  flusExp(5);
                   // Đóng các màn hình
-                  Navigator.pop(context);
-                  Navigator.pop(context);
-                  widget.reload();
+                  if (_isInterstitialAdReady) {
+                    _interstitialAd.show();
+
+                    _interstitialAd.fullScreenContentCallback = FullScreenContentCallback(
+                      onAdDismissedFullScreenContent: (ad) {
+                        ad.dispose();
+                        _loadInterstitialAd();
+                        _popTwoScreens(context);
+                      },
+                      onAdFailedToShowFullScreenContent: (ad, error) {
+                        ad.dispose();
+                        _popTwoScreens(context);
+                        widget.reload();
+                      },
+                    );
+                  } else {
+                    _popTwoScreens(context);
+                    widget.reload();
+                  }
+
+
                 },
                 onTapCancel: () {
                   setState(() {

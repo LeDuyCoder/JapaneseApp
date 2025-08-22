@@ -114,54 +114,64 @@ class _SortTextState extends State<sortText> {
                   ],
                 ),
               ),
-              Row(
-                children: [
-                  Image.asset("assets/character/character1.png", width: 200),
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    margin: const EdgeInsets.symmetric(vertical: 5),
-                    width: 200,
-                    height: 120,
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(15),
-                        topRight: Radius.circular(15),
-                        bottomRight: Radius.circular(15),
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey,
-                          offset: Offset(4, -4),
-                          blurRadius: 10,
-                        ),
-                      ],
+              Container(
+                width: MediaQuery.sizeOf(context).width,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Container(
+                      width: MediaQuery.sizeOf(context).width/3,
+                      child: Image.asset("assets/character/character1.png", width: 150),
                     ),
-                    child: Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () async {
-                            await readText(widget.WordTest.wayread);
-                          },
-                          child: const Icon(Icons.volume_down_sharp,
-                              color: Colors.blue),
-                        ),
-                        SizedBox(
-                          width: 150,
-                          child: Text(
-                            widget.typeTest == typeSort.JapanToVietNam
-                                ? widget.WordTest.vocabulary
-                                : widget.WordTest.mean,
-                            style: const TextStyle(
-                              fontSize: 18,
-                              color: Colors.black,
-                            ),
+                    Container(
+                      width: MediaQuery.sizeOf(context).width/2,
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        margin: const EdgeInsets.symmetric(vertical: 5),
+                        width: 200,
+                        height: 120,
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(15),
+                            topRight: Radius.circular(15),
+                            bottomRight: Radius.circular(15),
                           ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey,
+                              offset: Offset(4, -4),
+                              blurRadius: 10,
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
-                ],
+                        child: Row(
+                          children: [
+                            GestureDetector(
+                              onTap: () async {
+                                await readText(widget.WordTest.wayread);
+                              },
+                              child: const Icon(Icons.volume_down_sharp,
+                                  color: Colors.blue),
+                            ),
+                            SizedBox(
+                              width: 150,
+                              child: Text(
+                                widget.typeTest == typeSort.JapanToVietNam
+                                    ? widget.WordTest.vocabulary
+                                    : widget.WordTest.mean,
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ),
               DragTarget<boxText>(
                 onWillAccept: (data) => data != null,
@@ -350,7 +360,7 @@ class _SortTextState extends State<sortText> {
                     borderRadius: BorderRadius.all(Radius.circular(20)),
                   )
                       :  BoxDecoration(
-                    color: Color.fromRGBO(49, 230, 62, 1.0),
+                    color: Color.fromRGBO(97, 213, 88, 1.0),
                     borderRadius: BorderRadius.all(Radius.circular(20)),
                     boxShadow: isPress ? [] : [
                       const BoxShadow(

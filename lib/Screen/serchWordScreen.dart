@@ -68,7 +68,7 @@ class _searchWordScreen extends State<searchWordScreen> {
 
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Color.fromRGBO(20, 195, 142, 1.0),
+          backgroundColor: Color(0xFF81C784),
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

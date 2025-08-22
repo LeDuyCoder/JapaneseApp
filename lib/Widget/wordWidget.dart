@@ -2,10 +2,10 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-import 'package:flutter_volume_controller/flutter_volume_controller.dart';
 import 'package:japaneseapp/Config/dataHelper.dart';
 import 'package:japaneseapp/Module/word.dart';
 import 'package:japaneseapp/Widget/FlashCardWidget.dart';
+import 'package:volume_controller/volume_controller.dart';
 
 class wordWidget extends StatefulWidget{
 
@@ -29,6 +29,11 @@ class _wordWidget extends State<wordWidget>{
   TextEditingController vocabularyEdit = TextEditingController(),
                         wayReadEdit = TextEditingController(),
                         meanEdit = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   Future<void> readText(String text, double speed) async {
     await _flutterTts.setLanguage("ja-JP");
@@ -295,7 +300,8 @@ class _wordWidget extends State<wordWidget>{
             isPressed = false;
           });
           if(!isButtonDisabled){
-            final volume = await FlutterVolumeController.getVolume();
+            VolumeController.instance.showSystemUI = true;
+            double volume = await VolumeController.instance.getVolume();
 
             if(volume != 0){
               readText(widget.wordText.wayread, 0.5);
@@ -357,6 +363,8 @@ class _wordWidget extends State<wordWidget>{
                           fontFamily: "aoboshione",
                           fontSize: MediaQuery.sizeOf(context).height * 0.02,
                         ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.center,
                       ),
                     )

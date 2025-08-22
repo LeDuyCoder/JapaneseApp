@@ -59,12 +59,12 @@ class _topicWidget extends State<topicWidget>{
                       },
                     ),
                     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                      var scaleAnimation = Tween(begin: 0.0, end: 1.0).animate(
-                        CurvedAnimation(parent: animation, curve: Curves.easeInOut),
-                      );
-
-                      return ScaleTransition(
-                        scale: scaleAnimation,
+                      final offsetAnimation = Tween<Offset>(
+                        begin: const Offset(1.0, 0.0),
+                        end: Offset.zero,
+                      ).animate(CurvedAnimation(parent: animation, curve: Curves.easeInOut));
+                      return SlideTransition(
+                        position: offsetAnimation,
                         child: child,
                       );
                     },

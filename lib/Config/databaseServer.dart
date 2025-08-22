@@ -5,9 +5,7 @@ import 'package:japaneseapp/Module/topic.dart';
 import 'package:japaneseapp/Module/WordModule.dart';
 
 class DatabaseServer {
-  final String baseUrl;
-
-  DatabaseServer(this.baseUrl);
+  final String baseUrl = "https://jpa.landernetwork.io.vn/backendServer";
 
   Future<List<topic>> getAllDataTopic(int limit) async {
     final url = Uri.parse('$baseUrl/getAllDataTopic.php?limit=$limit');

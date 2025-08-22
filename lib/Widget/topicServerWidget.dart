@@ -51,7 +51,7 @@ class _topicServerWidget extends State<topicServerWidget>{
               children: [
                 Padding(
                   padding: EdgeInsets.only(left: 0),
-                  child: AutoSizeText(widget.name, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
+                  child: AutoSizeText(widget.name, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black),),
                 ),
                 Padding(
                   padding: EdgeInsets.only(left: 0),

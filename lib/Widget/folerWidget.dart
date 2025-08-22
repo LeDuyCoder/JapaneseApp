@@ -8,9 +8,10 @@ class folderWidget extends StatelessWidget{
 
   final String nameFolder;
   final String dateCreated;
+  final int idFolder;
   final void Function() reloadDashboard;
 
-  const folderWidget({super.key, required this.nameFolder, required this.reloadDashboard, required this.dateCreated});
+  const folderWidget({super.key, required this.nameFolder, required this.reloadDashboard, required this.dateCreated, required this.idFolder});
 
   void removeFolder(BuildContext context) async {
     DatabaseHelper db = DatabaseHelper.instance;
@@ -137,59 +138,73 @@ class folderWidget extends StatelessWidget{
     return Padding(
       padding: EdgeInsets.only(left: 10, right: 10),
       child: GestureDetector(
-        onLongPress: (){
-          showDialogDeleteFolder(context);
-        },
         onTap: (){
-          Navigator.push(context, MaterialPageRoute(builder: (ctx)=>folderManagerScreen(nameFolder: nameFolder, reloadDashBoard: () {
-            reloadDashboard();
-          },)));
-        },
-        child: GestureDetector(
-          child: Container(
-              width: 250,
-              height: 100,
-              decoration: BoxDecoration(
-                border: Border.all(
-                    color: Colors.grey
-                ),
-                borderRadius: BorderRadius.all(Radius.circular(20)),
+          Navigator.push(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) => folderManagerScreen(
+                idFolder: idFolder,
+                nameFolder: nameFolder,
+                reloadDashBoard: () {
+                  reloadDashboard();
+                },
               ),
-              child: Padding(
-                padding: EdgeInsets.only(left: 10, top: 10),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(width: 10),
-                    Image.asset("assets/folder.png", scale: 12),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          AutoSizeText(
-                            this.nameFolder,
-                            style: TextStyle(fontFamily: "Itim", fontSize: 20),
-                            maxLines: 1,
-                            minFontSize: 12,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          AutoSizeText(
-                            this.dateCreated,
-                            style: TextStyle(fontFamily: "Itim", fontSize: 15),
-                            maxLines: 1,
-                            minFontSize: 10,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
+              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                const begin = Offset(0.0, 1.0);
+                const end = Offset.zero;
+                const curve = Curves.ease;
+                final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                return SlideTransition(
+                  position: animation.drive(tween),
+                  child: child,
+                );
+              },
+            ),
+          );
+        },
+        child: Container(
+            width: 250,
+            height: 100,
+            decoration: BoxDecoration(
+              border: Border.all(
+                  color: Colors.grey
+              ),
+              borderRadius: BorderRadius.all(Radius.circular(20)),
+            ),
+            child: Padding(
+              padding: EdgeInsets.only(left: 10, top: 10),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(width: 10),
+                  Icon(Icons.folder_open, size: 40,),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        AutoSizeText(
+                          this.nameFolder,
+                          style: TextStyle(fontFamily: "Itim", fontSize: 20),
+                          maxLines: 1,
+                          minFontSize: 12,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        AutoSizeText(
+                          this.dateCreated,
+                          style: TextStyle(fontFamily: "Itim", fontSize: 15),
+                          maxLines: 1,
+                          minFontSize: 10,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              )
-          ),
-        )
+                  ),
+                ],
+              ),
+            )
+        ),
       ),
     );
   }

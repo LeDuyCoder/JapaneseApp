@@ -82,11 +82,11 @@ class _hiraganaScreen extends State<hiraganaScreen>{
                           .sizeOf(context)
                           .width * 0.15,
                       decoration: const BoxDecoration(
-                          color: Color.fromRGBO(97, 213, 88, 1.0),
+                          color: Colors.green,
                           borderRadius: BorderRadius.all(Radius.circular(20)),
                           boxShadow: [
                             BoxShadow(
-                                color: Colors.green,
+                                color: Color(0xFF2E7D32),
                                 offset: Offset(6, 6)
                             )
                           ]

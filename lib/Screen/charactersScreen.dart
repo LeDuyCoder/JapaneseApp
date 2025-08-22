@@ -58,12 +58,12 @@ class _charactersSCreen extends State<charactersScreen>{
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       TabBar(
-                        labelColor: Colors.green, // Màu chữ khi tab được chọn
+                        labelColor: Color(0xFF2E7D32), // Màu chữ khi tab được chọn
                         unselectedLabelColor: Colors.black, // Màu chữ khi chưa chọn
                         labelStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, fontFamily: "Itim"),
                         unselectedLabelStyle: TextStyle(fontSize: 16),
                         indicator: UnderlineTabIndicator(
-                          borderSide: BorderSide(width: 3.0, color: Colors.green), // Gạch dưới tab
+                          borderSide: BorderSide(width: 3.0, color: Color(0xFF2E7D32)), // Gạch dưới tab
                           insets: EdgeInsets.symmetric(horizontal: 16.0),
                         ),
                         tabs: [

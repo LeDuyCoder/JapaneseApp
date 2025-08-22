@@ -19,9 +19,9 @@ class learnScreen extends StatefulWidget {
   final void Function() reload;
   const learnScreen(
       {super.key,
-      required this.dataWords,
-      required this.topic,
-      required this.reload});
+        required this.dataWords,
+        required this.topic,
+        required this.reload});
 
   @override
   State<StatefulWidget> createState() => _learnScreen();
@@ -43,7 +43,9 @@ class _learnScreen extends State<learnScreen> {
   @override
   void initState() {
     super.initState();
-    _initialize();
+    Future.microtask(() async {
+      await _initialize();
+    });
   }
 
   Future<void> _initialize() async {
@@ -71,7 +73,7 @@ class _learnScreen extends State<learnScreen> {
 
   List<String> handleJapaneseString(String input) {
     List<String> characters =
-        input.split('').where((e) => e.trim().isNotEmpty).toList();
+    input.split('').where((e) => e.trim().isNotEmpty).toList();
     characters.shuffle(Random());
     return characters;
   }
@@ -80,53 +82,53 @@ class _learnScreen extends State<learnScreen> {
     setState(() {
       view = feature == "sort"
           ? sortText(
-              WordTest: dataMap[numberCount]["word"],
-              wordChose: dataMap[numberCount]["listChose"],
-              typeTest: dataMap[numberCount]["typeTranslate"],
-              isRetest: amountRightAwnser >= maxQuestion &&
-                  amountRightAwnser <= (dataMap.length + wrongWords.length),
-              nextLearned: (isRight) {
-                handleNext(isRight);
-              },
-            )
+        WordTest: dataMap[numberCount]["word"],
+        wordChose: dataMap[numberCount]["listChose"],
+        typeTest: dataMap[numberCount]["typeTranslate"],
+        isRetest: amountRightAwnser >= maxQuestion &&
+            amountRightAwnser <= (dataMap.length + wrongWords.length),
+        nextLearned: (isRight) {
+          handleNext(isRight);
+        },
+      )
           : feature == "listen"
-              ? listenTest(
-                  WordTest: dataMap[numberCount]["word"],
-                  wordChose: dataMap[numberCount]["listChose"],
-                  typeTest: dataMap[numberCount]["typeTranslate"],
-                  isRetest: amountRightAwnser >= maxQuestion &&
-                      amountRightAwnser <= (dataMap.length + wrongWords.length),
-                  nextLearned: (isRight) {
-                    handleNext(isRight);
-                  })
-              : feature == "combination"
-                  ? combinationTest(
-                      listColumA: dataMap[numberCount]["listColumA"],
-                      listColumB: dataMap[numberCount]["listColumB"],
-                      nextQuestion: () {
-                        handleNext(true);
-                      })
-                  : feature == "write"
-                      ? WriteTestScreen(
-                          testData: dataMap[numberCount]["word"],
-                          nextLearned: (bool isRight) {
-                            handleNext(true);
-                          },
-                          mean: dataMap[numberCount]["mean"],
-                        )
-                      : choseTest(
-                          data: {
-                            "word": dataMap[numberCount]["word"],
-                            "anwser": dataMap[numberCount]["anwser"],
-                            "listAnwserWrong": dataMap[numberCount]
-                                ["listAnwserWrong"],
-                            "numberRight": dataMap[numberCount]["numberRight"],
-                          },
-                          nextQuestion: () {
-                            handleNext(true);
-                          },
-                          readText: false,
-                        );
+          ? listenTest(
+          WordTest: dataMap[numberCount]["word"],
+          wordChose: dataMap[numberCount]["listChose"],
+          typeTest: dataMap[numberCount]["typeTranslate"],
+          isRetest: amountRightAwnser >= maxQuestion &&
+              amountRightAwnser <= (dataMap.length + wrongWords.length),
+          nextLearned: (isRight) {
+            handleNext(isRight);
+          })
+          : feature == "combination"
+          ? combinationTest(
+          listColumA: dataMap[numberCount]["listColumA"],
+          listColumB: dataMap[numberCount]["listColumB"],
+          nextQuestion: () {
+            handleNext(true);
+          })
+          : feature == "write"
+          ? WriteTestScreen(
+        testData: dataMap[numberCount]["word"],
+        nextLearned: (bool isRight) {
+          handleNext(true);
+        },
+        mean: dataMap[numberCount]["mean"],
+      )
+          : choseTest(
+        data: {
+          "word": dataMap[numberCount]["word"],
+          "anwser": dataMap[numberCount]["anwser"],
+          "listAnwserWrong": dataMap[numberCount]
+          ["listAnwserWrong"],
+          "numberRight": dataMap[numberCount]["numberRight"],
+        },
+        nextQuestion: () {
+          handleNext(true);
+        },
+        readText: false,
+      );
     });
   }
 
@@ -196,9 +198,9 @@ class _learnScreen extends State<learnScreen> {
                 ? typeSort.VietNamToJapan
                 : typeSort.JapanToVietNam;
             word wordRandom =
-                dataWords[randomInRange(0, widget.dataWords.length)];
+            dataWords[randomInRange(0, widget.dataWords.length)];
             if (dataMap.isEmpty || dataMap.last["feture"] != fetureChose) {
-              if (dataMap.isEmpty || (dataMap.last[word] != wordRandom)) {
+              if (dataMap.isEmpty || (dataMap.last["word"] != wordRandom)) {
                 dataMap.add(
                   {
                     "feture": fetureChose,
@@ -207,23 +209,21 @@ class _learnScreen extends State<learnScreen> {
                     "word": wordRandom,
                     "listChose": ranType == typeSort.JapanToVietNam
                         ? hanldStringChoseVN(
-                            "${wordRandom.mean} ${generateWrongAwnser("JapToVN", wordRandom.mean, dataWords)}")
+                        "${wordRandom.mean} ${generateWrongAwnser("JapToVN", wordRandom.mean, dataWords)}")
                         : handleJapaneseString(
-                            "${wordRandom.vocabulary} ${generateWrongAwnser("VNToJap", wordRandom.mean, dataWords)}"),
+                        "${wordRandom.vocabulary} ${generateWrongAwnser("VNToJap", wordRandom.mean, dataWords)}"),
                   },
                 );
 
-                // Kiểm tra nếu từ chưa tồn tại trong listWordsTest mới thêm
                 if (!listWordsTest
                     .any((wordCheck) => wordCheck == wordRandom)) {
-                  listWordsTest.add(wordRandom); // Chỉ thêm nếu từ chưa tồn tại
+                  listWordsTest.add(wordRandom);
                 }
 
                 i++;
               }
             }
-          }
-          else if (fetureChose == "combination") {
+          } else if (fetureChose == "combination") {
             List<word> wordsRandom = [];
             int numberWord = 0;
 
@@ -248,30 +248,30 @@ class _learnScreen extends State<learnScreen> {
               dataWordsTest.add(
                 type == "JapToVN"
                     ? {
-                        "word": wordCheck.vocabulary,
-                        "awnser": wordCheck.mean,
-                        "wayread": wordCheck.wayread
-                      }
+                  "word": wordCheck.vocabulary,
+                  "awnser": wordCheck.mean,
+                  "wayread": wordCheck.wayread
+                }
                     : type == "JapToWayRead"
-                        ? {
-                            "word": wordCheck.vocabulary,
-                            "awnser": wordCheck.wayread,
-                            "wayread": wordCheck.wayread
-                          }
-                        : {
-                            "word": wordCheck.wayread,
-                            "awnser": wordCheck.vocabulary,
-                            "wayread": wordCheck.wayread
-                          },
+                    ? {
+                  "word": wordCheck.vocabulary,
+                  "awnser": wordCheck.wayread,
+                  "wayread": wordCheck.wayread
+                }
+                    : {
+                  "word": wordCheck.wayread,
+                  "awnser": wordCheck.vocabulary,
+                  "wayread": wordCheck.wayread
+                },
               );
-              if (listWordsTest.any((wordTest) => wordTest != wordCheck)) {
+              if (!listWordsTest.contains(wordCheck)) {
                 listWordsTest.add(wordCheck);
               }
               type == "JapToVN"
                   ? listAwnser.add(wordCheck.mean)
                   : type == "JapToWayRead"
-                      ? listAwnser.add(wordCheck.wayread)
-                      : listAwnser.add(wordCheck.vocabulary);
+                  ? listAwnser.add(wordCheck.wayread)
+                  : listAwnser.add(wordCheck.vocabulary);
             }
 
             dataMap.add(
@@ -281,34 +281,23 @@ class _learnScreen extends State<learnScreen> {
                 "listColumB": listAwnser,
               },
             );
-          }
-          else if (fetureChose == "chose") {
-            // Select a random word for the question
+          } else if (fetureChose == "chose") {
             word wordCheckRandom =
-                widget.dataWords[randomInRange(0, widget.dataWords.length)];
+            widget.dataWords[randomInRange(0, widget.dataWords.length)];
 
             List<String> wordsWrong = [];
-
-            // List of question types
             List<String> dataType = ["JapToVN", "JapToWayRead", "WayReadToJap"];
             String type = dataType[randomInRange(0, 3)];
 
-            // Set to track used words for incorrect answers
-            Set<String> usedWords = {
-              wordCheckRandom.vocabulary
-            }; // Start with the correct answer already used
+            Set<String> usedWords = {wordCheckRandom.vocabulary};
 
-            // Loop to select incorrect words
             while (wordsWrong.length < 3) {
-              // Pick a random word
               word wordRandom =
-                  widget.dataWords[randomInRange(0, widget.dataWords.length)];
+              widget.dataWords[randomInRange(0, widget.dataWords.length)];
 
-              // Ensure word is not the same as the correct answer and hasn't been used already
               if (!usedWords.contains(wordRandom.vocabulary)) {
                 usedWords.add(wordRandom.vocabulary);
 
-                // Add incorrect answer based on the type
                 if (type == "JapToVN") {
                   wordsWrong.add(wordRandom.mean);
                 } else if (type == "JapToWayRead") {
@@ -319,39 +308,35 @@ class _learnScreen extends State<learnScreen> {
               }
             }
 
-            // Add the data for the current question to the map
             dataMap.add(
               type == "JapToVN"
                   ? {
-                      "feture": fetureChose,
-                      "word": wordCheckRandom.vocabulary,
-                      "anwser": wordCheckRandom.mean,
-                      "listAnwserWrong": wordsWrong,
-                      "numberRight": randomInRange(1, 5),
-                    }
+                "feture": fetureChose,
+                "word": wordCheckRandom.vocabulary,
+                "anwser": wordCheckRandom.mean,
+                "listAnwserWrong": wordsWrong,
+                "numberRight": randomInRange(1, 5),
+              }
                   : type == "JapToWayRead"
-                      ? {
-                          "feture": fetureChose,
-                          "word": wordCheckRandom.vocabulary,
-                          "anwser": wordCheckRandom.wayread,
-                          "listAnwserWrong": wordsWrong,
-                          "numberRight": randomInRange(1, 5),
-                        }
-                      : {
-                          "feture": fetureChose,
-                          "word": wordCheckRandom.wayread,
-                          "anwser": wordCheckRandom.vocabulary,
-                          "listAnwserWrong": wordsWrong,
-                          "numberRight": randomInRange(1, 5),
-                        },
+                  ? {
+                "feture": fetureChose,
+                "word": wordCheckRandom.vocabulary,
+                "anwser": wordCheckRandom.wayread,
+                "listAnwserWrong": wordsWrong,
+                "numberRight": randomInRange(1, 5),
+              }
+                  : {
+                "feture": fetureChose,
+                "word": wordCheckRandom.wayread,
+                "anwser": wordCheckRandom.vocabulary,
+                "listAnwserWrong": wordsWrong,
+                "numberRight": randomInRange(1, 5),
+              },
             );
-          }
-          else if (fetureChose == "write") {
-            // Select a random word for the question
+          } else if (fetureChose == "write") {
             word wordCheckRandom =
-                widget.dataWords[randomInRange(0, widget.dataWords.length)];
+            widget.dataWords[randomInRange(0, widget.dataWords.length)];
 
-            // Add the data for the current question to the map
             dataMap.add({
               "feture": fetureChose,
               "word": wordCheckRandom.vocabulary,
@@ -361,25 +346,11 @@ class _learnScreen extends State<learnScreen> {
         }
       }
 
-      if (numberCount < dataMap.length) {
-        switch (dataMap[numberCount]["feture"]) {
-          case "sort":
-            updateView("sort");
-            break;
-          case "listen":
-            updateView("listen");
-            break;
-          case "combination":
-            updateView("combination");
-            break;
-          case "write":
-            updateView("write");
-            break;
-        }
+      if (dataMap.isNotEmpty && numberCount < dataMap.length) {
+        updateView(dataMap[numberCount]["feture"]);
       } else {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           _timerService.stopTimer();
-
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -420,27 +391,26 @@ class _learnScreen extends State<learnScreen> {
                 ),
                 Expanded(
                     child: Padding(
-                  padding: EdgeInsets.only(right: 20),
-                  child: LinearProgressIndicator(
-                    value: numberCount / (dataMap.length + 1),
-                    backgroundColor: Colors.grey[300],
-                    color: Colors.greenAccent,
-                    minHeight: 15,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                )),
+                      padding: EdgeInsets.only(right: 20),
+                      child: LinearProgressIndicator(
+                        value: numberCount / (dataMap.length + 1),
+                        backgroundColor: Colors.grey[300],
+                        color: Colors.greenAccent,
+                        minHeight: 15,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    )),
               ],
             ),
-
             view != null
                 ? Expanded(child: view!)
                 : Center(
-                    child: Container(
-                      height: 50,
-                      width: 50,
-                      child: CircularProgressIndicator(),
-                    ),
-                  )
+              child: Container(
+                height: 50,
+                width: 50,
+                child: CircularProgressIndicator(),
+              ),
+            )
           ],
         ),
       ),

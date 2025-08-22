@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:intl/intl.dart';
+import 'package:japaneseapp/Module/topic.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:uuid/v4.dart';
@@ -70,9 +70,19 @@ class DatabaseHelper {
 
       await db.execute('''
         CREATE TABLE IF NOT EXISTS folders (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
           namefolder TEXT NOT NULL,
-          topics TEXT,
           datefolder TEXT
+        );
+      ''');
+
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS folder_topics (
+          folder_id INTEGER NOT NULL,
+          topic_id INTEGER NOT NULL,
+          FOREIGN KEY (folder_id) REFERENCES folders(id) ON DELETE CASCADE,
+          FOREIGN KEY (topic_id) REFERENCES topic(id) ON DELETE CASCADE,
+          PRIMARY KEY (folder_id, topic_id)
         );
       ''');
 
@@ -338,12 +348,12 @@ class DatabaseHelper {
     final db = await instance.database;
     await db.insert(
       'characterjp',
-      {
-        'charName': charName,
-        'level': level,
-        'setLevel': setLevel,
-        'typeword': typeword,
-      },
+        {
+          'charName': charName,
+          'level': level,
+          'setLevel': setLevel,
+          'typeword': typeword,
+        },
       conflictAlgorithm: ConflictAlgorithm.replace, // Tránh lỗi trùng key
     );
   }
@@ -379,5 +389,109 @@ class DatabaseHelper {
   Future<Batch> getBatch() async {
     final db = _database; // Đảm bảo database đã khởi tạo
     return db!.batch(); // Trả về Batch để sử dụng sau này
+  }
+
+  /// Checks if a topic exists in a specific folder.
+  Future<bool> hasTopicInFolder(int folderID, String topicID) async {
+    final db = await instance.database;
+    List<Map<String, dynamic>> result = await db.rawQuery(
+      'SELECT * FROM folder_topics WHERE folder_id = ? AND topic_id = ?',
+      [folderID, topicID],
+    );
+    return result.isNotEmpty;
+  }
+
+  //write documentation for this function by English
+  /// Adds a topic to a folder.
+  /// Returns true if the topic was successfully added, false if the topic already exists in the folder.<br>
+  /// [folderID] is the ID of the folder to which the topic will be added.<br>
+  /// [topicID] is the ID of the topic to be added.<br>
+  /// If the topic already exists in the folder, it returns false without adding it again.<br>
+  /// If the topic is successfully added, it returns true.<br>
+  /// This function uses a conflict algorithm to ignore duplicate entries, ensuring that no error is thrown if the
+  /// topic already exists in the folder.<br>
+  /// Example usage:
+  /// ```dart
+  /// bool success = await DatabaseHelper.instance.addTopicToFolder(folderID, topicID);
+  /// if (success) {
+  ///   print('Topic added successfully.');
+  /// } else {
+  ///  print('Topic already exists in the folder.');
+  ///  }
+  ///  ```
+  Future<bool> addTopicToFolder(int folderID, String topicID) async {
+    try {
+      final db = await instance.database;
+
+      if (await hasTopicInFolder(folderID, topicID)) {
+        return false; // Topic already exists in folder
+      }
+
+      // Check if topicID exists in topic table
+      final topicExists = await db.query(
+        'topic',
+        where: 'id = ?',
+        whereArgs: [topicID],
+      );
+      if (topicExists.isEmpty) {
+        throw Exception('Topic ID does not exist');
+      }
+
+      await db.insert(
+        'folder_topics',
+        {'folder_id': folderID, 'topic_id': topicID},
+        conflictAlgorithm: ConflictAlgorithm.ignore,
+      );
+
+      return true; // Successfully added
+    } catch (e) {
+      print('Error adding topic to folder: $e');
+      return false;
+    } // Thêm thành công
+  }
+
+  /// Deletes a topic from a folder.<br>
+  /// [folderID] is the ID of the folder from which the topic will be removed<br>
+  /// [topicID] is the ID of the topic to be removed.<br>
+  /// This function uses the `delete` method of the database to remove the topic from the<br>
+  /// `folder_topics` table based on the provided folder ID and topic ID.<br>
+  Future<void> deleteTopicFromFolder(int folderID, String topicID) async {
+    final db = await instance.database;
+    await db.delete(
+      'folder_topics',
+      where: 'folder_id = ? AND topic_id = ?',
+      whereArgs: [folderID, topicID],
+    );
+  }
+
+  Future<List<topic>> getAllTopicInFolder(int folderID) async {
+    final db = await instance.database;
+    List<Map<String, dynamic>> result = await db.rawQuery('''
+      SELECT 
+          topic.id, 
+          topic.name AS nameTopic, 
+          topic.user AS owner, 
+          COUNT(words.word) AS word_count
+      FROM folder_topics t
+      JOIN topic 
+          ON t.topic_id = topic.id
+      LEFT JOIN words 
+          ON topic.name = words.topic 
+      WHERE t.folder_id = ?
+      GROUP BY topic.id, topic.name, topic.user;
+
+    ''', [folderID]);
+    print(result);
+    return result.map((e) => topic.fromJson(e)).toList();
+  }
+  
+  Future<void> deleteFolder(int folderID) async {
+    final db = await instance.database;
+    db.delete("folder_topics", where: "folder_id = ?", whereArgs: [folderID]);
+    await db.delete(
+      'folders',
+      where: 'id = ?',
+      whereArgs: [folderID],
+    );
   }
 }

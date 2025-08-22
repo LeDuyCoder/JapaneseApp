@@ -1,6 +1,7 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:japaneseapp/Config/dataHelper.dart';
 import 'package:japaneseapp/Module/word.dart';
@@ -25,7 +26,32 @@ class _congraculationScreen extends State<congraculationScreen>{
 
   final AudioPlayer _audioPlayer = AudioPlayer();
   bool isPress = false;
+  late InterstitialAd _interstitialAd;
+  bool _isInterstitialAdReady = false;
 
+  @override
+  void initState() {
+    _loadInterstitialAd();
+  }
+
+  void _loadInterstitialAd() {
+    InterstitialAd.load(
+      adUnitId: 'ca-app-pub-3940256099942544/1033173712', // <-- ID test
+      request: AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (ad) {
+          _interstitialAd = ad;
+          _isInterstitialAdReady = true;
+
+          _interstitialAd.setImmersiveMode(true);
+        },
+        onAdFailedToLoad: (error) {
+          print('InterstitialAd failed to load: $error');
+          _isInterstitialAdReady = false;
+        },
+      ),
+    );
+  }
 
   // Hàm chạy file MP3 từ đường dẫn
   Future<void> playSound(String filePath) async {
@@ -54,7 +80,7 @@ class _congraculationScreen extends State<congraculationScreen>{
     int exp = await prefs.getInt("exp")??0;
     int nextExp = prefs.getInt("nextExp")??0;
 
-    exp += expplus;
+    exp += await prefs.getInt("level")??1 * expplus;
 
     while(exp >= nextExp){
       level++;
@@ -65,6 +91,11 @@ class _congraculationScreen extends State<congraculationScreen>{
     await prefs.setInt("level", level);
     await prefs.setInt("exp", exp);
     await prefs.setInt("nextExp", nextExp);
+  }
+
+  void _popTwoScreens(BuildContext context) {
+    Navigator.pop(context); // pop màn hiện tại
+    Navigator.pop(context); // pop màn trước đó
   }
 
   @override
@@ -206,13 +237,32 @@ class _congraculationScreen extends State<congraculationScreen>{
                     );
                   }
 
-                  flusExp(1);
+                  flusExp(5);
 
                   widget.reload();
+                  if (_isInterstitialAdReady) {
+                    _interstitialAd.show();
 
-                  // Đóng các màn hình
-                  Navigator.pop(context);
-                  Navigator.pop(context);
+                    // Sau khi hiển thị, xử lý chuyển tiếp màn hình ở callback:
+                    _interstitialAd.fullScreenContentCallback = FullScreenContentCallback(
+                      onAdDismissedFullScreenContent: (ad) {
+                        ad.dispose();
+                        _loadInterstitialAd(); // tải lại cho lần sau
+
+                        // 👉 Chuyển tiếp màn sau khi quảng cáo đóng
+                        _popTwoScreens(context);
+                      },
+                      onAdFailedToShowFullScreenContent: (ad, error) {
+                        ad.dispose();
+                        // Đóng các màn hình
+                        _popTwoScreens(context);
+                      },
+                    );
+                  } else {
+                    // Đóng các màn hình
+                    _popTwoScreens(context);
+                  }
+
                 },
                 onTapCancel: () {
                   setState(() {

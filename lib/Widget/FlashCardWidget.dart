@@ -102,68 +102,79 @@ class _FlashCardWidgetState extends State<FlashCardWidget> with SingleTickerProv
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
-            width: 400,
+          /// Từ vựng chính
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: AutoSizeText(
               widget.word,
-              style: TextStyle(
-                  fontSize: 50,
-                  color: Colors.black,
-                  fontFamily: "Itim"
+              style: const TextStyle(
+                fontSize: 50,
+                color: Colors.black,
+                fontFamily: "Itim",
               ),
               textAlign: TextAlign.center,
+              maxLines: 1,       // giữ 1 dòng, sẽ scale nhỏ lại
+              minFontSize: 16,   // không nhỏ hơn 16
+              overflow: TextOverflow.ellipsis,
             ),
           ),
-          SizedBox(height: 10,),
-          Container(
-            width: 400,
+          const SizedBox(height: 10),
+
+          /// Cách đọc
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: AutoSizeText(
               widget.wayread,
-              style: TextStyle(
-                  fontSize: 25,
-                  color: Colors.black,
-                  fontFamily: "Itim"
+              style: const TextStyle(
+                fontSize: 25,
+                color: Colors.black,
+                fontFamily: "Itim",
               ),
               textAlign: TextAlign.center,
+              maxLines: 1,
+              minFontSize: 12,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
-          SizedBox(height: 10,),
+          const SizedBox(height: 10),
+
+          /// Các nút
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               GestureDetector(
-                onTap: (){
+                onTap: () {
                   readText(widget.wayread, 0.5);
                 },
                 child: Container(
-                    height: 50,
-                    width: 50,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(20)),
-                        color: Colors.blue.shade200
-                    ),
-                    child: Icon(Icons.volume_down)
+                  height: 50,
+                  width: 50,
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(20)),
+                    color: Colors.blue.shade200,
+                  ),
+                  child: const Icon(Icons.volume_down),
                 ),
               ),
-              SizedBox(width: 10),
+              const SizedBox(width: 10),
               GestureDetector(
-                onTap: (){
+                onTap: () {
                   _flipCard();
                 },
                 child: Container(
-                    height: 50,
-                    width: 50,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(20)),
-                        color: Colors.red.shade200
-                    ),
-                    child: Icon(Icons.rotate_right, color: Colors.black,)
+                  height: 50,
+                  width: 50,
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(20)),
+                    color: Colors.red.shade200,
+                  ),
+                  child: const Icon(Icons.rotate_right, color: Colors.black),
                 ),
-              )
+              ),
             ],
           )
         ],
-      )
+      ),
     );
   }
 

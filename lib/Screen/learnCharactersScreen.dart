@@ -386,7 +386,6 @@ class _learnCharactersScreen extends State<learnCharactersScreen> {
   }
 
   void finishTest(dynamic dataJson){
-    print("demo");
     Future.delayed(Duration.zero, () {
       Navigator.push(
         context,

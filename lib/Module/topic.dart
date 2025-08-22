@@ -5,12 +5,15 @@ class topic{
   topic({required this.id, required this.name, this.owner, this.count});
 
   factory topic.fromJson(Map<String, dynamic> json) {
-    return topic(
+    topic newTopic = topic(
       id: json['id'],
-      name: json['nameTopic'], // ⚠️ API trả về nameTopic
+      name: json['nameTopic'],
       owner: json['owner'],
-      count: json['word_count']
+      count: int.tryParse(json['word_counts'] ?? '0') ?? 0,
     );
+
+    return newTopic;
+
   }
 
   Map<String, dynamic> toJson() {

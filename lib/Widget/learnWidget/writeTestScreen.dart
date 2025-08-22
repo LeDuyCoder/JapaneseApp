@@ -162,7 +162,7 @@ class _WriteTestScreenState extends State<WriteTestScreen> {
               width: MediaQuery.of(context).size.width - 20,
               height: MediaQuery.of(context).size.width * 0.15,
               decoration: BoxDecoration(
-                color: Color.fromRGBO(49, 230, 62, 1.0),
+                color: Color.fromRGBO(97, 213, 88, 1.0),
                 borderRadius: BorderRadius.all(Radius.circular(20)),
                 boxShadow: isPress
                     ? []

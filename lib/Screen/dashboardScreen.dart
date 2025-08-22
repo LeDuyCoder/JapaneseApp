@@ -20,26 +20,31 @@ import '../Module/word.dart';
 import '../Widget/topicServerWidget.dart';
 import '../Widget/topicWidget.dart';
 
-class dashboardScreen extends StatefulWidget{
-  @override
-  State<StatefulWidget> createState() => _dashboardScreen();
+class dashboardScreen extends StatefulWidget {
+  const dashboardScreen({Key? key}) : super(key: key);
 
+  // Khai báo GlobalKey static 1 lần duy nhất
+  static final GlobalKey<_DashboardScreenState> globalKey =
+  GlobalKey<_DashboardScreenState>();
+
+  @override
+  State<dashboardScreen> createState() => _DashboardScreenState();
 }
 
-class _dashboardScreen extends State<dashboardScreen>{
+
+class _DashboardScreenState extends State<dashboardScreen> {
 
   Map<String, List<Map<String, dynamic>>> dataDashBoards = {};
-  TextEditingController nameFolderInput = TextEditingController();
-  TextEditingController nameTopicInput = TextEditingController();
-  TextEditingController searchWord = TextEditingController();
-  TextEditingController renameTopicInput = TextEditingController();
+  final TextEditingController nameFolderInput = TextEditingController();
+  final TextEditingController nameTopicInput = TextEditingController();
+  final TextEditingController searchWord = TextEditingController();
+  final TextEditingController renameTopicInput = TextEditingController();
   String? textErrorName;
   String? textErrorTopicName;
   bool isLoadingCreateNewFolder = false;
   String amountTopic = "0 Topic";
   String? _fileContent;
   String nameTopic = "";
-
 
   Future<Map<String, List<Map<String, dynamic>>>> hanldeGetData() async {
     final db = await DatabaseHelper.instance;
@@ -49,6 +54,13 @@ class _dashboardScreen extends State<dashboardScreen>{
     };
 
     return data;
+  }
+
+  void reloadScreen(){
+    print("Reloading data...");
+    setState(() {
+
+    });
   }
 
   Future<void> reload() async {
@@ -890,8 +902,8 @@ class _dashboardScreen extends State<dashboardScreen>{
   }
 
   Future<List<topic>> getDataTopic() async {
-    DatabaseServer db = new DatabaseServer("http://10.0.2.2:80/backendServer");
-    return db.getAllDataTopic(5).timeout(Duration(seconds: 5));
+    DatabaseServer db = new DatabaseServer();
+    return db.getAllDataTopic(5).timeout(Duration(seconds: 10));
   }
 
   Future<bool> hastTopic(String id) async {
@@ -900,7 +912,7 @@ class _dashboardScreen extends State<dashboardScreen>{
   }
 
   Future<void> dowloadTopic(String id) async{
-    DatabaseServer dbServer = new DatabaseServer("http://10.0.2.2:80/backendServer");
+    DatabaseServer dbServer = new DatabaseServer();
     DatabaseHelper db = DatabaseHelper.instance;
 
     topic Topic = await dbServer.getDataTopicbyID(id);
@@ -1200,18 +1212,11 @@ class _dashboardScreen extends State<dashboardScreen>{
         }
 
         dataDashBoards = snapshot.data as Map<String, List<Map<String, dynamic>>>;
-
         amountTopic = "${dataDashBoards["topic"]!.length} Topic";
 
         return Scaffold(
           appBar: AppBar(
             automaticallyImplyLeading: false,
-            title: Container(
-              child: const Text(
-                "日本語",
-                style: TextStyle(fontFamily: "aboshione", fontSize: 20, color: Colors.white),
-              ),
-            ),
             actions: [
               GestureDetector(
                 onTap: (){
@@ -1225,7 +1230,7 @@ class _dashboardScreen extends State<dashboardScreen>{
                 ),
               )
             ],
-            backgroundColor: Color.fromRGBO(20, 195, 142, 1.0),
+            backgroundColor: Color(0xFF81C784),
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.vertical(
                 bottom: Radius.circular(20),
@@ -1233,7 +1238,7 @@ class _dashboardScreen extends State<dashboardScreen>{
             ),
           ),
           body: Container(
-              color: Colors.white,
+              color: Color(0xFFFFFFFF),
               width: double.infinity,
               height: MediaQuery.of(context).size.height,
               child: RefreshIndicator(
@@ -1285,7 +1290,7 @@ class _dashboardScreen extends State<dashboardScreen>{
                                         width: MediaQuery.sizeOf(context).width*0.11,
                                         height: MediaQuery.sizeOf(context).width*0.11,
                                         decoration: const BoxDecoration(
-                                          color: Color.fromRGBO(184, 241, 176, 1),
+                                          color: Color(0xFFE8F5E9),
                                           borderRadius: BorderRadius.all(Radius.circular(15)),
                                         ),
                                         child: Icon(Icons.search),
@@ -1296,46 +1301,26 @@ class _dashboardScreen extends State<dashboardScreen>{
                               ),
 
                               SizedBox(height: 20),
-                              Padding(
+                              const Padding(
                                 padding: EdgeInsets.only(bottom: 10, left: 10, right: 10),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    const Text(
+                                    Text(
                                       "Thư Mục",
                                       style: TextStyle(fontFamily: "itim", fontSize: 30),
-                                    ),
-                                    GestureDetector(
-                                      onTap: (){
-                                        showPopupAddFolder();
-                                      },
-                                      child: Container(
-                                        width: 150,
-                                        height: 50,
-                                        decoration: const BoxDecoration(
-                                          color: Color.fromRGBO(184, 241, 176, 1),
-                                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                                        ),
-                                        child: const Center(
-                                          child: Text(
-                                            "+ Thêm Thư Mục",
-                                            style: TextStyle(fontFamily: "Itim", fontWeight: FontWeight.bold, fontSize: 16),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                      )
                                     ),
                                   ],
                                 ),
                               ),
-                              dataDashBoards["folder"]!.isEmpty? Center(
+                              dataDashBoards["folder"]!.isEmpty? const Center(
                                 child: Text("Không có dữ liệu", style: TextStyle(fontSize: 20, color: Colors.grey),),
                               ) : SingleChildScrollView(
                                 scrollDirection: Axis.horizontal,
                                 child: Row(
                                   children: [
                                     for (Map<String, dynamic> folder in dataDashBoards["folder"]!)
-                                      folderWidget(nameFolder: folder["namefolder"]!, reloadDashboard: () {
+                                      folderWidget(idFolder: folder["id"], nameFolder: folder["namefolder"]!, reloadDashboard: () {
                                         reload();
                                       }, dateCreated: folder["datefolder"],),
                                   ],
@@ -1348,7 +1333,7 @@ class _dashboardScreen extends State<dashboardScreen>{
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     const Text(
-                                      "Cộng Đồng",
+                                      "Học Phần",
                                       style: TextStyle(fontFamily: "itim", fontSize: 30),
                                     ),
                                     Row(
@@ -1358,7 +1343,9 @@ class _dashboardScreen extends State<dashboardScreen>{
                                             Navigator.push(
                                               context,
                                               PageRouteBuilder(
-                                                pageBuilder: (context, animation, secondaryAnimation) => seeMoreTopic(),
+                                                pageBuilder: (context, animation, secondaryAnimation) => seeMoreTopic(reloadScreen: (){
+                                                  reload();
+                                                },),
                                                 transitionsBuilder: (context, animation, secondaryAnimation, child) {
                                                   const begin = Offset(1.0, 0.0); // bắt đầu từ bên phải
                                                   const end = Offset.zero;        // kết thúc ở chính giữa
@@ -1479,7 +1466,7 @@ class _dashboardScreen extends State<dashboardScreen>{
                                             width: 100,
                                             height: 50,
                                             decoration: const BoxDecoration(
-                                              color: Color.fromRGBO(184, 241, 176, 1),
+                                              color: Color(0xFFE8F5E9),
                                               borderRadius: BorderRadius.all(Radius.circular(10)),
                                             ),
                                             child: const Center(
@@ -1499,26 +1486,6 @@ class _dashboardScreen extends State<dashboardScreen>{
                                           ),
                                         ),
                                         SizedBox(width: 20,),
-                                        GestureDetector(
-                                          onTap: (){
-                                            showPopupAddTopic();
-                                          },
-                                          child: Container(
-                                            width: 120,
-                                            height: 50,
-                                            decoration: const BoxDecoration(
-                                              color: Color.fromRGBO(184, 241, 176, 1),
-                                              borderRadius: BorderRadius.all(Radius.circular(10)),
-                                            ),
-                                            child: const Center(
-                                              child: Text(
-                                                "+ Thêm Chủ Đề",
-                                                style: TextStyle(fontFamily: "Itim", fontWeight: FontWeight.bold, fontSize: 16),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                            ),
-                                          ),
-                                        )
                                       ],
                                     )
                                   ],
@@ -1540,7 +1507,6 @@ class _dashboardScreen extends State<dashboardScreen>{
                                     itemCount: dataDashBoards["topic"]!.length,
                                     itemBuilder: (context, index) {
                                       var topic = dataDashBoards["topic"]![index];
-                                        
                                       return Padding(
                                         padding: EdgeInsets.only(bottom: 10),
                                         child: topicWidget(

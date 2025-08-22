@@ -139,13 +139,13 @@ class _tutorialScreen extends State<tutorialScreen>{
           );
         },
         showSkipButton: true,
-        skip: Text("Skip"),
-        next: Text("Next"),
-        done: Text("Done", style: TextStyle(fontWeight: FontWeight.bold)),
+        skip: Text("Skip", style: TextStyle(color: Colors.green),),
+        next: Text("Next", style: TextStyle(color: Colors.green)),
+        done: Text("Done", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green)),
         dotsDecorator: const DotsDecorator(
           size: Size(10.0, 10.0),
           activeSize: Size(25.0, 10.0),
-          activeColor: Colors.blue,
+          activeColor: Colors.green,
           color: Colors.black26,
           spacing: EdgeInsets.symmetric(horizontal: 1.0),
         ),
