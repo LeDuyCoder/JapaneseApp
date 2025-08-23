@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:japaneseapp/Module/topic.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:uuid/v4.dart';
@@ -244,6 +245,21 @@ class DatabaseHelper {
     }
 
     return jsonEncode(allData);
+  }
+
+  Future<void> clearAllData() async {
+    final db = await instance.database;
+
+    // Lấy danh sách tất cả các bảng (trừ bảng hệ thống)
+    final List<Map<String, dynamic>> tables = await db.rawQuery(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%';"
+    );
+
+    // Xóa tất cả dữ liệu từ mỗi bảng
+    for (var table in tables) {
+      String tableName = table['name'];
+      await db.delete(tableName);
+    }
   }
 
   Future<void> importSynchronyData(String jsonData) async {
@@ -493,5 +509,38 @@ class DatabaseHelper {
       where: 'id = ?',
       whereArgs: [folderID],
     );
+  }
+
+  Future<void> createDataLevel() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    if(!prefs.containsKey("level")){
+      await prefs.setInt("level", 1);
+      await prefs.setInt("exp", 0);
+      await prefs.setInt("nextExp", 100);
+    }
+
+    if(!prefs.containsKey("Streak")){
+      await prefs.setInt("Streak", 0);
+      await prefs.setString("lastCheckIn", '');
+      await prefs.setStringList("checkInHistoryTreak", <String>[]);
+      await prefs.setStringList("checkInHistory", <String>[]);
+    }
+
+    if(!prefs.containsKey("achivement")){
+      await prefs.setStringList("achivement", <String>[]);
+    }
+
+    Map<String, dynamic> data = {
+      "levelSet": 0,
+      "level": 0,
+    };
+
+    if(!prefs.containsKey("hiragana")){
+      await prefs.setString("hiragana", jsonEncode(data));
+    }
+
+    if(!prefs.containsKey("katakana")){
+      await prefs.setString("katakana", jsonEncode(data));
+    }
   }
 }

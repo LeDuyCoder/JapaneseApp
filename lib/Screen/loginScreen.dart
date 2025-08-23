@@ -1,19 +1,23 @@
+import 'dart:convert';
+
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:japaneseapp/Screen/registerScreen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../Config/dataHelper.dart';
 
 class loginScreen extends StatefulWidget{
   @override
   State<StatefulWidget> createState() => _loginScreen();
-
 }
 
 class _loginScreen extends State<loginScreen>{
-
   bool _isShowPass = false;
   String? err_Password, err_mail;
   Map<String, dynamic>? _userData;
@@ -38,21 +42,18 @@ class _loginScreen extends State<loginScreen>{
         // Create an OAuthCredential from the access token
         final OAuthCredential oAuthCredential = FacebookAuthProvider.credential(loginResult.accessToken!.tokenString);
 
+        UserCredential result = await FirebaseAuth.instance.signInWithCredential(oAuthCredential);
+        await UpdateAsynchronyData();
+
         // Sign in to Firebase with the credential
-        return await FirebaseAuth.instance.signInWithCredential(oAuthCredential);
+        return result;
       } else {
-        // Print any errors if login was unsuccessful
-        print('Facebook login failed: ${loginResult.message}');
         throw Exception('Facebook login failed');
       }
     } catch (e) {
-      // Handle any errors
-      print('Error during Facebook login: $e');
       throw Exception('Error during Facebook login: $e');
     }
   }
-
-
 
   Future<User?> signInWithGoogle() async {
     try {
@@ -77,14 +78,59 @@ class _loginScreen extends State<loginScreen>{
 
       // Bước 5: Lấy User từ Firebase sau khi đăng nhập thành công
       final User? user = userCredential.user;
-
-      print('Đăng nhập thành công: ${user?.displayName}, email: ${user?.email}');
+      await UpdateAsynchronyData();
       return user;
     } catch (error) {
       print('Lỗi đăng nhập Google: $error');
       return null;
     }
   }
+
+  List<String> _convertToListString(dynamic list) {
+    if (list == null) return [];
+    return List<String>.from(list.map((item) => item.toString()));
+  }
+
+  Future<void> UpdateAsynchronyData() async {
+    DatabaseHelper db = DatabaseHelper.instance;
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    try {
+      // Get the Firestore instance
+      var userDoc = FirebaseFirestore.instance.collection("datas").doc(FirebaseAuth.instance.currentUser!.uid);
+
+      // Get the document snapshot
+      var docSnapshot = await userDoc.get();
+
+      // Check if the document exists
+      if (docSnapshot.exists) {
+        // Document exists, retrieve the data
+        var data = docSnapshot.data(); // This will return a Map<String, dynamic> with the document data
+        String dataInDatabase = data!["data"][0];
+        await db.importSynchronyData(dataInDatabase);
+
+        Map<String, dynamic> dataPrefs = jsonDecode(data["data"][1]);
+        print(dataPrefs);
+        await prefs.clear();
+        await prefs.setInt("level", dataPrefs["level"]);
+        await prefs.setInt("exp", dataPrefs["exp"]);
+        await prefs.setInt("nextExp", dataPrefs["nextExp"]);
+        await prefs.setInt("Streak", dataPrefs["Streak"]);
+        await prefs.setString("lastCheckIn", dataPrefs["lastCheckIn"]);
+        await prefs.setStringList("checkInHistory", _convertToListString(dataPrefs["checkInHistory"]));
+        await prefs.setStringList("checkInHistoryTreak", _convertToListString(dataPrefs["checkInHistoryTreak"]));
+        await prefs.setStringList("achivement", _convertToListString(dataPrefs["achivement"]));
+
+        userDoc.delete();
+      } else {
+        DatabaseHelper db = DatabaseHelper.instance;
+        await db.createDataLevel();
+      }
+    } catch (e) {
+      print("Error retrieving data: $e");
+    }
+  }
+
 
   Future<void> signInEmail() async {
     // Reset error messages
@@ -118,6 +164,7 @@ class _loginScreen extends State<loginScreen>{
 
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
+        await UpdateAsynchronyData();
         _userData = {
           'email': user.email,
           // Các thông tin khác
@@ -125,11 +172,6 @@ class _loginScreen extends State<loginScreen>{
 
         typeLogin = "mail";
       }
-
-
-      // Success - navigation or other logic can be added here
-      // For example:
-      // Navigator.pushReplacementNamed(context, '/home');
 
     } on FirebaseAuthException catch (e) {
       // Handle specific Firebase auth errors

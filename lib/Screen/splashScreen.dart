@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:japaneseapp/Config/dataHelper.dart';
 import 'package:japaneseapp/Screen/controllScreen.dart';
 import 'package:japaneseapp/Screen/loginScreen.dart';
 import 'package:japaneseapp/Screen/tabScreen.dart';
@@ -174,38 +175,7 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
     return prefs.getBool(flagKey) ?? false; // Nếu flag không tồn tại, trả về false
   }
 
-  Future<void> createDataLevel() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    if(!prefs.containsKey("level")){
-      await prefs.setInt("level", 1);
-      await prefs.setInt("exp", 0);
-      await prefs.setInt("nextExp", 100);
-    }
 
-    if(!prefs.containsKey("Streak")){
-      await prefs.setInt("Streak", 0);
-      await prefs.setString("lastCheckIn", '');
-      await prefs.setStringList("checkInHistoryTreak", <String>[]);
-      await prefs.setStringList("checkInHistory", <String>[]);
-    }
-
-    if(!prefs.containsKey("achivement")){
-      await prefs.setStringList("achivement", <String>[]);
-    }
-
-    Map<String, dynamic> data = {
-      "levelSet": 0,
-      "level": 0,
-    };
-
-    if(!prefs.containsKey("hiragana")){
-      await prefs.setString("hiragana", jsonEncode(data));
-    }
-
-    if(!prefs.containsKey("katakana")){
-      await prefs.setString("katakana", jsonEncode(data));
-    }
-  }
 
 
   Future<void> requestPermissions() async {
@@ -225,7 +195,10 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
 
   Future<void> _initializeDatabase() async {
     // Khởi tạo cơ sở dữ liệu và gọi await để chờ cơ sở dữ liệu được tạo
-    await createDataLevel();
+
+    DatabaseHelper db = DatabaseHelper.instance;
+
+    await db.createDataLevel();
     await Future.delayed(Duration(seconds: 3));
 
     bool isConnected = await InternetConnectionChecker.instance.hasConnection;

@@ -89,7 +89,7 @@ class topicManagerWidget extends StatelessWidget{
                     SizedBox(width: 20,),
                     Container(
                       width: MediaQuery.sizeOf(context).width*0.65,
-                      child: AutoSizeText(dataTopic.name, style: TextStyle(fontSize: 20, fontFamily: "indieflower"),),
+                      child: AutoSizeText(dataTopic.name, style: TextStyle(fontSize: 20),),
                     )
                   ],
                 ),
