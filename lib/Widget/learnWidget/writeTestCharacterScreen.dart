@@ -1,5 +1,4 @@
 import 'package:audioplayers/audioplayers.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -187,6 +186,8 @@ class _WriteTestCharacterScreenState extends State<WriteTestCharacterScreen> {
               ),
             ),
           ),
+          SizedBox(height: 20,),
+          Text("Khuyến nghị sử dụng Gboard để có trải nghiệm tốt nhất", style: TextStyle(color: Colors.red, fontSize: 15)),
         ],
       ),
     );

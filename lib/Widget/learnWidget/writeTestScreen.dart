@@ -180,6 +180,8 @@ class _WriteTestScreenState extends State<WriteTestScreen> {
               ),
             ),
           ),
+          SizedBox(height: 20,),
+          Text("Khuyến nghị sử dụng Gboard để có trải nghiệm tốt nhất", style: TextStyle(color: Colors.red, fontSize: 15)),
         ],
       ),
     );

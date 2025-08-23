@@ -272,9 +272,9 @@ class _addWordScreen extends State<addWordScreen>{
               actions: [
                 IconButton(onPressed: (){
                   showDialogSaveData(context);
-                }, icon: Icon(Icons.save), color: Colors.black,)
+                }, icon: Icon(Icons.save_as_outlined), color: Colors.black,)
               ],
-              backgroundColor: Color.fromRGBO(20, 195, 142, 1.0),
+              backgroundColor: Color(0xFF81C784),
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.vertical(
                   bottom: Radius.circular(20),
@@ -319,7 +319,7 @@ class _addWordScreen extends State<addWordScreen>{
                       decoration: const BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.vertical(
-                              top: Radius.circular(40)
+                              top: Radius.circular(20)
                           ),
                           boxShadow: [
                             BoxShadow(

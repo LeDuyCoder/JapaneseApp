@@ -1,8 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:japaneseapp/Config/dataJson.dart';
 import 'package:japaneseapp/Screen/hiraganaScreen.dart';
 
