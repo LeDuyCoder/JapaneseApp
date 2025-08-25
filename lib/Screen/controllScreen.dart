@@ -5,6 +5,9 @@ import 'package:japaneseapp/Screen/loginScreen.dart';
 import 'package:japaneseapp/Screen/tabScreen.dart';
 
 class controllScreen extends StatelessWidget {
+  final Function(Locale _locale) changeLanguage;
+
+  const controllScreen({super.key, required this.changeLanguage});
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +15,7 @@ class controllScreen extends StatelessWidget {
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (ctx, snapshot) {
         if(snapshot.hasData){
-          return TabScreen();
+          return TabScreen(changeLanguage: changeLanguage,);
         }
         return loginScreen();
       },

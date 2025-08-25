@@ -18,6 +18,10 @@ import '../Config/databaseServer.dart';
 import '../main.dart';
 
 class splashScreen extends StatefulWidget{
+  final Function(Locale _locale) changeLanguage;
+
+  const splashScreen({super.key, required this.changeLanguage});
+
   @override
   State<StatefulWidget> createState() => _splashScreen();
 }
@@ -133,7 +137,7 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
                                   await setFlag("firstJoint", true);
                                   Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => TabScreen()));
+                                  MaterialPageRoute(builder: (context) => TabScreen(changeLanguage: widget.changeLanguage,)));
                                 } else {
                                   Navigator.push(
                                     context,
@@ -174,10 +178,7 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getBool(flagKey) ?? false; // Nếu flag không tồn tại, trả về false
   }
-
-
-
-
+  
   Future<void> requestPermissions() async {
     if (await Permission.notification.isDenied) {
       await Permission.notification.request();
@@ -215,11 +216,15 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
   }
 
   void sendToScreen() async {
+    
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    await widget.changeLanguage(Locale(sharedPreferences.getString("language")??"vi"));
+
     Navigator.push(
       context,
       PageRouteBuilder(
         transitionDuration: const Duration(milliseconds: 800), // Tăng thời gian chuyển đổi
-        pageBuilder: (context, animation, secondaryAnimation) => controllScreen(),
+        pageBuilder: (context, animation, secondaryAnimation) => controllScreen(changeLanguage: widget.changeLanguage,),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           var tween = Tween(begin: const Offset(1.0, 0.0), end: Offset.zero)
               .chain(CurveTween(curve: Curves.easeInOut));

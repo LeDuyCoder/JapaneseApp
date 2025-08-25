@@ -5,9 +5,14 @@ import 'package:japaneseapp/Screen/dashboardScreen.dart';
 import 'package:japaneseapp/Screen/profileScreen.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
+import '../generated/app_localizations.dart';
 import 'addFolderScreen.dart';
 
 class TabScreen extends StatefulWidget {
+  final Function(Locale _locale) changeLanguage;
+
+  const TabScreen({super.key, required this.changeLanguage});
+
   @override
   _TabScreenState createState() => _TabScreenState();
 }
@@ -15,18 +20,18 @@ class TabScreen extends StatefulWidget {
 class _TabScreenState extends State<TabScreen> {
   int _selectedIndex = 0;
   late PageController _pageController;
+  late List<Widget> _screens;
 
   @override
   void initState() {
     super.initState();
     _pageController = PageController();
+    _screens = [
+      dashboardScreen(key: dashboardScreen.globalKey, changeLanguage: widget.changeLanguage,),
+      charactersScreen(),
+      profileScreen(changeLanguage: widget.changeLanguage,)
+    ];
   }
-
-  final List<Widget> _screens = [
-    dashboardScreen(key: dashboardScreen.globalKey),
-    charactersScreen(),
-    profileScreen()
-  ];
 
   void _showBottomMenu(BuildContext context) {
     showModalBottomSheet(
@@ -163,7 +168,7 @@ class _TabScreenState extends State<TabScreen> {
           items: [
             SalomonBottomBarItem(
               icon: const Icon(Icons.home, size: 30),
-              title: const Text("Trang Chính"),
+              title:  Text(AppLocalizations.of(context)!.tabbar_home,),
               selectedColor: Colors.green,
               unselectedColor: Colors.grey,
             ),
@@ -190,13 +195,13 @@ class _TabScreenState extends State<TabScreen> {
               activeIcon: const Text("あ",
                   style: TextStyle(
                       fontSize: 22, color: Colors.green, fontWeight: FontWeight.bold)),
-              title: const Text("Bảng Chữ Cái"),
+              title: Text(AppLocalizations.of(context)!.tabbar_character),
               selectedColor: Colors.green,
               unselectedColor: Colors.grey,
             ),
             SalomonBottomBarItem(
               icon: const Icon(Icons.person, size: 30),
-              title: const Text("Thông Tin"),
+              title: Text(AppLocalizations.of(context)!.tabbar_info),
               selectedColor: Colors.green,
               unselectedColor: Colors.grey,
             ),

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:japaneseapp/Config/dataHelper.dart';
 import 'package:japaneseapp/Screen/listWordScreen.dart';
 
+import '../generated/app_localizations.dart';
+
 class topicWidget extends StatefulWidget{
   final String nameTopic;
   final String id;
@@ -119,7 +121,7 @@ class _topicWidget extends State<topicWidget>{
                                 Row(
                                   children: [
                                     Text(
-                                      "Số Lượng Từ: ${snapshot.data![2]}",
+                                      AppLocalizations.of(context)!.amount_word("${snapshot.data![2]}"),
                                       style:
                                       TextStyle(fontSize: MediaQuery.sizeOf(context).width*0.04, fontWeight: FontWeight.bold,fontFamily: "Itim"),
                                     ),
@@ -132,7 +134,7 @@ class _topicWidget extends State<topicWidget>{
                                     children: [
                                       Flexible(
                                         child: AutoSizeText(
-                                          "Hoàn Thành: ${snapshot.data![0].toInt()}",
+                                          AppLocalizations.of(context)!.word_finish("${snapshot.data![0].toInt()}"),
                                           style: TextStyle(
                                             fontSize: MediaQuery.sizeOf(context).width * 0.035,
                                             fontWeight: FontWeight.bold,
@@ -148,7 +150,7 @@ class _topicWidget extends State<topicWidget>{
                                       SizedBox(width: 10),
                                       Flexible(
                                         child: AutoSizeText(
-                                          "Chưa Hoàn Thành: ${(snapshot.data![2] - snapshot.data![0]).toInt()}",
+                                          AppLocalizations.of(context)!.word_learning("${(snapshot.data![2] - snapshot.data![0]).toInt()}"),
                                           style: TextStyle(
                                             fontSize: MediaQuery.sizeOf(context).width * 0.035,
                                             fontWeight: FontWeight.bold,
@@ -166,7 +168,7 @@ class _topicWidget extends State<topicWidget>{
                                 ),
                                 Flexible(
                                   child: AutoSizeText(
-                                    "Tạo bởi: ${snapshot.data![3]}",
+                                    AppLocalizations.of(context)!.course_owner("${snapshot.data![3]}"),
                                     style: TextStyle(
                                       fontSize: MediaQuery.sizeOf(context).width * 0.035,
                                       fontWeight: FontWeight.bold,

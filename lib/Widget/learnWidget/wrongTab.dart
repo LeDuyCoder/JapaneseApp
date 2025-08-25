@@ -2,6 +2,8 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../generated/app_localizations.dart';
+
 class wrongTab extends StatefulWidget{
   @override
   State<StatefulWidget> createState() => _wrongTab();
@@ -22,7 +24,7 @@ class _wrongTab extends State<wrongTab>{
       constraints: BoxConstraints(
         minHeight: MediaQuery.sizeOf(context).height * 0.25, // Độ cao tối thiểu
       ),
-      height: MediaQuery.sizeOf(context).height * 0.3,
+      height: MediaQuery.sizeOf(context).height * 0.28,
       width: MediaQuery.sizeOf(context).width,
       decoration: BoxDecoration(
         color: Colors.red[100],
@@ -42,7 +44,7 @@ class _wrongTab extends State<wrongTab>{
                 const SizedBox(width: 10),
                 Expanded(
                   child: AutoSizeText(
-                    "Không Chính Xác",
+                    AppLocalizations.of(context)!.learn_bottomsheet_wrong_title,
                     style: TextStyle(
                       color: Colors.red,
                       fontSize: MediaQuery.sizeOf(context).width * 0.07,
@@ -56,7 +58,7 @@ class _wrongTab extends State<wrongTab>{
             Row(
               children: [
                 Text(
-                  "Câu trả lời đúng là: ",
+                  "${AppLocalizations.of(context)!.learn_bottomsheet_wrong_content}: ",
                   style: TextStyle(
                     color: Colors.red,
                     fontSize: MediaQuery.sizeOf(context).width * 0.045,
@@ -72,7 +74,7 @@ class _wrongTab extends State<wrongTab>{
                 ),
               ],
             ),
-            const Spacer(), // Đẩy nút xuống dưới
+            SizedBox(height: 20,),
             GestureDetector(
               onTapDown: (_) {
                 setState(() {
@@ -111,7 +113,7 @@ class _wrongTab extends State<wrongTab>{
                 ),
                 child: Center(
                   child: Text(
-                    "CONTINUE",
+                    AppLocalizations.of(context)!.learn_bottomsheet_wrong_btn,
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: MediaQuery.sizeOf(context).width * 0.04,

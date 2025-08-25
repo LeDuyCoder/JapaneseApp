@@ -123,8 +123,8 @@ class _congraculationScreen extends State<congraculationScreen>{
           children: [
             Image.asset("assets/character/character2.png", scale: 0.8,),
             SizedBox(height: MediaQuery.sizeOf(context).height*0.02,),
-            Text("Hoàn Thành", style: TextStyle(fontFamily: "indieflower", fontSize: MediaQuery.sizeOf(context).height*0.04, color: Color.fromRGBO(20, 195, 142, 1.0)),),
-            Text("Bạn Thật Tuyệt Vời", style: TextStyle(fontFamily: "indieflower", fontSize: MediaQuery.sizeOf(context).height*0.02, color: Colors.black),),
+            Text("Hoàn Thành", style: TextStyle(fontSize: MediaQuery.sizeOf(context).height*0.04, color: Color.fromRGBO(20, 195, 142, 1.0)),),
+            Text("Bạn Thật Tuyệt Vời", style: TextStyle(fontSize: MediaQuery.sizeOf(context).height*0.02, color: Colors.black),),
             SizedBox(height: MediaQuery.sizeOf(context).height*0.02,),
             Container(
               width: double.infinity,
@@ -142,7 +142,7 @@ class _congraculationScreen extends State<congraculationScreen>{
                       ),
                       child: Column(
                         children: [
-                          Text("Commited", style: TextStyle(fontFamily: "indieflower", color: Colors.white, fontSize: MediaQuery.sizeOf(context).width*0.04),),
+                          Text("Commited", style: TextStyle(color: Colors.white, fontSize: MediaQuery.sizeOf(context).width*0.04),),
                           Container(
                             constraints: BoxConstraints(
                               minHeight: MediaQuery.sizeOf(context).width * 0.2, // Độ cao tối thiểu
@@ -158,7 +158,7 @@ class _congraculationScreen extends State<congraculationScreen>{
                               children: [
                                 Icon(Icons.timer_sharp, color: Color.fromRGBO(20, 195, 142, 1.0), size: 60,),
                                 SizedBox(width: 10,),
-                                Text(formatTime(widget.timeTest*1.0), style: TextStyle(fontSize: MediaQuery.sizeOf(context).height*0.030, fontFamily: "indieflower", color: Color.fromRGBO(20, 195, 142, 1.0))),
+                                Text(formatTime(widget.timeTest*1.0), style: TextStyle(fontSize: MediaQuery.sizeOf(context).height*0.030, color: Color.fromRGBO(20, 195, 142, 1.0))),
                               ],
                             ),
                           )
@@ -175,7 +175,7 @@ class _congraculationScreen extends State<congraculationScreen>{
                       ),
                       child: Column(
                         children: [
-                          Text("Amazing", style: TextStyle(fontFamily: "indieflower", color: Colors.white, fontSize: MediaQuery.sizeOf(context).width*0.04),),
+                          Text("Amazing", style: TextStyle(color: Colors.white, fontSize: MediaQuery.sizeOf(context).width*0.04),),
                           Container(
                             constraints: BoxConstraints(
                               minHeight: MediaQuery.sizeOf(context).width * 0.2, // Độ cao tối thiểu
@@ -191,7 +191,7 @@ class _congraculationScreen extends State<congraculationScreen>{
                               children: [
                                 const Icon(MingCute.target_line, color: Color.fromRGBO(255, 174, 9, 1.0), size: 60,),
                                 SizedBox(width: 10,),
-                                Text("${persentAmazing}%", style: TextStyle(fontSize: MediaQuery.sizeOf(context).height*0.030, fontFamily: "indieflower", color: Color.fromRGBO(255, 174, 9, 1.0))),
+                                Text("${persentAmazing}%", style: TextStyle(fontSize: MediaQuery.sizeOf(context).height*0.030, color: Color.fromRGBO(255, 174, 9, 1.0))),
                               ],
                             ),
                           )

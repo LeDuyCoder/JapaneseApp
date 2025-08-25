@@ -8,6 +8,7 @@ import 'package:japaneseapp/Widget/learnWidget/rightTab.dart';
 import 'package:japaneseapp/Widget/learnWidget/sortText.dart.dart';
 import 'package:japaneseapp/Widget/learnWidget/wrongTab.dart';
 import '../../Module/word.dart';
+import '../../generated/app_localizations.dart';
 
 
 class listenTest extends StatefulWidget {
@@ -44,7 +45,6 @@ class _ListenTextState extends State<listenTest> {
   Future<void> playSound(String filePath) async {
     try {
       await _audioPlayer.play(AssetSource(filePath));
-      print("Đang phát âm thanh: $filePath");
     } catch (e) {
       print("Lỗi khi phát âm thanh: $e");
     }
@@ -54,9 +54,7 @@ class _ListenTextState extends State<listenTest> {
   Future<void> stopSound() async {
     try {
       await _audioPlayer.stop();
-      print("Đã dừng âm thanh.");
     } catch (e) {
-      print("Lỗi khi dừng âm thanh: $e");
     }
   }
 
@@ -101,7 +99,7 @@ class _ListenTextState extends State<listenTest> {
                 padding: EdgeInsets.only(left: 10),
                 child: Row(
                   children: [
-                    Text("Bạn Nghe Được Gì", style: TextStyle(fontSize: MediaQuery.sizeOf(context).height*0.025, fontWeight: FontWeight.bold, fontFamily: "Itim"),),
+                    Text(AppLocalizations.of(context)!.learn_listen_title, style: TextStyle(fontSize: MediaQuery.sizeOf(context).height*0.025, fontWeight: FontWeight.bold, fontFamily: "Itim"),),
                   ],
                 ),
               ),
@@ -352,7 +350,7 @@ class _ListenTextState extends State<listenTest> {
                   ),
                   child: Center(
                     child: Text(
-                      "CHECK",
+                      AppLocalizations.of(context)!.learn_btn_check,
                       style: TextStyle(
                         fontSize: 20,
                         color: dataInput.isEmpty

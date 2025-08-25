@@ -10,6 +10,7 @@ import '../Config/dataHelper.dart';
 import '../Config/databaseServer.dart';
 import '../Module/WordModule.dart';
 import '../Module/word.dart';
+import '../generated/app_localizations.dart';
 
 class seeMoreTopic extends StatefulWidget{
   final Function() reloadScreen;
@@ -390,7 +391,7 @@ class _seeMoreTopic extends State<seeMoreTopic>{
               child: TextField(
                 controller: searchTopicInput,
                 decoration: InputDecoration(
-                  hintText: "Tên thư mục",
+                  hintText: AppLocalizations.of(context)!.seemore_search,
                   hintStyle: TextStyle(color: Colors.grey),
                   filled: true,
                   fillColor: Colors.grey[100],

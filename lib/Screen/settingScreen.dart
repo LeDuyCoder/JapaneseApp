@@ -7,11 +7,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:japaneseapp/Screen/achivementScreen.dart';
+import 'package:japaneseapp/Screen/languageScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Config/dataHelper.dart';
+import '../generated/app_localizations.dart';
 
 class settingScreen extends StatefulWidget{
+  final Function(Locale _locale) changeLanguage;
+
+  const settingScreen({super.key, required this.changeLanguage});
+
   @override
   State<StatefulWidget> createState() => _settingScreen();
 }
@@ -115,7 +121,7 @@ class _settingScreen extends State<settingScreen>{
               Icon(Icons.warning_amber_rounded, color: Colors.orange, size: 48),
               const SizedBox(height: 16),
               Text(
-                "Cảnh báo",
+                AppLocalizations.of(context)!.bottomSheet_Warning_title,
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
@@ -126,7 +132,7 @@ class _settingScreen extends State<settingScreen>{
               ),
               const SizedBox(height: 10),
               Text(
-                "Khi đồng bộ, toàn bộ dữ liệu trên máy hiện tại sẽ bị xóa.",
+                AppLocalizations.of(context)!.bottomSheet_Warning_Description,
                 style: TextStyle(
                   fontSize: MediaQuery.sizeOf(context).width * 0.045,
                   fontFamily: "Itim",
@@ -148,7 +154,7 @@ class _settingScreen extends State<settingScreen>{
                     ),
                     onPressed: () => Navigator.of(context).pop(),
                     icon: const Icon(Icons.close),
-                    label: const Text("Hủy", style: TextStyle(fontSize: 16)),
+                    label: Text(AppLocalizations.of(context)!.bottomSheet_Warning_btn_cancle, style: TextStyle(fontSize: 16)),
                   ),
                   const SizedBox(width: 20),
                   ElevatedButton.icon(
@@ -165,8 +171,8 @@ class _settingScreen extends State<settingScreen>{
                       UpdateAsynchronyData();
                     },
                     icon: const Icon(Icons.check),
-                    label: const Text(
-                      "Xác Nhận",
+                    label: Text(
+                      AppLocalizations.of(context)!.bottomSheet_Warning_btn_ok,
                       style: TextStyle(fontSize: 16),
                     ),
                   ),
@@ -198,7 +204,7 @@ class _settingScreen extends State<settingScreen>{
                 SizedBox(height: 16),
                 SizedBox(height: 10),
                 Text(
-                  "Dữ liệu đã được đồng bộ hóa thành công.",
+                  AppLocalizations.of(context)!.bottomSheetAsync_Success_Description,
                   style: TextStyle(fontSize: 16, fontFamily: "Itim"),
                   textAlign: TextAlign.center,
                 ),
@@ -211,7 +217,7 @@ class _settingScreen extends State<settingScreen>{
                     ),
                   ),
                   onPressed: () => Navigator.of(context).pop(),
-                  child: Text("Ok", style: TextStyle(color: Colors.white)),
+                  child: Text(AppLocalizations.of(context)!.bottomSheetAsync_Success_Btn, style: TextStyle(color: Colors.white)),
                 ),
               ],
             ),
@@ -238,13 +244,13 @@ class _settingScreen extends State<settingScreen>{
                 Icon(Icons.error, color: Colors.red, size: 48),
                 SizedBox(height: 16),
                 Text(
-                  "Lỗi Tải Dữ Liệu",
+                  AppLocalizations.of(context)!.bottomSheet_Error_title,
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(height: 10),
                 Text(
-                  "Hiện không có bản đồng bộ hóa dữ liệu nào.",
+                  AppLocalizations.of(context)!.bottomSheet_Error_description,
                   style: TextStyle(fontSize: 16),
                   textAlign: TextAlign.center,
                 ),
@@ -285,7 +291,7 @@ class _settingScreen extends State<settingScreen>{
                 SizedBox(height: 16),
                 SizedBox(height: 10),
                 Text(
-                  "Đồng Bộ Hóa Dữ Liệu Thành Công",
+                  AppLocalizations.of(context)!.bottomSheetAsync_Success_Description,
                   style: TextStyle(fontSize: 16, fontFamily: "Itim"),
                   textAlign: TextAlign.center,
                 ),
@@ -331,13 +337,13 @@ class _settingScreen extends State<settingScreen>{
                 Icon(Icons.wifi_off, color: Colors.red, size: 48),
                 SizedBox(height: 16),
                 Text(
-                  "Không Có Kết Nối Internet",
+                  AppLocalizations.of(context)!.bottomSheet_Nointernet_title,
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(height: 10),
                 Text(
-                  "Vui lòng kiểm tra kết nối internet của bạn và thử lại.",
+                  AppLocalizations.of(context)!.bottomSheet_Nointernet_Description,
                   style: TextStyle(fontSize: 16),
                   textAlign: TextAlign.center,
                 ),
@@ -350,7 +356,7 @@ class _settingScreen extends State<settingScreen>{
                     ),
                   ),
                   onPressed: () => Navigator.of(context).pop(),
-                  child: Text("Ok", style: TextStyle(color: Colors.white)),
+                  child: Text(AppLocalizations.of(context)!.bottomSheet_Nointernet_Btn, style: TextStyle(color: Colors.white)),
                 ),
               ],
             ),
@@ -508,7 +514,7 @@ class _settingScreen extends State<settingScreen>{
               color: Colors.white,
               child: Column(
                 children: [
-                  Text("Cài đặt", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
+                  Text(AppLocalizations.of(context)!.setting_title, style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
                   SizedBox(height: 10,),
                   Divider(
                     color: Colors.grey[300],
@@ -516,8 +522,8 @@ class _settingScreen extends State<settingScreen>{
                   ),
                   ListTile(
                       leading: Icon(Icons.golf_course, color: Colors.black,),
-                      title: Text("Thành Tựu", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
-                      subtitle: Text("Danh sách thành tựu đã đạt được"),
+                      title: Text(AppLocalizations.of(context)!.setting_achivement_title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                      subtitle: Text(AppLocalizations.of(context)!.setting_achivement_content),
                       trailing: Icon(Icons.arrow_forward_ios, color: Colors.black,),
                       onTap: (){
                         Navigator.push(
@@ -545,15 +551,32 @@ class _settingScreen extends State<settingScreen>{
                   ),
                   ListTile(
                       leading: Icon(Icons.language, color: Colors.black,),
-                      title: Text("Ngôn ngữ", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
-                      subtitle: Text("Chọn ngôn ngữ hiển thị"),
+                      title: Text(AppLocalizations.of(context)!.setting_language_title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                      subtitle: Text(AppLocalizations.of(context)!.setting_language_content),
                       trailing: Icon(Icons.arrow_forward_ios, color: Colors.black,),
-                      onTap: (){}
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          PageRouteBuilder(
+                            pageBuilder: (context, animation, secondaryAnimation) => languageScreen(changeLanguage: widget.changeLanguage,),
+                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                              const begin = Offset(-1.0, 0.0);
+                              const end = Offset.zero;
+                              const curve = Curves.ease;
+                              final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                              return SlideTransition(
+                                position: animation.drive(tween),
+                                child: child,
+                              );
+                            },
+                          ),
+                        );
+                      }
                   ),
                   ListTile(
                       leading: Icon(Icons.sync, color: Colors.black,),
-                      title: Text("Đồng Bộ Dữ Liệu", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
-                      subtitle: Text("Đồng bộ dữ liệu lên đám mây"),
+                      title: Text(AppLocalizations.of(context)!.setting_async_title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                      subtitle: Text(AppLocalizations.of(context)!.setting_async_content),
                       trailing: Icon(Icons.arrow_forward_ios, color: Colors.black,),
                       onTap: () async {
                         await synchronyData(false);
@@ -561,26 +584,34 @@ class _settingScreen extends State<settingScreen>{
                   ),
                   ListTile(
                       leading: Icon(Icons.download, color: Colors.black,),
-                      title: Text("Tải Bộ Dữ Liệu", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
-                      subtitle: Text("Tải bộ dữ liệu đã dồng bộ trên máy củ của bạn"),
+                      title: Text(AppLocalizations.of(context)!.setting_downloadAsync_title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                      subtitle: Text(AppLocalizations.of(context)!.setting_downloadAsync_content),
                       trailing: Icon(Icons.arrow_forward_ios, color: Colors.black,),
-                      onTap: (){
-                        showBottomSheetConfirmAsynchrony(context);
+                      onTap: () async {
+                        if(!await hasInternet()){
+                            showBottomSheetNoInternet(context);
+                        }else{
+                            showBottomSheetConfirmAsynchrony(context);
+                        }
                       }
                   ),
                   ListTile(
                       leading: Icon(Icons.logout, color: Colors.red,),
-                      title: Text("Đăng Xuất", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.red),),
-                      subtitle: Text("Đăng xuất khỏi tài khoản hiện tại", style: TextStyle(color: Colors.red),),
+                      title: Text(AppLocalizations.of(context)!.setting_signout_title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.red),),
+                      subtitle: Text(AppLocalizations.of(context)!.setting_signout_content, style: TextStyle(color: Colors.red),),
                       trailing: Icon(Icons.arrow_forward_ios, color: Colors.red,),
                       onTap: () async {
-                        final SharedPreferences prefs = await SharedPreferences.getInstance();
-                        final DatabaseHelper db = DatabaseHelper.instance;
-                        await synchronyData(true);
-                        prefs.clear();
-                        db.clearAllData();
-                        await FirebaseAuth.instance.signOut();
-                        Navigator.pop(context);
+                        if(await hasInternet()){
+                          final SharedPreferences prefs = await SharedPreferences.getInstance();
+                          final DatabaseHelper db = DatabaseHelper.instance;
+                          await synchronyData(true);
+                          prefs.clear();
+                          db.clearAllData();
+                          await FirebaseAuth.instance.signOut();
+                          Navigator.pop(context);
+                        }else{
+                          showBottomSheetNoInternet(context);
+                        }
                       }
                   ),
                 ],

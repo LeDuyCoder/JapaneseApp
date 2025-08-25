@@ -1,0 +1,339 @@
+{
+  "@@locale": "en",
+
+  "tabbar_home": "Home",
+  "tabbar_character": "Alphabet",
+  "tabbar_info": "Info",
+
+  "dashboard_hintSearch": "Word you want to search",
+  "dashboard_folder": "Folder",
+  "dashboard_course": "Course",
+  "dashboard_topic": "Topic",
+  "dashboard_popupDownload_title": "Do you want to download?",
+  "dashboard_popupDownload_btn_cancel": "Cancel",
+  "dashboard_popupDownload_btn_dowload": "Download",
+  "dashboard_seemore": "See More",
+  "dashboard_btn_import": "Import",
+
+  "tutorial_one_title": "Install the App",
+  "tutorial_one_content": "Make sure your device has the Gboard app installed",
+  "tutorial_two_title": "Open Settings",
+  "tutorial_two_content": "Go to the settings app to set up the Japanese handwriting keyboard",
+  "tutorial_three_title": "Search for Gboard",
+  "tutorial_three_content": "Tap to search and find Gboard as shown in the image",
+  "tutorial_four_title": "Gboard",
+  "tutorial_four_content": "Continue tapping as instructed",
+  "tutorial_five_title": "Languages",
+  "tutorial_five_content": "Tap on the language section",
+  "tutorial_six_title": "Add Keyboard",
+  "tutorial_six_content": "Tap to add a keyboard and choose Japanese",
+  "tutorial_seven_title": "Search Japanese",
+  "tutorial_seven_content": "Search for the Japanese language",
+  "tutorial_eight_title": "Handwriting",
+  "tutorial_eight_content": "Choose the handwriting keyboard and tap Done",
+  "tutorial_nice_title": "Switch Keyboard",
+  "tutorial_nice_content": "Remember to switch keyboards when practicing writing to improve memory",
+  "tutorial_btn_back": "Back",
+  "tutorial_btn_forward": "Next",
+  "tutorial_btn_skip": "Skip",
+  "tutorial_one_done": "Done",
+
+  "course_owner": "Created by {user_nane}",
+  "@course_owner": {
+    "description": "Created by whom",
+    "placeholders": {
+      "user_nane": {
+        "type": "String",
+        "example": "wheel"
+      }
+    }
+  },
+
+  "amount_word": "Amount: {amount} Words",
+  "@amount_word": {
+    "description": "Number of words",
+    "placeholders": {
+      "amount": {
+        "type": "String",
+        "example": "10"
+      }
+    }
+  },
+
+  "word_finish": "Completed: {amount}",
+  "@word_finish": {
+    "description": "Number of completed words",
+    "placeholders": {
+      "amount": {
+        "type": "String",
+        "example": "10"
+      }
+    }
+  },
+
+  "word_learning": "Incomplete: {amount}",
+  "@word_learning": {
+    "description": "Number of incomplete words",
+    "placeholders": {
+      "amount": {
+        "type": "String",
+        "example": "10"
+      }
+    }
+  },
+
+  "add_course": "Course",
+  "add_folder": "Folder",
+
+  "folderManager": "Add Course Topic",
+  "folderManager_addTopic": "Add Topic",
+  "folderManager_remove": "Delete",
+  "folderManager_removeTopic": "Remove from Folder",
+
+  "seemore_search": "Folder Name",
+
+  "import_title": "Choose Import Method",
+  "import_btn_file": "From File",
+  "import_btn_qr": "From QR",
+
+  "character_btn_learn": "Learn Characters",
+
+  "listWord_word_complete": "Completed {count}",
+  "@listWord_word_complete": {
+    "description": "Number of completed words",
+    "placeholders": {
+      "count": {
+        "type": "String",
+        "example": "10"
+      }
+    }
+  },
+
+  "listWord_word_learning": "Incomplete {count}",
+  "@listWord_word_learning": {
+    "description": "Number of incomplete words",
+    "placeholders": {
+      "count": {
+        "type": "String",
+        "example": "10"
+      }
+    }
+  },
+
+  "listWord_btn_learn": "Learn Words",
+  "listWord_share_title": "Topic Name: {topic}",
+  "@listWord_share_title": {
+    "description": "Topic name",
+    "placeholders": {
+      "topic": {
+        "type": "String",
+        "example": "Demo"
+      }
+    }
+  },
+
+  "listWord_share_amount_word": "Amount: {amount} Words",
+  "@listWord_share_amount_word": {
+    "description": "Number of words",
+    "placeholders": {
+      "amount": {
+        "type": "String",
+        "example": "10"
+      }
+    }
+  },
+
+  "listWord_share_type": "Type: {type}",
+  "@listWord_share_type": {
+    "description": "Type of sharing",
+    "placeholders": {
+      "type": {
+        "type": "String",
+        "example": "File"
+      }
+    }
+  },
+  "listWord_btn_remove": "Delete",
+  "listWord_btn_shared": "Share",
+
+  "learn_warningGboard": "Gboard is recommended for the best experience",
+  "learn_btn_check": "Check",
+  "learn_bottomsheet_wrong_title": "Incorrect",
+  "learn_bottomsheet_wrong_content": "The correct answer is",
+  "learn_bottomsheet_wrong_btn": "Continue",
+  "learn_write_input": "Write",
+
+  "learn_bottomsheet_right_title": "Correct Answer",
+  "motivationalPhrases_1": "Keep going, you're doing great!",
+  "motivationalPhrases_2": "You did great this time, keep pushing forward!",
+  "motivationalPhrases_3": "Every step forward is progress!",
+  "motivationalPhrases_4": "Believe in yourself and keep trying!",
+  "motivationalPhrases_5": "You can do it, never give up!",
+  "motivationalPhrases_6": "Success comes to those who don’t quit!",
+  "motivationalPhrases_7": "Keep improving step by step!",
+  "motivationalPhrases_8": "Be strong, stay focused, and keep going!",
+  "motivationalPhrases_9": "Amazing effort! Aim even higher!",
+  "motivationalPhrases_10": "Your hard work will pay off soon!",
+  "learn_bottomsheet_right_btn": "Continue",
+  "learning_combine_title": "Match from Column A to Column B",
+  "learn_translate_title": "Translate the Sentence Below",
+  "learn_listen_title": "What Did You Hear?",
+  "learn_chose_title": "Which word is correct?",
+  "congraculate_title": "Completed",
+  "congraculate_content": "You’re Amazing!",
+  "congraculate_commited": "Time Spent",
+  "congraculate_amzing": "Wonderful",
+  "profile_level": "Level",
+  "profile_topic": "Topic",
+  "profile_title": "Title",
+
+  "levelTitles_1": "Scholar",
+  "levelTitles_2": "Wise One",
+  "levelTitles_3": "Thinker",
+  "levelTitles_4": "Honorable Academic",
+  "levelTitles_5": "Academic Scholar",
+  "levelTitles_6": "Literary Genius",
+  "levelTitles_7": "Sage",
+  "levelTitles_8": "Debating Genius",
+  "levelTitles_9": "Master Learner",
+  "levelTitles_10": "Literary Gentleman",
+  "levelTitles_11": "Disciplined Scholar",
+  "levelTitles_12": "Enlightened One",
+  "levelTitles_13": "Profound Sage",
+  "levelTitles_14": "Elegant Master",
+  "levelTitles_15": "Gifted Intellectual",
+
+  "profile_date": "Month {month}, Year {year}",
+  "@profile_date": {
+    "description": "Display month and year in profile",
+    "placeholders": {
+      "month": {
+        "type": "int",
+        "example": "8"
+      },
+      "year": {
+        "type": "int",
+        "example": "2025"
+      }
+    }
+  },
+
+  "setting_title": "Settings",
+  "setting_achivement_title": "Achievements",
+  "setting_achivement_content": "List of achievements unlocked",
+  "setting_language_title": "Language",
+  "setting_language_content": "Select display language",
+  "setting_async_title": "Data Sync",
+  "setting_async_content": "Sync data to the cloud",
+  "setting_downloadAsync_title": "Download Data",
+  "setting_downloadAsync_content": "Download synced data from your previous device",
+  "setting_signout_title": "Sign Out",
+  "setting_signout_content": "Sign out from the current account",
+
+  "achivement_title_one": "Achievements",
+  "achivement_owl_title": "Night Owl",
+  "achivement_owl_description": "Studied between 12am and 2am",
+  "achivement_tryhard_title": "Early Bird Learner",
+  "achivement_tryhard_description": "Studied between 4am and 6am",
+  "achivement_habit_title": "Habit Builder",
+  "achivement_habit_description": "Studied for 28 consecutive days",
+  "achivement_title_two": "Study Streak",
+  "achivement_streak_title": "{day}_Day Streak",
+  "@achivement_streak_title": {
+    "description": "Study streak title",
+    "placeholders": {
+      "day": {
+        "type": "String",
+        "example": "10"
+      }
+    }
+  },
+  "achivement_streak_description": "Earned by studying {day} days in a row",
+  "@achivement_streak_description": {
+    "description": "Study streak description",
+    "placeholders": {
+      "day": {
+        "type": "String",
+        "example": "10"
+      }
+    }
+  },
+
+  "achivement_title_three": "Completed Topics",
+  "achivement_topic_title": "{amount} Topics",
+  "@achivement_topic_title": {
+    "description": "Topic count",
+    "placeholders": {
+      "amount": {
+        "type": "String",
+        "example": "10"
+      }
+    }
+  },
+  "achivement_topic_description": "Earned after completing {amount} topics",
+  "@achivement_topic_description": {
+    "description": "Topic completion description",
+    "placeholders": {
+      "amount": {
+        "type": "String",
+        "example": "10"
+      }
+    }
+  },
+
+  "bottomSheetAsync_Success_Description": "Data synced successfully",
+  "bottomSheetAsync_Success_Btn": "OK",
+  "bottomSheet_Nointernet_title": "No Internet Connection",
+  "bottomSheet_Nointernet_Description": "Please check your internet connection and try again",
+  "bottomSheet_Nointernet_Btn": "OK",
+
+  "bottomSheet_Warning_title": "Warning",
+  "bottomSheet_Warning_Description": "Syncing will erase all local data on this device",
+  "bottomSheet_Warning_btn_ok": "OK",
+  "bottomSheet_Warning_btn_cancle": "Cancel",
+
+  "bottomSheet_Error_title": "Data Download Error",
+  "bottomSheet_Error_description": "There is currently no data sync available",
+
+  "language_title": "Language",
+  "language_bottomsheet_success": "Language updated successfully",
+
+  "error_connect_server": "Failed to connect to the server",
+
+  "login_title": "Welcome back, happy to see you",
+  "login_email_input_hint": "Email",
+  "login_email_input_hint_focus": "Enter your email",
+  "login_email_input_password": "Password",
+  "login_email_input_password_hint": "Enter your password",
+  "login_btn": "Login",
+  "login_create_question_account": "Don't have an account?",
+  "login_create_btn_account": "Sign Up",
+  "login_with_facebook": "Login with Facebook",
+  "login_with_google": "Login with Google",
+
+  "login_invalid_email": "Invalid email address",
+  "login_user_disabled": "This account has been disabled",
+  "login_user_not_found": "No account found with this email",
+  "login_wrong_password": "Incorrect password",
+  "login_error": "An error has occurred",
+
+  "register_title": "Hello, sign up to get started",
+  "register_email_input_hint": "Email",
+  "register_email_input_hint_focus": "Enter your email",
+  "register_user_input_hint": "Username",
+  "register_user_input_hint_focus": "Enter your username",
+  "register_password_input_hint": "Password",
+  "register_password_input_hint_focus": "Enter your password",
+  "register_re_password_input_hint": "Re-enter Password",
+  "register_re_password_input_hint_focus": "Re-enter your password",
+  "register_btn": "Sign Up",
+  "register_question_login": "Already have an account?",
+  "register_btn_login": "Login",
+
+  "register_email_already_in_use": "This email is already registered",
+  "register_invalid_email": "Invalid email address",
+  "register_operation_not_allowed": "Email/password sign-in is not enabled",
+  "register_weak_password": "Password is too weak",
+  "register_error": "An error has occurred",
+  "register_success": "Account created successfully, return to login page"
+}

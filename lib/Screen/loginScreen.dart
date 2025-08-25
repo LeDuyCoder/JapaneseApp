@@ -11,6 +11,7 @@ import 'package:japaneseapp/Screen/registerScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Config/dataHelper.dart';
+import '../generated/app_localizations.dart';
 
 class loginScreen extends StatefulWidget{
   @override
@@ -178,19 +179,19 @@ class _loginScreen extends State<loginScreen>{
       String errorMessage;
       switch (e.code) {
         case 'invalid-email':
-          errorMessage = "Email không hợp lệ";
+          errorMessage = AppLocalizations.of(context)!.login_invalid_email;
           break;
         case 'user-disabled':
-          errorMessage = "Tài khoản đã bị vô hiệu hóa";
+          errorMessage = AppLocalizations.of(context)!.login_user_disabled;
           break;
         case 'user-not-found':
-          errorMessage = "Không tìm thấy tài khoản với email này";
+          errorMessage = AppLocalizations.of(context)!.login_user_not_found;
           break;
         case 'wrong-password':
-          errorMessage = "Mật khẩu không đúng";
+          errorMessage = AppLocalizations.of(context)!.login_wrong_password;
           break;
         default:
-          errorMessage = "Đăng nhập thất bại: ${e.message}";
+          errorMessage = AppLocalizations.of(context)!.login_error;
       }
 
       setState(() {
@@ -228,7 +229,7 @@ class _loginScreen extends State<loginScreen>{
               child: Container(
                 height: MediaQuery.sizeOf(context).height*0.1,
                 width: MediaQuery.sizeOf(context).width,
-                child: AutoSizeText("Chào mừng trở lại, Rất vui được gặp bạn", style: TextStyle(fontSize: MediaQuery.sizeOf(context).width*0.8, fontFamily: "Itim"),),
+                child: AutoSizeText(AppLocalizations.of(context)!.login_title, style: TextStyle(fontSize: MediaQuery.sizeOf(context).width*0.8, fontFamily: "Itim"),),
               ),
             ),
 
@@ -238,7 +239,7 @@ class _loginScreen extends State<loginScreen>{
               child: TextField(
                 controller: mailController,
                 decoration: InputDecoration(
-                  labelText: 'Email',
+                  labelText: AppLocalizations.of(context)!.login_email_input_hint,
                   hintText: 'Nhập email của bạn',
                   prefixIcon: Icon(Icons.mail),
                   border: OutlineInputBorder(
@@ -260,7 +261,7 @@ class _loginScreen extends State<loginScreen>{
               child: TextField(
                 controller: passController,
                 decoration: InputDecoration(
-                  labelText: 'Mật Khẩu',
+                  labelText: AppLocalizations.of(context)!.login_email_input_password,
                   hintText: 'Nhập Mật Khẩu',
                   prefixIcon: Icon(Icons.lock),
                   suffixIcon: IconButton(
@@ -299,8 +300,8 @@ class _loginScreen extends State<loginScreen>{
                         color: Colors.green,
                         borderRadius: BorderRadius.all(Radius.circular(15))
                     ),
-                    child: const Center(
-                      child: Text("Đăng Nhập", style: TextStyle(color: Colors.white, fontSize: 20, fontFamily: "Itim")),
+                    child: Center(
+                      child: Text(AppLocalizations.of(context)!.login_btn, style: TextStyle(color: Colors.white, fontSize: 20, fontFamily: "Itim")),
                     )
                 ),
               ),
@@ -310,12 +311,12 @@ class _loginScreen extends State<loginScreen>{
               onTap: (){
                 Navigator.push(context, MaterialPageRoute(builder: (ctx)=>registerScreen()));
               },
-              child: const Row(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Không Có Mật Khẩu? ", style: TextStyle(fontFamily: "Itim"),),
+                  Text("${AppLocalizations.of(context)!.login_create_question_account} ", style: TextStyle(fontFamily: "Itim"),),
                   SizedBox(width: 2,),
-                  Text("Đăng Kí ", style: TextStyle(color: CupertinoColors.activeBlue, fontFamily: "Itim"),),
+                  Text(AppLocalizations.of(context)!.login_create_btn_account, style: TextStyle(color: CupertinoColors.activeBlue, fontFamily: "Itim"),),
                 ],
               ),
             ),
@@ -340,13 +341,13 @@ class _loginScreen extends State<loginScreen>{
                         ),
                         borderRadius: BorderRadius.all(Radius.circular(15))
                     ),
-                    child: const Center(
+                    child: Center(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.facebook_outlined, color: Colors.blue,),
-                            SizedBox(width: 10,),
-                            Text("Đăng Nhập Với Facebook", style: TextStyle(fontFamily: "Itim"),)
+                            const Icon(Icons.facebook_outlined, color: Colors.blue,),
+                            const SizedBox(width: 10,),
+                            Text(AppLocalizations.of(context)!.login_with_facebook, style: TextStyle(fontFamily: "Itim"),)
                           ],
                         )
                     )
@@ -376,7 +377,7 @@ class _loginScreen extends State<loginScreen>{
                           children: [
                             Image.asset("assets/logo_google.png", width: 24, height: 24),
                             SizedBox(width: 10,),
-                            Text("Đăng Nhập Với Google", style: TextStyle(fontFamily: "Itim"),)
+                            Text(AppLocalizations.of(context)!.login_with_google, style: TextStyle(fontFamily: "Itim"),)
                           ],
                         )
                     )

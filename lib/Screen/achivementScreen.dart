@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Config/FunctionService.dart';
 import '../Config/dataHelper.dart';
+import '../generated/app_localizations.dart';
 
 class achivementScreen extends StatefulWidget{
   @override
@@ -122,22 +123,22 @@ class _achivementScreen extends State<achivementScreen>{
   Widget build(BuildContext context) {
     List<Map<String, dynamic>> achievements = [
       {
-        "title": "Cú Đêm Học Khuya",
-        "description": "Học từ lúc 0h đến 2 giờ sáng",
+        "title": AppLocalizations.of(context)!.achivement_owl_title,
+        "description": AppLocalizations.of(context)!.achivement_owl_description,
         "key": "cudemhockhuya",
         "image": ["assets/achivement/overnight.png", "assets/achivement/no-overnight.png"],
         "check": (data) => checkAchivement(data, "cudemhockhuya"),
       },
       {
-        "title": "Tri Thức Chăm Chỉ",
-        "description": "Học từ lúc 4 đến 6 giờ sáng",
+        "title": AppLocalizations.of(context)!.achivement_tryhard_title,
+        "description": AppLocalizations.of(context)!.achivement_tryhard_description,
         "key": "trithucdaysom",
         "image": ["assets/achivement/earnly.png", "assets/achivement/no-earnly.png"],
         "check": (data) => checkAchivement(data, "trithucdaysom"),
       },
       {
-        "title": "Hình Thành Thói Quen",
-        "description": "Học Liên Tiếp 28 ngày",
+        "title": AppLocalizations.of(context)!.achivement_habit_title,
+        "description": AppLocalizations.of(context)!.achivement_habit_description,
         "key": "Streak",
         "image": ["assets/achivement/Habitualrot.png", "assets/achivement/no-Habitualrot.png"],
         "check": (data) => checkStreak(data["Streak"], 28),
@@ -186,7 +187,7 @@ class _achivementScreen extends State<achivementScreen>{
                 scrollDirection: Axis.vertical,
                 child: Column(
                   children: [
-                    Center(child: Text("Thành tựu", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),)),
+                    Center(child: Text(AppLocalizations.of(context)!.achivement_title_one, style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),)),
                     SizedBox(height: 20,),
                     Padding(
                       padding: const EdgeInsets.only(left: 10, right: 5),
@@ -247,7 +248,7 @@ class _achivementScreen extends State<achivementScreen>{
                       // indent: MediaQuery.sizeOf(context).width,
                       // endIndent: MediaQuery.sizeOf(context).width,// Độ dày
                     ),
-                    Center(child: Text("Chuổi Ngày Học", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),)),
+                    Center(child: Text(AppLocalizations.of(context)!.achivement_title_two, style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),)),
                     SizedBox(height: 20,),
                     Padding(
                       padding: const EdgeInsets.only(left: 15, right: 5),
@@ -259,7 +260,11 @@ class _achivementScreen extends State<achivementScreen>{
 
                             return GestureDetector(
                               onTap: (){
-                                showBottomSheetAchivementInfor(context, "Chuỗi $streak ngày", "Nhận khi học liên tục $streak ngày", imagePath, checkStreak(snapshot.data!["Streak"], streak));
+                                showBottomSheetAchivementInfor(
+                                    context,
+                                    AppLocalizations.of(context)!.achivement_streak_title("$streak"),
+                                    AppLocalizations.of(context)!.achivement_streak_description("$streak"),
+                                    imagePath, checkStreak(snapshot.data!["Streak"], streak));
                               },
                               child: Padding(
                                 padding: EdgeInsets.only(right: 20),
@@ -275,7 +280,7 @@ class _achivementScreen extends State<achivementScreen>{
 
                                     SizedBox(height: MediaQuery.sizeOf(context).width * 0.03),
                                     Text(
-                                      "Chuỗi $streak ngày",
+                                      AppLocalizations.of(context)!.achivement_streak_title("$streak"),
                                       style: const TextStyle(
                                         color: Colors.black,
                                         fontSize: 20,
@@ -298,7 +303,7 @@ class _achivementScreen extends State<achivementScreen>{
                       // indent: MediaQuery.sizeOf(context).width,
                       // endIndent: MediaQuery.sizeOf(context).width,// Độ dày
                     ),
-                    Center(child: Text("Chủ Đề Hoàn Thành", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),)),
+                    Center(child: Text(AppLocalizations.of(context)!.achivement_title_three, style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),)),
                     SizedBox(height: 20,),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -316,8 +321,8 @@ class _achivementScreen extends State<achivementScreen>{
                             onTap: () {
                               showBottomSheetAchivementInfor(
                                 context,
-                                "$topic Topic",
-                                "Nhận sau khi hoàn thành $topic topic",
+                                AppLocalizations.of(context)!.achivement_topic_title("$topic"),
+                                AppLocalizations.of(context)!.achivement_topic_description("$topic"),
                                 imagePath,
                                 amountTopicComplite >= topic,
                               );
@@ -341,7 +346,7 @@ class _achivementScreen extends State<achivementScreen>{
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
-                                  "$topic Topic",
+                                  AppLocalizations.of(context)!.achivement_topic_title("$topic"),
                                   style: const TextStyle(
                                     color: Colors.black,
                                     fontSize: 16,

@@ -2,6 +2,8 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../generated/app_localizations.dart';
+
 class topicServerWidget extends StatefulWidget{
 
   final bool isDowloaded;
@@ -55,11 +57,11 @@ class _topicServerWidget extends State<topicServerWidget>{
                 ),
                 Padding(
                   padding: EdgeInsets.only(left: 0),
-                  child: AutoSizeText("Người Tạo: ${widget.owner}", style: TextStyle(fontSize: 18, color: Colors.blue),),
+                  child: AutoSizeText(AppLocalizations.of(context)!.course_owner(widget.owner), style: TextStyle(fontSize: 18, color: Colors.blue),),
                 ),
                 Padding(
                   padding: EdgeInsets.only(left: 0),
-                  child: AutoSizeText("Số Lượng: ${widget.amount} Từ", style: TextStyle(fontSize: 18, color: Colors.red),),
+                  child: AutoSizeText(AppLocalizations.of(context)!.amount_word("${widget.amount}"), style: TextStyle(fontSize: 18, color: Colors.red),),
                 ),
               ],
             ),

@@ -1,0 +1,335 @@
+{
+  "@@locale": "vi",
+
+  "tabbar_home": "Trang Chủ",
+  "tabbar_character": "Bảng Chữ Cái",
+  "tabbar_info": "Thông Tin",
+
+  "dashboard_hintSearch": "Từ bạn muốn tra",
+  "dashboard_folder": "Thư Mục",
+  "dashboard_course": "Học Phần",
+  "dashboard_topic": "chủ đề",
+  "dashboard_popupDownload_title": "Bạn có muốn tải xuống không",
+  "dashboard_popupDownload_btn_cancel": "Hủy",
+  "dashboard_popupDownload_btn_dowload": "Tải",
+  "dashboard_seemore": "Xem Thêm",
+  "dashboard_btn_import": "Nhập",
+
+  "tutorial_one_title": "Cài đặt ứng dụng",
+  "tutorial_one_content": "Hãy đảm bảo thiết bị của bạn đã cài đặt ứng dụng Gboard",
+  "tutorial_two_title": "Vào Ứng Dụng Setting",
+  "tutorial_two_content": "Bạn hãy vào ứng dụng setting để thiết lập bàn phím học viết tiếng nhật",
+  "tutorial_three_title": "Tìm Kiếm Gboard",
+  "tutorial_three_content": "Bạn hãy bấm tìm và tìm đến Gboard như trên ảnh",
+  "tutorial_four_title": "Gboard",
+  "tutorial_four_content": "Tiếp tục bấm vòa theo như hướng dẫn",
+  "tutorial_five_title": "Languages",
+  "tutorial_five_content": "Hãy bấm vào phần ngôn ngữ",
+  "tutorial_six_title": "ADD KEYBOARD",
+  "tutorial_six_content": "Bấm vô thêm bàn phím để thêm bàn phím tiếng nhật",
+  "tutorial_seven_title": "Search Japanese",
+  "tutorial_seven_content": "Hãy bấm tìm kiếm ngôn ngữ tiếng nhật",
+  "tutorial_eight_title": "handwriting",
+  "tutorial_eight_content": "Hãy chọn dạng bàn phím viết và bấm done",
+  "tutorial_nice_title": "Thay đổi bàn phím",
+  "tutorial_nice_content": "khi học viết nhớ chuyển sang bàn phím để tập viết để nhớ tốt hơn",
+  "tutorial_btn_back": "trước",
+  "tutorial_btn_forward": "sau",
+  "tutorial_btn_skip": "bỏ qua",
+  "tutorial_one_done": "xong",
+
+  "course_owner": "tạo bởi {user_nane}",
+  "@course_owner": {
+    "description": "tạo bởi ai",
+    "placeholders": {
+      "user_nane": {
+        "type": "String",
+        "example": "wheel"
+      }
+    }
+  },
+
+  "amount_word": "số lượng: {amount} Từ",
+  "@amount_word": {
+    "description": "số lượng từ",
+    "placeholders": {
+      "amount": {
+        "type": "String",
+        "example": "10"
+      }
+    }
+  },
+
+  "word_finish": "Hoàn Thành: {amount}",
+  "@word_finish": {
+    "description": "số từ hoàn thành",
+    "placeholders": {
+      "amount": {
+        "type": "String",
+        "example": "10"
+      }
+    }
+  },
+
+  "word_learning": "Chưa Hoàn Thành: {amount}",
+  "@word_learning": {
+    "description": "số từ chưa hoàn thành",
+    "placeholders": {
+      "amount": {
+        "type": "String",
+        "example": "10"
+      }
+    }
+  },
+
+  "add_course": "Học phần",
+  "add_folder": "Thư Mục",
+
+  "folderManager":"Thêm Chủ Đề Học Phần",
+  "folderManager_addTopic": "Thêm Chủ Đề",
+  "folderManager_remove": "xóa",
+  "folderManager_removeTopic": "Xóa khỏi thư mục",
+
+  "seemore_search": "Tên thư mục",
+
+  "import_title": "Chọn phước thức nhập",
+  "import_btn_file": "Từ File",
+  "import_btn_qr": "Từ QR",
+
+  "character_btn_learn": "Học Chữ Cái",
+
+  "listWord_word_complete": "Hoàn Thành {count}",
+  "@listWord_word_complete": {
+    "description": "số lượng từ hoàn thành",
+    "placeholders": {
+      "count": {
+        "type": "String",
+        "example": "10"
+      }
+    }
+  },
+
+  "listWord_word_learning": "Chưa Hoàn Thành {count}",
+  "@listWord_word_learning": {
+    "description": "số lượng từ chưa hoàn thành",
+    "placeholders": {
+      "count": {
+        "type": "String",
+        "example": "10"
+      }
+    }
+  },
+
+  "listWord_btn_learn": "Học Từ",
+  "listWord_share_title": "Tên chủ đền {topic}",
+  "@listWord_share_title": {
+    "description": "số lượng từ chưa hoàn thành",
+    "placeholders": {
+      "topic": {
+        "type": "String",
+        "example": "Demo"
+      }
+    }
+  },
+
+  "listWord_share_amount_word": "số lượng: {amount} Từ",
+  "@listWord_share_amount_word": {
+    "description": "số lượng từ",
+    "placeholders": {
+      "amount": {
+        "type": "String",
+        "example": "10"
+      }
+    }
+  },
+
+  "listWord_share_type": "Loại: {type}",
+  "@listWord_share_type": {
+    "description": "Loại chia sẽ",
+    "placeholders": {
+      "type": {
+        "type": "String",
+        "example": "File"
+      }
+    }
+  },
+  "listWord_btn_remove": "Xóa",
+  "listWord_btn_shared": "Chia Sẻ",
+
+
+  "learn_warningGboard": "Khuyến nghị sử dụng Gboard để có trả nghiệm tốt nhất",
+  "learn_btn_check": "Kiểm tra",
+  "learn_bottomsheet_wrong_title": "Không Chính Xác",
+  "learn_bottomsheet_wrong_content": "Câu trả lời đúng là",
+  "learn_bottomsheet_wrong_btn": "Tiếp Tục",
+  "learn_write_input": "Viết",
+
+  "learn_bottomsheet_right_title": "Trả Lời Chính Xác",
+  "motivationalPhrases_1": "Tiếp tục cố gắng, bạn đang làm rất tốt!",
+  "motivationalPhrases_2": "Lần này bạn đã hoàn hảo, hãy tiếp tục cố gắng!",
+  "motivationalPhrases_3": "Mỗi bước tiến lên đều là một sự tiến bộ!",
+  "motivationalPhrases_4": "Hãy tin vào bản thân và tiếp tục nỗ lực!",
+  "motivationalPhrases_5": "Bạn có thể làm được, đừng bao giờ bỏ cuộc!",
+  "motivationalPhrases_6": "Thành công đến với những ai không ngừng cố gắng!",
+  "motivationalPhrases_7": "Tiếp tục cải thiện, từng bước một!",
+  "motivationalPhrases_8": "Hãy mạnh mẽ, tập trung và tiếp tục tiến lên!",
+  "motivationalPhrases_9": "Nỗ lực tuyệt vời! Hãy tiếp tục đặt mục tiêu cao hơn!",
+  "motivationalPhrases_10": "Sự chăm chỉ của bạn sẽ sớm được đền đáp!",
+
+  "learn_bottomsheet_right_btn": "Tiếp Tục",
+  "learning_combine_title": "Nói từ cột A sang cột B",
+  "learn_translate_title": "Dịch Câu Bên Dưới",
+  "learn_listen_title": "Bạn Nghe Được Gì",
+  "learn_chose_title": "Từ nào đúng của từ",
+  "congraculate_title": "Hoàn Thành",
+  "congraculate_content": "Bạn Thật Tuyệt vời",
+  "congraculate_commited": "Thời Gian",
+  "congraculate_amzing": "Tuyệt vời",
+  "profile_level": "Cấp Bậc",
+  "profile_topic": "Chủ Đề",
+  "profile_title": "Danh Hiệu",
+
+  "levelTitles_1": "Học Sĩ",
+  "levelTitles_2": "Minh Triết Giả",
+  "levelTitles_3": "Tư Tưởng Gia",
+  "levelTitles_4": "Bác Học Tôn Giả",
+  "levelTitles_5": "Hàn Lâm Học Sĩ",
+  "levelTitles_6": "Kỳ Tài Văn Học",
+  "levelTitles_7": "Trí Thánh Nhân",
+  "levelTitles_8": "Thiên Tài Biện Luận",
+  "levelTitles_9": "Học Đạo Tinh Thông",
+  "levelTitles_10": "Chí Sĩ Văn Nhân",
+  "levelTitles_11": "Luyện Tư Học Sĩ",
+  "levelTitles_12": "Thông Tuệ Giả",
+  "levelTitles_13": "Hiền Triết Uyên Thâm",
+  "levelTitles_14": "Văn Nhã Chân Nhân",
+  "levelTitles_15": "Trí Nhân Kỳ Tài",
+
+  "profile_date": "Tháng {month} Năm {year}",
+  "@profile_date": {
+    "description": "Hiển thị tháng và năm trong hồ sơ",
+    "placeholders": {
+      "month": {
+        "type": "int",
+        "example": "8"
+      },
+      "year": {
+        "type": "int",
+        "example": "2025"
+      }
+    }
+  },
+  "setting_title": "Cài Đặt",
+  "setting_achivement_title": "Thành Tựu",
+  "setting_achivement_content": "Danh sách thành tựu đã đặt được",
+  "setting_language_title": "Ngôn Ngữ",
+  "setting_language_content": "Chọn ngôn ngữ hiển thị",
+  "setting_async_title": "Đồng Bộ Dữ Liệu",
+  "setting_async_content": "Đồng bộ dữ liệu lên đám mây",
+  "setting_downloadAsync_title": "Tải Bộ Dữ Liệu",
+  "setting_downloadAsync_content": "Tải bộ dữ liệu đã đồng bộ trên máy củ của bạn",
+  "setting_signout_title": "Đăng Xuất",
+  "setting_signout_content": "Đăng xuất khỏi tài khoản hiện tại",
+  "achivement_title_one": "Thành Tựu",
+  "achivement_owl_title": "Cú Đêm Học Khuya",
+  "achivement_owl_description": "Học từ lúc 0h đến 2 giờ sáng",
+  "achivement_tryhard_title": "Tri Thức Chăm Chỉ",
+  "achivement_tryhard_description": "Học từ lúc 4 đến 6 giờ sáng",
+  "achivement_habit_title": "HÌnh Thành Thói Quen",
+  "achivement_habit_description": "Học liên tiếp 28 ngày",
+  "achivement_title_two": "Chuổi Ngày Học",
+  "achivement_streak_title": "Chuổi {day} ngày",
+  "@achivement_streak_title": {
+    "description": "chuổi ngày học",
+    "placeholders": {
+      "day": {
+        "type": "String",
+        "example": "10"
+      }
+    }
+  },
+  "achivement_streak_description": "Nhận khi học liên tục {day} ngày",
+  "@achivement_streak_description": {
+    "description": "mô tả chuổi ngày học",
+    "placeholders": {
+      "day": {
+        "type": "String",
+        "example": "10"
+      }
+    }
+  },
+  "achivement_title_three": "Chủ Đề Hoàn Thành",
+  "achivement_topic_title": "{amount} Chủ Đề",
+  "@achivement_topic_title": {
+    "description": "chuổi ngày học",
+    "placeholders": {
+      "amount": {
+        "type": "String",
+        "example": "10"
+      }
+    }
+  },
+  "achivement_topic_description": "Nhận khi hoàn thành {amount} chủ đề",
+  "@achivement_topic_description": {
+    "description": "mô tả chuổi ngày học",
+    "placeholders": {
+      "amount": {
+        "type": "String",
+        "example": "10"
+      }
+    }
+  },
+  "bottomSheetAsync_Success_Description": "Dữ liệu đã được đồng bộ hóa thành công",
+  "bottomSheetAsync_Success_Btn": "OK",
+  "bottomSheet_Nointernet_title": "Không Có Kết Nối Internet",
+  "bottomSheet_Nointernet_Description": "Vui lòng kểm tra kết nối internet của bạn và thử lại",
+  "bottomSheet_Nointernet_Btn": "OK",
+  "bottomSheet_Error_title": "Lỗi Tải Dữ Liệu",
+  "bottomSheet_Error_description": "Hiện không có bản đồng bộ hóa dữ liệu nào",
+
+  "bottomSheet_Warning_title": "Cảnh Báo",
+  "bottomSheet_Warning_Description": "Khi đồng bộ toa bộ dữ liệu trên máy hiện tại sẽ bị xóa",
+  "bottomSheet_Warning_btn_ok": "OK",
+  "bottomSheet_Warning_btn_cancle": "Hủy",
+  "language_title": "Ngôn ngữ",
+  "language_bottomsheet_success": "Cập Nhật Ngôn Ngữ Thành Công",
+
+  "error_connect_server": "Lỗi Kết Nối Đến Máy Chủ",
+  "login_title": "Chào mừng trở lại, Rất vui được gặp bạn",
+  "login_email_input_hint": "Email",
+  "login_email_input_hint_focus": "Nhập email của bạn",
+  "login_email_input_password": "Mật Khẩu",
+  "login_email_input_password_hint": "Nhập Mật Khẩu",
+  "login_btn": "Đăng Nhập",
+  "login_create_question_account": "Không Có Tài Khoảng",
+  "login_create_btn_account": "Đăng Kí",
+  "login_with_facebook": "Đăng Nhập Với Facebook",
+  "login_with_google": "Đăng Nhập Với Google",
+
+  "login_invalid_email": "Email Không Hợp Lệ",
+  "login_user_disabled": "Tài Khoản Đã Bị Khóa",
+  "login_user_not_found": "Không tìm thấy tài khoản với email này",
+  "login_wrong_password": "Mật khẩu không đúng",
+  "login_error": "Đã Có Lỗi Xảy Ra",
+
+
+  "register_title": "Xin chào, Đăng kí để bắt đầu trải nghiệm",
+  "register_email_input_hint": "Email",
+  "register_email_input_hint_focus": "Nhập email của bạn",
+  "register_user_input_hint": "Tên Người Dùng",
+  "register_user_input_hint_focus": "Nhập tên người dùng",
+  "register_password_input_hint": "Mật Khẩu",
+  "register_password_input_hint_focus": "Nhập Mật Khẩu",
+  "register_re_password_input_hint": "Nhập Lại Mật Khẩu",
+  "register_re_password_input_hint_focus": "Nhập Lại Mật Khẩu",
+  "register_btn": "Đăng Kí",
+  "register_question_login": "Đã Có Tài Khoảng",
+  "register_btn_login": "Đăng Nhập",
+
+  "register_email_already_in_use": "Email này đã được đăng ký",
+  "register_invalid_email": "Địa chỉ email không hợp lệ.",
+  "register_operation_not_allowed": "Tài khoản email/mật khẩu chưa được kích hoạt.",
+  "register_weak_password": "Mật Khẩu Quá Yếu",
+  "register_error": "Đã Có Lỗi Xảy Ra",
+  "register_success": "Tạo tài khoản thành công, quay lại trang đăng nhập"
+}

@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../generated/app_localizations.dart';
+
 class registerScreen extends StatefulWidget{
   @override
   State<StatefulWidget> createState() => _registerScreen();
@@ -78,19 +80,19 @@ class _registerScreen extends State<registerScreen>{
       String errorMessage;
       switch (e.code) {
         case 'email-already-in-use':
-          errorMessage = 'Email này đã được đăng ký.';
+          errorMessage = AppLocalizations.of(context)!.register_email_already_in_use;
           break;
         case 'invalid-email':
-          errorMessage = 'Địa chỉ email không hợp lệ.';
+          errorMessage = AppLocalizations.of(context)!.register_invalid_email;
           break;
         case 'operation-not-allowed':
-          errorMessage = 'Tài khoản email/mật khẩu chưa được kích hoạt.';
+          errorMessage = AppLocalizations.of(context)!.register_operation_not_allowed;
           break;
         case 'weak-password':
-          errorMessage = 'Mật khẩu quá yếu.';
+          errorMessage = AppLocalizations.of(context)!.register_weak_password;
           break;
         default:
-          errorMessage = 'Đã xảy ra lỗi không xác định.';
+          errorMessage = AppLocalizations.of(context)!.register_error;
       }
       setState(() {
         err_Username = errorMessage;
@@ -140,12 +142,12 @@ class _registerScreen extends State<registerScreen>{
                             Container(
                               width: MediaQuery.sizeOf(context).width - 100,
                               height: 30,
-                              child: const Row(
+                              child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Flexible(
                                     child: AutoSizeText(
-                                      "Tạo tài khoản thành công, quay lại trang đăng nhập", // Nội dung văn bản
+                                      AppLocalizations.of(context)!.register_success,
                                       overflow: TextOverflow.ellipsis,
                                       softWrap: true,
                                       maxLines: 2,
@@ -219,7 +221,7 @@ class _registerScreen extends State<registerScreen>{
                     child: Container(
                       height: MediaQuery.sizeOf(context).height*0.1,
                       width: MediaQuery.sizeOf(context).width,
-                      child: AutoSizeText("Xin chào, Đăng kí để bắt đầu trải nghiệm", style: TextStyle(fontSize: MediaQuery.sizeOf(context).width*0.8, fontFamily: "Itim"),),
+                      child: AutoSizeText(AppLocalizations.of(context)!.register_title, style: TextStyle(fontSize: MediaQuery.sizeOf(context).width*0.8, fontFamily: "Itim"),),
                     ),
                   ),
                   const SizedBox(height: 10,),
@@ -228,8 +230,8 @@ class _registerScreen extends State<registerScreen>{
                     child: TextField(
                       controller: mailController,
                       decoration: InputDecoration(
-                        labelText: 'Email',
-                        hintText: 'Nhập email của bạn',
+                        labelText: AppLocalizations.of(context)!.register_email_input_hint,
+                        hintText: AppLocalizations.of(context)!.register_email_input_hint_focus,
                         prefixIcon: Icon(Icons.mail),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10.0),
@@ -250,8 +252,8 @@ class _registerScreen extends State<registerScreen>{
                     child: TextField(
                       controller: userController,
                       decoration: InputDecoration(
-                        labelText: 'Tên Người Dùng',
-                        hintText: 'Nhập Tên Người Dùng',
+                        labelText: AppLocalizations.of(context)!.register_user_input_hint,
+                        hintText: AppLocalizations.of(context)!.register_user_input_hint_focus,
                         prefixIcon: const Icon(Icons.person),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10.0),
@@ -272,8 +274,8 @@ class _registerScreen extends State<registerScreen>{
                     child: TextField(
                       controller: passController,
                       decoration: InputDecoration(
-                        labelText: 'Mật Khẩu',
-                        hintText: 'Nhập Mật Khẩu',
+                        labelText: AppLocalizations.of(context)!.register_user_input_hint,
+                        hintText: AppLocalizations.of(context)!.register_user_input_hint_focus,
                         prefixIcon: Icon(Icons.lock),
                         suffixIcon: IconButton(
                           icon: Icon(_isShowPass ? Icons.visibility : Icons.visibility_off),
@@ -303,8 +305,8 @@ class _registerScreen extends State<registerScreen>{
                     child: TextField(
                       controller: rePassController,
                       decoration: InputDecoration(
-                        labelText: 'Nhập Lại Mật Khẩu',
-                        hintText: 'Nhập Mật Khẩu Lần Nữa',
+                        labelText: AppLocalizations.of(context)!.register_re_password_input_hint,
+                        hintText: AppLocalizations.of(context)!.register_re_password_input_hint_focus,
                         prefixIcon: Icon(Icons.lock),
                         suffixIcon: IconButton(
                           icon: Icon(_isShowPass ? Icons.visibility : Icons.visibility_off),
@@ -346,7 +348,7 @@ class _registerScreen extends State<registerScreen>{
                               borderRadius: BorderRadius.all(Radius.circular(15))
                           ),
                           child: Center(
-                            child: Text("Đăng Kí", style: TextStyle(color: Colors.white, fontSize: 20, fontFamily: "Itim")),
+                            child: Text(AppLocalizations.of(context)!.register_btn, style: TextStyle(color: Colors.white, fontSize: 20, fontFamily: "Itim")),
                           )
                       ),
                     ),
@@ -356,12 +358,12 @@ class _registerScreen extends State<registerScreen>{
                     onTap: (){
                       Navigator.pop(context);
                     },
-                    child: const Row(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("Đã có tài khoảng", style: TextStyle(fontFamily: "Itim"),),
+                        Text(AppLocalizations.of(context)!.register_question_login, style: TextStyle(fontFamily: "Itim"),),
                         SizedBox(width: 5,),
-                        Text("Đăng Nhập", style: TextStyle(color: CupertinoColors.activeBlue, fontFamily: "Itim"),),
+                        Text(AppLocalizations.of(context)!.register_btn_login, style: TextStyle(color: CupertinoColors.activeBlue, fontFamily: "Itim"),),
                       ],
                     ),
                   ),

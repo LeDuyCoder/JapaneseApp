@@ -18,6 +18,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:japaneseapp/Module/word.dart' as wordModule;
 
 import '../Config/databaseServer.dart';
+import '../generated/app_localizations.dart';
 
 class listWordScreen extends StatefulWidget{
   final String topicName;
@@ -251,155 +252,158 @@ class _listWordScreen extends State<listWordScreen>{
       builder: (BuildContext context) {
         return Dialog(
           backgroundColor: Colors.white,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(10),
-              bottomRight: Radius.circular(10),
-            ), // Bo góc popup
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
           ),
           child: StatefulBuilder(
             builder: (BuildContext context, void Function(void Function()) setState) {
               return Container(
-                decoration: const BoxDecoration(
-                  border: Border(
-                    top: BorderSide(
-                      color: Color.fromRGBO(20, 195, 142, 1.0), // Màu xanh cạnh trên ngoài cùng
-                      width: 10.0, // Độ dày của cạnh trên
+                padding: const EdgeInsets.all(28),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(24),
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.18),
+                      blurRadius: 28,
+                      offset: Offset(0, 10),
                     ),
-                  ),
+                  ],
                 ),
-                child: Container(
-                  height: 200,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Column(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.blueAccent.withOpacity(0.08),
+                        shape: BoxShape.circle,
+                      ),
+                      padding: EdgeInsets.all(16),
+                      child: Icon(Icons.share, color: Colors.blueAccent, size: 44),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      AppLocalizations.of(context)!.listWord_share_title(widget.topicName),
+                      style: TextStyle(
+                        fontFamily: "Itim",
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                        letterSpacing: 0.5,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      AppLocalizations.of(context)!.listWord_share_amount_word("$amountWord"),
+                      style: TextStyle(
+                        fontFamily: "Itim",
+                        fontSize: 16,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: amountWord < 15 ? Colors.green[100] : Colors.blue[100],
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          SizedBox(height: 20),
-                          Container(
-                            width: MediaQuery.sizeOf(context).width - 100,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const AutoSizeText(
-                                  "Tên chủ đề: ",
-                                  style: TextStyle(fontFamily: "indieflower"),
-                                ),
-                                Flexible(
-                                  child: Text(
-                                    widget.topicName,
-                                    style: const TextStyle(
-                                      fontFamily: "indieflower",
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15,
-                                    ),
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis, // Xử lý nếu văn bản quá dài
-                                  ),
-                                ),
-                              ],
+                          Icon(
+                            amountWord < 15 ? Icons.qr_code : Icons.insert_drive_file,
+                            color: amountWord < 15 ? Colors.green[700] : Colors.blue[700],
+                            size: 18,
+                          ),
+                          SizedBox(width: 6),
+                          Text(
+                            AppLocalizations.of(context)!.listWord_share_type("${amountWord < 15 ? "QR Code" : "Share File"}"),
+                            style: TextStyle(
+                              color: amountWord < 15 ? Colors.green[800] : Colors.blue[800],
+                              fontWeight: FontWeight.w600,
+                              fontSize: 15,
                             ),
                           ),
-
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              AutoSizeText("Số Lượng Từ: ", style: TextStyle(fontFamily: "indieflower")),
-                              AutoSizeText(
-                                "$amountWord",
-                                style: TextStyle(fontFamily: "indieflower", fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              AutoSizeText("Loại: ", style: TextStyle(fontFamily: "indieflower")),
-                              AutoSizeText(
-                                amountWord < 15 ? "QR Code" : "Share File",
-                                style: TextStyle(fontFamily: "indieflower", fontWeight: FontWeight.bold, fontSize: 10),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 20),
                         ],
                       ),
-                      SizedBox(width: 20),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          GestureDetector(
-                            onTap: (){
-                              showDialogDelete();
-                            },
-                            child: Container(
-                              width: MediaQuery.sizeOf(context).width*0.3,
-                              height: MediaQuery.sizeOf(context).height*0.05,
-                              decoration: const BoxDecoration(
-                                  color: Colors.red,
-                                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                                  boxShadow: [
-                                  ]
-                              ),
-                              child: const Center(
-                                child: Text("Xóa", style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),),
+                    ),
+                    const SizedBox(height: 28),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: ElevatedButton.icon(
+                            onPressed: showDialogDelete,
+                            icon: Icon(Icons.delete_outline, color: Colors.red),
+                            label: Text(
+                              AppLocalizations.of(context)!.listWord_btn_remove,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                fontFamily: "Itim",
+                                letterSpacing: 0.2,
+                                color: Colors.red,
                               ),
                             ),
-
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(14),
+                                side: BorderSide(color: Colors.red, width: 2),
+                              ),
+                              padding: EdgeInsets.symmetric(vertical: 14),
+                              elevation: 0,
+                            ),
                           ),
-                          SizedBox(width:10,),
-                          GestureDetector(
-                            onTap: () async {
+                        ),
+                        const SizedBox(width: 18),
+                        Expanded(
+                          child: ElevatedButton.icon(
+                            onPressed: () async {
                               if (amountWord < 15) {
                                 try {
-                                  // Gọi hàm bất đồng bộ
-                                  final data = await hanldDataWordsQr(
-                                      widget.topicName);
-                                  // Hiển thị dialog khi có dữ liệu
+                                  final data = await hanldDataWordsQr(widget.topicName);
                                   showDialogQR(
-                                      QrImageView(
-                                        data: gzipCompress(data),
-                                        size: 150, // Đảm bảo kích thước bên trong widget QrImageView
-                                      )
+                                    QrImageView(
+                                      data: gzipCompress(data),
+                                      size: 160,
+                                    ),
                                   );
                                 } catch (e) {
                                   print("Error: $e");
                                 }
-                              }
-                              else {
-                                final data = await hanldDataWordsQr(
-                                    widget.topicName);
-                                String path = await saveCustomFile(
-                                    "${widget.topicName}.jpdb", data);
+                              } else {
+                                final data = await hanldDataWordsQr(widget.topicName);
+                                String path = await saveCustomFile("${widget.topicName}.jpdb", data);
                                 shareFile(path);
                               }
                             },
-                            child: Container(
-                              width: MediaQuery.sizeOf(context).width * 0.3,
-                              height: MediaQuery.sizeOf(context).height * 0.05,
-                              decoration: const BoxDecoration(
-                                color: Colors.blue,
-                                borderRadius: BorderRadius.all(Radius.circular(10)),
-                              ),
-                              child: const Center(
-                                child: Text(
-                                  "Chia Sẽ",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
+                            icon: Icon(Icons.send, color: Colors.white),
+                            label: Text(
+                              AppLocalizations.of(context)!.listWord_btn_shared,
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontFamily: "Itim",
+                                letterSpacing: 0.2,
+                                color: Colors.white
                               ),
                             ),
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
-                )
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blueAccent,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(14),
+                              ),
+                              padding: EdgeInsets.symmetric(vertical: 14),
+                              elevation: 0,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               );
             },
           ),
@@ -1096,7 +1100,7 @@ class _listWordScreen extends State<listWordScreen>{
                       children: [
                         Flexible(
                           child: AutoSizeText(
-                            "Hoàn Thành ${(snapshot.data![1] as num).toInt()}",
+                            AppLocalizations.of(context)!.listWord_word_complete("${(snapshot.data![1] as num).toInt()}"),
                             style: const TextStyle(
                               fontSize: 20,
                               fontFamily: "Itim",
@@ -1111,7 +1115,7 @@ class _listWordScreen extends State<listWordScreen>{
                         SizedBox(width: 10),
                         Flexible(
                           child: AutoSizeText(
-                            "Chưa Hoàn Thành ${(snapshot.data![2] - snapshot.data![1] as num).toInt()}",
+                            AppLocalizations.of(context)!.listWord_word_learning("${(snapshot.data![2] - snapshot.data![1] as num).toInt()}"),
                             style: const TextStyle(
                               fontSize: 20,
                               fontFamily: "Itim",
@@ -1222,7 +1226,7 @@ class _listWordScreen extends State<listWordScreen>{
                         ),
                         child: Center(
                           child: Text(
-                            "Học Từ",
+                            AppLocalizations.of(context)!.listWord_btn_learn,
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: MediaQuery.sizeOf(context).height * 0.025,

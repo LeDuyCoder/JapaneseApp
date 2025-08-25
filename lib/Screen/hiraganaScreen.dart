@@ -4,6 +4,7 @@ import 'package:flutter_tts/flutter_tts.dart';
 import 'package:japaneseapp/Config/dataHelper.dart';
 import 'package:japaneseapp/Screen/learnCharactersScreen.dart';
 
+import '../generated/app_localizations.dart';
 import 'congraculationCharacterScreen.dart';
 
 class hiraganaScreen extends StatefulWidget{
@@ -92,7 +93,7 @@ class _hiraganaScreen extends State<hiraganaScreen>{
                           ]
                       ),
                       child: Center(
-                        child: Text("Học Chữ Cái", style: TextStyle(
+                        child: Text(AppLocalizations.of(context)!.character_btn_learn, style: TextStyle(
                             fontFamily: "Itim",
                             fontWeight: FontWeight.bold,
                             color: Colors.white,

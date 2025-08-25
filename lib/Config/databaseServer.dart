@@ -3,7 +3,6 @@ import 'dart:convert';
 
 import 'package:japaneseapp/Module/topic.dart';
 import 'package:japaneseapp/Module/WordModule.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class DatabaseServer {
   final String baseUrl = "https://jpa.landernetwork.io.vn/backendServer";
