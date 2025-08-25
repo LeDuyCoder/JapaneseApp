@@ -135,29 +135,44 @@ class _LanguageScreenState extends State<languageScreen> {
   }
 
   Future<void> changeLanguase() async {
-    if(languageChosen == "VN") widget.changeLanguage(const Locale("vi"));
-    if(languageChosen == "US") widget.changeLanguage(const Locale("us"));
+    if (languageChosen == "VN") widget.changeLanguage(const Locale("vi"));
+    if (languageChosen == "US") widget.changeLanguage(const Locale("en"));
+    if (languageChosen == "JP") widget.changeLanguage(const Locale("ja"));
+    if (languageChosen == "CN") widget.changeLanguage(const Locale("zh")); // tiếng Trung giản thể
+    if (languageChosen == "RU") widget.changeLanguage(const Locale("ru")); // tiếng Nga
   }
 
-
   void setLanguageChosen() {
-    if(languageChosen == ""){
-      if(Localizations.localeOf(context).languageCode == "vi" ) languageChosen = "VN";
-      if(Localizations.localeOf(context).languageCode == "en" ) languageChosen = "US";
+    if (languageChosen == "") {
+      final code = Localizations.localeOf(context).languageCode;
+      // map các ngôn ngữ
+      if (code == "vi") languageChosen = "VN";
+      if (code == "en") languageChosen = "US";
+      if (code == "ja") languageChosen = "JP";
+      if (code == "zh") languageChosen = "CN"; // giản thể
+      if (code == "ru") languageChosen = "RU"; // tiếng Nga
     }
   }
 
-  String changeLanguageCode(){
-    if(Localizations.localeOf(context).languageCode == "vi") return "VN";
-    if(Localizations.localeOf(context).languageCode == "en") return "US";
+  String changeLanguageCode() {
+    final code = Localizations.localeOf(context).languageCode;
+    if (code == "vi") return "VN";
+    if (code == "en") return "US";
+    if (code == "ja") return "JP";
+    if (code == "zh") return "CN"; // giản thể
+    if (code == "ru") return "RU"; // tiếng Nga
     return "";
   }
 
-  String changLanguageFromCode(){
-    if(languageChosen == "VN") return "vi";
-    if(languageChosen == "US") return "us";
+  String changLanguageFromCode() {
+    if (languageChosen == "VN") return "vi";
+    if (languageChosen == "US") return "en";
+    if (languageChosen == "JP") return "ja";
+    if (languageChosen == "CN") return "zh"; // giản thể
+    if (languageChosen == "RU") return "ru"; // tiếng Nga
     return "";
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -201,6 +216,12 @@ class _LanguageScreenState extends State<languageScreen> {
               choseLanguage("VN", "Việt Nam"),
               const SizedBox(height: 10,),
               choseLanguage("US", "English (US)"),
+              const SizedBox(height: 10,),
+              choseLanguage("JP", "日本語"),
+              const SizedBox(height: 10,),
+              choseLanguage("CN", "中文"),
+              const SizedBox(height: 10,),
+              choseLanguage("RU", "Русский"),
             ],
           ),
         ),

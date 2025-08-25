@@ -1,0 +1,339 @@
+{
+  "@@locale": "ru",
+
+  "tabbar_home": "Главная",
+  "tabbar_character": "Алфавит",
+  "tabbar_info": "Информация",
+
+  "dashboard_hintSearch": "Слово, которое вы хотите найти",
+  "dashboard_folder": "Папка",
+  "dashboard_course": "Курс",
+  "dashboard_topic": "тема",
+  "dashboard_popupDownload_title": "Хотите скачать?",
+  "dashboard_popupDownload_btn_cancel": "Отмена",
+  "dashboard_popupDownload_btn_dowload": "Скачать",
+  "dashboard_seemore": "Показать больше",
+  "dashboard_btn_import": "Импорт",
+
+  "tutorial_one_title": "Установите приложение",
+  "tutorial_one_content": "Убедитесь, что приложение Gboard установлено на вашем устройстве",
+  "tutorial_two_title": "Откройте Настройки",
+  "tutorial_two_content": "Откройте приложение Настройки и настройте японскую рукописную клавиатуру",
+  "tutorial_three_title": "Найдите Gboard",
+  "tutorial_three_content": "Найдите Gboard и нажмите, как показано на изображении",
+  "tutorial_four_title": "Gboard",
+  "tutorial_four_content": "Продолжайте нажимать согласно инструкции",
+  "tutorial_five_title": "Языки",
+  "tutorial_five_content": "Нажмите на раздел языков",
+  "tutorial_six_title": "Добавить клавиатуру",
+  "tutorial_six_content": "Добавьте клавиатуру и выберите японский",
+  "tutorial_seven_title": "Поиск японского",
+  "tutorial_seven_content": "Поиск японского языка",
+  "tutorial_eight_title": "Рукописный ввод",
+  "tutorial_eight_content": "Выберите рукописную клавиатуру и нажмите Готово",
+  "tutorial_nice_title": "Смена клавиатуры",
+  "tutorial_nice_content": "При обучении письму переключайтесь на клавиатуру, чтобы лучше запоминать",
+  "tutorial_btn_back": "Назад",
+  "tutorial_btn_forward": "Вперед",
+  "tutorial_btn_skip": "Пропустить",
+  "tutorial_one_done": "Готово",
+
+  "course_owner": "создано {user_nane}",
+  "@course_owner": {
+    "description": "создано кем",
+    "placeholders": {
+      "user_nane": {
+        "type": "String",
+        "example": "wheel"
+      }
+    }
+  },
+
+  "amount_word": "Количество: {amount} слов",
+  "@amount_word": {
+    "description": "Количество слов",
+    "placeholders": {
+      "amount": {
+        "type": "String",
+        "example": "10"
+      }
+    }
+  },
+
+  "word_finish": "Завершено: {amount}",
+  "@word_finish": {
+    "description": "Количество завершенных слов",
+    "placeholders": {
+      "amount": {
+        "type": "String",
+        "example": "10"
+      }
+    }
+  },
+
+  "word_learning": "Не завершено: {amount}",
+  "@word_learning": {
+    "description": "Количество незавершенных слов",
+    "placeholders": {
+      "amount": {
+        "type": "String",
+        "example": "10"
+      }
+    }
+  },
+
+  "add_course": "Курс",
+  "add_folder": "Папка",
+
+  "folderManager": "Добавить тему курса",
+  "folderManager_addTopic": "Добавить тему",
+  "folderManager_remove": "Удалить",
+  "folderManager_removeTopic": "Удалить из папки",
+
+  "seemore_search": "Название папки",
+
+  "import_title": "Выберите способ импорта",
+  "import_btn_file": "Из файла",
+  "import_btn_qr": "С помощью QR",
+
+  "character_btn_learn": "Изучать буквы",
+
+  "listWord_word_complete": "Завершено {count}",
+  "@listWord_word_complete": {
+    "description": "Количество завершенных слов",
+    "placeholders": {
+      "count": {
+        "type": "String",
+        "example": "10"
+      }
+    }
+  },
+
+  "listWord_word_learning": "Не завершено {count}",
+  "@listWord_word_learning": {
+    "description": "Количество незавершенных слов",
+    "placeholders": {
+      "count": {
+        "type": "String",
+        "example": "10"
+      }
+    }
+  },
+
+  "listWord_btn_learn": "Изучать слова",
+  "listWord_share_title": "Название темы: {topic}",
+  "@listWord_share_title": {
+    "description": "Название темы",
+    "placeholders": {
+      "topic": {
+        "type": "String",
+        "example": "Demo"
+      }
+    }
+  },
+
+  "listWord_share_amount_word": "Количество: {amount} слов",
+  "@listWord_share_amount_word": {
+    "description": "Количество слов",
+    "placeholders": {
+      "amount": {
+        "type": "String",
+        "example": "10"
+      }
+    }
+  },
+
+  "listWord_share_type": "Тип: {type}",
+  "@listWord_share_type": {
+    "description": "Тип для совместного использования",
+    "placeholders": {
+      "type": {
+        "type": "String",
+        "example": "Файл"
+      }
+    }
+  },
+  "listWord_btn_remove": "Удалить",
+  "listWord_btn_shared": "Поделиться",
+
+  "learn_warningGboard": "Рекомендуется использовать Gboard для наилучшего опыта",
+  "learn_btn_check": "Проверить",
+  "learn_bottomsheet_wrong_title": "Неверно",
+  "learn_bottomsheet_wrong_content": "Правильный ответ:",
+  "learn_bottomsheet_wrong_btn": "Продолжить",
+  "learn_write_input": "Писать",
+
+  "learn_bottomsheet_right_title": "Правильно",
+  "motivationalPhrases_1": "Продолжайте в том же духе, вы отлично справляетесь!",
+  "motivationalPhrases_2": "На этот раз вы справились идеально, продолжайте!",
+  "motivationalPhrases_3": "Каждый шаг — это прогресс!",
+  "motivationalPhrases_4": "Верьте в себя и продолжайте стараться!",
+  "motivationalPhrases_5": "Вы сможете это сделать, никогда не сдавайтесь!",
+  "motivationalPhrases_6": "Успех приходит к тем, кто не перестает пытаться!",
+  "motivationalPhrases_7": "Продвигайтесь вперед шаг за шагом!",
+  "motivationalPhrases_8": "Будьте сильными, сосредоточенными и двигайтесь вперед!",
+  "motivationalPhrases_9": "Отличные усилия! Стремитесь к большему!",
+  "motivationalPhrases_10": "Ваш труд обязательно окупится!",
+
+  "learn_bottomsheet_right_btn": "Продолжить",
+  "learning_combine_title": "Сопоставьте слова из столбца А со столбцом B",
+  "learn_translate_title": "Переведите предложение ниже",
+  "learn_listen_title": "Что вы услышали?",
+  "learn_chose_title": "Какое слово правильное?",
+  "congraculate_title": "Завершено",
+  "congraculate_content": "Вы великолепны",
+  "congraculate_commited": "Время",
+  "congraculate_amzing": "Отлично",
+  "profile_level": "Уровень",
+  "profile_topic": "Тема",
+  "profile_title": "Звание",
+
+  "levelTitles_1": "Ученый",
+  "levelTitles_2": "Мудрец",
+  "levelTitles_3": "Мыслитель",
+  "levelTitles_4": "Почетный ученый",
+  "levelTitles_5": "Академический ученый",
+  "levelTitles_6": "Гений литературы",
+  "levelTitles_7": "Святой",
+  "levelTitles_8": "Гений дебатов",
+  "levelTitles_9": "Мастер обучения",
+  "levelTitles_10": "Литературный джентльмен",
+  "levelTitles_11": "Дисциплинированный ученый",
+  "levelTitles_12": "Просветленный",
+  "levelTitles_13": "Глубокий мудрец",
+  "levelTitles_14": "Элегантный наставник",
+  "levelTitles_15": "Гений интеллекта",
+
+  "profile_date": "{month} месяц {year} год",
+  "@profile_date": {
+    "description": "Отображение месяца и года в профиле",
+    "placeholders": {
+      "month": {
+        "type": "int",
+        "example": "8"
+      },
+      "year": {
+        "type": "int",
+        "example": "2025"
+      }
+    }
+  },
+
+  "setting_title": "Настройки",
+  "setting_achivement_title": "Достижения",
+  "setting_achivement_content": "Список полученных достижений",
+  "setting_language_title": "Язык",
+  "setting_language_content": "Выберите язык интерфейса",
+  "setting_async_title": "Синхронизация данных",
+  "setting_async_content": "Синхронизация данных с облаком",
+  "setting_downloadAsync_title": "Загрузить данные",
+  "setting_downloadAsync_content": "Загрузите данные, синхронизированные с предыдущего устройства",
+  "setting_signout_title": "Выйти",
+  "setting_signout_content": "Выйти из текущей учетной записи",
+
+  "achivement_title_one": "Достижения",
+  "achivement_owl_title": "Ночной совенок",
+  "achivement_owl_description": "Учился с 0 до 2 часов ночи",
+  "achivement_tryhard_title": "Усердный ученик",
+  "achivement_tryhard_description": "Учился с 4 до 6 утра",
+  "achivement_habit_title": "Создание привычки",
+  "achivement_habit_description": "Учился 28 дней подряд",
+  "achivement_title_two": "Серия дней обучения",
+  "achivement_streak_title": "Серия {day} дней",
+  "@achivement_streak_title": {
+    "description": "Серия дней обучения",
+    "placeholders": {
+      "day": {
+        "type": "String",
+        "example": "10"
+      }
+    }
+  },
+  "achivement_streak_description": "Достижение за {day} дней подряд",
+  "@achivement_streak_description": {
+    "description": "Описание серии дней обучения",
+    "placeholders": {
+      "day": {
+        "type": "String",
+        "example": "10"
+      }
+    }
+  },
+
+  "achivement_title_three": "Завершенные темы",
+  "achivement_topic_title": "{amount} тем",
+  "@achivement_topic_title": {
+    "description": "Количество завершенных тем",
+    "placeholders": {
+      "amount": {
+        "type": "String",
+        "example": "10"
+      }
+    }
+  },
+  "achivement_topic_description": "Достижение за завершение {amount} тем",
+  "@achivement_topic_description": {
+    "description": "Описание завершенных тем",
+    "placeholders": {
+      "amount": {
+        "type": "String",
+        "example": "10"
+      }
+    }
+  },
+
+  "bottomSheetAsync_Success_Description": "Данные успешно синхронизированы",
+  "bottomSheetAsync_Success_Btn": "OK",
+  "bottomSheet_Nointernet_title": "Нет подключения к интернету",
+  "bottomSheet_Nointernet_Description": "Проверьте подключение к интернету и повторите попытку",
+  "bottomSheet_Nointernet_Btn": "OK",
+  "bottomSheet_Error_title": "Ошибка загрузки данных",
+  "bottomSheet_Error_description": "В настоящее время нет доступных синхронизированных данных",
+
+  "bottomSheet_Warning_title": "Предупреждение",
+  "bottomSheet_Warning_Description": "При синхронизации все локальные данные на этом устройстве будут удалены",
+  "bottomSheet_Warning_btn_ok": "OK",
+  "bottomSheet_Warning_btn_cancle": "Отмена",
+
+  "language_title": "Язык",
+  "language_bottomsheet_success": "Язык успешно обновлен",
+
+  "error_connect_server": "Ошибка подключения к серверу",
+
+  "login_title": "С возвращением! Рады вас видеть",
+  "login_email_input_hint": "Электронная почта",
+  "login_email_input_hint_focus": "Введите вашу электронную почту",
+  "login_email_input_password": "Пароль",
+  "login_email_input_password_hint": "Введите пароль",
+  "login_btn": "Войти",
+  "login_create_question_account": "Нет учетной записи?",
+  "login_create_btn_account": "Регистрация",
+  "login_with_facebook": "Войти через Facebook",
+  "login_with_google": "Войти через Google",
+
+  "login_invalid_email": "Неверный адрес электронной почты",
+  "login_user_disabled": "Эта учетная запись отключена",
+  "login_user_not_found": "Учетная запись с этим адресом не найдена",
+  "login_wrong_password": "Неверный пароль",
+  "login_error": "Произошла ошибка",
+
+  "register_title": "Здравствуйте, зарегистрируйтесь, чтобы начать",
+  "register_email_input_hint": "Электронная почта",
+  "register_email_input_hint_focus": "Введите вашу электронную почту",
+  "register_user_input_hint": "Имя пользователя",
+  "register_user_input_hint_focus": "Введите имя пользователя",
+  "register_password_input_hint": "Пароль",
+  "register_password_input_hint_focus": "Введите пароль",
+  "register_re_password_input_hint": "Повторите пароль",
+  "register_re_password_input_hint_focus": "Повторно введите пароль",
+  "register_btn": "Регистрация",
+  "register_question_login": "Уже есть аккаунт?",
+  "register_btn_login": "Войти",
+
+  "register_email_already_in_use": "Этот адрес электронной почты уже зарегистрирован",
+  "register_invalid_email": "Неверный адрес электронной почты",
+  "register_operation_not_allowed": "Вход по email/паролю не разрешен",
+  "register_weak_password": "Слишком слабый пароль",
+  "register_error": "Произошла ошибка",
+  "register_success": "Аккаунт успешно создан, вернитесь на страницу входа"
+}

@@ -1323,30 +1323,42 @@ class _DashboardScreenState extends State<dashboardScreen> {
                               ),
                               SizedBox(height: 20),
                               Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                padding: const EdgeInsets.symmetric(horizontal: 10),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(
-                                      AppLocalizations.of(context)!.dashboard_course,
-                                      style: TextStyle(fontFamily: "itim", fontSize: 30),
+                                    // Text sẽ tự co giãn
+                                    Expanded(
+                                      child: Text(
+                                        AppLocalizations.of(context)!.dashboard_course,
+                                        style: const TextStyle(
+                                          fontFamily: "Itim",
+                                          fontSize: 30,
+                                        ),
+                                        overflow: TextOverflow.ellipsis, // nếu quá dài sẽ hiển thị "..."
+                                      ),
                                     ),
                                     Row(
                                       children: [
                                         GestureDetector(
-                                          onTap: (){
+                                          onTap: () {
                                             Navigator.push(
                                               context,
                                               PageRouteBuilder(
-                                                pageBuilder: (context, animation, secondaryAnimation) => seeMoreTopic(reloadScreen: (){
-                                                  reload();
-                                                },),
-                                                transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                                  const begin = Offset(1.0, 0.0); // bắt đầu từ bên phải
-                                                  const end = Offset.zero;        // kết thúc ở chính giữa
+                                                pageBuilder: (context, animation, secondaryAnimation) =>
+                                                    seeMoreTopic(
+                                                      reloadScreen: () {
+                                                        reload();
+                                                      },
+                                                    ),
+                                                transitionsBuilder:
+                                                    (context, animation, secondaryAnimation, child) {
+                                                  const begin = Offset(1.0, 0.0);
+                                                  const end = Offset.zero;
                                                   const curve = Curves.ease;
 
-                                                  var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                                                  var tween =
+                                                  Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
                                                   var offsetAnimation = animation.drive(tween);
 
                                                   return SlideTransition(
@@ -1358,23 +1370,23 @@ class _DashboardScreenState extends State<dashboardScreen> {
                                             );
                                           },
                                           child: Container(
-                                            width: 100,
-                                            height: 50,
-                                            decoration: const BoxDecoration(),
-                                            child: Center(
-                                              child: Row(
-                                                children: [
-                                                  Text(
-                                                    AppLocalizations.of(context)!.dashboard_seemore,
-                                                    style: TextStyle(fontFamily: "Itim", fontWeight: FontWeight.bold, fontSize: 16),
-                                                    textAlign: TextAlign.center,
+                                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Text(
+                                                  AppLocalizations.of(context)!.dashboard_seemore,
+                                                  style: const TextStyle(
+                                                    fontFamily: "Itim",
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16,
                                                   ),
-                                                  Icon(Icons.arrow_right_alt)
-                                                ],
-                                              )
+                                                ),
+                                                const Icon(Icons.arrow_right_alt),
+                                              ],
                                             ),
                                           ),
-                                        )
+                                        ),
                                       ],
                                     )
                                   ],
@@ -1443,46 +1455,60 @@ class _DashboardScreenState extends State<dashboardScreen> {
                               ),
                               SizedBox(height: 20,),
                               Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                padding: const EdgeInsets.symmetric(horizontal: 10),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(
-                                      AppLocalizations.of(context)!.dashboard_topic,
-                                      style: TextStyle(fontFamily: "itim", fontSize: 30),
+                                    // Text sẽ tự co giãn
+                                    Expanded(
+                                      child: Text(
+                                        AppLocalizations.of(context)!.dashboard_topic,
+                                        style: const TextStyle(
+                                          fontFamily: "Itim",
+                                          fontSize: 30,
+                                        ),
+                                        overflow: TextOverflow.ellipsis, // nếu quá dài sẽ hiển thị "..."
+                                      ),
                                     ),
                                     Row(
+                                      mainAxisSize: MainAxisSize.min, // Row chỉ chiếm vừa đủ nội dung
                                       children: [
                                         GestureDetector(
-                                          onTap: (){
+                                          onTap: () {
                                             showPopupInput();
                                           },
                                           child: Container(
-                                            width: 100,
-                                            height: 50,
+                                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                                             decoration: const BoxDecoration(
                                               color: Color(0xFFE8F5E9),
                                               borderRadius: BorderRadius.all(Radius.circular(10)),
                                             ),
-                                            child: Center(
-                                                child: Row(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  children: [
-                                                    Icon(Icons.insert_page_break, color: Colors.black,size: 20,),
-                                                    SizedBox(width: 10,),
-                                                    Text(
-                                                      AppLocalizations.of(context)!.dashboard_btn_import,
-                                                      style: TextStyle(fontFamily: "Itim", fontWeight: FontWeight.bold, fontSize: 16),
-                                                      textAlign: TextAlign.center,
-                                                    ),
-                                                  ],
-                                                )
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min, // chỉ rộng vừa đủ icon + text
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                const Icon(
+                                                  Icons.insert_page_break,
+                                                  color: Colors.black,
+                                                  size: 20,
+                                                ),
+                                                const SizedBox(width: 10),
+                                                Text(
+                                                  AppLocalizations.of(context)!.dashboard_btn_import,
+                                                  style: const TextStyle(
+                                                    fontFamily: "Itim",
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16,
+                                                  ),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ],
                                             ),
                                           ),
                                         ),
-                                        SizedBox(width: 20,),
+                                        const SizedBox(width: 20),
                                       ],
-                                    )
+                                    ),
                                   ],
                                 ),
                               ),
