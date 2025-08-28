@@ -252,7 +252,7 @@ class _WriteTestScreenState extends State<WriteTestScreen> {
                           builder: (ctx) =>
                               rightTab(nextQuestion: () {
                                 widget.nextLearned(true);
-                              }, isMean: true, mean: widget.mean,));
+                              }, isMean: true, mean: widget.mean, context: context,));
                     } else {
                       await playSound("sound/wrong.mp3");
                       showModalBottomSheet(

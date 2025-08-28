@@ -3,6 +3,9 @@ import 'dart:math';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
+
+import '../../generated/app_localizations.dart';
 
 class rightTab extends StatefulWidget{
   @override
@@ -10,24 +13,32 @@ class rightTab extends StatefulWidget{
   final void Function() nextQuestion;
   final bool isMean;
   final String? mean;
-  List<String> motivationalPhrasesVN = [
-    "Tiếp tục cố gắng, bạn đang làm rất tốt!",
-    "Lần này bạn đã hoàn hảo, hãy tiếp tục cố gắng!",
-    "Mỗi bước tiến lên đều là một sự tiến bộ!",
-    "Hãy tin vào bản thân và tiếp tục nỗ lực!",
-    "Bạn có thể làm được, đừng bao giờ bỏ cuộc!",
-    "Thành công đến với những ai không ngừng cố gắng!",
-    "Tiếp tục cải thiện, từng bước một!",
-    "Hãy mạnh mẽ, tập trung và tiếp tục tiến lên!",
-    "Nỗ lực tuyệt vời! Hãy tiếp tục đặt mục tiêu cao hơn!",
-    "Sự chăm chỉ của bạn sẽ sớm được đền đáp!"
-  ];
+  final BuildContext context;
+  late List<String> motivationalPhrasesVN;
   String? PhrasesVN;
-  rightTab({super.key, required this.nextQuestion, required this.isMean, this.mean});
+  rightTab({super.key, required this.nextQuestion, required this.isMean, this.mean, required this.context});
 }
 
 class _rightTab extends State<rightTab>{
   bool isPressed = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    widget.motivationalPhrasesVN = [
+      AppLocalizations.of(widget.context)!.motivationalPhrases_1,
+      AppLocalizations.of(widget.context)!.motivationalPhrases_2,
+      AppLocalizations.of(widget.context)!.motivationalPhrases_3,
+      AppLocalizations.of(widget.context)!.motivationalPhrases_4,
+      AppLocalizations.of(widget.context)!.motivationalPhrases_5,
+      AppLocalizations.of(widget.context)!.motivationalPhrases_6,
+      AppLocalizations.of(widget.context)!.motivationalPhrases_7,
+      AppLocalizations.of(widget.context)!.motivationalPhrases_8,
+      AppLocalizations.of(widget.context)!.motivationalPhrases_9,
+      AppLocalizations.of(widget.context)!.motivationalPhrases_10
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +67,7 @@ class _rightTab extends State<rightTab>{
                 const SizedBox(width: 10),
                 Expanded( // Đảm bảo văn bản không tràn
                   child: AutoSizeText(
-                    "Trả Lời Chính Xác",
+                    AppLocalizations.of(context)!.learn_bottomsheet_right_title,
                     style: TextStyle(
                       color: Colors.green,
                       fontSize: MediaQuery.sizeOf(context).width * 0.06,
@@ -113,7 +124,7 @@ class _rightTab extends State<rightTab>{
                 ),
                 child: Center(
                   child: Text(
-                    "CONTINUE",
+                    AppLocalizations.of(context)!.learn_bottomsheet_right_btn,
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: MediaQuery.sizeOf(context).width * 0.04,

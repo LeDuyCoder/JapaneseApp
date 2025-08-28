@@ -172,7 +172,7 @@ class _choseTestState extends State<choseTest> {
                             builder: (ctx) =>
                                 rightTab(nextQuestion: () {
                                   widget.nextQuestion();
-                                }, isMean: false,));
+                                }, isMean: false, context: ctx,));
                       } else {
                         playSound("sound/wrong.mp3");
                         showModalBottomSheet(enableDrag: false,

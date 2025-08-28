@@ -6,6 +6,7 @@ import 'package:japaneseapp/Module/boxText.dart';
 import 'package:japaneseapp/Widget/learnWidget/rightTab.dart';
 import 'package:japaneseapp/Widget/learnWidget/wrongTab.dart';
 import '../../Module/word.dart';
+import '../../generated/app_localizations.dart';
 
 enum typeSort {
   JapanToVietNam,
@@ -110,7 +111,7 @@ class _SortTextState extends State<sortText> {
                   ) : Row(
                   children: [
                     Icon(Icons.translate, size: MediaQuery.sizeOf(context).width*0.07,),
-                    Text("Dịch Câu Bên Dưới", style: TextStyle(fontSize: MediaQuery.sizeOf(context).width*0.05, fontWeight: FontWeight.bold),),
+                    Text(" ${AppLocalizations.of(context)!.learn_translate_title}", style: TextStyle(fontSize: MediaQuery.sizeOf(context).width*0.05, fontWeight: FontWeight.bold),),
                   ],
                 ),
               ),
@@ -318,7 +319,7 @@ class _SortTextState extends State<sortText> {
                               dataBoxText!.add(boxText(text));
                             }
                             loadBoxText = true;
-                          }, isMean: false,));
+                          }, isMean: false, context: context,));
                     }else{
                       await playSound("sound/wrong.mp3");
 

@@ -297,7 +297,7 @@ class _ListenTextState extends State<listenTest> {
                               dataBoxText!.add(boxText(text));
                             }
                             loadBoxText = true;
-                          }, isMean: false,));
+                          }, isMean: false, context: context,));
                     }else{
                       await playSound("sound/wrong.mp3");
 

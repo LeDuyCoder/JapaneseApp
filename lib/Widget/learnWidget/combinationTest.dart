@@ -166,7 +166,7 @@ class _combinationTest extends State<combinationTest>{
                       playSound("sound/correct.mp3");
                       showModalBottomSheet(enableDrag: false,isDismissible: false, context: context, builder: (ctx) => rightTab(nextQuestion: (){
                         widget.nextQuestion();
-                      }, isMean: false,));
+                      }, isMean: false, context: context,));
                     }
                   }
                 },

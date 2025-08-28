@@ -37,7 +37,7 @@ class _learnScreen extends State<learnScreen> {
   late TimerService _timerService;
   int _currentSeconds = 0;
 
-  int maxQuestion = 5;
+  int maxQuestion = 1; //5
   int amountRightAwnser = 0;
 
   @override
