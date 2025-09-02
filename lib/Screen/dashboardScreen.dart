@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:japaneseapp/Module/topic.dart';
 import 'package:japaneseapp/Screen/addWordScreen.dart';
+import 'package:japaneseapp/Screen/allFolderScreen.dart';
 import 'package:japaneseapp/Screen/qrScreen.dart';
 import 'package:japaneseapp/Theme/colors.dart';
 import 'package:japaneseapp/Widget/folerWidget.dart';
@@ -1737,12 +1738,35 @@ class _DashboardScreenState extends State<dashboardScreen> {
                     ),
                   ),
                   SizedBox(height: 30,),
-                  const Row(
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Text("Thư Mục Của Tôi", style: TextStyle(color: AppColors.textPrimary, fontSize: 18),),
-                      SizedBox(width: 80,),
-                      Text("Xem Tất Cả", style: TextStyle(color: AppColors.primary, fontSize: 18),),
+                      const Text("Thư Mục Của Tôi", style: TextStyle(color: AppColors.textPrimary, fontSize: 18),),
+                      const SizedBox(width: 80,),
+                      GestureDetector(
+                        onTap: () {
+                          print("demo");
+                          Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                              pageBuilder: (context, animation, secondaryAnimation) => allFolderScreen(),
+                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                const begin = Offset(1.0, 0.0);
+                                const end = Offset.zero;
+                                const curve = Curves.ease;
+
+                                final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+                                return SlideTransition(
+                                  position: animation.drive(tween),
+                                  child: child,
+                                );
+                              },
+                            ),
+                          );
+                        },
+                        child: Text("Xem Tất Cả", style: TextStyle(color: AppColors.primary, fontSize: 18),),
+                      )
                     ],
                   ),
                   SizedBox(height: 10,),

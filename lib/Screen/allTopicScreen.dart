@@ -28,7 +28,7 @@ class _allTopicScreen extends State<allTopicScreen>{
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            "Chủ Đề CỦa Tôi",
+            "Chủ Đề Của Tôi",
           style: TextStyle(color: AppColors.primary, fontSize: 25, fontFamily: "Itim", fontWeight: FontWeight.bold),
         ),
         backgroundColor: AppColors.backgroundPrimary,
