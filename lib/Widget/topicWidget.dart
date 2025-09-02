@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:japaneseapp/Config/dataHelper.dart';
 import 'package:japaneseapp/Screen/listWordScreen.dart';
+import 'package:japaneseapp/Theme/colors.dart';
 
 import '../generated/app_localizations.dart';
 
@@ -21,6 +22,8 @@ class _topicWidget extends State<topicWidget>{
 
   AutoSizeGroup textGroup = AutoSizeGroup();
 
+
+  //function to handle data of topic which have amount word, processal finished
   Future<List<dynamic>> handledComplited () async {
     double sumComplitted = 0.0;
 
@@ -34,7 +37,12 @@ class _topicWidget extends State<topicWidget>{
       }
     }
 
-    List<dynamic> dataResult = [dataWords.isNotEmpty ? sumComplitted / (28*dataWords.length) : 0.0, sumComplitted, dataWords.length, dataTopic[0]["user"]];
+    List<dynamic> dataResult = [
+      dataWords.isNotEmpty ? sumComplitted / (28*dataWords.length) : 0.0,
+      sumComplitted,
+      dataWords.length,
+      dataTopic[0]["user"]
+    ];
 
     return dataResult;
   }
@@ -46,150 +54,107 @@ class _topicWidget extends State<topicWidget>{
     return FutureBuilder(future: handledComplited(), builder: (context, snapshot){
       if(snapshot.hasData){
         return Padding(
-            padding: EdgeInsets.only(left: 10),
-            child: GestureDetector(
-              onTap: (){
-                Navigator.push(
-                  context,
-                  PageRouteBuilder(
-                    transitionDuration: const Duration(milliseconds: 500),
-                    pageBuilder: (context, animation, secondaryAnimation) => listWordScreen(
-                      id: widget.id,
-                      topicName: widget.nameTopic,
-                      reloadDashboard: () {
-                        widget.reloadDashBoard();
-                      },
-                    ),
-                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                      final offsetAnimation = Tween<Offset>(
-                        begin: const Offset(1.0, 0.0),
-                        end: Offset.zero,
-                      ).animate(CurvedAnimation(parent: animation, curve: Curves.easeInOut));
-                      return SlideTransition(
-                        position: offsetAnimation,
-                        child: child,
-                      );
+          padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
+          child: GestureDetector(
+            onTap: (){
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  transitionDuration: const Duration(milliseconds: 500),
+                  pageBuilder: (context, animation, secondaryAnimation) => listWordScreen(
+                    id: widget.id,
+                    topicName: widget.nameTopic,
+                    reloadDashboard: () {
+                      widget.reloadDashBoard();
                     },
                   ),
-                );
-              },
-              child: Container(
-                child: Stack(
-                  children: [
-                    Container(
-                        width: MediaQuery.sizeOf(context).width,
-                        height: 120,
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                                color: Colors.grey
-                            ),
-                            borderRadius: BorderRadius.all(Radius.circular(20))
-                        ),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SizedBox(width: MediaQuery.sizeOf(context).width*0.01,),
-                            Stack(
-                              alignment: Alignment.center, // Căn giữa tất cả phần tử trong Stack
-                              children: [
-                                SizedBox(
-                                  width: MediaQuery.sizeOf(context).width*0.18,
-                                  height: MediaQuery.sizeOf(context).width*0.18,
-                                  child: CustomPaint(
-                                    painter: _CircularProgressPainter(
-                                      progress: snapshot.data![0] ?? 0,
-                                      backgroundColor: Colors.grey,
-                                      progressColor: Colors.green,
-                                    ),
-                                  ),
-                                ),
-                                Text(
-                                  "${((snapshot.data![0] ?? 0)*100).toInt()}%",
-                                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, fontFamily: "Itim"),
-                                ),
-                              ],
-                            ),
-                            SizedBox(width: MediaQuery.sizeOf(context).width*0.02,),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  width: MediaQuery.sizeOf(context).width*0.65,
-                                  child: AutoSizeText(widget.nameTopic, style: TextStyle(fontFamily: "Itim", fontSize: MediaQuery.sizeOf(context).width*0.045), maxLines: 1,),
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      AppLocalizations.of(context)!.amount_word("${snapshot.data![2]}"),
-                                      style:
-                                      TextStyle(fontSize: MediaQuery.sizeOf(context).width*0.04, fontWeight: FontWeight.bold,fontFamily: "Itim"),
-                                    ),
-                                  ],
-                                ),
-                                Container(
-                                  width: MediaQuery.sizeOf(context).width * 0.65,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Flexible(
-                                        child: AutoSizeText(
-                                          AppLocalizations.of(context)!.word_finish("${snapshot.data![0].toInt()}"),
-                                          style: TextStyle(
-                                            fontSize: MediaQuery.sizeOf(context).width * 0.035,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.green,
-                                            fontFamily: "Itim",
-                                          ),
-                                          minFontSize: 8,
-                                          maxLines: 1,
-                                          wrapWords: false,
-                                          group: textGroup, // Đồng bộ kích thước
-                                        ),
-                                      ),
-                                      SizedBox(width: 10),
-                                      Flexible(
-                                        child: AutoSizeText(
-                                          AppLocalizations.of(context)!.word_learning("${(snapshot.data![2] - snapshot.data![0]).toInt()}"),
-                                          style: TextStyle(
-                                            fontSize: MediaQuery.sizeOf(context).width * 0.035,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.red,
-                                            fontFamily: "Itim",
-                                          ),
-                                          minFontSize: 8,
-                                          maxLines: 1,
-                                          wrapWords: false,
-                                          group: textGroup, // Đồng bộ kích thước
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Flexible(
-                                  child: AutoSizeText(
-                                    AppLocalizations.of(context)!.course_owner("${snapshot.data![3]}"),
-                                    style: TextStyle(
-                                      fontSize: MediaQuery.sizeOf(context).width * 0.035,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.blue,
-                                      fontFamily: "Itim",
-                                    ),
-                                    minFontSize: 8,
-                                    maxLines: 1,
-                                    wrapWords: false,
-                                    group: textGroup, // Đồng bộ kích thước
-                                  ),
-                                ),
-                              ],
+                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                    final offsetAnimation = Tween<Offset>(
+                      begin: const Offset(1.0, 0.0),
+                      end: Offset.zero,
+                    ).animate(CurvedAnimation(parent: animation, curve: Curves.easeInOut));
+                    return SlideTransition(
+                      position: offsetAnimation,
+                      child: child,
+                    );
+                  },
+                ),
+              );
+            },
+            child: Container(
+              child: Stack(
+                children: [
+                  Container(
+                      width: MediaQuery.sizeOf(context).width,
+                      height: 120,
+                      padding: EdgeInsets.only(left: 10, right: 10, top: 10),
+                      decoration: const BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey,
+                              offset: Offset(0, 2),
+                              blurRadius: 10,
                             )
                           ],
-                        )
-                    ),
-                  ],
-                ),
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(20))
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(widget.nameTopic, style: TextStyle(fontSize: 20, color: AppColors.textPrimary),),
+                              Container(
+                                width: 70,
+                                height: 30,
+                                decoration: BoxDecoration(
+                                    color: AppColors.primary,
+                                    borderRadius: BorderRadius.all(Radius.circular(8))
+                                ),
+                                child: Center(
+                                  child: Text("${snapshot.data?[2]} Từ", style: TextStyle(color: Colors.white),),
+                                ),
+                              )
+                            ],
+                          ),
+                          SizedBox(height: 10,),
+                          const Divider(
+                              color: Colors.grey,
+                              height: 2
+                          ),
+                          const SizedBox(height: 20),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Column(
+                                children: [
+                                  Text("Phần Trăm"),
+                                  Text("${snapshot.data?[0]}%"),
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  Text("Hoàn Thành",  style: TextStyle(color: AppColors.textSucessState)),
+                                  Text("${(snapshot.data?[1]??0).toInt()}", style: TextStyle(color: AppColors.textSucessState)),
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  Text("Chưa Hoàn Thành", style: TextStyle(color: AppColors.primary),),
+                                  Text("${(snapshot.data?[2] - snapshot.data?[1] ?? 0).toInt()}", style: TextStyle(color: AppColors.primary)),
+                                ],
+                              )
+                            ],
+                          )
+                        ],
+                      )
+                  ),
+                ],
               ),
-            )
+            ),
+          ),
         );
       }
 
@@ -198,6 +163,7 @@ class _topicWidget extends State<topicWidget>{
     });
   }
 }
+
 
 class _CircularProgressPainter extends CustomPainter {
   final double progress;

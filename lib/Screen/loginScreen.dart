@@ -11,6 +11,7 @@ import 'package:japaneseapp/Screen/registerScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Config/dataHelper.dart';
+import '../Theme/colors.dart';
 import '../generated/app_localizations.dart';
 
 class loginScreen extends StatefulWidget{
@@ -297,7 +298,7 @@ class _loginScreen extends State<loginScreen>{
                     height: MediaQuery.sizeOf(context).width*0.14,
                     width: MediaQuery.sizeOf(context).width,
                     decoration: const BoxDecoration(
-                        color: Colors.green,
+                        color: AppColors.primary,
                         borderRadius: BorderRadius.all(Radius.circular(15))
                     ),
                     child: Center(

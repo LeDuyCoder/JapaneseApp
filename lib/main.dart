@@ -6,6 +6,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:japaneseapp/Screen/splashScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'Theme/colors.dart';
 import 'firebase_options.dart';
 import 'generated/app_localizations.dart';
 
@@ -60,7 +61,7 @@ class _MyApp extends State<MyApp>{
         supportedLocales: AppLocalizations.supportedLocales,
         title: 'Flutter Demo',
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
+          colorScheme: ColorScheme.fromSeed(seedColor: AppColors.backgroundPrimary),
           useMaterial3: true,
         ),
         home: splashScreen(changeLanguage: _changeLanguage,)

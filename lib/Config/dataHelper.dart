@@ -98,9 +98,13 @@ class DatabaseHelper {
 
   Future<List<Map<String, dynamic>>> getAllFolder() async {
     final db = await instance.database;
-
-    // Sử dụng truy vấn SQL thô
-    final List<Map<String, dynamic>> result = await db.rawQuery('SELECT * FROM folders');
+    final List<Map<String, dynamic>> result = await db.rawQuery(
+        '''SELECT f.id, f.namefolder, f.datefolder, COUNT(ft.topic_id) as amountTopic
+          FROM folders f
+          LEFT JOIN folder_topics ft ON f.id = ft.folder_id
+          GROUP BY f.id, f.namefolder, f.datefolder;
+          '''
+    );
     return result;
   }
 
@@ -191,7 +195,6 @@ class DatabaseHelper {
   Future<void> insertDataTopic(List<Map<String, dynamic>> dataInsert) async {
     final db = await instance.database;
     try {
-      print(dataInsert);
       await db.transaction((txn) async {
         for (var topic in dataInsert) {
           await txn.insert(
@@ -202,7 +205,6 @@ class DatabaseHelper {
         }
       });
     } catch (e) {
-      print("Lỗi khi chèn dữ liệu: $e");
     }
   }
 

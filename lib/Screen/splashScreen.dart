@@ -288,7 +288,6 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
                     scale: 0.8,
                   ),
                 ),
-                const SizedBox(height: 10,),
                 const Text("日本語", style: TextStyle(fontFamily: "aboshione", fontSize: 50),),
                 const Text("Application", style: TextStyle(fontFamily: "islandmoment", fontSize: 50),),
             ],

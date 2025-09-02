@@ -1,71 +1,94 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:japaneseapp/Theme/colors.dart';
 
-import '../generated/app_localizations.dart';
+import '../Config/dataHelper.dart';
 
 class topicServerWidget extends StatefulWidget{
 
-  final bool isDowloaded;
+  final String id;
   final String name;
   final String owner;
   final int amount;
   final double? width;
 
-  const topicServerWidget({super.key, required this.name, required this.owner, required this.amount, required this.isDowloaded, this.width});
+  const topicServerWidget({super.key, required this.name, required this.owner, required this.amount, required this.id , this.width});
 
   @override
   State<StatefulWidget> createState() => _topicServerWidget();
 }
 
 class _topicServerWidget extends State<topicServerWidget>{
+
+  Future<bool> hastTopic(String id) async {
+    DatabaseHelper db = DatabaseHelper.instance;
+    return await db.hasTopicID(id);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(right: widget.width == null ? 10 : 0),
-      width: widget.width ?? 300,
-      height: 140,
-      decoration: BoxDecoration(
+      margin: EdgeInsets.only(left: 5, right: 10),
+      padding: const EdgeInsets.only(left: 25, right: 15),
+      width: widget.width ?? 310,
+      height: 120,
+      decoration: const BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(20)),
-        border: Border.all(
-          color: Colors.black
-        )
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey,
+            offset: Offset(0, 2),
+            blurRadius: 5
+          )
+        ]
       ),
-      child: Stack(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
-            padding: EdgeInsets.only(right: 10, top: 10),
-            width: MediaQuery.sizeOf(context).width,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                width: MediaQuery.sizeOf(context).width*0.5,
+                child: Text(widget.name, style: TextStyle(fontSize: 20, color: AppColors.textPrimary), overflow: TextOverflow.ellipsis, maxLines: 1,),
+              ),
+              FutureBuilder(future: hastTopic(widget.id), builder: (ctx, data){
+                if(data.hasData && data.data!){
+                  return Icon(Icons.download_done, color: Colors.green,);
+                }
+
+                return  const Icon(Icons.public, color: Colors.grey,);
+              })
+            ],
+          ),
+          Divider(
+            color: Colors.grey, // Màu của đường kẻ
+            thickness: 1,
+            indent: 0,
+            endIndent: 5,// Độ dày
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                child: Row(
+                  children: [
+                    Icon(Icons.person, color: AppColors.primary,),
+                    SizedBox(width: 5,),
+                    Text(widget.owner, style: TextStyle(fontSize: 20, color: AppColors.textSecond.withOpacity(0.5)), overflow: TextOverflow.ellipsis, maxLines: 1,),
+                  ],
+                )
+              ),
+              Row(
                 children: [
-                  widget.isDowloaded ? 
-                    Icon(Icons.download_done, color: Colors.green,) :
-                      Icon(Icons.public, color: Colors.grey,)
+                  Icon(Icons.book, color: AppColors.primary),
+                  Text("${widget.amount}", textAlign: TextAlign.right , style: TextStyle(fontSize: 20, color: AppColors.textSecond.withOpacity(0.5)), overflow: TextOverflow.ellipsis, maxLines: 1,),
                 ],
               )
+            ],
           ),
-          Container(
-            width: MediaQuery.sizeOf(context).width,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(left: 0),
-                  child: AutoSizeText(widget.name, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black),),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 0),
-                  child: AutoSizeText(AppLocalizations.of(context)!.course_owner(widget.owner), style: TextStyle(fontSize: 18, color: Colors.blue),),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 0),
-                  child: AutoSizeText(AppLocalizations.of(context)!.amount_word("${widget.amount}"), style: TextStyle(fontSize: 18, color: Colors.red),),
-                ),
-              ],
-            ),
-          )
+
         ],
       )
     );

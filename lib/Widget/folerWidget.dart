@@ -3,15 +3,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:japaneseapp/Config/dataHelper.dart';
 import 'package:japaneseapp/Screen/folderManagerScreen.dart';
+import 'package:japaneseapp/Theme/colors.dart';
 
 class folderWidget extends StatelessWidget{
 
   final String nameFolder;
   final String dateCreated;
   final int idFolder;
+  final int amountTopic;
   final void Function() reloadDashboard;
 
-  const folderWidget({super.key, required this.nameFolder, required this.reloadDashboard, required this.dateCreated, required this.idFolder});
+  const folderWidget({super.key, required this.nameFolder, required this.reloadDashboard, required this.dateCreated, required this.idFolder, required this.amountTopic});
 
   void removeFolder(BuildContext context) async {
     DatabaseHelper db = DatabaseHelper.instance;
@@ -136,7 +138,7 @@ class folderWidget extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(left: 10, right: 10),
+      padding: EdgeInsets.only(left: 5, right: 5),
       child: GestureDetector(
         onTap: (){
           Navigator.push(
@@ -164,45 +166,46 @@ class folderWidget extends StatelessWidget{
         },
         child: Container(
             width: 250,
-            height: 100,
-            decoration: BoxDecoration(
-              border: Border.all(
-                  color: Colors.grey
-              ),
+            height: 140,
+            decoration: const BoxDecoration(
+              color: Colors.white,
               borderRadius: BorderRadius.all(Radius.circular(20)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey,
+                  offset: Offset(0, 2),
+                  blurRadius: 5,
+                )
+              ]
             ),
             child: Padding(
-              padding: EdgeInsets.only(left: 10, top: 10),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
+              padding: EdgeInsets.only(left: 10, top: 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(width: 10),
-                  Icon(Icons.folder_open, size: 40,),
-                  SizedBox(width: 10),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        AutoSizeText(
-                          this.nameFolder,
-                          style: TextStyle(fontFamily: "Itim", fontSize: 20),
-                          maxLines: 1,
-                          minFontSize: 12,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        AutoSizeText(
-                          this.dateCreated,
-                          style: TextStyle(fontFamily: "Itim", fontSize: 15),
-                          maxLines: 1,
-                          minFontSize: 10,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
+                  Text(nameFolder, style: TextStyle(color: AppColors.textSecond, fontSize: 18, fontWeight: FontWeight.bold),),
+                  Divider(
+                    color: Colors.grey, // Màu của đường kẻ
+                    thickness: 1,
+                    indent: 0,
+                    endIndent: 5,// Độ dày
                   ),
+                  Text(dateCreated, style: const TextStyle(color: AppColors.textSecond),),
+                  SizedBox(height: 10,),
+                  Container(
+                    width: 70,
+                    height: 30,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: AppColors.primary,
+                    ),
+                    child: Center(
+                      child: Text("${amountTopic} chủ đề", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),),
+                    )
+                  )
                 ],
-              ),
+              )
             )
         ),
       ),

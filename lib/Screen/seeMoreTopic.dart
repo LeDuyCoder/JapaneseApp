@@ -65,7 +65,7 @@ class _seeMoreTopic extends State<seeMoreTopic>{
 
   Future<List<topic>> getListTopic() async {
     DatabaseServer dbServer = new DatabaseServer();
-    return await dbServer.getAllDataTopic(limit).timeout(Duration(seconds: 10));
+    return await dbServer.getAllDataTopic(limit).timeout(Duration(seconds: 10)) as List<topic>;
   }
 
   Future<List<topic>> getListTopicsSearch(String keyword) async {
@@ -82,8 +82,8 @@ class _seeMoreTopic extends State<seeMoreTopic>{
     DatabaseServer dbServer = new DatabaseServer();
     DatabaseHelper db = DatabaseHelper.instance;
 
-    topic Topic = await dbServer.getDataTopicbyID(id);
-    nameTopic = Topic.name;
+    topic? Topic = await dbServer.getDataTopicbyID(id);
+    nameTopic = Topic!.name;
     List<Map<String, dynamic>> dataWords = [];
 
     if(await db.hasTopicName(nameTopic)){
@@ -440,7 +440,7 @@ class _seeMoreTopic extends State<seeMoreTopic>{
                                 children: [
                                   FutureBuilder(future: hastTopic(Topic.id), builder: (context, topicData){
                                     if(topicData.connectionState == ConnectionState.waiting) return Container();
-                                    return topicServerWidget(name: Topic.name, owner: Topic.owner!, amount: Topic.count!, isDowloaded: topicData.data!, width: MediaQuery.sizeOf(context).width - 30,);
+                                    return topicServerWidget(name: Topic.name, owner: Topic.owner!, amount: Topic.count!, id: Topic.id, width: MediaQuery.sizeOf(context).width - 30,);
                                   }),
                                   const SizedBox(height: 10,),
                                 ],
@@ -509,7 +509,7 @@ class _seeMoreTopic extends State<seeMoreTopic>{
                                   children: [
                                     FutureBuilder(future: hastTopic(Topic.id), builder: (context, topicData){
                                       if(topicData.connectionState == ConnectionState.waiting) return Container();
-                                      return topicServerWidget(name: Topic.name, owner: Topic.owner!, amount: Topic.count!, isDowloaded: topicData.data!, width: MediaQuery.sizeOf(context).width - 30,);
+                                      return topicServerWidget(name: Topic.name, owner: Topic.owner!, amount: Topic.count!, id: Topic.id, width: MediaQuery.sizeOf(context).width - 30,);
                                     }),
                                     const SizedBox(height: 10,),
                                   ],

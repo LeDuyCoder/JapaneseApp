@@ -7,7 +7,7 @@ import 'package:japaneseapp/Module/WordModule.dart';
 class DatabaseServer {
   final String baseUrl = "https://jpa.landernetwork.io.vn/backendServer";
 
-  Future<List<topic>> getAllDataTopic(int limit) async {
+  Future<List<dynamic>> getAllDataTopic(int limit) async {
     final url = Uri.parse('$baseUrl/getAllDataTopic.php?limit=$limit');
 
     try {
@@ -25,8 +25,7 @@ class DatabaseServer {
         throw Exception('Lỗi từ server: ${response.statusCode}');
       }
     } catch (e) {
-      print('Lỗi khi kết nối đến server: $e');
-      rethrow; // hoặc return []; nếu bạn muốn tránh app crash
+      rethrow;
     }
   }
 
@@ -48,7 +47,6 @@ class DatabaseServer {
         throw Exception('Lỗi từ server: ${response.statusCode}');
       }
     } catch (e) {
-      print('Lỗi khi kết nối đến server: $e');
       rethrow; // hoặc return []; nếu bạn muốn tránh app crash
     }
   }
@@ -77,9 +75,8 @@ class DatabaseServer {
   ///   // Handle the error
   /// }
   /// ```
-  Future<topic> getDataTopicbyID(String id) async{
+  Future<topic?> getDataTopicbyID(String id) async{
     final url = Uri.parse('$baseUrl/getDataTopicByTopicID.php?topic_id=$id');
-
     try {
       final response = await http.get(url);
 
@@ -87,11 +84,11 @@ class DatabaseServer {
         final data = json.decode(response.body);
         return topic.fromJson(data);
       } else {
-        throw Exception('Lỗi từ server: ${response.statusCode}');
+        return null;
       }
     } catch (e) {
       print('Lỗi khi kết nối đến server: $e');
-      rethrow; // hoặc return []; nếu bạn muốn tránh app crash
+      rethrow;
     }
   }
 
@@ -190,7 +187,6 @@ class DatabaseServer {
         throw Exception('❌ Delete failed: ${data['error']}');
       }
     } catch (e) {
-      print("❌ Error calling API: $e");
       rethrow;
     }
   }
