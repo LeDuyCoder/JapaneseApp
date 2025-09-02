@@ -22,6 +22,8 @@ import '../Widget/topicServerWidget.dart';
 import '../Widget/topicWidget.dart';
 import 'package:http/http.dart' as http;
 
+import 'allTopicScreen.dart';
+
 class dashboardScreen extends StatefulWidget {
   final Function(Locale _locale) changeLanguage;
 
@@ -1547,12 +1549,13 @@ class _DashboardScreenState extends State<dashboardScreen> {
                     ),
                   ),
                   SizedBox(height: 10,),
-                  const Row(
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Text("Chủ Đề Của Tôi", style: TextStyle(color: AppColors.textPrimary, fontSize: 18),),
                       SizedBox(width: 80,),
                       Text("Xem Tất Cả", style: TextStyle(color: AppColors.primary, fontSize: 18),),
+
                     ],
                   ),
                   SizedBox(height: 10,),
@@ -1858,12 +1861,41 @@ class _DashboardScreenState extends State<dashboardScreen> {
                     ),
                   ),
                   SizedBox(height: 10,),
-                  const Row(
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Text("Chủ Đề Của Tôi", style: TextStyle(color: AppColors.textPrimary, fontSize: 18),),
-                      SizedBox(width: 80,),
-                      Text("Xem Tất Cả", style: TextStyle(color: AppColors.primary, fontSize: 18),),
+                      const Text("Chủ Đề Của Tôi", style: TextStyle(color: AppColors.textPrimary, fontSize: 18),),
+                      const SizedBox(width: 80,),
+                      GestureDetector(
+                        onTap: () {
+                          print("demo");
+                          Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                              pageBuilder: (context, animation, secondaryAnimation) => allTopicScreen(),
+                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                const begin = Offset(1.0, 0.0);
+                                const end = Offset.zero;
+                                const curve = Curves.ease;
+
+                                final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+                                return SlideTransition(
+                                  position: animation.drive(tween),
+                                  child: child,
+                                );
+                              },
+                            ),
+                          );
+                        },
+                        child: const Padding(
+                          padding: EdgeInsets.all(8.0), // tạo vùng click thoải mái hơn
+                          child: Text(
+                            "Xem Tất Cả",
+                            style: TextStyle(color: AppColors.primary, fontSize: 18),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                   SizedBox(height: 10,),
