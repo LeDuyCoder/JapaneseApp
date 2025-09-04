@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:japaneseapp/Module/boxText.dart';
+import 'package:japaneseapp/Theme/colors.dart';
 import 'package:japaneseapp/Widget/learnWidget/rightTab.dart';
-import 'package:japaneseapp/Widget/learnWidget/sortText.dart.dart';
+import 'package:japaneseapp/Widget/learnWidget/sortText.dart';
 import 'package:japaneseapp/Widget/learnWidget/wrongTab.dart';
 import '../../Module/word.dart';
 import '../../generated/app_localizations.dart';
@@ -114,39 +115,18 @@ class _ListenTextState extends State<listenTest> {
                     width: MediaQuery.sizeOf(context).width*0.5,
                     child: Center(
                       child: GestureDetector(
-                        onTapDown: (_) {
-                          setState(() {
-                            isPress = true;
-                          });
-                        },
                         onTapUp: (_) async {
-                          setState(() {
-                            isPress = false;
-                          });
                           await readText(widget.WordTest.wayread, 0.1);
-
-                        },
-                        onTapCancel: () {
-                          setState(() {
-                            isPress = false;
-                          });
                         },
                         child: AnimatedContainer(
                           duration: Duration(milliseconds: 100),
                           curve: Curves.easeInOut,
-                          transform: Matrix4.translationValues(0, isPress ? 4 : 0, 0),
+                          transform: Matrix4.translationValues(0, 0, 0),
                           height: MediaQuery.sizeOf(context).width*0.3,
                           width: MediaQuery.sizeOf(context).width*0.3,
                           decoration: BoxDecoration(
-                              color: Colors.blue.shade200,
+                              color: AppColors.primary,
                               borderRadius: BorderRadius.all(Radius.circular(20)),
-                              boxShadow: [
-                                if(!isPress)
-                                  BoxShadow(
-                                      color: Colors.blue.shade400,
-                                      offset: Offset(6, 6)
-                                  )
-                              ]
                           ),
                           child: Icon(Icons.volume_up_rounded, color: Colors.white, size:50,),
                         ),

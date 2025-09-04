@@ -42,6 +42,7 @@ class _allTopicScreen extends State<allTopicScreen>{
               color: AppColors.backgroundPrimary,
               child: Column(
                 children: [
+                  SizedBox(height: 10,),
                   Container(
                     padding: EdgeInsets.all(20),
                     width: MediaQuery.sizeOf(context).width/1.2,

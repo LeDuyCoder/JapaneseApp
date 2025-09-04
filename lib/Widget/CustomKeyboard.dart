@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_dash/flutter_dash.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:japaneseapp/Theme/colors.dart';
 
 class CustomKeyboard extends StatefulWidget {
   final Function(List<List<Offset>>) onStrokeComplete;
@@ -93,9 +94,8 @@ class _CustomKeyboardState extends State<CustomKeyboard> {
           Container(
             width: MediaQuery.sizeOf(context).width,
             height: 60,
-            color: Color.fromRGBO(31, 205, 48, 1.0),
+            color: AppColors.primary,
             child: Row(
-
               children: [
                 Expanded(
                   child: Container(

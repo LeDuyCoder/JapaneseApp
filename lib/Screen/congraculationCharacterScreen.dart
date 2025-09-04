@@ -10,6 +10,7 @@ import 'package:japaneseapp/Module/character.dart' as charHiKa;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Config/FunctionService.dart';
+import '../Theme/colors.dart';
 
 class congraculationChacterScreen extends StatefulWidget{
   final List<String> listWordsTest, listWordsWrong;
@@ -25,32 +26,35 @@ class congraculationChacterScreen extends StatefulWidget{
   State<StatefulWidget> createState() => _congraculationChacterScreen();
 }
 
-class _congraculationChacterScreen extends State<congraculationChacterScreen>{
+class _congraculationChacterScreen extends State<congraculationChacterScreen>  with TickerProviderStateMixin{
 
   final AudioPlayer _audioPlayer = AudioPlayer();
   bool isPress = false;
-  List<String> motivationalQuotes = [
-    "Chẳng có gì ngăn cản bạn.",
-    "Bạn mạnh mẽ vượt qua mọi thử thách.",
-    "Không điều gì làm bạn nao núng.",
-    "Mỗi bước đi đều là chiến thắng.",
-    "Hãy tự tin với chính mình.",
-    "Đam mê dẫn lối thành công.",
-    "Niềm tin mở ra cánh cửa tương lai.",
-    "Tiến lên, đừng chùn bước.",
-    "Bền bỉ tạo nên thành công.",
-    "Nỗ lực không bao giờ phản bội bạn."
-  ];
   String motivationQuotes = "";
   late InterstitialAd _interstitialAd;
   bool _isInterstitialAdReady = false;
 
+  late AnimationController _controllerProcess;
+  late Animation<double> _animationProcess;
+
+  void startProgressAnimation(double endValue) {
+    _animationProcess = Tween<double>(begin: 0.0, end: endValue).animate(
+      CurvedAnimation(parent: _controllerProcess, curve: Curves.easeInOut),
+    );
+
+    _controllerProcess.forward(from: 0); // bắt đầu lại từ 0 mỗi lần gọi
+  }
+
+
   @override
   void initState() {
-    // TODO: implement initState
-    super.initState();
-    motivationQuotes = motivationalQuotes[Random().nextInt(motivationalQuotes.length)];
     _loadInterstitialAd();
+
+    _controllerProcess = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    );
+
   }
 
   void _loadInterstitialAd() {
@@ -117,26 +121,6 @@ class _congraculationChacterScreen extends State<congraculationChacterScreen>{
     }
   }
 
-  Future<void> flusExp(int expplus) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    int level = await prefs.getInt("level")??0;
-    int exp = await prefs.getInt("exp")??0;
-    int nextExp = prefs.getInt("nextExp")??0;
-
-    exp += expplus;
-
-    while(exp >= nextExp){
-      level++;
-      exp -= nextExp;
-      nextExp = 10*(level*level)+50*level+100;
-    }
-
-    await prefs.setInt("level", level);
-    await prefs.setInt("exp", exp);
-    await prefs.setInt("nextExp", nextExp);
-  }
-
-
 
   Future<void> IncreaseLevelUser() async {
     SharedPreferences perf = await SharedPreferences.getInstance();
@@ -177,180 +161,253 @@ class _congraculationChacterScreen extends State<congraculationChacterScreen>{
     await IncreaseLevelUser();// Thực hiện batch
   }
 
+  Future<void> flusExp(int expplus) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    int level = await prefs.getInt("level")??0;
+    int exp = await prefs.getInt("exp")??0;
+    int nextExp = prefs.getInt("nextExp")??0;
 
-  void _popTwoScreens(BuildContext context) {
-    Navigator.pop(context); // pop màn hiện tại
-    Navigator.pop(context); // pop màn trước đó
+    exp += expplus;
+
+    while(exp >= nextExp){
+      level++;
+      exp -= nextExp;
+      nextExp = 10*(level*level)+50*level+100;
+    }
+
+    await prefs.setInt("level", level);
+    await prefs.setInt("exp", exp);
+    await prefs.setInt("nextExp", nextExp);
   }
-  
+
+  int xpPerTurn(int level, int expNeed) {
+    final _random = Random();
+    final targetTurns = 5 + (level % 6);
+    final xp = expNeed / targetTurns;
+    final rounded = (xp / 5).round() * 5;
+    final variation = _random.nextInt(5) - 10;
+    final result = max(5, rounded + variation);
+    return result;
+  }
+
+  Future<Map<String, dynamic>> getProfile() async{
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    int expAw = xpPerTurn(await prefs.getInt("level")??0, await prefs.getInt("nextExp")??0);
+    flusExp(expAw);
+
+    return {
+      "expFlus": expAw,
+      "level": await prefs.getInt("level")??0,
+      "exp": await prefs.getInt("exp")??0,
+      "nextExp": await prefs.getInt("nextExp")??0
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
-    int persentAmazing = 100 - (widget.listWordsWrong.length * 2);
     String formatTime(double timeInSeconds) {
       int minutes = timeInSeconds ~/ 60; // Lấy số phút (chia lấy nguyên)
       int seconds = timeInSeconds % 60 ~/ 1; // Lấy số giây (phần dư của phép chia)
 
       // Định dạng chuỗi: thêm số 0 vào giây nếu cần
-      String formattedTime = "$minutes:${seconds.toString().padLeft(2, '0')}";
+      String formattedTime = "$minutes phút ${seconds.toString().padLeft(2, '0')} giây";
 
       return formattedTime;
     }
-
     playSound("sound/completed.mp3");
     return Scaffold(
-      body: Container(
-        width: MediaQuery.sizeOf(context).width,
-        height: MediaQuery.sizeOf(context).height,
-        color: Colors.white,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset("assets/character/character9.png", scale: 1.8,),
-            SizedBox(height: MediaQuery.sizeOf(context).height*0.02,),
-            Text("Hoàn Thành", style: TextStyle(fontFamily: "indieflower", fontSize: MediaQuery.sizeOf(context).height*0.04, color: Color.fromRGBO(20, 195, 142, 1.0)),),
-            Text(motivationQuotes, style: TextStyle(fontFamily: "indieflower", fontSize: MediaQuery.sizeOf(context).height*0.02, color: Colors.black),),
-            SizedBox(height: MediaQuery.sizeOf(context).height*0.02,),
-            Container(
-              width: double.infinity,
-              child:Padding(
-                padding: EdgeInsets.only(),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: MediaQuery.sizeOf(context).width*0.4,
-                      height: MediaQuery.sizeOf(context).width*0.30,
-                      decoration: BoxDecoration(
-                          color: Color.fromRGBO(20, 195, 142, 1.0),
-                          borderRadius: BorderRadius.circular(20)
-                      ),
-                      child: Column(
-                        children: [
-                          Text("Commited", style: TextStyle(fontFamily: "indieflower", color: Colors.white, fontSize: MediaQuery.sizeOf(context).width*0.04),),
-                          Container(
-                            constraints: BoxConstraints(
-                              minHeight: MediaQuery.sizeOf(context).width * 0.2, // Độ cao tối thiểu
-                            ),
-                            width: MediaQuery.sizeOf(context).width*0.38,
-                            height: MediaQuery.sizeOf(context).width*0.22,
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(20)
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.timer_sharp, color: Color.fromRGBO(20, 195, 142, 1.0), size: 60,),
-                                SizedBox(width: 10,),
-                                Text(formatTime(widget.timeTest*1.0), style: TextStyle(fontSize: MediaQuery.sizeOf(context).height*0.030, fontFamily: "indieflower", color: Color.fromRGBO(20, 195, 142, 1.0))),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    SizedBox(width: 10,),
-                    Container(
-                      width: MediaQuery.sizeOf(context).width*0.4,
-                      height: MediaQuery.sizeOf(context).width*0.30,
-                      decoration: BoxDecoration(
-                          color: Color.fromRGBO(255, 174, 9, 1.0),
-                          borderRadius: BorderRadius.circular(20)
-                      ),
-                      child: Column(
-                        children: [
-                          Text("Amazing", style: TextStyle(fontFamily: "indieflower", color: Colors.white, fontSize: MediaQuery.sizeOf(context).width*0.04),),
-                          Container(
-                            constraints: BoxConstraints(
-                              minHeight: MediaQuery.sizeOf(context).width * 0.2, // Độ cao tối thiểu
-                            ),
-                            width: MediaQuery.sizeOf(context).width*0.38,
-                            height: MediaQuery.sizeOf(context).width*0.220,
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(20)
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Icon(MingCute.target_line, color: Color.fromRGBO(255, 174, 9, 1.0), size: 60,),
-                                SizedBox(width: 10,),
-                                Text("${persentAmazing}%", style: TextStyle(fontSize: MediaQuery.sizeOf(context).height*0.030, fontFamily: "indieflower", color: Color.fromRGBO(255, 174, 9, 1.0))),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    )
-                  ],
+      body: FutureBuilder(future: getProfile(), builder: (ctx, snapshot){
+        if(snapshot.hasData){
+          startProgressAnimation(snapshot.data!["exp"]/snapshot.data!["nextExp"]);
+          return Container(
+            color: Colors.white,
+            child: Stack(
+              children: [
+                Container(
+                  width: MediaQuery.sizeOf(context).width,
+                  child: Image.asset("assets/animation/6k2.gif"),
                 ),
-              ),
-            ),
-            SizedBox(height: MediaQuery.sizeOf(context).height*0.03,),
-            GestureDetector(
-                onTapDown: (_) {
-                  setState(() {
-                    isPress = true;
-                  });
-                },
-                onTapUp: (_) async {
-                  setState(() {
-                    isPress = false;
-                  });
-                  await handleData();
-                  flusExp(5);
-                  // Đóng các màn hình
-                  if (_isInterstitialAdReady) {
-                    _interstitialAd.show();
-
-                    _interstitialAd.fullScreenContentCallback = FullScreenContentCallback(
-                      onAdDismissedFullScreenContent: (ad) {
-                        ad.dispose();
-                        _loadInterstitialAd();
-                        _popTwoScreens(context);
-                      },
-                      onAdFailedToShowFullScreenContent: (ad, error) {
-                        ad.dispose();
-                        _popTwoScreens(context);
-                        widget.reload();
-                      },
-                    );
-                  } else {
-                    _popTwoScreens(context);
-                    widget.reload();
-                  }
-
-
-                },
-                onTapCancel: () {
-                  setState(() {
-                    isPress = false;
-                  });
-                },
-                child: AnimatedContainer(
-                  duration: Duration(milliseconds: 100),
-                  curve: Curves.easeInOut,
-                  transform: Matrix4.translationValues(0, isPress ? 4 : 0, 0),
-                  width: MediaQuery.sizeOf(context).width - 40,
-                  height: MediaQuery.sizeOf(context).width * 0.15,
-                  decoration: BoxDecoration(
-                      color: const Color.fromRGBO(97, 213, 88, 1.0),
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
-                      boxShadow: isPress ? [] : [
-                        const BoxShadow(
-                            color: Colors.green,
-                            offset: Offset(6, 6)
-                        )
-                      ]
+                Container(
+                  width: MediaQuery.sizeOf(context).width,
+                  height: MediaQuery.sizeOf(context).height,
+                  color: Colors.white.withOpacity(0.15),
+                  child: Column(
+                    children: [
+                      SizedBox(height: 60,),
+                      Container(
+                        width: 80,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.red,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.red.withOpacity(0.6), // màu glow
+                              spreadRadius: 1, // độ lan của ánh sáng
+                              blurRadius: 15,  // độ mờ
+                            ),
+                          ],
+                        ),
+                        child: const Icon(
+                          HeroIcons.trophy, // icon bên trong
+                          color: Colors.white,
+                          size: 40,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Text("Chic Mừng", style: TextStyle(color: AppColors.primary, fontSize: 40, fontFamily: "Itim"),),
+                      Text("Bạn đã hoàn thành", style: TextStyle(color: AppColors.black, fontSize: 25, fontFamily: "Itim", height: 0.8),),
+                      SizedBox(height: 30,),
+                      Container(
+                        width: MediaQuery.sizeOf(context).width / 1.1,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          color: AppColors.grey.withOpacity(0.15),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "Bài Học",
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontFamily: "itim",
+                                fontSize: 18,
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                const Text(
+                                  "Thời gian hoàn thành: ",
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontFamily: "itim",
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                Text(
+                                  formatTime(widget.timeTest * 1.0),
+                                  style: const TextStyle(
+                                    color: AppColors.primary,
+                                    fontFamily: "itim",
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Container(
+                        width: MediaQuery.sizeOf(context).width / 1.1,
+                        height: 130,
+                        decoration: BoxDecoration(
+                          color: AppColors.primary,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text("+${snapshot.data!["expFlus"]}", style: TextStyle(color: Colors.white, fontSize: 40, fontFamily: "Itim", height: 0.8),),
+                            const Text("Điểm Kinh Nghiệm", style: TextStyle(color: Colors.white, fontSize: 20, fontFamily: "Itim", height: 1.2),)
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text("Tiến Trình Level", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                            Text("${snapshot.data!["exp"]}/${snapshot.data!["nextExp"]}", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: SizedBox(
+                          height: 10,
+                          child: AnimatedBuilder(
+                            animation: _animationProcess,
+                            builder: (context, child) {
+                              return LinearProgressIndicator(
+                                borderRadius: const BorderRadius.all(Radius.circular(360)),
+                                value: _animationProcess.value,
+                                backgroundColor: Colors.grey.withOpacity(0.2),
+                                valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10,),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("Cấp ${snapshot.data!["level"]}", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                            Text("Cấp ${snapshot.data!["level"] + 1}", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.grey.withOpacity(0.5))),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 50,),
+                      Text("Bài tiếp theo", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20),),
+                      SizedBox(height: 10,),
+                      GestureDetector(
+                        onTap: () async {
+                          await handleData();
+                          if (_isInterstitialAdReady) {
+                            _interstitialAd.show();
+                            _interstitialAd.fullScreenContentCallback = FullScreenContentCallback(
+                              onAdDismissedFullScreenContent: (ad) {
+                                ad.dispose();
+                                Navigator.pop(context);
+                              },
+                              onAdFailedToShowFullScreenContent: (ad, error) {
+                                ad.dispose();
+                                Navigator.pop(context);
+                              },
+                            );
+                          } else {
+                            Navigator.pop(context);
+                          }
+                        },
+                        child: Container(
+                          width: MediaQuery.sizeOf(context).width / 1.1,
+                          height: 60,
+                          decoration: BoxDecoration(
+                            color: AppColors.primary,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                          child: const Center(
+                            child: Text("Bắt Đầu Lượt Học Tiếp", style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  child: Center(
-                    child: Text("CONTINUE", style: TextStyle(color: Colors.white, fontSize: MediaQuery.sizeOf(context).width*0.05, fontWeight: FontWeight.bold),),
-                  ),
-              ),
+                )
+              ],
             ),
-          ],
-        ),
-      ),
+          );
+        }
+
+        return Container();
+      }),
     );
   }
 

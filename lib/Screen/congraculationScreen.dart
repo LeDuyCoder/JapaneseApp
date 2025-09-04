@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +7,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:japaneseapp/Config/dataHelper.dart';
 import 'package:japaneseapp/Module/word.dart';
+import 'package:japaneseapp/Theme/colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Config/FunctionService.dart';
@@ -29,8 +32,6 @@ class _congraculationScreen extends State<congraculationScreen> with TickerProvi
   late InterstitialAd _interstitialAd;
   bool _isInterstitialAdReady = false;
 
-  late AnimationController _controller;
-  late Animation<double> _animation;
   late AnimationController _controllerProcess;
   late Animation<double> _animationProcess;
 
@@ -47,21 +48,11 @@ class _congraculationScreen extends State<congraculationScreen> with TickerProvi
   void initState() {
     _loadInterstitialAd();
 
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 2), // Thời gian zoom in/out
-    )..repeat(reverse: true); // Lặp lại và đảo ngược
-
     _controllerProcess = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 2),
     );
 
-    _animation = Tween<double>(begin: 0.8, end: 0.9).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
-
-    startProgressAnimation(0.5);
   }
 
   void _loadInterstitialAd() {
@@ -110,7 +101,7 @@ class _congraculationScreen extends State<congraculationScreen> with TickerProvi
     int exp = await prefs.getInt("exp")??0;
     int nextExp = prefs.getInt("nextExp")??0;
 
-    exp += await prefs.getInt("level")??1 * expplus;
+    exp += expplus;
 
     while(exp >= nextExp){
       level++;
@@ -123,377 +114,264 @@ class _congraculationScreen extends State<congraculationScreen> with TickerProvi
     await prefs.setInt("nextExp", nextExp);
   }
 
-  void _popTwoScreens(BuildContext context) {
-    Navigator.pop(context); // pop màn hiện tại
-    Navigator.pop(context); // pop màn trước đó
+  int xpPerTurn(int level, int expNeed) {
+    final _random = Random();
+    final targetTurns = 5 + (level % 6);
+    final xp = expNeed / targetTurns;
+    final rounded = (xp / 5).round() * 5;
+    final variation = _random.nextInt(5) - 10;
+    final result = max(5, rounded + variation);
+    return result;
+  }
+
+  Future<Map<String, dynamic>> getProfile() async{
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    int expAw = xpPerTurn(await prefs.getInt("level")??0, await prefs.getInt("nextExp")??0);
+    flusExp(expAw);
+
+    return {
+      "expFlus": expAw,
+      "level": await prefs.getInt("level")??0,
+      "exp": await prefs.getInt("exp")??0,
+      "nextExp": await prefs.getInt("nextExp")??0
+    };
   }
 
   @override
   Widget build(BuildContext context) {
-    int persentAmazing = 100 - (widget.listWordsWrong.length * 2);
     String formatTime(double timeInSeconds) {
       int minutes = timeInSeconds ~/ 60; // Lấy số phút (chia lấy nguyên)
       int seconds = timeInSeconds % 60 ~/ 1; // Lấy số giây (phần dư của phép chia)
 
       // Định dạng chuỗi: thêm số 0 vào giây nếu cần
-      String formattedTime = "$minutes:${seconds.toString().padLeft(2, '0')}";
+      String formattedTime = "$minutes phút ${seconds.toString().padLeft(2, '0')} giây";
 
       return formattedTime;
     }
-
-
     playSound("sound/completed.mp3");
-
     return Scaffold(
-      body:  Container(
-        color: Color(0xFF43B648),
-        child: Stack(
-          children: [
-            Container(
-              width: MediaQuery.sizeOf(context).width,
-              child: Image.asset("assets/animation/6k2.gif"),
-            ),
-            Container(
-              width: MediaQuery.sizeOf(context).width,
-              height: MediaQuery.sizeOf(context).height,
-              color: Colors.white.withOpacity(0.15),
-              child: Column(
-                children: [
-                  SizedBox(height: 80,),
-                  ScaleTransition(
-                    scale: _animation,
-                    child: Image.asset(
-                      "assets/trophy.png",
-                      scale: 0.7,
-                    ),
-                  ),
-                  const Text("Chúc Mừng", style: TextStyle(color: Colors.white, fontSize: 45, fontWeight: FontWeight.bold), textAlign: TextAlign.center,),
-                  SizedBox(height: 10,),
-                  const Text("Bạn Đã Hoàn Thành", style: TextStyle(color: Color(0xFFFFD700), fontSize: 35), textAlign: TextAlign.center,),
-                  SizedBox(height: 20,),
-                  Container(
-                    width: MediaQuery.sizeOf(context).width - 40,
-                    height: 80,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      color: Colors.white.withOpacity(0.15)
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          width: MediaQuery.sizeOf(context).width,
-                          child: const Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.menu_book_outlined, color: Colors.white, size: 25,),
-                              SizedBox(width: 10,),
-                              Text("Bài Học", style: TextStyle(color: Colors.white, fontSize: 20),)
-                            ],
-                          ),
+      body: FutureBuilder(future: getProfile(), builder: (ctx, snapshot){
+        if(snapshot.hasData){
+          startProgressAnimation(snapshot.data!["exp"]/snapshot.data!["nextExp"]);
+          return Container(
+            color: Colors.white,
+            child: Stack(
+              children: [
+                Container(
+                  width: MediaQuery.sizeOf(context).width,
+                  child: Image.asset("assets/animation/6k2.gif"),
+                ),
+                Container(
+                  width: MediaQuery.sizeOf(context).width,
+                  height: MediaQuery.sizeOf(context).height,
+                  color: Colors.white.withOpacity(0.15),
+                  child: Column(
+                    children: [
+                      SizedBox(height: 60,),
+                      Container(
+                        width: 80,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.red,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.red.withOpacity(0.6), // màu glow
+                              spreadRadius: 1, // độ lan của ánh sáng
+                              blurRadius: 15,  // độ mờ
+                            ),
+                          ],
                         ),
-                        SizedBox(
-                          width: MediaQuery.sizeOf(context).width,
-                          child: const Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text("Thời gian hoàn thành bài 3 phút 14 giây", style: TextStyle(color: Colors.white, fontSize: 15),)
-                            ],
-                          ),
+                        child: const Icon(
+                          HeroIcons.trophy, // icon bên trong
+                          color: Colors.white,
+                          size: 40,
                         ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 20,),
-                  Container(
-                    width: MediaQuery.sizeOf(context).width,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.star, color: Color(0xFFFFD700), size: 30,),
-                        Text("+ 150 Điểm Kinh Nghiệm", style: TextStyle(color:  Color(0xFFFFD700), fontSize: 18),)
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 20,),
-                  Container(
-                    width: MediaQuery.sizeOf(context).width - 40,
-                    height: 100,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        color: Colors.white.withOpacity(0.15)
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          width: MediaQuery.sizeOf(context).width / 1.25,
-                          child: const Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text("Tiến Trình Level", style: TextStyle(color: Colors.white, fontSize: 20),),
-                              SizedBox(width: 10,),
-                              Text("50/100", style: TextStyle(color: Colors.white, fontSize: 20),)
-                            ],
-                          ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Text("Chic Mừng", style: TextStyle(color: AppColors.primary, fontSize: 40, fontFamily: "Itim"),),
+                      Text("Bạn đã hoàn thành", style: TextStyle(color: AppColors.black, fontSize: 25, fontFamily: "Itim", height: 0.8),),
+                      SizedBox(height: 30,),
+                      Container(
+                        width: MediaQuery.sizeOf(context).width / 1.1,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          color: AppColors.grey.withOpacity(0.15),
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                        SizedBox(height: 5,),
-                        Container(
-                          width: MediaQuery.sizeOf(context).width / 1.25,
-                          height: 12,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[300],
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: ShaderMask(
-                              shaderCallback: (Rect bounds) {
-                                return const LinearGradient(
-                                  colors: [Color(0xFFFFD700), Color(0xFFFF7B00)],
-                                  begin: Alignment.centerLeft,
-                                  end: Alignment.centerRight,
-                                ).createShader(bounds);
-                              },
-                              child: AnimatedBuilder(
-                                animation: _controllerProcess,
-                                builder: (context, child) {
-                                  return LinearProgressIndicator(
-                                    value: _animationProcess.value,
-                                    backgroundColor: Colors.transparent,
-                                    valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
-                                  );
-                                },
+                        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "Bài Học",
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontFamily: "itim",
+                                fontSize: 18,
                               ),
                             ),
+                            Row(
+                              children: [
+                                const Text(
+                                  "Thời gian hoàn thành: ",
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontFamily: "itim",
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                Text(
+                                  formatTime(widget.timeTest * 1.0),
+                                  style: const TextStyle(
+                                    color: AppColors.primary,
+                                    fontFamily: "itim",
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Container(
+                        width: MediaQuery.sizeOf(context).width / 1.1,
+                        height: 130,
+                        decoration: BoxDecoration(
+                          color: AppColors.primary,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text("+${snapshot.data!["expFlus"]}", style: TextStyle(color: Colors.white, fontSize: 40, fontFamily: "Itim", height: 0.8),),
+                            const Text("Điểm Kinh Nghiệm", style: TextStyle(color: Colors.white, fontSize: 20, fontFamily: "Itim", height: 1.2),)
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text("Tiến Trình Level", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                            Text("${snapshot.data!["exp"]}/${snapshot.data!["nextExp"]}", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: SizedBox(
+                          height: 10,
+                          child: AnimatedBuilder(
+                            animation: _animationProcess,
+                            builder: (context, child) {
+                              return LinearProgressIndicator(
+                                borderRadius: const BorderRadius.all(Radius.circular(360)),
+                                value: _animationProcess.value,
+                                backgroundColor: Colors.grey.withOpacity(0.2),
+                                valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+                              );
+                            },
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                  const Column(
-                    children: [
-                      SizedBox(height: 20,),
-                      Text("25", style: TextStyle(color: Color(0xFFFFD700), fontSize: 50, fontWeight: FontWeight.bold, height: 1),),
-                      Text("Cấp Bậc", style: TextStyle(color: Colors.white),)
+                      ),
+                      SizedBox(height: 10,),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("Cấp ${snapshot.data!["level"]}", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                            Text("Cấp ${snapshot.data!["level"] + 1}", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.grey.withOpacity(0.5))),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 50,),
+                      Text("Bài tiếp theo", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20),),
+                      SizedBox(height: 10,),
+                      GestureDetector(
+                        onTap: () async {
+
+                          final List<word> filteredWords = widget.listWordsTest.where((word wordCheck) {
+                            final int wrongCount = widget.listWordsWrong.where((wordWrongCheck) => wordWrongCheck == wordCheck).length;
+                            return wrongCount < 2; // Chỉ giữ lại những từ sai ít hơn 2 lần
+                          }).toList();
+
+                          // Chuẩn bị dữ liệu cập nhật
+                          final List<Map<String, dynamic>> dataUpdate = filteredWords.map((word wordUP) {
+                            return {
+                              "dataUpdate": {"level": wordUP.level < 28 ? wordUP.level + 1 : wordUP.level},
+                              "word": wordUP.vocabulary,
+                            };
+                          }).toList();
+
+                          // Cập nhật cơ sở dữ liệu
+                          final DatabaseHelper db = DatabaseHelper.instance;
+                          for (final data in dataUpdate) {
+                            await db.updateDatabase(
+                              "words",
+                              data["dataUpdate"],
+                              "word = '${data["word"]}' and topic = '${widget.topic}'",
+                            );
+                          }
+
+                          if (_isInterstitialAdReady) {
+                                _interstitialAd.show();
+
+
+                                _interstitialAd.fullScreenContentCallback = FullScreenContentCallback(
+                                  onAdDismissedFullScreenContent: (ad) {
+                                    ad.dispose();
+                                    _loadInterstitialAd(); // tải lại cho lần sau
+
+                                    Navigator.pop(context);
+                                  },
+                                  onAdFailedToShowFullScreenContent: (ad, error) {
+                                    ad.dispose();
+                                    // Đóng các màn hình
+                                    Navigator.pop(context);
+                                  },
+                                );
+                              } else {
+                                Navigator.pop(context);
+                              }
+
+                        },
+                        child: Container(
+                          width: MediaQuery.sizeOf(context).width / 1.1,
+                          height: 60,
+                          decoration: BoxDecoration(
+                            color: AppColors.primary,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                          child: const Center(
+                            child: Text("Bắt Đầu Lượt Học Tiếp", style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
+                )
+              ],
+            ),
+          );
+        }
 
-                  SizedBox(height: 50,),
-                  Container(
-                    width: MediaQuery.sizeOf(context).width/2,
-                    height: 60,
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.15),
-                          offset: Offset(1, 1),
-                          blurRadius: 2,
-                          spreadRadius: 2,
-                        )
-                      ],
-                      color:  Color(0xFFFFD700),
-                      borderRadius: BorderRadius.all(Radius.circular(15))
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("Tiếp Tục", style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 20),),
-                      ],
-                    )
-                    
-                  )
-                ],
-
-              ),
-            )
-          ],
-        ),
-      ),
+        return Container();
+      }),
     );
-
-    // return Scaffold(
-    //   body: Container(
-    //     width: MediaQuery.sizeOf(context).width,
-    //     height: MediaQuery.sizeOf(context).height,
-    //     color: Colors.white,
-    //     child: Column(
-    //       mainAxisAlignment: MainAxisAlignment.center,
-    //       children: [
-    //         Image.asset("assets/character/character2.png", scale: 0.8,),
-    //         SizedBox(height: MediaQuery.sizeOf(context).height*0.02,),
-    //         Text("Hoàn Thành", style: TextStyle(fontSize: MediaQuery.sizeOf(context).height*0.04, color: Color.fromRGBO(20, 195, 142, 1.0)),),
-    //         Text("Bạn Thật Tuyệt Vời", style: TextStyle(fontSize: MediaQuery.sizeOf(context).height*0.02, color: Colors.black),),
-    //         SizedBox(height: MediaQuery.sizeOf(context).height*0.02,),
-    //         Container(
-    //           width: double.infinity,
-    //           child:Padding(
-    //             padding: EdgeInsets.only(),
-    //             child: Row(
-    //               mainAxisAlignment: MainAxisAlignment.center,
-    //               children: [
-    //                 Container(
-    //                   width: MediaQuery.sizeOf(context).width*0.4,
-    //                   height: MediaQuery.sizeOf(context).width*0.30,
-    //                   decoration: BoxDecoration(
-    //                       color: Color.fromRGBO(20, 195, 142, 1.0),
-    //                       borderRadius: BorderRadius.circular(20)
-    //                   ),
-    //                   child: Column(
-    //                     children: [
-    //                       Text("Commited", style: TextStyle(color: Colors.white, fontSize: MediaQuery.sizeOf(context).width*0.04),),
-    //                       Container(
-    //                         constraints: BoxConstraints(
-    //                           minHeight: MediaQuery.sizeOf(context).width * 0.2, // Độ cao tối thiểu
-    //                         ),
-    //                         width: MediaQuery.sizeOf(context).width*0.38,
-    //                         height: MediaQuery.sizeOf(context).width*0.22,
-    //                         decoration: BoxDecoration(
-    //                             color: Colors.white,
-    //                             borderRadius: BorderRadius.circular(20)
-    //                         ),
-    //                         child: Row(
-    //                           mainAxisAlignment: MainAxisAlignment.center,
-    //                           children: [
-    //                             Icon(Icons.timer_sharp, color: Color.fromRGBO(20, 195, 142, 1.0), size: 60,),
-    //                             SizedBox(width: 10,),
-    //                             Text(formatTime(widget.timeTest*1.0), style: TextStyle(fontSize: MediaQuery.sizeOf(context).height*0.030, color: Color.fromRGBO(20, 195, 142, 1.0))),
-    //                           ],
-    //                         ),
-    //                       )
-    //                     ],
-    //                   ),
-    //                 ),
-    //                 SizedBox(width: 10,),
-    //                 Container(
-    //                   width: MediaQuery.sizeOf(context).width*0.4,
-    //                   height: MediaQuery.sizeOf(context).width*0.30,
-    //                   decoration: BoxDecoration(
-    //                       color: Color.fromRGBO(255, 174, 9, 1.0),
-    //                       borderRadius: BorderRadius.circular(20)
-    //                   ),
-    //                   child: Column(
-    //                     children: [
-    //                       Text("Amazing", style: TextStyle(color: Colors.white, fontSize: MediaQuery.sizeOf(context).width*0.04),),
-    //                       Container(
-    //                         constraints: BoxConstraints(
-    //                           minHeight: MediaQuery.sizeOf(context).width * 0.2, // Độ cao tối thiểu
-    //                         ),
-    //                         width: MediaQuery.sizeOf(context).width*0.38,
-    //                         height: MediaQuery.sizeOf(context).width*0.220,
-    //                         decoration: BoxDecoration(
-    //                             color: Colors.white,
-    //                             borderRadius: BorderRadius.circular(20)
-    //                         ),
-    //                         child: Row(
-    //                           mainAxisAlignment: MainAxisAlignment.center,
-    //                           children: [
-    //                             const Icon(MingCute.target_line, color: Color.fromRGBO(255, 174, 9, 1.0), size: 60,),
-    //                             SizedBox(width: 10,),
-    //                             Text("${persentAmazing}%", style: TextStyle(fontSize: MediaQuery.sizeOf(context).height*0.030, color: Color.fromRGBO(255, 174, 9, 1.0))),
-    //                           ],
-    //                         ),
-    //                       )
-    //                     ],
-    //                   ),
-    //                 )
-    //               ],
-    //             ),
-    //           ),
-    //         ),
-    //         SizedBox(height: MediaQuery.sizeOf(context).height*0.03,),
-    //         GestureDetector(
-    //             onTapDown: (_) {
-    //               setState(() {
-    //                 isPress = true;
-    //               });
-    //             },
-    //             onTapUp: (_) async {
-    //               setState(() {
-    //                 isPress = false;
-    //               });
-    //               // Lọc danh sách với điều kiện
-    //               final List<word> filteredWords = widget.listWordsTest.where((word wordCheck) {
-    //                 final int wrongCount = widget.listWordsWrong.where((wordWrongCheck) => wordWrongCheck == wordCheck).length;
-    //                 return wrongCount < 2; // Chỉ giữ lại những từ sai ít hơn 2 lần
-    //               }).toList();
-    //
-    //               // Chuẩn bị dữ liệu cập nhật
-    //               final List<Map<String, dynamic>> dataUpdate = filteredWords.map((word wordUP) {
-    //                 return {
-    //                   "dataUpdate": {"level": wordUP.level < 28 ? wordUP.level + 1 : wordUP.level},
-    //                   "word": wordUP.vocabulary,
-    //                 };
-    //               }).toList();
-    //
-    //               // Cập nhật cơ sở dữ liệu
-    //               final DatabaseHelper db = DatabaseHelper.instance;
-    //               for (final data in dataUpdate) {
-    //                 await db.updateDatabase(
-    //                   "words",
-    //                   data["dataUpdate"],
-    //                   "word = '${data["word"]}' and topic = '${widget.topic}'",
-    //                 );
-    //               }
-    //
-    //               flusExp(5);
-    //
-    //               widget.reload();
-    //               if (_isInterstitialAdReady) {
-    //                 _interstitialAd.show();
-    //
-    //                 // Sau khi hiển thị, xử lý chuyển tiếp màn hình ở callback:
-    //                 _interstitialAd.fullScreenContentCallback = FullScreenContentCallback(
-    //                   onAdDismissedFullScreenContent: (ad) {
-    //                     ad.dispose();
-    //                     _loadInterstitialAd(); // tải lại cho lần sau
-    //
-    //                     // 👉 Chuyển tiếp màn sau khi quảng cáo đóng
-    //                     _popTwoScreens(context);
-    //                   },
-    //                   onAdFailedToShowFullScreenContent: (ad, error) {
-    //                     ad.dispose();
-    //                     // Đóng các màn hình
-    //                     _popTwoScreens(context);
-    //                   },
-    //                 );
-    //               } else {
-    //                 // Đóng các màn hình
-    //                 _popTwoScreens(context);
-    //               }
-    //
-    //             },
-    //             onTapCancel: () {
-    //               setState(() {
-    //                 isPress = false;
-    //               });
-    //             },
-    //             child: AnimatedContainer(
-    //               duration: Duration(milliseconds: 100),
-    //               curve: Curves.easeInOut,
-    //               transform: Matrix4.translationValues(0, isPress ? 4 : 0, 0),
-    //               width: MediaQuery.sizeOf(context).width - 40,
-    //               height: MediaQuery.sizeOf(context).width * 0.15,
-    //               decoration: BoxDecoration(
-    //                   color: const Color.fromRGBO(97, 213, 88, 1.0),
-    //                   borderRadius: BorderRadius.all(Radius.circular(20)),
-    //                   boxShadow: isPress ? [] : [
-    //                     const BoxShadow(
-    //                         color: Colors.green,
-    //                         offset: Offset(6, 6)
-    //                     )
-    //                   ]
-    //               ),
-    //               child: Center(
-    //                 child: Text("CONTINUE", style: TextStyle(color: Colors.white, fontSize: MediaQuery.sizeOf(context).width*0.05, fontWeight: FontWeight.bold),),
-    //               ),
-    //           ),
-    //         ),
-    //       ],
-    //     ),
-    //   ),
-    // );
   }
 
 }

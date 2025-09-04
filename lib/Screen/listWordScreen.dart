@@ -1153,7 +1153,7 @@ class _listWordScreen extends State<listWordScreen>{
                         style: TextStyle(color: AppColors.textSucessState),
                       )
                           : Text(
-                        "${(wordItem["level"] / 2).toInt()}%",
+                        "${(wordItem["level"] / 2)}%",
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                           color: AppColors.textSecond,

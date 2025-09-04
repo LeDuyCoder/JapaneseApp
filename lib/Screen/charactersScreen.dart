@@ -42,8 +42,6 @@ class _charactersSCreen extends State<charactersScreen>{
             );
           }
 
-
-
           return DefaultTabController(
             length: 2, // Số lượng tab
             child: Scaffold(
@@ -71,12 +69,16 @@ class _charactersSCreen extends State<charactersScreen>{
                     ],
                   ),
                 ),
-                body: TabBarView(
-                  children: [
-                    Center(child: hiraganaScreen(data: snapshot.data![0], type: "hiragana", width: MediaQuery.sizeOf(context).height - AppBar().preferredSize.height)),
-                    Center(child: hiraganaScreen(data: snapshot.data![1], type: "katakana", width: MediaQuery.sizeOf(context).height - AppBar().preferredSize.height)),
-                  ],
-                ),
+                body: Expanded(
+                  child: Container(
+                    child: TabBarView(
+                      children: [
+                        Center(child: hiraganaScreen(data: snapshot.data![0], type: "hiragana", width: MediaQuery.sizeOf(context).height - AppBar().preferredSize.height)),
+                        Center(child: hiraganaScreen(data: snapshot.data![1], type: "katakana", width: MediaQuery.sizeOf(context).height - AppBar().preferredSize.height)),
+                      ],
+                    ),
+                  ),
+                )
             ),
           );
         }),

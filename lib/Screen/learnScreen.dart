@@ -4,10 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:japaneseapp/Module/word.dart';
 import 'package:japaneseapp/Screen/congraculationScreen.dart';
+import 'package:japaneseapp/Theme/colors.dart';
 import 'package:japaneseapp/Widget/learnWidget/choseTest.dart';
 import 'package:japaneseapp/Widget/learnWidget/combinationTest.dart';
 import 'package:japaneseapp/Widget/learnWidget/listenTest.dart';
-import 'package:japaneseapp/Widget/learnWidget/sortText.dart.dart';
+import 'package:japaneseapp/Widget/learnWidget/sortText.dart';
 import 'package:japaneseapp/Widget/learnWidget/writeTestScreen.dart';
 import 'package:japaneseapp/Widget/quitTab.dart';
 
@@ -37,7 +38,7 @@ class _learnScreen extends State<learnScreen> {
   late TimerService _timerService;
   int _currentSeconds = 0;
 
-  int maxQuestion = 1; //5
+  int maxQuestion = 5; //5
   int amountRightAwnser = 0;
 
   @override
@@ -143,6 +144,7 @@ class _learnScreen extends State<learnScreen> {
         if (numberCount < dataMap.length) {
           updateView(dataMap[numberCount]["feture"]);
         } else {
+          Navigator.pop(context);
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -395,7 +397,7 @@ class _learnScreen extends State<learnScreen> {
                       child: LinearProgressIndicator(
                         value: numberCount / (dataMap.length + 1),
                         backgroundColor: Colors.grey[300],
-                        color: Colors.greenAccent,
+                        color: AppColors.primary,
                         minHeight: 15,
                         borderRadius: BorderRadius.circular(20),
                       ),

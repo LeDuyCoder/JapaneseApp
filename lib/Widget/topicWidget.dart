@@ -26,19 +26,20 @@ class _topicWidget extends State<topicWidget>{
   //function to handle data of topic which have amount word, processal finished
   Future<List<dynamic>> handledComplited () async {
     double sumComplitted = 0.0;
+    double progressComplited = 0.0;
 
     DatabaseHelper db = DatabaseHelper.instance;
     List<Map<String, dynamic>> dataWords = await db.getAllWordbyTopic(widget.nameTopic);
     List<Map<String, dynamic>> dataTopic = await db.getAllTopicByName(widget.nameTopic);
     if(dataWords.isNotEmpty) {
-
       for (Map<String, dynamic> word in dataWords) {
-        sumComplitted += (word['level'] * 1.0) ?? 0;
+        sumComplitted += (word['level'] * 1.0) >= 27 ? 1 : 0;
+        progressComplited += (word['level'] * 1.0) ?? 0;
       }
     }
 
     List<dynamic> dataResult = [
-      dataWords.isNotEmpty ? sumComplitted / (28*dataWords.length) : 0.0,
+      dataWords.isNotEmpty ? progressComplited / (28*dataWords.length) : 0.0,
       sumComplitted,
       dataWords.length,
       dataTopic[0]["user"]
@@ -131,7 +132,7 @@ class _topicWidget extends State<topicWidget>{
                               Column(
                                 children: [
                                   Text("Phần Trăm"),
-                                  Text("${snapshot.data?[0]}%"),
+                                  Text("${(snapshot.data?[0] as double).toStringAsFixed(2)}%"),
                                 ],
                               ),
                               Column(

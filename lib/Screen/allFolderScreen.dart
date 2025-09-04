@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../Config/dataHelper.dart';
 import '../Theme/colors.dart';
+import 'folderManagerScreen.dart';
 
 class allFolderScreen extends StatefulWidget{
   @override
@@ -10,134 +12,179 @@ class allFolderScreen extends StatefulWidget{
 }
 
 class _allFolderScreen extends State<allFolderScreen>{
-  String display = "flex";
+  String display = "grid";
 
-  Widget boxFolderGrid() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(25),
-        boxShadow: const [
-          BoxShadow(
-            color: AppColors.grey,
-            offset: Offset(0, 2),
-            blurRadius: 5,
-          )
-        ],
-      ),
-      child: const Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.folder_open, size: 50),
-          SizedBox(height: 8),
-          Flexible(
-            child: Text(
-              "Tất cả thư mục",
-              textAlign: TextAlign.center,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: AppColors.black,
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
+  Future<Map<String, dynamic>> hanldeGetData() async {
+    final db = await DatabaseHelper.instance;
+
+    Map<String, dynamic> data = {
+      "folder": await db.getAllFolder(),
+    };
+
+    return data;
+  }
+
+  Widget boxFolderGrid(dynamic folder) {
+    return GestureDetector(
+      onTap: (){
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) => folderManagerScreen(
+              idFolder: folder["id"],
+              nameFolder: folder["namefolder"],
+              reloadDashBoard: () {
+                setState(() {});
+              },
+            ),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              const begin = Offset(0.0, 1.0);
+              const end = Offset.zero;
+              const curve = Curves.ease;
+              final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+              return SlideTransition(
+                position: animation.drive(tween),
+                child: child,
+              );
+            },
+          ),
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(25),
+          boxShadow: const [
+            BoxShadow(
+              color: AppColors.grey,
+              offset: Offset(0, 2),
+              blurRadius: 5,
+            )
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.folder_open, size: 50),
+            SizedBox(height: 8),
+            Flexible(
+              child: Text(
+                folder["namefolder"],
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: AppColors.black,
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          ),
-          SizedBox(height: 4),
-          Flexible(
-            child: Text(
-              "2/10/2025 10:32:12",
-              textAlign: TextAlign.center,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: AppColors.textSecond,
-                fontSize: 12,
+            SizedBox(height: 4),
+            Flexible(
+              child: Text(
+                folder["datefolder"],
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: AppColors.textSecond,
+                  fontSize: 12,
+                ),
               ),
             ),
-          ),
-          SizedBox(height: 4),
-          Flexible(
-            child: Text(
-              "2 Chủ Đề",
-              textAlign: TextAlign.center,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: AppColors.textSecond,
-                fontSize: 12,
+            SizedBox(height: 4),
+            Flexible(
+              child: Text(
+                "${folder["amountTopic"]} Chủ Đề",
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: AppColors.textSecond,
+                  fontSize: 12,
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
-  Widget boxFolderFlex() {
-    return Container(
-      width: MediaQuery.sizeOf(context).width/1.3,
-      height: 130,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(25),
-        boxShadow: const [
-          BoxShadow(
-            color: AppColors.grey,
-            offset: Offset(0, 2),
-            blurRadius: 5,
-          )
-        ],
-      ),
-      child: const Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Row(
-            children: [
-              SizedBox(width: 20,),
-              Icon(Icons.folder_open, size: 50),
-              SizedBox(width: 10,),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Tất cả thư mục",
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: AppColors.black,
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Row(
+  Widget boxFolderFlex(dynamic folder) {
+    return GestureDetector(
+      onTap: (){
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) => folderManagerScreen(
+              idFolder: folder["id"],
+              nameFolder: folder["namefolder"],
+              reloadDashBoard: () {
+                setState(() {});
+              },
+            ),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              const begin = Offset(0.0, 1.0);
+              const end = Offset.zero;
+              const curve = Curves.ease;
+              final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+              return SlideTransition(
+                position: animation.drive(tween),
+                child: child,
+              );
+            },
+          ),
+        );
+      },
+      child: Container(
+        width: MediaQuery.sizeOf(context).width/1.3,
+        height: 110,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(25),
+          boxShadow: const [
+            BoxShadow(
+              color: AppColors.grey,
+              offset: Offset(0, 2),
+              blurRadius: 5,
+            )
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              children: [
+                SizedBox(width: 30),
+                Icon(Icons.folder_open, size: 50),
+                SizedBox(width: 10),
+                Expanded(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "2 Chủ Đề",
-                        textAlign: TextAlign.center,
+                        folder["namefolder"],
                         overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
                         style: TextStyle(
-                          color: AppColors.textSecond,
-                          fontSize: 12,
+                          color: AppColors.black,
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(width: 10),
-                      Text(
-                        "2/10/2025 10:32:12",
-                        textAlign: TextAlign.center,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: AppColors.textSecond,
-                          fontSize: 12,
-                        ),
-                      ),
-
-
+                      Row(
+                        children: [
+                          Text("${folder["amountTopic"]} Chủ Đề", style: TextStyle(fontSize: 12)),
+                          SizedBox(width: 10),
+                          Text(folder["datefolder"], style: TextStyle(fontSize: 12)),
+                        ],
+                      )
                     ],
-                  )
-                ],
-              )
-            ],
-          )
-        ],
+                  ),
+                )
+              ],
+            )
+          ],
+        ),
       ),
     );
   }
@@ -153,137 +200,228 @@ class _allFolderScreen extends State<allFolderScreen>{
         backgroundColor: AppColors.backgroundPrimary,
         scrolledUnderElevation: 0,
       ),
-      body: Container(
-        color: AppColors.backgroundPrimary,
-        child: Column(
-          children: [
-            const SizedBox(height: 20),
-            Row(
+      body: FutureBuilder(future: hanldeGetData(), builder: (ctx, snapshot){
+        print(snapshot.data!);
+        if(snapshot.connectionState == ConnectionState.waiting){
+          return Container(
+            color: AppColors.backgroundPrimary,
+            child: Column(
               children: [
-                const SizedBox(width: 10),
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      display = "grid";
-                    });
-                  },
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
-                    width: 120,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: display == "grid"
-                          ? AppColors.primary
-                          : AppColors.grey.withOpacity(0.4),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Center(
-                      child: Text(
-                        "Lưới",
-                        style: TextStyle(
-                          color: display == "grid"
-                              ? AppColors.white
-                              : AppColors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      display = "flex";
-                    });
-                  },
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
-                    width: 120,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: display == "flex"
-                          ? AppColors.primary
-                          : AppColors.grey.withOpacity(0.4),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Center(
-                      child: Text(
-                        "Danh Sách",
-                        style: TextStyle(
-                          color: display == "flex"
-                              ? AppColors.white
-                              : AppColors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
+                const SizedBox(height: 20),
                 Row(
                   children: [
-                    SizedBox(width: 15),
-                    Text(
-                      "Tất cả thư mục",
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                    const SizedBox(width: 10),
+                    Container(
+                      width: 120,
+                      height: 40,
+                      decoration: BoxDecoration(
+                          color: Colors.grey.withOpacity(0.3),
+                          borderRadius: BorderRadius.circular(20)
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Container(
+                      width: 120,
+                      height: 40,
+                      decoration: BoxDecoration(
+                          color: Colors.grey.withOpacity(0.3),
+                          borderRadius: BorderRadius.circular(20)
+                      ),
                     ),
                   ],
                 ),
+                const SizedBox(height: 20),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      "8 Thư Mục",
-                      style: TextStyle(color: AppColors.textSecond),
+                    Row(
+                      children: [
+                        SizedBox(width: 15),
+                        Container(
+                          width: 120,
+                          height: 20,
+                          decoration: BoxDecoration(
+                              color: Colors.grey.withOpacity(0.3),
+                              borderRadius: BorderRadius.circular(20)
+                          ),
+                        ),
+                      ],
                     ),
-                    SizedBox(width: 15),
+                    Row(
+                      children: [
+                        Container(
+                          width: 80,
+                          height: 20,
+                          decoration: BoxDecoration(
+                              color: Colors.grey.withOpacity(0.3),
+                              borderRadius: BorderRadius.circular(20)
+                          ),
+                        ),
+                        SizedBox(width: 15),
+                      ],
+                    ),
                   ],
                 ),
-              ],
-            ),
-            display == 'grid' ?
-            Expanded(
-              child: Container(
-                width: MediaQuery.sizeOf(context).width / 1.2,
-                child: GridView.count(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
-                  padding: const EdgeInsets.all(16),
-                  children: [
-                    boxFolderGrid(),
-                    boxFolderGrid(),
-                    boxFolderGrid(),
-                  ],
-                ),
-              ),
-            ):
-            Expanded(
-                child: Container(
-                  width: MediaQuery.sizeOf(context).width / 1.2,
-                  child: ListView(
-                    children: [
-                      for (int i = 0; i < 3; i++)
-                        ...[
-                          SizedBox(height: 10,),
-                          boxFolderFlex(),
-                        ]
-                    ],
+                Expanded(
+                  child: Container(
+                    width: MediaQuery.sizeOf(context).width / 1.2,
+                    child: GridView.count(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 12,
+                      mainAxisSpacing: 12,
+                      padding: const EdgeInsets.all(16),
+                      children: [
+                        for (int i = 0; i < 4; i++)
+                        Container(
+                          decoration: BoxDecoration(
+                              color: Colors.grey.withOpacity(0.3),
+                              borderRadius: BorderRadius.circular(20)
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 )
-            )
-          ],
-        ),
-      ),
+              ],
+            ),
+          );
+        }
+        if(snapshot.hasData){
+          return Container(
+            color: AppColors.backgroundPrimary,
+            child: Column(
+              children: [
+                const SizedBox(height: 20),
+                Row(
+                  children: [
+                    const SizedBox(width: 10),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          display = "grid";
+                        });
+                      },
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                        width: 120,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: display == "grid"
+                              ? AppColors.primary
+                              : AppColors.grey.withOpacity(0.4),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Center(
+                          child: Text(
+                            "Lưới",
+                            style: TextStyle(
+                              color: display == "grid"
+                                  ? AppColors.white
+                                  : AppColors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          display = "flex";
+                        });
+                      },
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                        width: 120,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: display == "flex"
+                              ? AppColors.primary
+                              : AppColors.grey.withOpacity(0.4),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Center(
+                          child: Text(
+                            "Danh Sách",
+                            style: TextStyle(
+                              color: display == "flex"
+                                  ? AppColors.white
+                                  : AppColors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        SizedBox(width: 15),
+                        Text(
+                          "Tất cả thư mục",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          "${snapshot.data!["folder"].length} Thư Mục",
+                          style: TextStyle(color: AppColors.textSecond),
+                        ),
+                        SizedBox(width: 15),
+                      ],
+                    ),
+                  ],
+                ),
+                display == 'grid' ?
+                Expanded(
+                  child: Container(
+                    width: MediaQuery.sizeOf(context).width / 1.2,
+                    child: GridView.count(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 12,
+                      mainAxisSpacing: 12,
+                      padding: const EdgeInsets.all(16),
+                      children: [
+                        for (dynamic folder in snapshot.data!["folder"])
+                          boxFolderGrid(folder),
+
+                      ],
+                    ),
+                  ),
+                ):
+                Expanded(
+                    child: Container(
+                      width: MediaQuery.sizeOf(context).width / 1.2,
+                      child: ListView(
+                        children: [
+                          for (dynamic folder in snapshot.data!["folder"])
+                            ...[
+                              SizedBox(height: 10,),
+                              boxFolderFlex(folder),
+                            ]
+                        ],
+                      ),
+                    )
+                )
+              ],
+            ),
+          );
+        }
+
+        return Container();
+      }),
     );
 
   }

@@ -6,6 +6,7 @@ import 'package:japaneseapp/Config/dataHelper.dart';
 import 'package:japaneseapp/Module/topic.dart';
 import 'package:japaneseapp/Screen/addTopicFolder.dart';
 import 'package:japaneseapp/Screen/dashboardScreen.dart';
+import 'package:japaneseapp/Theme/colors.dart';
 import 'package:japaneseapp/Widget/topicManagerWidget.dart';
 
 class folderManagerScreen extends StatefulWidget{
@@ -31,19 +32,6 @@ class _folderMangerScreen extends State<folderManagerScreen>{
     List<topic> result = [];
     result = await db.getAllTopicInFolder(widget.idFolder);
     return result;
-  }
-
-  Future<void> updateDataBase() async {
-    // DatabaseHelper db = DatabaseHelper.instance;
-    // List<Map<String, dynamic>> dataCoverMap = [];
-    //
-    // for(topic TopicHanlde in dataTopics!){
-    //   dataCoverMap.add(
-    //       {TopicHanlde.id:TopicHanlde.name}
-    //   );
-    // }
-    //
-    // await db.updateDatabase("folders", {"topics":jsonEncode(dataCoverMap)}, "namefolder = '${widget.nameFolder}'");
   }
 
   void removeTopic(String topicID) async {
@@ -232,7 +220,7 @@ class _folderMangerScreen extends State<folderManagerScreen>{
                                                 width: 200,
                                                 height: 50,
                                                 decoration: BoxDecoration(
-                                                    color: Colors.green[400],
+                                                    color: AppColors.primary,
                                                     borderRadius: BorderRadius.all(Radius.circular(10))
                                                 ),
                                                 child: const Column(

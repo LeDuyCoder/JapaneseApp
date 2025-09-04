@@ -387,6 +387,7 @@ class _learnCharactersScreen extends State<learnCharactersScreen> {
 
   void finishTest(dynamic dataJson){
     Future.delayed(Duration.zero, () {
+      Navigator.pop(context);
       Navigator.push(
         context,
         MaterialPageRoute(

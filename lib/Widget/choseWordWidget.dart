@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:japaneseapp/Theme/colors.dart';
 
 class choseWordWidget extends StatefulWidget {
   final String textShow;
@@ -50,16 +51,16 @@ class _choseWordWidgetState extends State<choseWordWidget> {
         height: MediaQuery.sizeOf(context).width / 2 - 30,
         decoration: BoxDecoration(
           border: Border.all(
-            color: widget.isChose ? Colors.blue : Colors.grey,
+            color: widget.isChose ? AppColors.primary : Colors.grey,
             width: 2,
           ),
           borderRadius: const BorderRadius.all(Radius.circular(20)),
-          color: widget.isChose ? Colors.blue[100] : Colors.white,
+          color: widget.isChose ? Color(0xFFFFD8D8).withOpacity(1) : Colors.white,
           boxShadow: isPressed
               ? [] // Khi nhấn, không có boxShadow
               :[
             BoxShadow(
-              color: widget.isChose ? Colors.blue.shade400 : Colors.grey,
+              color: widget.isChose ? AppColors.primary.withOpacity(0.4) : Colors.grey,
               offset: Offset(3, 3)
             )
           ]
@@ -70,7 +71,7 @@ class _choseWordWidgetState extends State<choseWordWidget> {
             style: TextStyle(
               fontFamily: "indieflower",
               fontSize: MediaQuery.sizeOf(context).height*0.03,
-              color: widget.isChose ? Colors.blue : Colors.black,
+              color: widget.isChose ? AppColors.primaryDark : Colors.black,
             ),
             textAlign: TextAlign.center,
           ),

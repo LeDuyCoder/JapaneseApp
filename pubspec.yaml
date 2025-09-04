@@ -78,6 +78,7 @@ dependencies:
   country_flags: ^2.2.0
   collection: ^1.18.0
   flutter_dash: ^1.0.0
+  google_generative_ai: ^0.4.7
 
 flutter_launcher_icons:
   android: "launcher_icon"

@@ -1,5 +1,6 @@
 import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
+import 'package:japaneseapp/Theme/colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../generated/app_localizations.dart';
@@ -187,7 +188,7 @@ class _LanguageScreenState extends State<languageScreen> {
         ),
         title: Text(
           AppLocalizations.of(context)!.language_title,
-          style: TextStyle(color: Colors.black, fontSize: 22),
+          style: TextStyle(color: AppColors.primary, fontFamily: "Itim" ,fontSize: 25,),
         ),
         actions: [
           IconButton(

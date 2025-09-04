@@ -4,6 +4,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:japaneseapp/Module/topic.dart';
+import 'package:japaneseapp/Theme/colors.dart';
 import 'package:japaneseapp/Widget/topicServerWidget.dart';
 
 import '../Config/dataHelper.dart';
@@ -49,15 +50,6 @@ class _seeMoreTopic extends State<seeMoreTopic>{
           topicsSearch = await getListTopicsSearch(query);
         }
       });
-      // if (searchTopicInput.text.isEmpty) {
-      //   // Gán lại giá trị mặc định sau 1 frame để tránh lỗi setState trong listener
-      //   Future.microtask(() {
-      //     searchTopicInput.text = "";
-      //     searchTopicInput.selection = TextSelection.fromPosition(
-      //       TextPosition(offset: searchTopicInput.text.length),
-      //     );
-      //   });
-      // }
     });
   }
 
@@ -370,8 +362,10 @@ class _seeMoreTopic extends State<seeMoreTopic>{
           Navigator.pop(context);
           widget.reloadScreen();
         }, icon: Icon(Icons.arrow_back)),
+        title: Text("Cộng Đồng", style: TextStyle(color: AppColors.primary, fontSize: 30, fontFamily: "Itim"),),
         backgroundColor: Colors.white,
         elevation: 0,
+        scrolledUnderElevation: 1,
         automaticallyImplyLeading: true, // hoặc false nếu không cần icon back
         foregroundColor: Colors.black,   // Đảm bảo icon/text không bị trắng
         titleTextStyle: const TextStyle(color: Colors.black, fontSize: 18),
@@ -383,33 +377,43 @@ class _seeMoreTopic extends State<seeMoreTopic>{
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            SizedBox(height: 20,),
             Container(
-              padding: const EdgeInsets.all(16.0),
+              margin: EdgeInsets.only(left: 10, right: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
               width: MediaQuery.sizeOf(context).width,
-              height: 100,
+              height: 60,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(15.0), // pill shape
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.black26, // shadow mờ hơn
+                    offset: Offset(0, 2),
+                    blurRadius: 8,
+                  ),
+                ],
+              ),
               child: TextField(
                 controller: searchTopicInput,
                 decoration: InputDecoration(
+                  border: InputBorder.none, // bỏ border mặc định
+                  prefixIcon: const Icon(Icons.search, color: Colors.black, size: 30,),
                   hintText: AppLocalizations.of(context)!.seemore_search,
-                  hintStyle: TextStyle(color: Colors.grey),
-                  filled: true,
-                  fillColor: Colors.grey[100],
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 12.0,
-                    vertical: 20.0,
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Color.fromRGBO(214, 214, 214, 1), width: 2.0),
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Color.fromRGBO(214, 214, 214, 1), width: 2.0),
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
+                  hintStyle: const TextStyle(color: Colors.grey),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 18.0),
                 ),
               ),
             ),
+            SizedBox(height: 30),
+            Container(
+              width: MediaQuery.sizeOf(context).width,
+              margin: EdgeInsets.only(left: 20),
+              child: Text("Bộ Sưu Tập Cộng Đồng", style: TextStyle(fontFamily: "Itim", fontSize: 20, color: AppColors.textSecond.withOpacity(0.8)), textAlign: TextAlign.left,),
+            ),
+            SizedBox(height: 10),
             if(lenghtInput == 0)
               Expanded(
               child: Container(
@@ -430,21 +434,14 @@ class _seeMoreTopic extends State<seeMoreTopic>{
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           for(topic Topic in data.data!)
-                            GestureDetector(
-                              onTap: () async {
-                                if(await hastTopic(Topic.id) == false){
-                                  showDialogDowloadPulic(Topic.id);
-                                }
-                              },
-                              child: Column(
-                                children: [
-                                  FutureBuilder(future: hastTopic(Topic.id), builder: (context, topicData){
-                                    if(topicData.connectionState == ConnectionState.waiting) return Container();
-                                    return topicServerWidget(name: Topic.name, owner: Topic.owner!, amount: Topic.count!, id: Topic.id, width: MediaQuery.sizeOf(context).width - 30,);
-                                  }),
-                                  const SizedBox(height: 10,),
-                                ],
-                              ),
+                            Column(
+                              children: [
+                                FutureBuilder(future: hastTopic(Topic.id), builder: (context, topicData){
+                                  if(topicData.connectionState == ConnectionState.waiting) return Container();
+                                  return topicServerWidget(name: Topic.name, owner: Topic.owner!, amount: Topic.count!, id: Topic.id, width: MediaQuery.sizeOf(context).width - 30, showBottomShetDownload: (String id) { showDialogDowloadPulic(Topic.id); },);
+                                }),
+                                const SizedBox(height: 10,),
+                              ],
                             ),
 
                           SizedBox(height: 20,),
@@ -485,7 +482,6 @@ class _seeMoreTopic extends State<seeMoreTopic>{
                 ),
               ),
             ),
-
             if(lenghtInput > 0)
               Expanded(
                 child: Container(
@@ -495,25 +491,16 @@ class _seeMoreTopic extends State<seeMoreTopic>{
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-
-
                           if(topicsSearch.length > 0)
                             for(topic Topic in topicsSearch)
-                              GestureDetector(
-                                onTap: () async {
-                                  if(await hastTopic(Topic.id) == false){
-                                    showDialogDowloadPulic(Topic.id);
-                                  }
-                                },
-                                child: Column(
-                                  children: [
-                                    FutureBuilder(future: hastTopic(Topic.id), builder: (context, topicData){
-                                      if(topicData.connectionState == ConnectionState.waiting) return Container();
-                                      return topicServerWidget(name: Topic.name, owner: Topic.owner!, amount: Topic.count!, id: Topic.id, width: MediaQuery.sizeOf(context).width - 30,);
-                                    }),
-                                    const SizedBox(height: 10,),
-                                  ],
-                                ),
+                              Column(
+                                children: [
+                                  FutureBuilder(future: hastTopic(Topic.id), builder: (context, topicData){
+                                    if(topicData.connectionState == ConnectionState.waiting) return Container();
+                                    return topicServerWidget(name: Topic.name, owner: Topic.owner!, amount: Topic.count!, id: Topic.id, width: MediaQuery.sizeOf(context).width - 30, showBottomShetDownload: (String id) { showDialogDowloadPulic(Topic.id); },);
+                                  }),
+                                  const SizedBox(height: 10,),
+                                ],
                               ),
 
 

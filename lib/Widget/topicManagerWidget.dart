@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:japaneseapp/Screen/listWordScreen.dart';
+import 'package:japaneseapp/Theme/colors.dart';
 
 import '../Module/topic.dart';
 
@@ -82,7 +83,7 @@ class topicManagerWidget extends StatelessWidget{
                       height: 50,
                       child: Icon(Icons.sticky_note_2_outlined, size: 30),
                       decoration: BoxDecoration(
-                        color: Color.fromRGBO(213, 251, 213, 0.8),
+                        color: AppColors.primaryLight.withOpacity(0.3),
                         borderRadius: BorderRadius.all(Radius.circular(10))
                       ),
                     ),

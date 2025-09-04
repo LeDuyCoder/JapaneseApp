@@ -117,57 +117,64 @@ class _SortTextState extends State<sortText> {
               ),
               Container(
                 width: MediaQuery.sizeOf(context).width,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                child: Stack(
                   children: [
-                    Container(
-                      width: MediaQuery.sizeOf(context).width/3,
-                      child: Image.asset("assets/character/character1.png", width: 150),
-                    ),
-                    Container(
-                      width: MediaQuery.sizeOf(context).width/2,
+                    Center(
                       child: Container(
-                        padding: const EdgeInsets.all(10),
-                        margin: const EdgeInsets.symmetric(vertical: 5),
-                        width: 200,
-                        height: 120,
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(15),
-                            topRight: Radius.circular(15),
-                            bottomRight: Radius.circular(15),
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey,
-                              offset: Offset(4, -4),
-                              blurRadius: 10,
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          children: [
-                            GestureDetector(
-                              onTap: () async {
-                                await readText(widget.WordTest.wayread);
-                              },
-                              child: const Icon(Icons.volume_down_sharp,
-                                  color: Colors.blue),
-                            ),
-                            SizedBox(
-                              width: 150,
-                              child: Text(
-                                widget.typeTest == typeSort.JapanToVietNam
-                                    ? widget.WordTest.vocabulary
-                                    : widget.WordTest.mean,
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.black,
-                                ),
+                        margin: EdgeInsets.only(top: 40, right: 50),
+                        width: MediaQuery.sizeOf(context).width/3,
+                        child: Image.asset("assets/character/character1.png", width: 180),
+                      ),
+                    ),
+                    Positioned(
+                      right: 20,
+                      child:  Center(
+                        child: Container(
+                          width: MediaQuery.sizeOf(context).width/2.4,
+                          child: Container(
+                            padding: EdgeInsets.only(left: 10,),
+                            height: 120,
+                            decoration: const BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(15),
+                                topRight: Radius.circular(15),
+                                bottomRight: Radius.circular(15),
                               ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey,
+                                  offset: Offset(4, -4),
+                                  blurRadius: 10,
+                                ),
+                              ],
                             ),
-                          ],
+                            child: Row(
+                              children: [
+                                GestureDetector(
+                                  onTap: () async {
+                                    await readText(widget.WordTest.wayread);
+                                  },
+                                  child: const Icon(Icons.volume_down_sharp,
+                                      color: Colors.blue),
+                                ),
+                                SizedBox(
+                                  width: 150,
+                                  child: Text(
+                                    widget.typeTest == typeSort.JapanToVietNam
+                                        ? widget.WordTest.vocabulary
+                                        : widget.WordTest.mean,
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.black,
+                                    ),
+                                    overflow: TextOverflow.ellipsis, // tránh tràn
+                                    maxLines: 2
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
                     )

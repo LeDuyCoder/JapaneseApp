@@ -12,6 +12,7 @@ import 'package:japaneseapp/Module/topic.dart';
 import 'package:japaneseapp/Screen/addWordScreen.dart';
 import 'package:japaneseapp/Screen/allFolderScreen.dart';
 import 'package:japaneseapp/Screen/qrScreen.dart';
+import 'package:japaneseapp/Screen/seeMoreTopic.dart';
 import 'package:japaneseapp/Theme/colors.dart';
 import 'package:japaneseapp/Widget/folerWidget.dart';
 
@@ -82,13 +83,16 @@ class _DashboardScreenState extends State<dashboardScreen> {
 
     try {
       final response = await http
-          .get(Uri.parse("https://google.com"))
-          .timeout(const Duration(seconds: 5));
-      return response.statusCode >= 200 && response.statusCode < 400;
-    } catch (_) {
+          .get(Uri.parse("https://www.gstatic.com/generate_204"))
+          .timeout(const Duration(seconds: 8));
+      print(response.statusCode);
+      return response.statusCode == 204;
+    } catch (e) {
+      print("Internet check error: $e");
       return false;
     }
   }
+
 
   @override
   void dispose() {
@@ -1181,7 +1185,6 @@ class _DashboardScreenState extends State<dashboardScreen> {
   void showBottomSheetDowloadPulic(String id) {
     showModalBottomSheet(
       context: context,
-      isDismissible: false,
       backgroundColor: Colors.transparent,
       builder: (BuildContext context) {
         return Container(
@@ -1196,14 +1199,15 @@ class _DashboardScreenState extends State<dashboardScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Image.asset(
-                "assets/character/character6.png",
-                width: MediaQuery.sizeOf(context).width * 0.3,
+              Icon(
+                Icons.warning,
+                color: Colors.orange, // màu icon
+                size: 60,
               ),
               const SizedBox(height: 20),
               const AutoSizeText(
                 "Bạn có muốn tải xuống không ?",
-                style: TextStyle(fontFamily: "indieflower", fontSize: 15),
+                style: TextStyle(fontFamily: "Itim", fontSize: 20),
               ),
               const SizedBox(height: 20),
               Row(
@@ -1211,39 +1215,14 @@ class _DashboardScreenState extends State<dashboardScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Container(
-                      width: MediaQuery.sizeOf(context).width * 0.3,
-                      height: MediaQuery.sizeOf(context).height * 0.05,
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        boxShadow: [],
-                      ),
-                      child: const Center(
-                        child: Text(
-                          "Hủy",
-                          style: TextStyle(
-                            color: Colors.red,
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  GestureDetector(
                     onTap: () async {
                       dowloadTopic(id);
                     },
                     child: Container(
-                      width: MediaQuery.sizeOf(context).width * 0.3,
-                      height: MediaQuery.sizeOf(context).height * 0.05,
-                      decoration: const BoxDecoration(
-                        color: Colors.green,
+                      width: MediaQuery.sizeOf(context).width * 0.2,
+                      height: MediaQuery.sizeOf(context).height * 0.04,
+                      decoration: BoxDecoration(
+                        color: Colors.orange.withOpacity(1),
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                       ),
                       child: const Center(
@@ -1322,7 +1301,7 @@ class _DashboardScreenState extends State<dashboardScreen> {
                   const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Text("Thư Mục Của Tôi", style: TextStyle(color: AppColors.textPrimary, fontSize: 18),),
+                      Text("Thư Mục Của Tôi", style: TextStyle(color: AppColors.textPrimary, fontSize: 20, fontFamily: "Itim"),),
                       SizedBox(width: 80,),
                       Text("Xem Tất Cả", style: TextStyle(color: AppColors.primary, fontSize: 18),),
                     ],
@@ -1427,7 +1406,7 @@ class _DashboardScreenState extends State<dashboardScreen> {
                   const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Text("Cộng Đồng", style: TextStyle(color: AppColors.textPrimary, fontSize: 18),),
+                      Text("Cộng Đồng", style: TextStyle(color: AppColors.textPrimary, fontSize: 18, fontFamily: "Itim"),),
                       SizedBox(width: 80,),
                       Text("Xem Tất Cả", style: TextStyle(color: AppColors.primary, fontSize: 18),),
                     ],
@@ -1553,7 +1532,7 @@ class _DashboardScreenState extends State<dashboardScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Text("Chủ Đề Của Tôi", style: TextStyle(color: AppColors.textPrimary, fontSize: 18),),
+                      Text("Chủ Đề Của Tôi", style: TextStyle(color: AppColors.textPrimary, fontSize: 20, fontFamily: "Itim"),),
                       SizedBox(width: 80,),
                       Text("Xem Tất Cả", style: TextStyle(color: AppColors.primary, fontSize: 18),),
 
@@ -1574,7 +1553,7 @@ class _DashboardScreenState extends State<dashboardScreen> {
                                     width: MediaQuery.sizeOf(context).width,
                                     height: 120,
                                     padding: EdgeInsets.only(left: 10, right: 10, top: 10),
-                                    decoration: BoxDecoration(
+                                    decoration: const BoxDecoration(
                                         boxShadow: [
                                           BoxShadow(
                                             color: Colors.grey,
@@ -1741,11 +1720,10 @@ class _DashboardScreenState extends State<dashboardScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      const Text("Thư Mục Của Tôi", style: TextStyle(color: AppColors.textPrimary, fontSize: 18),),
+                      const Text("Thư Mục Của Tôi", style: TextStyle(color: AppColors.textPrimary, fontSize: 20, fontFamily: "Itim"),),
                       const SizedBox(width: 80,),
                       GestureDetector(
                         onTap: () {
-                          print("demo");
                           Navigator.push(
                             context,
                             PageRouteBuilder(
@@ -1765,7 +1743,7 @@ class _DashboardScreenState extends State<dashboardScreen> {
                             ),
                           );
                         },
-                        child: Text("Xem Tất Cả", style: TextStyle(color: AppColors.primary, fontSize: 18),),
+                        child: Text("Xem Tất Cả", style: TextStyle(color: AppColors.primary, fontSize: 18, fontFamily: "Itim"),),
                       )
                     ],
                   ),
@@ -1785,114 +1763,179 @@ class _DashboardScreenState extends State<dashboardScreen> {
                       )
                   ),
                   SizedBox(height: 10,),
-                  const Row(
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Text("Cộng Đồng", style: TextStyle(color: AppColors.textPrimary, fontSize: 18),),
+                      Text("Cộng Đồng", style: TextStyle(color: AppColors.textPrimary, fontSize: 18, fontFamily: "Itim"),),
                       SizedBox(width: 80,),
-                      Text("Xem Tất Cả", style: TextStyle(color: AppColors.primary, fontSize: 18),),
+                      GestureDetector(
+                        onTap: (){
+                          Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                              pageBuilder: (context, animation, secondaryAnimation) => seeMoreTopic(reloadScreen: reloadScreen),
+                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                const begin = Offset(1.0, 0.0);
+                                const end = Offset.zero;
+                                const curve = Curves.ease;
+
+                                final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+                                return SlideTransition(
+                                  position: animation.drive(tween),
+                                  child: child,
+                                );
+                              },
+                            ),
+                          );
+                        },
+                        child: Text("Xem Tất Cả", style: TextStyle(fontFamily: "Itim", color: AppColors.primary, fontSize: 18),),
+                      )
                     ],
                   ),
+                  SizedBox(height: 10,),
                   Container(
                     width: MediaQuery.sizeOf(context).width,
                     child: SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Row(
                         children: [
-                          if(snapshot.data!.containsKey("topicServer"))
-                            for(topic topicServer in snapshot.data?["topicServer"])
-                              GestureDetector(
-                                onTap: (){
-                                },
-                                child: topicServerWidget(
-                                    name: topicServer.name,
-                                    owner: topicServer.owner ?? '',
-                                    amount: topicServer.count??0,
-                                    id: topicServer.id
-                                ),
-                              ),
-                          if(!snapshot.data!.containsKey("topicServer"))
+                          if(snapshot.data!.containsKey("topicServer") && snapshot.data!.isEmpty)
                             Container(
                               width: MediaQuery.sizeOf(context).width,
-                              height: 250,
+                              height: 180,
                               child: Container(
                                 margin: const EdgeInsets.only(left: 20, right: 20, top: 20),
                                 width: MediaQuery.sizeOf(context).width,
-                                height: 250,
+                                height: 180,
                                 decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(20),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: AppColors.grey,
-                                      offset: Offset(0, 2),
-                                      blurRadius: 10
-                                    )
-                                  ]
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(20),
+                                    boxShadow: const [
+                                      BoxShadow(
+                                          color: AppColors.grey,
+                                          offset: Offset(0, 2),
+                                          blurRadius: 10
+                                      )
+                                    ]
                                 ),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Text("Không thể kết nối", style: TextStyle(color: AppColors.textPrimary, fontSize: 20, fontWeight: FontWeight.bold),),
-                                    const Padding(
+                                    const Icon(Icons.folder, color: AppColors.grey, size: 50,),
+                                    const Text("Không có dữ liệu", style: TextStyle(fontFamily: "Itim" ,color: AppColors.textPrimary, fontSize: 20, fontWeight: FontWeight.bold),),
+                                    Padding(
                                       padding: EdgeInsets.only(left: 50, right: 50),
-                                      child: Text("Vui lòng kiểm tra lại internet của bạn và thử lại để xem nội dung cộng đồng",
+                                      child: Text("Hiện tại không có thư mục nào. Hãy đăng thư mục đầu tiên của bạn",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            color: AppColors.textSecond.withOpacity(0.5),
+                                            fontSize: 15,
+                                            height: 1.8,
+                                            fontFamily: "Itim"
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          if(snapshot.data!.containsKey("topicServer") && snapshot.data!.isNotEmpty)
+                            for(topic topicServer in snapshot.data?["topicServer"])
+                              topicServerWidget(
+                                  name: topicServer.name,
+                                  owner: topicServer.owner ?? '',
+                                  amount: topicServer.count??0,
+                                  id: topicServer.id,
+                                  showBottomShetDownload: (String id) {
+                                    showBottomSheetDowloadPulic(id);
+                                  },
+                              ),
+                          if(!snapshot.data!.containsKey("topicServer"))
+                            ...[
+                              Container(
+                                width: MediaQuery.sizeOf(context).width,
+                                height: 250,
+                                child: Container(
+                                  margin: const EdgeInsets.only(left: 20, right: 20, top: 20),
+                                  width: MediaQuery.sizeOf(context).width,
+                                  height: 250,
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(20),
+                                      boxShadow: [
+                                        BoxShadow(
+                                            color: AppColors.grey,
+                                            offset: Offset(0, 2),
+                                            blurRadius: 10
+                                        )
+                                      ]
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Text("Không thể kết nối", style: TextStyle(color: AppColors.textPrimary, fontSize: 20, fontWeight: FontWeight.bold),),
+                                      const Padding(
+                                        padding: EdgeInsets.only(left: 50, right: 50),
+                                        child: Text("Vui lòng kiểm tra lại internet của bạn và thử lại để xem nội dung cộng đồng",
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                               color: AppColors.textSecond,
                                               fontSize: 15,
                                               height: 1.8
                                           ),
-                                      ),
-                                    ),
-                                    SizedBox(height: 20,),
-                                    InkWell(
-                                      onTap: () {
-                                        reloadScreen();
-                                      },
-                                      borderRadius: BorderRadius.circular(60),
-                                      child: Container(
-                                        width: 140,
-                                        height: 50,
-                                        decoration: BoxDecoration(
-                                          color: AppColors.primary,
-                                          borderRadius: BorderRadius.circular(60),
-                                        ),
-                                        child: const Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Icon(ZondIcons.reload, color: AppColors.white),
-                                            SizedBox(width: 10),
-                                            Text(
-                                              "Thử Lại",
-                                              style: TextStyle(
-                                                color: AppColors.white,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 18,
-                                              ),
-                                            )
-                                          ],
                                         ),
                                       ),
-                                    )
-                                  ],
+                                      SizedBox(height: 20,),
+                                      InkWell(
+                                        onTap: () {
+                                          reloadScreen();
+                                        },
+                                        borderRadius: BorderRadius.circular(60),
+                                        child: Container(
+                                          width: 140,
+                                          height: 50,
+                                          decoration: BoxDecoration(
+                                            color: AppColors.primary,
+                                            borderRadius: BorderRadius.circular(60),
+                                          ),
+                                          child: const Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Icon(ZondIcons.reload, color: AppColors.white),
+                                              SizedBox(width: 10),
+                                              Text(
+                                                "Thử Lại",
+                                                style: TextStyle(
+                                                  color: AppColors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 18,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
+                            ]
+
                         ],
                       ),
                     ),
                   ),
-                  SizedBox(height: 10,),
+                  SizedBox(height: 20,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      const Text("Chủ Đề Của Tôi", style: TextStyle(color: AppColors.textPrimary, fontSize: 18),),
+                      const Text("Chủ Đề Của Tôi", style: TextStyle(color: AppColors.textPrimary, fontSize: 20, fontFamily: "Itim"),),
                       const SizedBox(width: 80,),
                       GestureDetector(
                         onTap: () {
-                          print("demo");
                           Navigator.push(
                             context,
                             PageRouteBuilder(
@@ -1916,7 +1959,7 @@ class _DashboardScreenState extends State<dashboardScreen> {
                           padding: EdgeInsets.all(8.0), // tạo vùng click thoải mái hơn
                           child: Text(
                             "Xem Tất Cả",
-                            style: TextStyle(color: AppColors.primary, fontSize: 18),
+                            style: TextStyle(color: AppColors.primary, fontSize: 18, fontFamily: "Itim"),
                           ),
                         ),
                       ),

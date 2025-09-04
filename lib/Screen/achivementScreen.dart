@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:japaneseapp/Theme/colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Config/FunctionService.dart';
@@ -150,7 +151,8 @@ class _achivementScreen extends State<achivementScreen>{
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.backgroundPrimary,
+        scrolledUnderElevation: 0,
         leading: IconButton(onPressed: (){
           Navigator.pop(context);
         }, icon: const Icon(Icons.arrow_back, size: 30,)),
@@ -181,186 +183,239 @@ class _achivementScreen extends State<achivementScreen>{
         return Container(
             color: Colors.white,
             child: Container(
+              color: AppColors.backgroundPrimary,
               width: MediaQuery.sizeOf(context).width,
               height: MediaQuery.sizeOf(context).height - AppBar().preferredSize.height,
               child: SingleChildScrollView(
                 scrollDirection: Axis.vertical,
                 child: Column(
                   children: [
-                    Center(child: Text(AppLocalizations.of(context)!.achivement_title_one, style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),)),
-                    SizedBox(height: 20,),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10, right: 5),
-                      child: GridView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          mainAxisSpacing: 5,
-                          crossAxisSpacing: 5,
-                          childAspectRatio: 1,
-                        ),
-                        itemCount: achievements.length,
-                        itemBuilder: (context, index) {
-                          final achievement = achievements[index];
-                          String imagePath = achievement["image"][0];
-
-                          return GestureDetector(
-                            onTap: () {
-                              if (achievement.containsKey("description")) {
-                                showBottomSheetAchivementInfor(context, achievement["title"], achievement["description"], imagePath, achievement["check"](snapshot.data!));
-                              }
-                            },
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                ColorFiltered(
-                                  colorFilter: ColorFilter.mode(
-                                      Colors.white,
-                                      achievement["check"](snapshot.data!) ? BlendMode.dst : BlendMode.saturation
-                                  ),
-                                  child: Image.asset(
-                                    imagePath,
-                                    scale: 3,
-                                  ),
-                                ),
-                                SizedBox(height: 8),
-                                Text(
-                                  achievement["title"],
-                                  style: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 20,
-                                    fontFamily: "Itim",
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ],
-                            ),
-                          );
-                        },
+                    Container(
+                      width: MediaQuery.sizeOf(context).width / 1.1,
+                      height: 550,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.grey,
+                            offset: Offset(0, 2),
+                            blurRadius: 10
+                          )
+                        ]
                       ),
-                    ),
-
-                    SizedBox(height: 10,),
-                    Divider(
-                      color: Colors.grey.shade300, // Màu của đường kẻ
-                      thickness: 2,
-                      // indent: MediaQuery.sizeOf(context).width,
-                      // endIndent: MediaQuery.sizeOf(context).width,// Độ dày
-                    ),
-                    Center(child: Text(AppLocalizations.of(context)!.achivement_title_two, style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),)),
-                    SizedBox(height: 20,),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 15, right: 5),
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: streakMilestones.map((streak) {
-                            String imagePath = "assets/achivement/dayStreak/${streak}day.png";
-
-                            return GestureDetector(
-                              onTap: (){
-                                showBottomSheetAchivementInfor(
-                                    context,
-                                    AppLocalizations.of(context)!.achivement_streak_title("$streak"),
-                                    AppLocalizations.of(context)!.achivement_streak_description("$streak"),
-                                    imagePath, checkStreak(snapshot.data!["Streak"], streak));
-                              },
-                              child: Padding(
-                                padding: EdgeInsets.only(right: 20),
-                                child: Column(
-                                  children: [
-                                    ColorFiltered(
-                                      colorFilter: ColorFilter.mode(
-                                          Colors.white,
-                                          checkStreak(snapshot.data!["Streak"], streak) ? BlendMode.dst : BlendMode.saturation
-                                      ),
-                                      child: Image.asset(imagePath, scale: 14),
-                                    ),
-
-                                    SizedBox(height: MediaQuery.sizeOf(context).width * 0.03),
-                                    Text(
-                                      AppLocalizations.of(context)!.achivement_streak_title("$streak"),
-                                      style: const TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 20,
-                                        fontFamily: "Itim",
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Center(child: Text(AppLocalizations.of(context)!.achivement_title_one, style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: AppColors.primary),)),
+                          SizedBox(height: 20,),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10, right: 5),
+                            child: GridView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                mainAxisSpacing: 5,
+                                crossAxisSpacing: 5,
+                                childAspectRatio: 1,
                               ),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    ),
+                              itemCount: achievements.length,
+                              itemBuilder: (context, index) {
+                                final achievement = achievements[index];
+                                String imagePath = achievement["image"][0];
 
-                    SizedBox(height: 10,),
-                    Divider(
-                      color: Colors.grey.shade300, // Màu của đường kẻ
-                      thickness: 2,
-                      // indent: MediaQuery.sizeOf(context).width,
-                      // endIndent: MediaQuery.sizeOf(context).width,// Độ dày
-                    ),
-                    Center(child: Text(AppLocalizations.of(context)!.achivement_title_three, style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),)),
-                    SizedBox(height: 20,),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: GridView.count(
-                        shrinkWrap: true, // để GridView nằm gọn trong Column
-                        physics: const NeverScrollableScrollPhysics(), // tránh conflict với Scroll cha
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 10,
-                        childAspectRatio: 1, // chỉnh lại tỉ lệ (thấp hơn 1 cho item cao hơn)
-                        children: topicMilestones.map((topic) {
-                          String imagePath = "assets/achivement/finish/${topic}_finish.png";
-
-                          return GestureDetector(
-                            onTap: () {
-                              showBottomSheetAchivementInfor(
-                                context,
-                                AppLocalizations.of(context)!.achivement_topic_title("$topic"),
-                                AppLocalizations.of(context)!.achivement_topic_description("$topic"),
-                                imagePath,
-                                amountTopicComplite >= topic,
-                              );
-                            },
-                            child: Column(
-                              children: [
-                                Expanded( // co giãn hình cho vừa khung
-                                  child: ColorFiltered(
-                                    colorFilter: ColorFilter.mode(
-                                      Colors.white,
-                                      amountTopicComplite >= topic
-                                          ? BlendMode.dst
-                                          : BlendMode.saturation,
-                                    ),
-                                    child: Container(
-                                      width: 150,
-                                      height: 150,
-                                      child: Image.asset(imagePath, fit: BoxFit.contain),
-                                    )
+                                return GestureDetector(
+                                  onTap: () {
+                                    if (achievement.containsKey("description")) {
+                                      showBottomSheetAchivementInfor(context, achievement["title"], achievement["description"], imagePath, achievement["check"](snapshot.data!));
+                                    }
+                                  },
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      ColorFiltered(
+                                        colorFilter: ColorFilter.mode(
+                                            Colors.white,
+                                            achievement["check"](snapshot.data!) ? BlendMode.dst : BlendMode.saturation
+                                        ),
+                                        child: Image.asset(
+                                          imagePath,
+                                          scale: 3,
+                                        ),
+                                      ),
+                                      SizedBox(height: 8),
+                                      Text(
+                                        achievement["title"],
+                                        style: const TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 14,
+                                          fontFamily: "Itim",
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
                                   ),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  AppLocalizations.of(context)!.achivement_topic_title("$topic"),
-                                  style: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 16,
-                                    fontFamily: "Itim",
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ],
+                                );
+                              },
                             ),
-                          );
-                        }).toList(),
+                          )
+                        ],
                       ),
-                    )
-              ],
+                    ),
+                    SizedBox(height: 50,),
+                    Container(
+                      width: MediaQuery.sizeOf(context).width / 1.1,
+                      height: 700,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          boxShadow: [
+                            BoxShadow(
+                                color: AppColors.grey,
+                                offset: Offset(0, 2),
+                                blurRadius: 10
+                            )
+                          ]
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Center(child: Text(AppLocalizations.of(context)!.achivement_title_two, style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: AppColors.primary),)),
+                          SizedBox(height: 20,),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 15, right: 5),
+                            child: GridView.count(
+                              shrinkWrap: true,
+                              crossAxisCount: 2, // số cột muốn hiển thị
+                              mainAxisSpacing: 5, // khoảng cách dọc
+                              crossAxisSpacing: 5, // khoảng cách ngang
+                              physics: const NeverScrollableScrollPhysics(), // tránh conflict với scroll cha
+                              children: streakMilestones.map((streak) {
+                                String imagePath = "assets/achivement/dayStreak/${streak}day.png";
+
+                                return GestureDetector(
+                                  onTap: () {
+                                    showBottomSheetAchivementInfor(
+                                      context,
+                                      AppLocalizations.of(context)!.achivement_streak_title("$streak"),
+                                      AppLocalizations.of(context)!.achivement_streak_description("$streak"),
+                                      imagePath,
+                                      checkStreak(snapshot.data!["Streak"], streak),
+                                    );
+                                  },
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      ColorFiltered(
+                                        colorFilter: ColorFilter.mode(
+                                          Colors.white,
+                                          checkStreak(snapshot.data!["Streak"], streak)
+                                              ? BlendMode.dst
+                                              : BlendMode.saturation,
+                                        ),
+                                        child: Image.asset(imagePath, scale: 14),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        AppLocalizations.of(context)!
+                                            .achivement_streak_title("$streak"),
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 16,
+                                          fontFamily: "Itim",
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        ],
+                      )
+                    ),
+                    SizedBox(height: 50,),
+                    Container(
+                        width: MediaQuery.sizeOf(context).width / 1.1,
+                        height: 700,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                            boxShadow: [
+                              BoxShadow(
+                                  color: AppColors.grey,
+                                  offset: Offset(0, 2),
+                                  blurRadius: 10
+                              )
+                            ]
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Center(child: Text(AppLocalizations.of(context)!.achivement_title_three, style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: AppColors.primary),)),
+                            SizedBox(height: 20,),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 15),
+                              child: GridView.count(
+                                shrinkWrap: true, // để GridView nằm gọn trong Column
+                                physics: const NeverScrollableScrollPhysics(), // tránh conflict với Scroll cha
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 10,
+                                mainAxisSpacing: 10,
+                                childAspectRatio: 1, // chỉnh lại tỉ lệ (thấp hơn 1 cho item cao hơn)
+                                children: topicMilestones.map((topic) {
+                                  String imagePath = "assets/achivement/finish/${topic}_finish.png";
+
+                                  return GestureDetector(
+                                    onTap: () {
+                                      showBottomSheetAchivementInfor(
+                                        context,
+                                        AppLocalizations.of(context)!.achivement_topic_title("$topic"),
+                                        AppLocalizations.of(context)!.achivement_topic_description("$topic"),
+                                        imagePath,
+                                        amountTopicComplite >= topic,
+                                      );
+                                    },
+                                    child: Column(
+                                      children: [
+                                        Expanded( // co giãn hình cho vừa khung
+                                          child: ColorFiltered(
+                                              colorFilter: ColorFilter.mode(
+                                                Colors.white,
+                                                amountTopicComplite >= topic
+                                                    ? BlendMode.dst
+                                                    : BlendMode.saturation,
+                                              ),
+                                              child: Container(
+                                                width: 150,
+                                                height: 150,
+                                                child: Image.asset(imagePath, fit: BoxFit.contain),
+                                              )
+                                          ),
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Text(
+                                          AppLocalizations.of(context)!.achivement_topic_title("$topic"),
+                                          style: const TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 16,
+                                            fontFamily: "Itim",
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                            )
+                          ],
+                        )
+                    ),
+
+                  ],
                 ),
               ),
             )

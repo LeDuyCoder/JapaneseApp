@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:japaneseapp/Screen/charactersScreen.dart';
 import 'package:japaneseapp/Screen/dashboardScreen.dart';
+import 'package:japaneseapp/Screen/dictionaryScreen.dart';
 import 'package:japaneseapp/Screen/profileScreen.dart';
 import 'package:japaneseapp/Theme/colors.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
@@ -23,8 +24,7 @@ class _TabScreenState extends State<TabScreen> {
   late PageController _pageController;
   late final List<Widget> _screens = [
     dashboardScreen(key: dashboardScreen.globalKey, changeLanguage: widget.changeLanguage,),
-    Container(
-    ),
+    dictionaryScreen(),
     charactersScreen(),
     profileScreen(changeLanguage: widget.changeLanguage,)
   ];
