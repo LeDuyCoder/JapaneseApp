@@ -152,9 +152,13 @@ class _dictionaryScreen extends State<dictionaryScreen>{
   }
 
   Future<String> translateEnglish(String input) async{
-    final translator = GoogleTranslator();
-    String translation = (await translator.translate(input, to: 'en')).toString();
-    return translation;
+    try{
+      final translator = GoogleTranslator();
+      String translation = (await translator.translate(input, to: 'en')).toString();
+      return translation;
+    }catch(e){
+      return input;
+    }
   }
 
   Future<String> translateToLocalLanguage(String word, String languageCode) async{

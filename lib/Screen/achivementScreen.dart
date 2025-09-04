@@ -179,7 +179,7 @@ class _achivementScreen extends State<achivementScreen>{
           );
         }
 
-        var data = snapshot.data as Map<String, dynamic>;
+        //var data = snapshot.data as Map<String, dynamic>;
         return Container(
             color: Colors.white,
             child: Container(

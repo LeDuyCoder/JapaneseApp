@@ -144,22 +144,11 @@ class _listWordScreen extends State<listWordScreen>{
         return Dialog(
           backgroundColor: Colors.white,
           shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(10),
-              bottomRight: Radius.circular(10),
-            ), // Bo góc popup
+            borderRadius: BorderRadius.all(Radius.circular(20)) // Bo góc popup
           ),
           child: StatefulBuilder(
             builder: (BuildContext context, void Function(void Function()) setState) {
               return Container(
-                  decoration: const BoxDecoration(
-                    border: Border(
-                      top: BorderSide(
-                        color: Color.fromRGBO(20, 195, 142, 1.0), // Màu xanh cạnh trên ngoài cùng
-                        width: 10.0, // Độ dày của cạnh trên
-                      ),
-                    ),
-                  ),
                   child: Container(
                     height: 300,
                     child: Column(
@@ -167,17 +156,17 @@ class _listWordScreen extends State<listWordScreen>{
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Image.asset("assets/character/character6.png", width: MediaQuery.sizeOf(context).width*0.3,),
-                        const Column(
+                        Column(
                           children: [
                             SizedBox(height: 20),
                             AutoSizeText(
-                              "Once deleted, it cannot be restored",
-                              style: TextStyle(fontFamily: "indieflower", fontSize: 15),
+                              "Xóa chủ đề",
+                              style: TextStyle(fontFamily: "Itim", fontSize: 25),
                             ),
 
                             AutoSizeText(
-                              "Do you want delete topic",
-                              style: TextStyle(fontFamily: "indieflower"),
+                              "Bạn có muốn xóa không",
+                              style: TextStyle(fontFamily: "Itim", color: AppColors.textSecond.withOpacity(0.8)),
                             ),
                             SizedBox(height: 20),
                           ],
@@ -188,13 +177,7 @@ class _listWordScreen extends State<listWordScreen>{
                           children: [
                             GestureDetector(
                               onTap: () async {
-                                DatabaseHelper db = DatabaseHelper.instance;
-                                db.deleteData("topic", "name = '${widget.topicName}'");
-                                db.deleteData("words", "topic = '${widget.topicName}'");
                                 Navigator.pop(context);
-                                Navigator.pop(context);
-                                Navigator.pop(context);
-                                widget.reloadDashboard();
                               },
                               child: Container(
                                 width: MediaQuery.sizeOf(context).width*0.3,
@@ -206,7 +189,7 @@ class _listWordScreen extends State<listWordScreen>{
                                     ]
                                 ),
                                 child: const Center(
-                                  child: Text("Delete", style: TextStyle(color: Colors.red, fontSize: 15, fontWeight: FontWeight.bold),),
+                                  child: Text("Cancle", style: TextStyle(color: Colors.red, fontSize: 15, fontWeight: FontWeight.bold),),
                                 ),
                               ),
 
@@ -214,18 +197,24 @@ class _listWordScreen extends State<listWordScreen>{
                             SizedBox(width:10,),
                             GestureDetector(
                               onTap: () async {
+                                DatabaseHelper db = DatabaseHelper.instance;
+                                db.deleteData("topic", "name = '${widget.topicName}'");
+                                db.deleteData("words", "topic = '${widget.topicName}'");
                                 Navigator.pop(context);
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                                widget.reloadDashboard();
                               },
                               child: Container(
                                 width: MediaQuery.sizeOf(context).width * 0.3,
                                 height: MediaQuery.sizeOf(context).height * 0.05,
-                                decoration: const BoxDecoration(
-                                  color: Colors.green,
+                                decoration: BoxDecoration(
+                                  color: AppColors.primary,
                                   borderRadius: BorderRadius.all(Radius.circular(10)),
                                 ),
                                 child: const Center(
                                   child: Text(
-                                    "Cancel",
+                                    "Delete",
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 15,

@@ -27,7 +27,7 @@ class _allTopicScreen extends State<allTopicScreen>{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
             "Chủ Đề Của Tôi",
           style: TextStyle(color: AppColors.primary, fontSize: 25, fontFamily: "Itim", fontWeight: FontWeight.bold),
         ),
@@ -42,7 +42,7 @@ class _allTopicScreen extends State<allTopicScreen>{
               color: AppColors.backgroundPrimary,
               child: Column(
                 children: [
-                  SizedBox(height: 10,),
+                  const SizedBox(height: 10,),
                   Container(
                     padding: EdgeInsets.all(20),
                     width: MediaQuery.sizeOf(context).width/1.2,

@@ -11,6 +11,7 @@ import 'package:icons_plus/icons_plus.dart';
 import 'package:japaneseapp/Module/topic.dart';
 import 'package:japaneseapp/Screen/addWordScreen.dart';
 import 'package:japaneseapp/Screen/allFolderScreen.dart';
+import 'package:japaneseapp/Screen/downloadScreen.dart';
 import 'package:japaneseapp/Screen/qrScreen.dart';
 import 'package:japaneseapp/Screen/seeMoreTopic.dart';
 import 'package:japaneseapp/Theme/colors.dart';
@@ -742,14 +743,14 @@ class _DashboardScreenState extends State<dashboardScreen> {
                         children: [
                           Row(
                             children: [
-                              Icon(Icons.add_circle_outline, color: Color(0xFF4CAF50), size: 28),
+                              Icon(Icons.add_circle_outline, color: AppColors.primary, size: 28),
                               const SizedBox(width: 10),
-                              const Text(
+                              Text(
                                 'Add New Topic',
                                 style: TextStyle(
                                   fontSize: 22,
                                   fontWeight: FontWeight.bold,
-                                  color: Color(0xFF388E3C),
+                                  color: AppColors.primary,
                                   fontFamily: "Itim",
                                 ),
                               ),
@@ -850,7 +851,7 @@ class _DashboardScreenState extends State<dashboardScreen> {
                                   style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
                                 ),
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xFF66BB6A),
+                                  backgroundColor: AppColors.primary,
                                   padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10),
@@ -1016,7 +1017,8 @@ class _DashboardScreenState extends State<dashboardScreen> {
     );
   }
 
-  Future<void> dowloadTopic(String id) async{
+  Future<bool> dowloadTopic(String id) async{
+
     DatabaseServer dbServer = new DatabaseServer();
     DatabaseHelper db = DatabaseHelper.instance;
 
@@ -1041,7 +1043,7 @@ class _DashboardScreenState extends State<dashboardScreen> {
       reload();
     }
 
-     Navigator.pop(context);
+    return true;
   }
 
   Future<bool> showDialogRenameTopic() async {
@@ -1182,7 +1184,7 @@ class _DashboardScreenState extends State<dashboardScreen> {
     return true;
   }
 
-  void showBottomSheetDowloadPulic(String id) {
+  void showBottomSheetDowloadPulic(String id, String nameTopic) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -1216,7 +1218,26 @@ class _DashboardScreenState extends State<dashboardScreen> {
                 children: [
                   GestureDetector(
                     onTap: () async {
-                      dowloadTopic(id);
+                      Navigator.push(
+                        context,
+                        PageRouteBuilder(
+                          pageBuilder: (context, animation, secondaryAnimation) => DownloadScreen(nameTopic: nameTopic, downloadTopic: () async {
+                            return dowloadTopic(id);
+                          },),
+                          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                            const begin = Offset(1.0, 0.0);
+                            const end = Offset.zero;
+                            const curve = Curves.ease;
+
+                            final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+                            return SlideTransition(
+                              position: animation.drive(tween),
+                              child: child,
+                            );
+                          },
+                        ),
+                      );
                     },
                     child: Container(
                       width: MediaQuery.sizeOf(context).width * 0.2,
@@ -1849,7 +1870,7 @@ class _DashboardScreenState extends State<dashboardScreen> {
                                   amount: topicServer.count??0,
                                   id: topicServer.id,
                                   showBottomShetDownload: (String id) {
-                                    showBottomSheetDowloadPulic(id);
+                                    showBottomSheetDowloadPulic(id, topicServer.name);
                                   },
                               ),
                           if(!snapshot.data!.containsKey("topicServer"))

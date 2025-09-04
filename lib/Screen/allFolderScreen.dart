@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../Config/dataHelper.dart';
@@ -15,7 +14,7 @@ class _allFolderScreen extends State<allFolderScreen>{
   String display = "grid";
 
   Future<Map<String, dynamic>> hanldeGetData() async {
-    final db = await DatabaseHelper.instance;
+    final db = DatabaseHelper.instance;
 
     Map<String, dynamic> data = {
       "folder": await db.getAllFolder(),
@@ -72,20 +71,20 @@ class _allFolderScreen extends State<allFolderScreen>{
                 folder["namefolder"],
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(
+                style: const TextStyle(
                   color: AppColors.black,
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            SizedBox(height: 4),
+            const SizedBox(height: 4),
             Flexible(
               child: Text(
                 folder["datefolder"],
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(
+                style: const TextStyle(
                   color: AppColors.textSecond,
                   fontSize: 12,
                 ),
@@ -97,7 +96,7 @@ class _allFolderScreen extends State<allFolderScreen>{
                 "${folder["amountTopic"]} Chủ Đề",
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(
+                style: const TextStyle(
                   color: AppColors.textSecond,
                   fontSize: 12,
                 ),
@@ -154,9 +153,9 @@ class _allFolderScreen extends State<allFolderScreen>{
           children: [
             Row(
               children: [
-                SizedBox(width: 30),
-                Icon(Icons.folder_open, size: 50),
-                SizedBox(width: 10),
+                const SizedBox(width: 30),
+                const Icon(Icons.folder_open, size: 50),
+                const SizedBox(width: 10),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -165,7 +164,7 @@ class _allFolderScreen extends State<allFolderScreen>{
                         folder["namefolder"],
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: AppColors.black,
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
@@ -173,9 +172,9 @@ class _allFolderScreen extends State<allFolderScreen>{
                       ),
                       Row(
                         children: [
-                          Text("${folder["amountTopic"]} Chủ Đề", style: TextStyle(fontSize: 12)),
-                          SizedBox(width: 10),
-                          Text(folder["datefolder"], style: TextStyle(fontSize: 12)),
+                          Text("${folder["amountTopic"]} Chủ Đề", style: const TextStyle(fontSize: 12)),
+                          const SizedBox(width: 10),
+                          Text(folder["datefolder"], style: const TextStyle(fontSize: 12)),
                         ],
                       )
                     ],
@@ -193,7 +192,7 @@ class _allFolderScreen extends State<allFolderScreen>{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "Thư Mục Của Tôi",
           style: TextStyle(color: AppColors.primary, fontSize: 25, fontFamily: "Itim", fontWeight: FontWeight.bold),
         ),
@@ -201,7 +200,6 @@ class _allFolderScreen extends State<allFolderScreen>{
         scrolledUnderElevation: 0,
       ),
       body: FutureBuilder(future: hanldeGetData(), builder: (ctx, snapshot){
-        print(snapshot.data!);
         if(snapshot.connectionState == ConnectionState.waiting){
           return Container(
             color: AppColors.backgroundPrimary,
@@ -236,7 +234,7 @@ class _allFolderScreen extends State<allFolderScreen>{
                   children: [
                     Row(
                       children: [
-                        SizedBox(width: 15),
+                        const SizedBox(width: 15),
                         Container(
                           width: 120,
                           height: 20,
@@ -257,7 +255,7 @@ class _allFolderScreen extends State<allFolderScreen>{
                               borderRadius: BorderRadius.circular(20)
                           ),
                         ),
-                        SizedBox(width: 15),
+                        const SizedBox(width: 15),
                       ],
                     ),
                   ],
@@ -364,7 +362,7 @@ class _allFolderScreen extends State<allFolderScreen>{
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
+                    const Row(
                       children: [
                         SizedBox(width: 15),
                         Text(
@@ -408,7 +406,7 @@ class _allFolderScreen extends State<allFolderScreen>{
                         children: [
                           for (dynamic folder in snapshot.data!["folder"])
                             ...[
-                              SizedBox(height: 10,),
+                              const SizedBox(height: 10,),
                               boxFolderFlex(folder),
                             ]
                         ],

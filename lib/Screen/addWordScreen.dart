@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:japaneseapp/Config/dataHelper.dart';
 import 'package:japaneseapp/Module/word.dart';
+import 'package:japaneseapp/Theme/colors.dart';
 import 'package:japaneseapp/Widget/addWordWidget.dart';
 
 class addWordScreen extends StatefulWidget{
@@ -262,19 +263,20 @@ class _addWordScreen extends State<addWordScreen>{
         Scaffold(
             resizeToAvoidBottomInset: true,
             appBar: AppBar(
+              backgroundColor: AppColors.backgroundPrimary,
+              scrolledUnderElevation: 0,
               leading: IconButton(onPressed: () {
                 Navigator.pop(context);
               }, icon: const Icon(Icons.arrow_back)),
               title: Text(
                 widget.topicName,
-                style: TextStyle(fontFamily: "aboshione", fontSize: 20, color: Colors.white),
+                style: const TextStyle(fontFamily: "Itim", fontSize: 30, color: AppColors.primary),
               ),
               actions: [
                 IconButton(onPressed: (){
                   showDialogSaveData(context);
-                }, icon: Icon(Icons.save_as_outlined), color: Colors.black,)
+                }, icon: Icon(Icons.done), color: AppColors.primary,)
               ],
-              backgroundColor: Color(0xFF81C784),
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.vertical(
                   bottom: Radius.circular(20),
@@ -290,10 +292,10 @@ class _addWordScreen extends State<addWordScreen>{
                     color: Colors.white,
                     child: SingleChildScrollView(
                       scrollDirection: Axis.vertical,
-                      child: listVocabulary.isEmpty ? const Center(
+                      child: listVocabulary.isEmpty ? Center(
                           child: Padding(
                             padding: EdgeInsets.only(top: 10),
-                            child: Text("No Vocabulary", style: TextStyle(fontFamily: "indieflower", fontSize: 25),),
+                            child: Text("Chưa Có Từ Nào", style: TextStyle(fontFamily: "Itim", fontSize: 25, color: AppColors.grey.withOpacity(0.8)),),
                           )
                       ): Column(
                         children: [
