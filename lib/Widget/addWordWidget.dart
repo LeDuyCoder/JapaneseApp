@@ -18,19 +18,26 @@ class _addWordWidget extends State<addWordWidget>{
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.sizeOf(widget.context).width - 20,
+
+      margin: const EdgeInsets.only(bottom: 5, right: 5, left: 5),
+      width: MediaQuery.sizeOf(widget.context).width,
       height: 100,
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: Colors.grey
-        ),
-        borderRadius: BorderRadius.all(Radius.circular(20))
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.all(Radius.circular(20)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey,
+            offset: Offset(0, 2),
+            blurRadius: 5
+          )
+        ]
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Padding(
@@ -38,25 +45,27 @@ class _addWordWidget extends State<addWordWidget>{
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(width: MediaQuery.sizeOf(context).width-80,
+                    SizedBox(width: MediaQuery.sizeOf(context).width/1.5,
                       child: Row(
                         children: [
-                          Text("${widget.word} : ", style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),
+                          Text("${widget.word} : ",
+                              style: const TextStyle(fontFamily: "itim", fontSize: 20),),
                           Text(
                             widget.wayRead,
-                            style: const TextStyle(fontSize: 15),
+                            style: const TextStyle(fontFamily: "itim", fontSize: 20),
                             maxLines: 1, // Chỉ hiển thị 1 dòng
                             overflow: TextOverflow.ellipsis, // Hiển thị "..." nếu vượt quá
                           ),
                         ],
                       )
                     ),
-                    SizedBox(width: MediaQuery.sizeOf(context).width-80,
+                    SizedBox(width: MediaQuery.sizeOf(context).width/1.5,
                       child: Text(
                         softWrap: true,
                         widget.mean,
-                        style: const TextStyle(fontFamily: "indieflower"),
-                        maxLines: 2, // Chỉ hiển thị tối đa 2 dòng
+                        style: const TextStyle(fontFamily: "itim", fontSize: 15),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis
                       ),
                     )
                   ],

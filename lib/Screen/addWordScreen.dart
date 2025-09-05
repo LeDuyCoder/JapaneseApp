@@ -1,22 +1,22 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:japaneseapp/Config/dataHelper.dart';
+import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:japaneseapp/Module/word.dart';
-import 'package:japaneseapp/Theme/colors.dart';
-import 'package:japaneseapp/Widget/addWordWidget.dart';
+
+import '../Config/dataHelper.dart';
+import '../Theme/colors.dart';
+import '../Widget/addWordWidget.dart';
+
 
 class addWordScreen extends StatefulWidget{
   final String topicName;
   final void Function() reload;
   final void Function() setIsLoad;
 
-  const addWordScreen({super.key, required this.topicName, required, required this.setIsLoad, required this.reload});
+  const addWordScreen({super.key, required this.topicName, required this.reload, required this.setIsLoad});
 
   @override
   State<StatefulWidget> createState() => _addWordScreen();
-
 }
 
 class _addWordScreen extends State<addWordScreen>{
@@ -33,210 +33,181 @@ class _addWordScreen extends State<addWordScreen>{
 
   bool isLoading = false;
 
-  void showDialogSaveData(BuildContext contextOrigin){
-    showDialog(
-      barrierDismissible: true,
-      context: context,
+  void showBottomSheetSaveData(BuildContext contextOrigin) {
+    showModalBottomSheet(
+      context: contextOrigin,
+      isDismissible: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
       builder: (BuildContext context) {
-        return Dialog(
-          backgroundColor: Colors.white,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(10),
-              bottomRight: Radius.circular(10),
-            ), // Bo góc popup
-          ),
-          child: StatefulBuilder(
-            builder: (BuildContext context, void Function(void Function()) setState) {
-              return Container(
-                decoration: const BoxDecoration(
-                  border: Border(
-                    top: BorderSide(
-                      color: Color.fromRGBO(20, 195, 142, 1.0), // Màu xanh cạnh trên ngoài cùng
-                      width: 10.0, // Độ dày của cạnh trên
+        return Container(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Thanh kéo nhỏ
+              Container(
+                width: 40,
+                height: 4,
+                margin: const EdgeInsets.only(bottom: 15),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade300,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+
+              // Icon + Title
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.warning_amber_rounded,
+                      color: Color(0xFFE21B3C), size: 50),
+                  const SizedBox(width: 10),
+                  const Text(
+                    "Cảnh Báo",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFFE21B3C),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+
+              // Content
+              const Text(
+                "Khi lưu không thể chỉnh sữa",
+                style: TextStyle(fontSize: 15, color: Colors.black87),
+              ),
+              const SizedBox(height: 20),
+
+              // Save Button
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFE21B3C),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 2,
+                  ),
+                  onPressed: () async {
+                    try {
+                      await saveData();
+                      Navigator.of(context).pop(); // đóng bottom sheet
+                      showBottomSheetSuccessSaveData(contextOrigin);
+                    } catch (e) {
+                      print("Lỗi: ${e.toString()}");
+                    }
+                  },
+                  icon: const Icon(Icons.save, color: Colors.white),
+                  label: const Text(
+                    "Save",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
-                child: Stack(
-                  children: [
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.only(left: 16, right: 16, top: 5),
-                          child: Text(
-                            'Waring Store Data ⚠️',
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.only(left: 16, right: 16, top: 5),
-                          child: Text(
-                            'Stored, can\'t edit',
-                            style: TextStyle(fontSize: 15),
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.bottomRight,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.only(top: 10, bottom: 10, right: 5),
-                                  child: Container(
-                                    width: 100,
-                                    height: 50,
-                                    decoration: const BoxDecoration(
-                                      color: Color.fromRGBO(255, 32, 32, 1.0),
-                                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                                    ),
-                                    child: const Center(
-                                      child: Text(
-                                        "Cancel",
-                                        style: TextStyle(color: Colors.white, fontSize: 15),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () async {
-                                  try {
-                                    await saveData(); // Đợi hàm saveData hoàn thành
-                                    showDialogSuccessSaveData(contextOrigin); // Hiển thị dialog sau khi lưu xong
-                                  } catch (e) {
-                                    print("Lỗi test: ${e.toString()}");
-                                  }
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10),
-                                  child: Container(
-                                    width: 100,
-                                    height: 50,
-                                    decoration: const BoxDecoration(
-                                      color: Color.fromRGBO(184, 241, 176, 1),
-                                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                                    ),
-                                    child: const Center(
-                                      child: Text(
-                                        "Save",
-                                        style: TextStyle(color: Colors.black, fontSize: 15),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              );
-            },
+              ),
+              const SizedBox(height: 10),
+            ],
           ),
         );
       },
     );
   }
-  void showDialogSuccessSaveData(BuildContext contextOrigin){
-    showDialog(
-      barrierDismissible: true,
-      context: context,
+
+  void showBottomSheetSuccessSaveData(BuildContext contextOrigin) {
+    showModalBottomSheet(
+      context: contextOrigin,
+      isDismissible: false,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
       builder: (BuildContext context) {
-        return Dialog(
-          backgroundColor: Colors.white,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(10),
-              bottomRight: Radius.circular(10),
-            ), // Bo góc popup
-          ),
-          child: StatefulBuilder(
-            builder: (BuildContext context, void Function(void Function()) setState) {
-              return Container(
-                decoration: const BoxDecoration(
-                  border: Border(
-                    top: BorderSide(
-                      color: Color.fromRGBO(20, 195, 142, 1.0), // Màu xanh cạnh trên ngoài cùng
-                      width: 10.0, // Độ dày của cạnh trên
+        return Container(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Thanh kéo
+              Container(
+                width: 40,
+                height: 4,
+                margin: const EdgeInsets.only(bottom: 15),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade300,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+
+              // Icon + Title
+              Column(
+                children: const [
+                  Icon(Icons.check_circle,
+                      color: Color(0xFF4CAF50), size: 60),
+                  SizedBox(width: 10),
+                  Text(
+                    "Lưu Thành Công",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF4CAF50),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+
+              // Content
+              const Text(
+                "Chủ đề bạn tạo đã được tạo thành công 🎉",
+                style: TextStyle(fontSize: 15, color: Colors.black87),
+              ),
+              const SizedBox(height: 20),
+
+              // Save / Close button
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF4CAF50),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 2,
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context); // đóng bottom sheet
+                    Navigator.pop(contextOrigin); // đóng màn addWord
+                    widget.reload();
+                  },
+                  icon: const Icon(Icons.check, color: Colors.white),
+                  label: const Text(
+                    "OK",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
-                child: Stack(
-                  children: [
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.only(left: 16, right: 16, top: 5),
-                          child: Text(
-                            'Successfully Save ✔️',
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.only(left: 16, right: 16, top: 5),
-                          child: Text(
-                            'Save data vocabulay success',
-                            style: TextStyle(fontSize: 15),
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.bottomRight,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.pop(contextOrigin);
-                                  Navigator.pop(contextOrigin);
-                                  Navigator.pop(contextOrigin);
-                                  widget.reload();
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10),
-                                  child: Container(
-                                    width: 100,
-                                    height: 50,
-                                    decoration: const BoxDecoration(
-                                      color: Color.fromRGBO(184, 241, 176, 1),
-                                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                                    ),
-                                    child: const Center(
-                                      child: Text(
-                                        "Save",
-                                        style: TextStyle(color: Colors.black, fontSize: 15),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              );
-            },
+              ),
+              const SizedBox(height: 10),
+            ],
           ),
         );
       },
     );
   }
+
 
   void deleteVocalary(word Vocabulary){
     setState(() {
@@ -258,277 +229,287 @@ class _addWordScreen extends State<addWordScreen>{
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Scaffold(
-            resizeToAvoidBottomInset: true,
-            appBar: AppBar(
-              backgroundColor: AppColors.backgroundPrimary,
-              scrolledUnderElevation: 0,
-              leading: IconButton(onPressed: () {
-                Navigator.pop(context);
-              }, icon: const Icon(Icons.arrow_back)),
-              title: Text(
-                widget.topicName,
-                style: const TextStyle(fontFamily: "Itim", fontSize: 30, color: AppColors.primary),
-              ),
-              actions: [
-                IconButton(onPressed: (){
-                  showDialogSaveData(context);
-                }, icon: Icon(Icons.done), color: AppColors.primary,)
-              ],
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(
-                  bottom: Radius.circular(20),
-                ),
-              ),
-            ),
+    return Scaffold(
+        resizeToAvoidBottomInset: true,
+        appBar: AppBar(
+          backgroundColor: AppColors.backgroundPrimary,
+          scrolledUnderElevation: 0,
+          leading: IconButton(onPressed: () {
+            Navigator.pop(context);
+          }, icon: const Icon(Icons.arrow_back)),
+          title: Text(
+            widget.topicName,
+            style: const TextStyle(fontFamily: "Itim", fontSize: 30, color: AppColors.primary),
+          ),
+          actions: [
+            IconButton(onPressed: (){
+              showBottomSheetSaveData(context);
+            }, icon: const Icon(Icons.done), color: AppColors.primary,)
+          ],
+        ),
 
-            body: Stack(
-              children: [
-                Container(
-                    width: MediaQuery.sizeOf(context).width,
-                    height: double.infinity,
-                    color: Colors.white,
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.vertical,
-                      child: listVocabulary.isEmpty ? Center(
-                          child: Padding(
-                            padding: EdgeInsets.only(top: 10),
-                            child: Text("Chưa Có Từ Nào", style: TextStyle(fontFamily: "Itim", fontSize: 25, color: AppColors.grey.withOpacity(0.8)),),
-                          )
-                      ): Column(
-                        children: [
-                          const SizedBox(height: 20,),
-                          for(word vocabulary in listVocabulary)
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 10),
-                              child: addWordWidget(context: context, word: vocabulary.vocabulary, wayRead: vocabulary.wayread, mean: vocabulary.mean, removeVocabulary: (){
-                                deleteVocalary(vocabulary);
-                              },),
-                            ),
-                          SizedBox(height: 200,),
-                        ],
+        body: Container(
+          width: MediaQuery.sizeOf(context).width,
+          height: MediaQuery.sizeOf(context).height,
+          color: AppColors.backgroundPrimary,
+          child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 20),
+              width: MediaQuery.sizeOf(context).width/1.1,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Column(
+                  children: [
+                    const SizedBox(height: 20,),
+                    for(word vocabulary in listVocabulary)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: addWordWidget(context: context, word: vocabulary.vocabulary, wayRead: vocabulary.wayread, mean: vocabulary.mean, removeVocabulary: (){
+                          deleteVocalary(vocabulary);
+                        },),
                       ),
-                    )
-                ),
-                //nagivator
-                Container(
-                  height: MediaQuery.sizeOf(context).height - AppBar().preferredSize.height,
-                  child: Align(
-                    alignment: Alignment.bottomLeft,
-                    child: Container(
+
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: 5),
+                      height: 500,
                       decoration: const BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.vertical(
-                              top: Radius.circular(20)
-                          ),
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
                           boxShadow: [
                             BoxShadow(
-                                offset: Offset(0, -4),
-                                blurRadius: 20,
+                                offset: Offset(0, -2),
+                                blurRadius: 5,
                                 color: Colors.grey
                             )
                           ]
                       ),
-                      height: 200,
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Row(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.only(left: 20, right: 10, top: 16),
-                                width: MediaQuery.sizeOf(context).width/2,
-                                height: 100,
-                                child: TextField(
-                                  controller: japanWordInput,
-                                  decoration: InputDecoration(
-                                      hintText: "Japnaese Word",
-                                      hintStyle: TextStyle(color: Colors.grey), // Màu chữ gợi ý
-                                      filled: true,
-                                      fillColor: Colors.white,
-                                      contentPadding: const EdgeInsets.symmetric(
-                                        horizontal: 12.0,
-                                        vertical: 20.0,
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: const BorderSide(
-                                          color: Colors.grey,
-                                          width: 2.0,
-                                        ),
-                                        borderRadius: BorderRadius.circular(8.0),
-                                      ),
-                                      errorBorder: OutlineInputBorder(
-                                        borderSide: const BorderSide(
-                                          color: Colors.red,
-                                          width: 3.0,
-                                        ),
-                                        borderRadius: BorderRadius.circular(10.0),
-                                      ),
-                                      errorText: errorMessageJapan
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                padding: const EdgeInsets.only(left: 10, right: 10, top: 16),
-                                width: MediaQuery.sizeOf(context).width/2,
-                                height: 100,
-                                child: TextField(
-                                  controller: readWayInput,
-                                  decoration: InputDecoration(
-                                      hintText: "Read Way",
-                                      hintStyle: TextStyle(color: Colors.grey), // Màu chữ gợi ý
-                                      filled: true,
-                                      fillColor: Colors.white,
-                                      contentPadding: const EdgeInsets.symmetric(
-                                        horizontal: 12.0,
-                                        vertical: 20.0,
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: const BorderSide(
-                                          color: Colors.grey,
-                                          width: 2.0,
-                                        ),
-                                        borderRadius: BorderRadius.circular(8.0),
-                                      ),
-                                      errorBorder: OutlineInputBorder(
-                                        borderSide: const BorderSide(
-                                          color: Colors.red,
-                                          width: 3.0,
-                                        ),
-                                        borderRadius: BorderRadius.circular(10.0),
-                                      ),
-                                      errorText: errorMessageReadWay
-                                  ),
-                                ),
-                              ),
-                            ],
+                          const SizedBox(height: 10,),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            child: Text("Từ vựng tiếng nhật", style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontFamily: "Itim",
+                                fontSize: 20,
+                                height: 1,
+                                color: AppColors.textSecond.withOpacity(0.6)
+                            ),),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.only(left: 20, right: 10),
-                                width: MediaQuery.sizeOf(context).width-100,
-                                height: 100,
-                                child: TextField(
-                                  controller: meanInput,
-                                  decoration: InputDecoration(
-                                      hintText: "Mean",
-                                      hintStyle: TextStyle(color: Colors.grey), // Màu chữ gợi ý
-                                      filled: true,
-                                      fillColor: Colors.white,
-                                      contentPadding: const EdgeInsets.symmetric(
-                                        horizontal: 12.0,
-                                        vertical: 20.0,
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: const BorderSide(
-                                          color: Colors.grey,
-                                          width: 2.0,
-                                        ),
-                                        borderRadius: BorderRadius.circular(8.0),
-                                      ),
-                                      errorBorder: OutlineInputBorder(
-                                        borderSide: const BorderSide(
-                                          color: Colors.red,
-                                          width: 3.0,
-                                        ),
-                                        borderRadius: BorderRadius.circular(10.0),
-                                      ),
-                                      errorText: errorMessageMean
+                          Container(
+                            padding: const EdgeInsets.only(left: 20, top:10, right: 20,),
+                            width: MediaQuery.sizeOf(context).width/1.1,
+                            height: 100,
+                            child: TextField(
+                              controller: japanWordInput,
+                              decoration: InputDecoration(
+                                  hintText: "Japnaese Word",
+                                  hintStyle: TextStyle(color: Colors.grey), // Màu chữ gợi ý
+                                  filled: true,
+                                  fillColor: Colors.white,
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 12.0,
+                                    vertical: 20.0,
                                   ),
-                                ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                      color: Colors.grey,
+                                      width: 2.0,
+                                    ),
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  errorBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                      color: Colors.red,
+                                      width: 3.0,
+                                    ),
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  errorText: errorMessageJapan
                               ),
-                              GestureDetector(
-                                onTap: (){
-                                  String japanVocabulary = japanWordInput.text;
-                                  String readWayVocabulary = readWayInput.text;
-                                  String meanVocabulary = meanInput.text;
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            child: Text("Cách đọc (Hiragana)", style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontFamily: "Itim",
+                                fontSize: 20,
+                                height: 1,
+                                color: AppColors.textSecond.withOpacity(0.6)
+                            ),),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.only(left: 20, top:10, right: 20,),
+                            width: MediaQuery.sizeOf(context).width,
+                            height: 100,
+                            child: TextField(
+                              controller: readWayInput,
+                              decoration: InputDecoration(
+                                  hintText: "Read Way",
+                                  hintStyle: TextStyle(color: Colors.grey), // Màu chữ gợi ý
+                                  filled: true,
+                                  fillColor: Colors.white,
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 12.0,
+                                    vertical: 20.0,
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                      color: Colors.grey,
+                                      width: 2.0,
+                                    ),
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  errorBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                      color: Colors.red,
+                                      width: 3.0,
+                                    ),
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  errorText: errorMessageReadWay
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Text("Nghĩa của từ", style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontFamily: "Itim",
+                                fontSize: 20,
+                                height: 1,
+                                color: AppColors.textSecond.withOpacity(0.6)
+                            ),),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.only(left: 20, top:10, right: 20,),
+                            width: MediaQuery.sizeOf(context).width,
+                            height: 100,
+                            child: TextField(
+                              controller: meanInput,
+                              decoration: InputDecoration(
+                                  hintText: "Mean",
+                                  hintStyle: TextStyle(color: Colors.grey), // Màu chữ gợi ý
+                                  filled: true,
+                                  fillColor: Colors.white,
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 12.0,
+                                    vertical: 20.0,
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                      color: Colors.grey,
+                                      width: 2.0,
+                                    ),
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  errorBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                      color: Colors.red,
+                                      width: 3.0,
+                                    ),
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  errorText: errorMessageMean
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: MediaQuery.sizeOf(context).width,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                GestureDetector(
+                                  onTap: (){
+                                    String japanVocabulary = japanWordInput.text;
+                                    String readWayVocabulary = readWayInput.text;
+                                    String meanVocabulary = meanInput.text;
 
-                                  bool canAdd = true;
+                                    bool canAdd = true;
 
-                                  if(japanVocabulary.isEmpty ||  japanVocabulary == ""){
-                                    setState(() {
-                                      errorMessageJapan = "Not empty";
-                                    });
-                                  }else if(readWayVocabulary.isEmpty ||  readWayVocabulary == ""){
-                                    setState(() {
-                                      errorMessageReadWay = "Not empty";
-                                    });
-                                  }else if(meanVocabulary.isEmpty ||  meanVocabulary == ""){
-                                    setState(() {
-                                      errorMessageMean = "Not empty";
-                                    });
-                                  }else{
-                                    for(word vocabulary in listVocabulary){
-                                      if(vocabulary.vocabulary == japanVocabulary && vocabulary.mean == meanVocabulary){
+                                    if(japanVocabulary.isEmpty ||  japanVocabulary == ""){
+                                      setState(() {
+                                        errorMessageJapan = "Not empty";
+                                      });
+                                    }else if(readWayVocabulary.isEmpty ||  readWayVocabulary == ""){
+                                      setState(() {
+                                        errorMessageReadWay = "Not empty";
+                                      });
+                                    }else if(meanVocabulary.isEmpty ||  meanVocabulary == ""){
+                                      setState(() {
+                                        errorMessageMean = "Not empty";
+                                      });
+                                    }else{
+                                      for(word vocabulary in listVocabulary){
+                                        if(vocabulary.vocabulary == japanVocabulary && vocabulary.mean == meanVocabulary){
+                                          setState(() {
+                                            errorMessageJapan = "word has exist";
+                                            canAdd = false;
+                                          });
+                                        }
+                                      }
+
+                                      if(canAdd){
                                         setState(() {
-                                          errorMessageJapan = "word has exist";
-                                          canAdd = false;
+                                          listVocabulary.add(
+                                              word(japanVocabulary, readWayVocabulary, meanVocabulary, widget.topicName, 0)
+                                          );
+                                          japanWordInput.clear();
+                                          readWayInput.clear();
+                                          meanInput.clear();
+                                          errorMessageJapan = null;
                                         });
                                       }
                                     }
-
-                                    if(canAdd){
-                                      setState(() {
-                                        listVocabulary.add(
-                                            word(japanVocabulary, readWayVocabulary, meanVocabulary, widget.topicName, 0)
-                                        );
-                                        japanWordInput.clear();
-                                        readWayInput.clear();
-                                        meanInput.clear();
-                                        errorMessageJapan = null;
-                                      });
-                                    }
-                                  }
-                                },
-                                child: SizedBox(
-                                    height: 100, // Giảm chiều cao của SizedBox
-                                    child: Column(
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.only(right: 10),
-                                          child: Container(
-                                            width: 70,
-                                            height: 70,
-                                            // Chiều cao thực của Container
-                                            decoration: const BoxDecoration(
-                                              color: Color.fromRGBO(184, 241, 176, 1),
-                                              borderRadius: BorderRadius.all(Radius.circular(20)),
-                                            ),
-                                            child: Center(
-                                              child: Icon(Icons.download_done),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                ),
-                              )
-                            ],
-                          )
+                                  },
+                                  child: Padding(
+                                    padding: EdgeInsets.only(right: 10),
+                                    child: Container(
+                                      width: 150,
+                                      height: 60,
+                                      // Chiều cao thực của Container
+                                      decoration: BoxDecoration(
+                                        color: AppColors.primary,
+                                        borderRadius: BorderRadius.all(Radius.circular(15)),
+                                      ),
+                                      child: Center(
+                                          child: Text("Thêm Từ", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),)
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                     ),
-                  ),
-                )
-              ],
-            )
+                    SizedBox(height: 50,)
+                  ],
 
-
-        ),
-        if(isLoading)
-          Container(
-            width: MediaQuery.sizeOf(context).width,
-            height: double.infinity,
-            color: const Color.fromRGBO(0, 0, 0, 0.1),
-            child: Center(
-              child: CircularProgressIndicator(color: Colors.green,),
-            ),
+                ),
+              )
           )
-      ],
+        )
+
     );
+    //   Stack(
+    //   children: [
+    //
+    //     if(isLoading)
+    //
+    //       Container(
+    //         width: MediaQuery.sizeOf(context).width,
+    //         height: double.infinity,
+    //         color: const Color.fromRGBO(0, 0, 0, 0.1),
+    //         child: const Center(
+    //           child: CircularProgressIndicator(color: Colors.green,),
+    //         ),
+    //       )
+    //   ],
+    // );
   }
 
 }
