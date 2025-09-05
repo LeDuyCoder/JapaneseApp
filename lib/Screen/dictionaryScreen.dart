@@ -26,10 +26,10 @@ class _dictionaryScreen extends State<dictionaryScreen>{
   late InterstitialAd? _interstitialAd;
   bool _isInterstitialAdReady = false;
   int amountSearch = 0;
+  String _lastQuery = "";
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _loadInterstitialAd();
   }
@@ -98,48 +98,57 @@ class _dictionaryScreen extends State<dictionaryScreen>{
 
 
   void _onSearchChanged(String query) {
-
-    if(query.length > 0){
-      setState(() {
-        status = "typing";
-      });
-    }else{
-      setState(() {
-        status = "waiting";
-      });
+    // Update trạng thái UI
+    if (query.isNotEmpty) {
+      setState(() => status = "typing");
+    } else {
+      setState(() => status = "waiting");
     }
 
+    // Hủy debounce cũ
     if (_debounce?.isActive ?? false) _debounce!.cancel();
 
-    _debounce = Timer(const Duration(milliseconds: 500), () {
-      if (query.isNotEmpty) {
-        setState(() {
-          status = "loading";
-        });
-        _callApi(query);
-      }
+    // Tạo debounce mới
+    _debounce = Timer(const Duration(milliseconds: 600), () {
+      if (query.isEmpty || query == _lastQuery) return;
+
+      setState(() => status = "loading");
+      _lastQuery = query;
+      _callApi(query).then((_) {
+        if (query == _lastQuery) {
+          setState(() => status = "done");
+        }
+      }).catchError((e) {
+        if (query == _lastQuery) {
+          setState(() => status = "error");
+        }
+      });
     });
   }
 
-  void _callApi(String query) async {
+  Future<void> _callApi(String query) async {
     amountSearch++;
     example = "";
     data = await fetchData(query);
-    if(data != null) {
-      String word = (data!["data"][0]["japanese"][0] as Map<dynamic, dynamic>).containsKey("word") ? data!["data"][0]["japanese"][0]["word"] : data!["data"][0]["slug"];
+
+    if (data != null) {
+      String word = (data!["data"][0]["japanese"][0] as Map<dynamic, dynamic>)
+          .containsKey("word")
+          ? data!["data"][0]["japanese"][0]["word"]
+          : data!["data"][0]["slug"];
+
       example = await generateExample(word, "vie");
     }
-    setState(()  {
+
+    setState(() {
       status = "done";
     });
-
 
     if (_isInterstitialAdReady && amountSearch >= 10) {
       _showInterstitialAd();
     }
-
-
   }
+
 
   Future<String> detectLanguage(String word) async{
     var code = await LanguageDetector.getLanguageCode(
