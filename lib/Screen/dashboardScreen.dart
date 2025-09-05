@@ -571,7 +571,7 @@ class _DashboardScreenState extends State<dashboardScreen> {
                           const Padding(
                             padding: EdgeInsets.all(16.0),
                             child: Text(
-                              'Add New Folder',
+                              'Thêm Thư Mục Mới',
                               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                             ),
                           ),
@@ -741,12 +741,12 @@ class _DashboardScreenState extends State<dashboardScreen> {
                       Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Row(
+                          const Row(
                             children: [
                               Icon(Icons.add_circle_outline, color: AppColors.primary, size: 28),
-                              const SizedBox(width: 10),
+                              SizedBox(width: 10),
                               Text(
-                                'Add New Topic',
+                                'Thêm Chủ Đề Mới',
                                 style: TextStyle(
                                   fontSize: 22,
                                   fontWeight: FontWeight.bold,
@@ -802,7 +802,7 @@ class _DashboardScreenState extends State<dashboardScreen> {
                                 },
                                 icon: const Icon(Icons.close, color: Colors.red),
                                 label: const Text(
-                                  "Cancel",
+                                  "Hủy",
                                   style: TextStyle(color: Colors.red, fontSize: 16, fontWeight: FontWeight.w600),
                                 ),
                                 style: TextButton.styleFrom(
@@ -821,17 +821,19 @@ class _DashboardScreenState extends State<dashboardScreen> {
 
                                   if (await DatabaseHelper.instance.hasTopicName(nameTopicInput.text)) {
                                     setState(() {
-                                      textErrorName = "Name Topic Exist";
+                                      textErrorName = "Tên Chủ Đề Đã Tồn Tại";
                                       isLoadingCreateNewFolder = false;
                                     });
                                   } else {
                                     isLoadingCreateNewFolder = false;
+                                    String nameTopic = nameTopicInput.text;
+                                    nameFolderInput.clear();
                                     Navigator.pop(context);
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => addWordScreen(
-                                          topicName: nameTopicInput.text,
+                                          topicName: nameTopic,
                                           setIsLoad: () {
                                             setState(() {
                                               isLoadingCreateNewFolder = false;
@@ -843,11 +845,12 @@ class _DashboardScreenState extends State<dashboardScreen> {
                                         ),
                                       ),
                                     );
+
                                   }
                                 },
                                 icon: const Icon(Icons.check_circle, color: Colors.white),
                                 label: const Text(
-                                  "Create",
+                                  "Tạo",
                                   style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
                                 ),
                                 style: ElevatedButton.styleFrom(

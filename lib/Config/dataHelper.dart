@@ -22,9 +22,6 @@ class DatabaseHelper {
   Future<Database> _initDatabase() async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, 'app_database.db');
-    
-    print("path: $path");
-
 
     // Đảm bảo rằng phiên bản đã được tăng lên để gọi lại onCreate nếu cần thiết
     return await openDatabase(
