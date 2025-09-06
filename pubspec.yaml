@@ -78,13 +78,16 @@ dependencies:
   country_flags: ^2.2.0
   collection: ^1.18.0
   flutter_dash: ^1.0.0
+  animated_text_kit: ^4.2.3
   google_generative_ai: ^0.4.7
 
 flutter_launcher_icons:
-  android: "launcher_icon"
   ios: true
+  android: true
   image_path: "assets/logo.png"
-  min_sdk_android: 21 # android min sdk min:16, default 21
+  image_path_ios: "assets/logo.png"
+  adaptive_icon_background: "assets/logo.png"   # dùng chính ảnh làm nền
+  adaptive_icon_foreground: "assets/logo.png"
 
 
 
