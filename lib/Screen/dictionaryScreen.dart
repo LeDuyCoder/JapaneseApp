@@ -3,13 +3,13 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:japaneseapp/Theme/colors.dart';
 import 'package:language_detector/language_detector.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:translator/translator.dart';
 import 'package:http/http.dart' as http;
+
+import '../Config/config.dart';
 
 class dictionaryScreen extends StatefulWidget{
   @override
@@ -36,7 +36,7 @@ class _dictionaryScreen extends State<dictionaryScreen>{
 
   void _loadInterstitialAd() {
     InterstitialAd.load(
-      adUnitId: 'ca-app-pub-3940256099942544/1033173712',
+      adUnitId: Config.admodId,
       request: const AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (ad) {

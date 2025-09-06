@@ -1,11 +1,10 @@
 import 'dart:convert';
-import 'dart:ffi';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:in_app_update/in_app_update.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:japaneseapp/Config/dataHelper.dart';
 import 'package:japaneseapp/Screen/controllScreen.dart';
@@ -29,6 +28,8 @@ class splashScreen extends StatefulWidget{
 class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
+
+  AppUpdateInfo? _updateInfo;
 
   String version_check = "", message_old_version = "";
   String version = "1.4.2";
@@ -72,6 +73,8 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
     _controller.forward();
     playIntro();
     _initializeDatabase();
+
+    checkForUpdate();
   }
 
 
@@ -213,19 +216,40 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
     DatabaseHelper db = DatabaseHelper.instance;
 
     await db.createDataLevel();
-    await Future.delayed(Duration(seconds: 3));
+    await Future.delayed(Duration(seconds: 2));
 
-    bool isConnected = await InternetConnectionChecker.instance.hasConnection;
-    if(isConnected) {
-      await fetchData();
-      if(version_check == version) {
-        sendToScreen();
-      }else{
-        showDialogNotificationVersion();
+    sendToScreen();
+    // bool isConnected = await InternetConnectionChecker.instance.hasConnection;
+    // if(isConnected) {
+    //   // await fetchData();
+    //   // if(version_check == version) {
+    //   //   sendToScreen();
+    //   // }else{
+    //   //   showDialogNotificationVersion();
+    //   // }
+    // }else{
+    //
+    // }
+  }
+
+  Future<void> checkForUpdate() async {
+    InAppUpdate.checkForUpdate().then((info) {
+      setState(() {
+        _updateInfo = info;
+      });
+
+      if (_updateInfo?.updateAvailability == UpdateAvailability.updateAvailable) {
+        // Flexible Update (người dùng có thể tiếp tục xài app trong lúc tải)
+        InAppUpdate.startFlexibleUpdate().then((_) {
+          InAppUpdate.completeFlexibleUpdate();
+        });
+
+        // Hoặc Immediate Update (bắt buộc cập nhật ngay)
+        // InAppUpdate.performImmediateUpdate();
       }
-    }else{
-      sendToScreen();
-    }
+    }).catchError((e) {
+      debugPrint("Lỗi check update: $e");
+    });
   }
 
   void sendToScreen() async {
@@ -300,7 +324,7 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
                       BlendMode.multiply,
                     ),
                     child: Image.asset(
-                      "assets/logo.png",
+                      "assets/icon.png",
                       scale: 5,
                     ),
                   ),

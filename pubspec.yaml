@@ -80,6 +80,7 @@ dependencies:
   flutter_dash: ^1.0.0
   animated_text_kit: ^4.2.3
   google_generative_ai: ^0.4.7
+  in_app_update: ^4.2.3
 
 flutter_launcher_icons:
   ios: true
@@ -121,14 +122,11 @@ flutter:
     - assets/sound/
     - assets/storyset/
     - assets/StateLevel/
-    - assets/textureBoder/
     - assets/achivement/
     - assets/achivement/dayStreak/
     - assets/achivement/finish/
     - assets/katakana/
     - assets/hiragana/
-    - assets/tabbar/
-    - assets/tutorial/
     - assets/animation/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
