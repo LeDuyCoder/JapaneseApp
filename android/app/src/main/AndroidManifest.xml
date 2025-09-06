@@ -19,7 +19,7 @@
         android:label="Japanese Learn"
         android:name="${applicationName}"
         android:hardwareAccelerated="true"
-        android:icon="@mipmap/launcher_icon"
+        android:icon="@mipmap/ic_launcher"
         tools:targetApi="honeycomb">
 
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>

@@ -1,9 +1,10 @@
 import 'dart:convert';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:in_app_update/in_app_update.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:japaneseapp/Config/dataHelper.dart';
 import 'package:japaneseapp/Screen/controllScreen.dart';
@@ -13,9 +14,7 @@ import 'package:japaneseapp/Screen/tabScreen.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-
-import '../Config/databaseServer.dart';
-import '../main.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 
 class splashScreen extends StatefulWidget{
   final Function(Locale _locale) changeLanguage;
@@ -28,13 +27,32 @@ class splashScreen extends StatefulWidget{
 
 class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  late Animation<Offset> _animation;
+  late Animation<double> _animation;
+
+  AppUpdateInfo? _updateInfo;
 
   String version_check = "", message_old_version = "";
   String version = "1.4.2";
+
+  late AudioPlayer _audioPlayer;
+
+  Future<void> playSound(String filePath) async {
+    try {
+      await _audioPlayer.play(AssetSource(filePath));
+    } catch (e) {
+      print("Lỗi khi phát âm thanh: $e");
+    }
+  }
+
+  Future<void> playIntro() async {
+    print("Debug");
+    await playSound("sound/intro.mp3");
+  }
+
   @override
   void initState() {
     super.initState();
+    _audioPlayer = AudioPlayer();
 
     // Tạo AnimationController
     _controller = AnimationController(
@@ -43,19 +61,20 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
     );
 
     // Tạo hiệu ứng chuyển động từ trên xuống
-    _animation = Tween<Offset>(
-      begin: Offset(0, -0.5), // Bắt đầu từ ngoài màn hình (trên cùng)
-      end: Offset(0, 0),   // Kết thúc ở vị trí ban đầu
+    _animation = Tween<double>(
+      begin: 0.0, // nhỏ xíu
+      end: 1.0,   // full size
     ).animate(CurvedAnimation(
       parent: _controller,
-      curve: Curves.easeInOut, // Đường cong hiệu ứng
+      curve: Curves.easeOutBack, // bung ra có nảy nhẹ
     ));
 
     requestPermissions();
-
-    // Bắt đầu hoạt ảnh
     _controller.forward();
+    playIntro();
     _initializeDatabase();
+
+    checkForUpdate();
   }
 
 
@@ -70,8 +89,6 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
 
     return next11PM.difference(now);
   }
-
-
   void showDialogNotificationVersion() {
     showDialog(
       barrierDismissible: true,
@@ -173,7 +190,6 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
     );
   }
 
-
   Future<bool> checkFlag(String flagKey) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getBool(flagKey) ?? false; // Nếu flag không tồn tại, trả về false
@@ -200,19 +216,40 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
     DatabaseHelper db = DatabaseHelper.instance;
 
     await db.createDataLevel();
-    await Future.delayed(Duration(seconds: 3));
+    await Future.delayed(Duration(seconds: 2));
 
-    bool isConnected = await InternetConnectionChecker.instance.hasConnection;
-    if(isConnected) {
-      await fetchData();
-      if(version_check == version) {
-        sendToScreen();
-      }else{
-        showDialogNotificationVersion();
+    sendToScreen();
+    // bool isConnected = await InternetConnectionChecker.instance.hasConnection;
+    // if(isConnected) {
+    //   // await fetchData();
+    //   // if(version_check == version) {
+    //   //   sendToScreen();
+    //   // }else{
+    //   //   showDialogNotificationVersion();
+    //   // }
+    // }else{
+    //
+    // }
+  }
+
+  Future<void> checkForUpdate() async {
+    InAppUpdate.checkForUpdate().then((info) {
+      setState(() {
+        _updateInfo = info;
+      });
+
+      if (_updateInfo?.updateAvailability == UpdateAvailability.updateAvailable) {
+        // Flexible Update (người dùng có thể tiếp tục xài app trong lúc tải)
+        InAppUpdate.startFlexibleUpdate().then((_) {
+          InAppUpdate.completeFlexibleUpdate();
+        });
+
+        // Hoặc Immediate Update (bắt buộc cập nhật ngay)
+        // InAppUpdate.performImmediateUpdate();
       }
-    }else{
-      sendToScreen();
-    }
+    }).catchError((e) {
+      debugPrint("Lỗi check update: $e");
+    });
   }
 
   void sendToScreen() async {
@@ -262,34 +299,52 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
     super.dispose();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Japanese App',
+        title: 'Kujilingo',
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
         home: Scaffold(
           body: Container(
-            color: Colors.white,
+            color: Color(0xFFf44041),
             width: MediaQuery.sizeOf(context).width,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SlideTransition(
-                  position: _animation,
-                  child: Image.asset(
-                    "assets/logo.png",
-                    scale: 0.8,
+                ScaleTransition(
+                  scale: _animation, // Animation<double>
+                  child: ColorFiltered(
+                    colorFilter: const ColorFilter.mode(
+                      Colors.transparent,
+                      BlendMode.multiply,
+                    ),
+                    child: Image.asset(
+                      "assets/icon.png",
+                      scale: 5,
+                    ),
                   ),
                 ),
-                const Text("日本語", style: TextStyle(fontFamily: "aboshione", fontSize: 50),),
-                const Text("Application", style: TextStyle(fontFamily: "islandmoment", fontSize: 50),),
+                AnimatedTextKit(
+                  animatedTexts: [
+                    ColorizeAnimatedText(
+                      'KuJiLinGo',
+                      textStyle: TextStyle(fontFamily: "Itim", fontSize: 60, color: Colors.white),
+                      colors: [
+                        Colors.white,
+                        Colors.grey
+                      ],
+                    ),
+                  ],
+                  isRepeatingAnimation: true,
+                  onTap: () {
+                    print("Tap Event");
+                  },
+                ),
             ],
             ),
           ),

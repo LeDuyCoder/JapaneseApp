@@ -1,5 +1,10 @@
+import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:japaneseapp/Config/dataHelper.dart';
+import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'config.dart';
 
 class FunctionService{
 
@@ -11,8 +16,148 @@ class FunctionService{
     return DateTime(year, month, day);
   }
 
+  RewardedAd? _rewardedAd;
+  bool _isRewardedAdReady = false;
+
+
+  FunctionService(){
+    _loadRewardedAd();
+  }
+
+  void _loadRewardedAd() {
+    RewardedAd.load(
+      adUnitId: Config.admodRewardId, // phải lấy đúng ID RewardedAd
+      request: const AdRequest(),
+      rewardedAdLoadCallback: RewardedAdLoadCallback(
+        onAdLoaded: (ad) {
+          print("RewardedAd loaded");
+          _rewardedAd = ad;
+          _isRewardedAdReady = true;
+        },
+        onAdFailedToLoad: (error) {
+          print("RewardedAd failed to load: $error");
+          _rewardedAd = null;
+          _isRewardedAdReady = false;
+        },
+      ),
+    );
+  }
+
+  void _showRewardedAd(SharedPreferences prefs, String today) {
+    if (_isRewardedAdReady && _rewardedAd != null) {
+      _rewardedAd!.fullScreenContentCallback = FullScreenContentCallback(
+        onAdDismissedFullScreenContent: (ad) {
+          print("RewardedAd dismissed");
+          ad.dispose();
+          _loadRewardedAd(); // load lại quảng cáo sau khi đóng
+        },
+        onAdFailedToShowFullScreenContent: (ad, error) {
+          print("RewardedAd failed to show: $error");
+          ad.dispose();
+          _loadRewardedAd();
+        },
+      );
+
+      _rewardedAd!.show(
+        onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
+        },
+      );
+
+      _rewardedAd = null;
+      _isRewardedAdReady = false;
+    } else {
+      print("RewardedAd chưa sẵn sàng");
+    }
+  }
+
+
+  Future<void> showRewardAdSheet(
+      BuildContext context,
+      VoidCallback onWatchAd,
+      SharedPreferences prefs,
+      String today,
+      ) async {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (BuildContext ctx) {
+        return Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Icon + tiêu đề
+              const Row(
+                children: [
+                  CircleAvatar(
+                    radius: 22,
+                    backgroundColor: Colors.orange,
+                    child: Icon(Icons.local_fire_department, color: Colors.white, size: 28),
+                  ),
+                  SizedBox(width: 12),
+                  Text(
+                    "Khôi phục chuỗi học",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 16),
+
+              // Nội dung
+              const Text(
+                "Bạn có thể xem quảng cáo để khôi phục lại chuỗi học hôm nay. "
+                    "Nếu không, chuỗi sẽ bị reset.",
+                textAlign: TextAlign.start,
+                style: TextStyle(fontSize: 16, color: Colors.black87),
+              ),
+
+              const SizedBox(height: 24),
+
+              // Nút hành động
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton.icon(
+                    onPressed: () async {
+                      await _resetCheckInStreak(prefs, today);
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(Icons.close, color: Colors.red),
+                    label: const Text("Huỷ"),
+                  ),
+                  const SizedBox(width: 12),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.pop(ctx);
+                      onWatchAd();
+                    },
+                    icon: const Icon(Icons.play_circle_fill),
+                    label: const Text("Xem quảng cáo"),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.orange,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+
+
   // Hàm reset chuỗi điểm danh
-  static Future<void> _resetCheckInStreak(SharedPreferences prefs, String today) async {
+  Future<void> _resetCheckInStreak(SharedPreferences prefs, String today) async {
     prefs.setString("lastCheckIn", today);
     prefs.setStringList("checkInHistoryTreak", [today]);
   }
@@ -27,7 +172,7 @@ class FunctionService{
     prefs.setString("lastCheckIn", today);
   }
 
-  static Future<void> setDay() async {
+  Future<void> setDay(BuildContext ctx) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     DateTime now = DateTime.now();
     String today = "${now.day.toString().padLeft(2, '0')}/${now.month.toString().padLeft(2, '0')}/${now.year.toString()}";
@@ -52,7 +197,9 @@ class FunctionService{
 
     // Nếu khoảng cách > 1 ngày, reset streak
     if (daysDifference > 1) {
-      await _resetCheckInStreak(prefs, today);
+      showRewardAdSheet(ctx, (){
+        _showRewardedAd(prefs, today);
+      }, prefs, today);
     } else {
       await _continueCheckInStreak(prefs, today);
     }

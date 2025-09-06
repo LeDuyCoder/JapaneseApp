@@ -193,7 +193,7 @@ class _achivementScreen extends State<achivementScreen>{
                     Container(
                       width: MediaQuery.sizeOf(context).width / 1.1,
                       height: 550,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.all(Radius.circular(20)),
                         boxShadow: [

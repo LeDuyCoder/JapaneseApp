@@ -10,6 +10,7 @@ import 'package:japaneseapp/Module/character.dart' as charHiKa;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Config/FunctionService.dart';
+import '../Config/config.dart';
 import '../Theme/colors.dart';
 
 class congraculationChacterScreen extends StatefulWidget{
@@ -59,7 +60,7 @@ class _congraculationChacterScreen extends State<congraculationChacterScreen>  w
 
   void _loadInterstitialAd() {
     InterstitialAd.load(
-      adUnitId: 'ca-app-pub-3940256099942544/1033173712', // <-- ID test
+      adUnitId: Config.admodId, // <-- ID test
       request: AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (ad) {
@@ -105,7 +106,8 @@ class _congraculationChacterScreen extends State<congraculationChacterScreen>  w
   Future<void> playSound(String filePath) async {
     try {
       await _audioPlayer.play(AssetSource(filePath));
-      await FunctionService.setDay();
+      FunctionService fs = FunctionService();
+      await fs.setDay(context);
     } catch (e) {
       print(e);
     }

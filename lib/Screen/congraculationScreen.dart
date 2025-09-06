@@ -11,6 +11,7 @@ import 'package:japaneseapp/Theme/colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Config/FunctionService.dart';
+import '../Config/config.dart';
 
 class congraculationScreen extends StatefulWidget{
   final List<word> listWordsTest, listWordsWrong;
@@ -43,9 +44,9 @@ class _congraculationScreen extends State<congraculationScreen> with TickerProvi
     _controllerProcess.forward(from: 0); // bắt đầu lại từ 0 mỗi lần gọi
   }
 
-
   @override
   void initState() {
+    super.initState();
     _loadInterstitialAd();
 
     _controllerProcess = AnimationController(
@@ -57,7 +58,7 @@ class _congraculationScreen extends State<congraculationScreen> with TickerProvi
 
   void _loadInterstitialAd() {
     InterstitialAd.load(
-      adUnitId: 'ca-app-pub-3940256099942544/1033173712', // <-- ID test
+      adUnitId: Config.admodId, // <-- ID test
       request: AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (ad) {
@@ -78,7 +79,8 @@ class _congraculationScreen extends State<congraculationScreen> with TickerProvi
   Future<void> playSound(String filePath) async {
     try {
       await _audioPlayer.play(AssetSource(filePath));
-      await FunctionService.setDay();
+      FunctionService fs = FunctionService();
+      await fs.setDay(context);
       print("Đang phát âm thanh: $filePath");
     } catch (e) {
       print("Lỗi khi phát âm thanh: $e");
