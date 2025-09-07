@@ -69,16 +69,14 @@ class _charactersSCreen extends State<charactersScreen>{
                     ],
                   ),
                 ),
-                body: Expanded(
-                  child: Container(
-                    child: TabBarView(
-                      children: [
-                        Center(child: hiraganaScreen(data: snapshot.data![0], type: "hiragana", width: MediaQuery.sizeOf(context).height - AppBar().preferredSize.height)),
-                        Center(child: hiraganaScreen(data: snapshot.data![1], type: "katakana", width: MediaQuery.sizeOf(context).height - AppBar().preferredSize.height)),
-                      ],
-                    ),
+                body: Container(
+                  child: TabBarView(
+                    children: [
+                      Center(child: hiraganaScreen(data: snapshot.data![0], type: "hiragana", width: MediaQuery.sizeOf(context).height - AppBar().preferredSize.height)),
+                      Center(child: hiraganaScreen(data: snapshot.data![1], type: "katakana", width: MediaQuery.sizeOf(context).height - AppBar().preferredSize.height)),
+                    ],
                   ),
-                )
+                ),
             ),
           );
         }),
