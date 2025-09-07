@@ -2,45 +2,22 @@
   "@@locale": "vi",
 
   "tabbar_home": "Trang Chủ",
+  "tabber_distionary": "Từ Điển",
   "tabbar_character": "Bảng Chữ Cái",
   "tabbar_info": "Thông Tin",
 
-  "dashboard_hintSearch": "Từ bạn muốn tra",
-  "dashboard_folder": "Thư Mục",
-  "dashboard_course": "Học Phần",
-  "dashboard_topic": "chủ đề",
-  "dashboard_popupDownload_title": "Bạn có muốn tải xuống không",
-  "dashboard_popupDownload_btn_cancel": "Hủy",
-  "dashboard_popupDownload_btn_dowload": "Tải",
-  "dashboard_seemore": "Xem Thêm",
-  "dashboard_btn_import": "Nhập",
+  "dashboard_folder": "Thư Mục Của Tôi",
+  "dashboard_folder_seemore": "Xem Tất Cả",
+  "dashboard_folder_content": "chủ đề",
 
-  "tutorial_one_title": "Cài đặt ứng dụng",
-  "tutorial_one_content": "Hãy đảm bảo thiết bị của bạn đã cài đặt ứng dụng Gboard",
-  "tutorial_two_title": "Vào Ứng Dụng Setting",
-  "tutorial_two_content": "Bạn hãy vào ứng dụng setting để thiết lập bàn phím học viết tiếng nhật",
-  "tutorial_three_title": "Tìm Kiếm Gboard",
-  "tutorial_three_content": "Bạn hãy bấm tìm và tìm đến Gboard như trên ảnh",
-  "tutorial_four_title": "Gboard",
-  "tutorial_four_content": "Tiếp tục bấm vòa theo như hướng dẫn",
-  "tutorial_five_title": "Languages",
-  "tutorial_five_content": "Hãy bấm vào phần ngôn ngữ",
-  "tutorial_six_title": "ADD KEYBOARD",
-  "tutorial_six_content": "Bấm vô thêm bàn phím để thêm bàn phím tiếng nhật",
-  "tutorial_seven_title": "Search Japanese",
-  "tutorial_seven_content": "Hãy bấm tìm kiếm ngôn ngữ tiếng nhật",
-  "tutorial_eight_title": "handwriting",
-  "tutorial_eight_content": "Hãy chọn dạng bàn phím viết và bấm done",
-  "tutorial_nice_title": "Thay đổi bàn phím",
-  "tutorial_nice_content": "khi học viết nhớ chuyển sang bàn phím để tập viết để nhớ tốt hơn",
-  "tutorial_btn_back": "trước",
-  "tutorial_btn_forward": "sau",
-  "tutorial_btn_skip": "bỏ qua",
-  "tutorial_one_done": "xong",
+  "dashboard_folder_nodata_title": "Chưa có thư mục nào",
+  "dashboard_folder_nodata_content": "Hãy tạo thư mục đầu tiên để sắp xếp từ vựng của bạn",
+  "dashboard_comunication": "Cộng Đồng",
+  "dashboard_comunication_seemore": "Xem Tất Cả",
 
-  "course_owner": "tạo bởi {user_nane}",
+
+  "course_owner": "{user_nane}",
   "@course_owner": {
-    "description": "tạo bởi ai",
     "placeholders": {
       "user_nane": {
         "type": "String",
@@ -48,10 +25,8 @@
       }
     }
   },
-
-  "amount_word": "số lượng: {amount} Từ",
+  "amount_word": "{amount}",
   "@amount_word": {
-    "description": "số lượng từ",
     "placeholders": {
       "amount": {
         "type": "String",
@@ -60,44 +35,138 @@
     }
   },
 
-  "word_finish": "Hoàn Thành: {amount}",
-  "@word_finish": {
-    "description": "số từ hoàn thành",
-    "placeholders": {
-      "amount": {
-        "type": "String",
-        "example": "10"
-      }
-    }
-  },
-
-  "word_learning": "Chưa Hoàn Thành: {amount}",
-  "@word_learning": {
-    "description": "số từ chưa hoàn thành",
-    "placeholders": {
-      "amount": {
-        "type": "String",
-        "example": "10"
-      }
-    }
-  },
+  "topic_persent": "Phần Trăm",
+  "topic_word_finish": "Hoàn Thành",
+  "topic_word_learning": "Chưa Hoàn Thành",
 
   "add_course": "Học phần",
   "add_folder": "Thư Mục",
 
-  "folderManager":"Thêm Chủ Đề Học Phần",
-  "folderManager_addTopic": "Thêm Chủ Đề",
-  "folderManager_remove": "xóa",
-  "folderManager_removeTopic": "Xóa khỏi thư mục",
+  "folderSeemore_title": "Thư Mục Của Tôi",
+  "folderSeemore_grid": "Lưới",
+  "folderSeemore_tag_flex": "Danh Sách",
 
-  "seemore_search": "Tên thư mục",
+  "folderSeemore_content": "Tất cả thư mục",
+  "folderSeemore_subContent": "Thư Mục",
 
-  "import_title": "Chọn phước thức nhập",
-  "import_btn_file": "Từ File",
-  "import_btn_qr": "Từ QR",
+  "folderManager_nodata_title": "Bắt đầu tạo thư mục cho riêng bạn",
+  "folderManager_nodata_button": "Thêm chủ đề học",
+
+  "folderManager_bottomSheet_addTopic": "Thêm Chủ Đề Học",
+  "folderManager_bottomSheet_removeFolder": "Xóa",
+
+  "folderManager_topic_bottomSheet_remove": "Xóa khỏi thư mục",
+
+  "folderManager_Screen_addTopic_title": " Thêm Chủ Đề Học Phần",
+  "folderManager_Screen_addTopic_card_owner": "tác giả: {name}",
+  "@folderManager_Screen_addTopic_card_owner": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "folderManager_Screen_addTopic_card_amountWord": "số từ: {amount}",
+  "@folderManager_Screen_addTopic_card_amountWord": {
+    "placeholders": {
+      "amount": {
+        "type": "int"
+      }
+    }
+  },
+  "comunication_bottomSheet_notify_download_title": "Bạn có muốn tải xuống không",
+  "comunication_bottomSheet_notify_download_btn": "Tải",
+
+  "download_Screen_downloading_title": "Đang Tải Chủ Đề",
+  "download_Screen_downloading_contetnt": "Vui lòng chờ trong giây lát...",
+  "download_Screen_downloading_btn": "Hủy",
+  "download_Screen_Success_title": "Tải Thành Công",
+  "download_Screen_Success_contetnt": "Chủ đề đã sẵn sàng để học",
+  "download_Screen_Success_btn": "Bắt đầu học",
+
+  "dashboard_topic_nodata_title": "Chưa có chủ đề nào",
+  "dashboard_topic_nodata_content": "Hãy tạo chủ đề đầu tiên để bắt đầu học",
+
+  "communication_Screen_title": "Cộng Đồng",
+  "communication_Screen_hint_search": "Nhập tên chủ đề...",
+  "communication_Screen_subTitle": "Bộ Sư Tập Cộng Đồng",
+
+  "dashboard_topic": "Chủ để của tôi",
+  "dashboard_topic_seemore": "Xem Tất Cả",
+
+  "topic_seemore_title": "Chủ Đề Của Tôi",
+  "topic_seemore_subTitle": "Chủ Đề",
+
+  "bottomSheet_add_topic": "Học Phần",
+  "bottomSheet_add_folder": "Thư Mục",
+
+  "popup_add_topic": "Thêm Chủ Đề Mới",
+  "popup_add_topic_hint": "Tên Chủ Đề",
+  "popup_add_topic_exit": "Tên Chủ Đề Đã Tồn Tại",
+  "popup_add_topic_btn_create": "Tạo",
+  "popup_add_topic_btn_cancle": "Hủy",
+
+  "addWord_Screen_Input_Japan_Label": "Từ vựng tiếng nhật",
+  "addWord_Screen_Input_Japan_Hint": "Từ tiếng nhật",
+  "addWord_Screen_Input_WayRead_Label": "Cách đọc (Hiragana)",
+  "addWord_Screen_Input_WayRead_Hint": "cách đọc",
+  "addWord_Screen_Input_Mean_Label": "Nghĩa của từ",
+  "addWord_Screen_Input_Mean_Hint": "nghĩa",
+  "addWord_Screen_btn_add": "Thêm Từ",
+
+  "addWord_bottomShet_warning_save_title": "Cảnh Báo",
+  "addWord_bottomShet_warning_save_content": "Khi lưu không thể chỉnh sữa",
+  "addWord_bottomShet_warning_save_btn": "Lưu",
+
+  "addWord_bottomShet_success_save_title": "Lưu Thành Công",
+  "addWord_bottomShet_success_save_content": "Chủ đề bạn tạo đã được tạo thành công \uD83C\uDF89",
+  "addWord_bottomShet_success_save_btn": "OK",
+
+  "listword_Screen_title": "Chủ Đề",
+  "listword_Screen_AmountWord": "từ vựng",
+  "listword_Screen_Learned": "đã thuộc",
+  "listword_Screen_head_col1": "Tiếng Nhật",
+  "listword_Screen_head_col2": "Nghĩa",
+  "listword_Screen_head_col3": "Trạng Thái",
+
+  "listword_Screen_bottomSheet_public_title": "Bạn có muốn chia sẻ không?",
+  "listword_Screen_bottomSheet_public_content": "Khi chia sẻ, ai cũng có thể tải về",
+  "listword_Screen_bottomSheet_public_btn_pulic": "Công Khai",
+  "listword_Screen_bottomSheet_public_btn_cancel": "Hủy",
+
+  "listword_Screen_bottomSheet_public_succes_title": "Chúc Mừng",
+  "listword_Screen_bottomSheet_public_succes_content": "Bạn đã chia sẽ thành công bộ chủ đề của bạn",
+  "listword_Screen_bottomSheet_public_succes_btn_ok": "OK",
+
+  "listword_Screen_bottomSheet_private_title": "Bạn có muốn hủy chia sẻ không",
+  "listword_Screen_bottomSheet_private_btn_private": "Hủy chia sẻ",
+  "listword_Screen_bottomSheet_private_btn_cancel": "Không",
+
+  "listword_Screen_bottomSheet_private_success_title": "Hủy Công Khai Thành Công",
+  "listword_Screen_bottomSheet_private_success_content": "Bạn đã hủy chia sẽ chủ đề của bạn",
+  "listword_Screen_bottomSheet_private_success_OK": "OK",
+
+  "listword_Screen_btn_learn": "Học Ngay",
+
+  "keyboard_handwriting_btn_space": "Khoảng trắng",
+  "keyboard_handwriting_btn_remove": "Xóa",
+
+  "distionary_Screen_title": "Từ Điển Tiếng Nhật",
+  "distionary_Screen_hint": "Nhập Từ Muốn Tra",
+  "distionary_Screen_hint_title": "Tra Từ Vựng",
+  "distionary_Screen_hint_content": "Bắt đầu tra và học từ của bạn nào",
+
+  "distionary_Screen_mean": "Nghĩa của từ",
+  "distionary_Screen_info": "Thông tin từ",
+  "distionary_Screen_type": "Danh từ: ",
+  "distionary_Screen_level": "Cấp Độ: ",
+
+  "popup_remove_topic_title": "Xóa chủ đề",
+  "popup_remove_topic_content": "Bạn có muốn xóa không",
+  "popup_remove_topic_btn_cancle": "Hủy",
+  "popup_remove_topic_btn_delete": "Xóa",
 
   "character_btn_learn": "Học Chữ Cái",
-
   "listWord_word_complete": "Hoàn Thành {count}",
   "@listWord_word_complete": {
     "description": "số lượng từ hoàn thành",
@@ -108,7 +177,6 @@
       }
     }
   },
-
   "listWord_word_learning": "Chưa Hoàn Thành {count}",
   "@listWord_word_learning": {
     "description": "số lượng từ chưa hoàn thành",
@@ -119,7 +187,6 @@
       }
     }
   },
-
   "listWord_btn_learn": "Học Từ",
   "listWord_share_title": "Tên chủ đền {topic}",
   "@listWord_share_title": {
@@ -131,7 +198,6 @@
       }
     }
   },
-
   "listWord_share_amount_word": "số lượng: {amount} Từ",
   "@listWord_share_amount_word": {
     "description": "số lượng từ",
@@ -142,7 +208,6 @@
       }
     }
   },
-
   "listWord_share_type": "Loại: {type}",
   "@listWord_share_type": {
     "description": "Loại chia sẽ",
@@ -155,8 +220,6 @@
   },
   "listWord_btn_remove": "Xóa",
   "listWord_btn_shared": "Chia Sẻ",
-
-
   "learn_warningGboard": "Khuyến nghị sử dụng Gboard để có trả nghiệm tốt nhất",
   "learn_btn_check": "Kiểm tra",
   "learn_bottomsheet_wrong_title": "Không Chính Xác",
@@ -175,7 +238,6 @@
   "motivationalPhrases_8": "Hãy mạnh mẽ, tập trung và tiếp tục tiến lên!",
   "motivationalPhrases_9": "Nỗ lực tuyệt vời! Hãy tiếp tục đặt mục tiêu cao hơn!",
   "motivationalPhrases_10": "Sự chăm chỉ của bạn sẽ sớm được đền đáp!",
-
   "learn_bottomsheet_right_btn": "Tiếp Tục",
   "learning_combine_title": "Nói từ cột A sang cột B",
   "learn_translate_title": "Dịch Câu Bên Dưới",
@@ -188,7 +250,6 @@
   "profile_level": "Cấp Bậc",
   "profile_topic": "Chủ Đề",
   "profile_title": "Danh Hiệu",
-
   "levelTitles_1": "Học Sĩ",
   "levelTitles_2": "Minh Triết Giả",
   "levelTitles_3": "Tư Tưởng Gia",
@@ -204,7 +265,6 @@
   "levelTitles_13": "Hiền Triết Uyên Thâm",
   "levelTitles_14": "Văn Nhã Chân Nhân",
   "levelTitles_15": "Trí Nhân Kỳ Tài",
-
   "profile_date": "Tháng {month} Năm {year}",
   "@profile_date": {
     "description": "Hiển thị tháng và năm trong hồ sơ",
@@ -286,14 +346,12 @@
   "bottomSheet_Nointernet_Btn": "OK",
   "bottomSheet_Error_title": "Lỗi Tải Dữ Liệu",
   "bottomSheet_Error_description": "Hiện không có bản đồng bộ hóa dữ liệu nào",
-
   "bottomSheet_Warning_title": "Cảnh Báo",
   "bottomSheet_Warning_Description": "Khi đồng bộ toa bộ dữ liệu trên máy hiện tại sẽ bị xóa",
   "bottomSheet_Warning_btn_ok": "OK",
   "bottomSheet_Warning_btn_cancle": "Hủy",
   "language_title": "Ngôn ngữ",
   "language_bottomsheet_success": "Cập Nhật Ngôn Ngữ Thành Công",
-
   "error_connect_server": "Lỗi Kết Nối Đến Máy Chủ",
   "login_title": "Chào mừng trở lại, Rất vui được gặp bạn",
   "login_email_input_hint": "Email",
@@ -305,14 +363,11 @@
   "login_create_btn_account": "Đăng Kí",
   "login_with_facebook": "Đăng Nhập Với Facebook",
   "login_with_google": "Đăng Nhập Với Google",
-
   "login_invalid_email": "Email Không Hợp Lệ",
   "login_user_disabled": "Tài Khoản Đã Bị Khóa",
   "login_user_not_found": "Không tìm thấy tài khoản với email này",
   "login_wrong_password": "Mật khẩu không đúng",
   "login_error": "Đã Có Lỗi Xảy Ra",
-
-
   "register_title": "Xin chào, Đăng kí để bắt đầu trải nghiệm",
   "register_email_input_hint": "Email",
   "register_email_input_hint_focus": "Nhập email của bạn",
@@ -325,7 +380,6 @@
   "register_btn": "Đăng Kí",
   "register_question_login": "Đã Có Tài Khoảng",
   "register_btn_login": "Đăng Nhập",
-
   "register_email_already_in_use": "Email này đã được đăng ký",
   "register_invalid_email": "Địa chỉ email không hợp lệ.",
   "register_operation_not_allowed": "Tài khoản email/mật khẩu chưa được kích hoạt.",

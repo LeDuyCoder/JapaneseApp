@@ -108,14 +108,14 @@ class _topicWidget extends State<topicWidget>{
                             children: [
                               Text(widget.nameTopic, style: TextStyle(fontSize: 20, color: AppColors.textPrimary),),
                               Container(
-                                width: 70,
+                                padding: EdgeInsets.symmetric(vertical: 5, horizontal: 16),
                                 height: 30,
                                 decoration: BoxDecoration(
                                     color: AppColors.primary,
                                     borderRadius: BorderRadius.all(Radius.circular(8))
                                 ),
                                 child: Center(
-                                  child: Text("${snapshot.data?[2]} Từ", style: TextStyle(color: Colors.white),),
+                                  child: Text("${snapshot.data?[2]} ${AppLocalizations.of(context)!.listword_Screen_AmountWord}", style: TextStyle(color: Colors.white),),
                                 ),
                               )
                             ],
@@ -131,19 +131,19 @@ class _topicWidget extends State<topicWidget>{
                             children: [
                               Column(
                                 children: [
-                                  Text("Phần Trăm"),
+                                  Text(AppLocalizations.of(context)!.topic_persent),
                                   Text("${(snapshot.data?[0] as double).toStringAsFixed(2)}%"),
                                 ],
                               ),
                               Column(
                                 children: [
-                                  Text("Hoàn Thành",  style: TextStyle(color: AppColors.textSucessState)),
+                                  Text(AppLocalizations.of(context)!.topic_word_finish,  style: TextStyle(color: AppColors.textSucessState)),
                                   Text("${(snapshot.data?[1]??0).toInt()}", style: TextStyle(color: AppColors.textSucessState)),
                                 ],
                               ),
                               Column(
                                 children: [
-                                  Text("Chưa Hoàn Thành", style: TextStyle(color: AppColors.primary),),
+                                  Text(AppLocalizations.of(context)!.topic_word_learning, style: TextStyle(color: AppColors.primary),),
                                   Text("${(snapshot.data?[2] - snapshot.data?[1] ?? 0).toInt()}", style: TextStyle(color: AppColors.primary)),
                                 ],
                               )

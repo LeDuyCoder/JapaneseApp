@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../Config/dataHelper.dart';
 import '../Theme/colors.dart';
+import '../generated/app_localizations.dart';
 import 'folderManagerScreen.dart';
 
 class allFolderScreen extends StatefulWidget{
@@ -192,8 +193,8 @@ class _allFolderScreen extends State<allFolderScreen>{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Thư Mục Của Tôi",
+        title: Text(
+          AppLocalizations.of(context)!.folderSeemore_title,
           style: TextStyle(color: AppColors.primary, fontSize: 25, fontFamily: "Itim", fontWeight: FontWeight.bold),
         ),
         backgroundColor: AppColors.backgroundPrimary,
@@ -312,7 +313,7 @@ class _allFolderScreen extends State<allFolderScreen>{
                         ),
                         child: Center(
                           child: Text(
-                            "Lưới",
+                            AppLocalizations.of(context)!.folderSeemore_grid,
                             style: TextStyle(
                               color: display == "grid"
                                   ? AppColors.white
@@ -344,7 +345,7 @@ class _allFolderScreen extends State<allFolderScreen>{
                         ),
                         child: Center(
                           child: Text(
-                            "Danh Sách",
+                            AppLocalizations.of(context)!.folderSeemore_tag_flex,
                             style: TextStyle(
                               color: display == "flex"
                                   ? AppColors.white
@@ -362,11 +363,11 @@ class _allFolderScreen extends State<allFolderScreen>{
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Row(
+                    Row(
                       children: [
                         SizedBox(width: 15),
                         Text(
-                          "Tất cả thư mục",
+                          AppLocalizations.of(context)!.folderSeemore_content,
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ],
@@ -374,7 +375,7 @@ class _allFolderScreen extends State<allFolderScreen>{
                     Row(
                       children: [
                         Text(
-                          "${snapshot.data!["folder"].length} Thư Mục",
+                          "${snapshot.data!["folder"].length} ${AppLocalizations.of(context)!.folderSeemore_subContent}",
                           style: TextStyle(color: AppColors.textSecond),
                         ),
                         SizedBox(width: 15),

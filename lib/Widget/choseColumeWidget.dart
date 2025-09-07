@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:japaneseapp/Theme/colors.dart';
 
 class choseColumeWidget extends StatefulWidget{
 
@@ -32,7 +33,8 @@ class _choseColumeWidget extends State<choseColumeWidget>{
         decoration: BoxDecoration(
             color: Colors.white,
             border: Border.all(
-                color: widget.isCancle ? const Color.fromRGBO(213, 213, 213, 1.0) : widget.isWrong ? Colors.red : widget.isChoose ? Colors.blueAccent : Colors.grey,
+                color: widget.isCancle ? const Color.fromRGBO(213, 213, 213, 1.0) : widget.isWrong ? Color.fromRGBO(
+                    80, 3, 3, 1.0) : widget.isChoose ? AppColors.primary : Colors.grey,
                 width: 2
             ),
             borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -44,7 +46,8 @@ class _choseColumeWidget extends State<choseColumeWidget>{
             ]
         ),
         child: Center(
-          child: AutoSizeText(widget.text, style: TextStyle(fontSize: MediaQuery.sizeOf(context).width*0.045, color: widget.isCancle ? const Color.fromRGBO(213, 213, 213, 1.0) : widget.isWrong ? Colors.red : widget.isChoose ? Colors.blueAccent : Colors.grey,),),
+          child: AutoSizeText(widget.text, style: TextStyle(fontSize: MediaQuery.sizeOf(context).width*0.045, color: widget.isCancle ? const Color.fromRGBO(213, 213, 213, 1.0) : widget.isWrong ? Color.fromRGBO(
+              80, 3, 3, 1.0) : widget.isChoose ? AppColors.primary : Colors.grey,),),
         ),
       ),
     );

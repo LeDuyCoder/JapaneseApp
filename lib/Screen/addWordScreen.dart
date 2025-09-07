@@ -6,6 +6,7 @@ import 'package:japaneseapp/Module/word.dart';
 import '../Config/dataHelper.dart';
 import '../Theme/colors.dart';
 import '../Widget/addWordWidget.dart';
+import '../generated/app_localizations.dart';
 
 
 class addWordScreen extends StatefulWidget{
@@ -64,8 +65,8 @@ class _addWordScreen extends State<addWordScreen>{
                   const Icon(Icons.warning_amber_rounded,
                       color: Color(0xFFE21B3C), size: 50),
                   const SizedBox(width: 10),
-                  const Text(
-                    "Cảnh Báo",
+                  Text(
+                    AppLocalizations.of(context)!.addWord_bottomShet_warning_save_title,
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -77,8 +78,8 @@ class _addWordScreen extends State<addWordScreen>{
               const SizedBox(height: 12),
 
               // Content
-              const Text(
-                "Khi lưu không thể chỉnh sữa",
+              Text(
+                AppLocalizations.of(context)!.addWord_bottomShet_warning_save_content,
                 style: TextStyle(fontSize: 15, color: Colors.black87),
               ),
               const SizedBox(height: 20),
@@ -105,8 +106,8 @@ class _addWordScreen extends State<addWordScreen>{
                     }
                   },
                   icon: const Icon(Icons.save, color: Colors.white),
-                  label: const Text(
-                    "Save",
+                  label: Text(
+                    AppLocalizations.of(context)!.addWord_bottomShet_warning_save_btn,
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
@@ -149,12 +150,12 @@ class _addWordScreen extends State<addWordScreen>{
 
               // Icon + Title
               Column(
-                children: const [
+                children: [
                   Icon(Icons.check_circle,
                       color: Color(0xFF4CAF50), size: 60),
                   SizedBox(width: 10),
                   Text(
-                    "Lưu Thành Công",
+                    AppLocalizations.of(context)!.addWord_bottomShet_success_save_title,
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -166,8 +167,8 @@ class _addWordScreen extends State<addWordScreen>{
               const SizedBox(height: 12),
 
               // Content
-              const Text(
-                "Chủ đề bạn tạo đã được tạo thành công 🎉",
+              Text(
+                AppLocalizations.of(context)!.addWord_bottomShet_success_save_content,
                 style: TextStyle(fontSize: 15, color: Colors.black87),
               ),
               const SizedBox(height: 20),
@@ -190,8 +191,8 @@ class _addWordScreen extends State<addWordScreen>{
                     widget.reload();
                   },
                   icon: const Icon(Icons.check, color: Colors.white),
-                  label: const Text(
-                    "OK",
+                  label: Text(
+                    AppLocalizations.of(context)!.addWord_bottomShet_success_save_btn,
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
@@ -289,7 +290,7 @@ class _addWordScreen extends State<addWordScreen>{
                           const SizedBox(height: 10,),
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 20),
-                            child: Text("Từ vựng tiếng nhật", style: TextStyle(
+                            child: Text(AppLocalizations.of(context)!.addWord_Screen_Input_Japan_Label, style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontFamily: "Itim",
                                 fontSize: 20,
@@ -304,7 +305,7 @@ class _addWordScreen extends State<addWordScreen>{
                             child: TextField(
                               controller: japanWordInput,
                               decoration: InputDecoration(
-                                  hintText: "Japnaese Word",
+                                  hintText: AppLocalizations.of(context)!.addWord_Screen_Input_Japan_Hint,
                                   hintStyle: TextStyle(color: Colors.grey), // Màu chữ gợi ý
                                   filled: true,
                                   fillColor: Colors.white,
@@ -332,7 +333,7 @@ class _addWordScreen extends State<addWordScreen>{
                           ),
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 20),
-                            child: Text("Cách đọc (Hiragana)", style: TextStyle(
+                            child: Text(AppLocalizations.of(context)!.addWord_Screen_Input_WayRead_Label, style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontFamily: "Itim",
                                 fontSize: 20,
@@ -347,7 +348,7 @@ class _addWordScreen extends State<addWordScreen>{
                             child: TextField(
                               controller: readWayInput,
                               decoration: InputDecoration(
-                                  hintText: "Read Way",
+                                  hintText: AppLocalizations.of(context)!.addWord_Screen_Input_WayRead_Hint,
                                   hintStyle: TextStyle(color: Colors.grey), // Màu chữ gợi ý
                                   filled: true,
                                   fillColor: Colors.white,
@@ -375,7 +376,7 @@ class _addWordScreen extends State<addWordScreen>{
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: Text("Nghĩa của từ", style: TextStyle(
+                            child: Text(AppLocalizations.of(context)!.addWord_Screen_Input_Mean_Label, style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontFamily: "Itim",
                                 fontSize: 20,
@@ -390,7 +391,7 @@ class _addWordScreen extends State<addWordScreen>{
                             child: TextField(
                               controller: meanInput,
                               decoration: InputDecoration(
-                                  hintText: "Mean",
+                                  hintText: AppLocalizations.of(context)!.addWord_Screen_Input_Mean_Hint,
                                   hintStyle: TextStyle(color: Colors.grey), // Màu chữ gợi ý
                                   filled: true,
                                   fillColor: Colors.white,
@@ -475,7 +476,7 @@ class _addWordScreen extends State<addWordScreen>{
                                         borderRadius: BorderRadius.all(Radius.circular(15)),
                                       ),
                                       child: Center(
-                                          child: Text("Thêm Từ", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),)
+                                          child: Text(AppLocalizations.of(context)!.addWord_Screen_btn_add, style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),)
                                       ),
                                     ),
                                   ),

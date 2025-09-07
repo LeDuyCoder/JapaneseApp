@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:in_app_update/in_app_update.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:japaneseapp/Config/dataHelper.dart';
+import 'package:japaneseapp/Screen/SetUpLanguage.dart';
 import 'package:japaneseapp/Screen/controllScreen.dart';
 import 'package:japaneseapp/Screen/loginScreen.dart';
 import 'package:japaneseapp/Screen/tabScreen.dart';
@@ -257,23 +258,43 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     await widget.changeLanguage(Locale(sharedPreferences.getString("language")??"vi"));
 
-    Navigator.push(
-      context,
-      PageRouteBuilder(
-        transitionDuration: const Duration(milliseconds: 800), // Tăng thời gian chuyển đổi
-        pageBuilder: (context, animation, secondaryAnimation) => controllScreen(changeLanguage: widget.changeLanguage,),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          var tween = Tween(begin: const Offset(1.0, 0.0), end: Offset.zero)
-              .chain(CurveTween(curve: Curves.easeInOut));
-          var offsetAnimation = animation.drive(tween);
+    if(sharedPreferences.containsKey("language")){
+      Navigator.push(
+        context,
+        PageRouteBuilder(
+          transitionDuration: const Duration(milliseconds: 800), // Tăng thời gian chuyển đổi
+          pageBuilder: (context, animation, secondaryAnimation) => controllScreen(changeLanguage: widget.changeLanguage,),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            var tween = Tween(begin: const Offset(1.0, 0.0), end: Offset.zero)
+                .chain(CurveTween(curve: Curves.easeInOut));
+            var offsetAnimation = animation.drive(tween);
 
-          return SlideTransition(
-            position: offsetAnimation,
-            child: child,
-          );
-        },
-      ),
-    );
+            return SlideTransition(
+              position: offsetAnimation,
+              child: child,
+            );
+          },
+        ),
+      );
+    }else{
+      Navigator.push(
+        context,
+        PageRouteBuilder(
+          transitionDuration: const Duration(milliseconds: 800), // Tăng thời gian chuyển đổi
+          pageBuilder: (context, animation, secondaryAnimation) => setUpLanguage(changeLanguage: widget.changeLanguage,),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            var tween = Tween(begin: const Offset(1.0, 0.0), end: Offset.zero)
+                .chain(CurveTween(curve: Curves.easeInOut));
+            var offsetAnimation = animation.drive(tween);
+
+            return SlideTransition(
+              position: offsetAnimation,
+              child: child,
+            );
+          },
+        ),
+      );
+    }
   }
 
   Future<void> fetchData() async {

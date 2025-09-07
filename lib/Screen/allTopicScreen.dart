@@ -4,6 +4,7 @@ import 'package:japaneseapp/Theme/colors.dart';
 
 import '../Config/dataHelper.dart';
 import '../Widget/topicWidget.dart';
+import '../generated/app_localizations.dart';
 
 class allTopicScreen extends StatefulWidget{
   @override
@@ -27,8 +28,8 @@ class _allTopicScreen extends State<allTopicScreen>{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-            "Chủ Đề Của Tôi",
+        title: Text(
+          AppLocalizations.of(context)!.topic_seemore_title,
           style: TextStyle(color: AppColors.primary, fontSize: 25, fontFamily: "Itim", fontWeight: FontWeight.bold),
         ),
         backgroundColor: AppColors.backgroundPrimary,
@@ -65,7 +66,7 @@ class _allTopicScreen extends State<allTopicScreen>{
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("Chủ Đề", style: TextStyle(fontSize: 20, fontFamily: "Itim"),),
+                            Text(AppLocalizations.of(context)!.topic_seemore_subTitle, style: TextStyle(fontSize: 20, fontFamily: "Itim"),),
                             Divider(
                               height: 4,
                               color: AppColors.primary,

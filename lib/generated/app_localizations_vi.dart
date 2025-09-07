@@ -10,123 +10,53 @@ class AppLocalizationsVi extends AppLocalizations {
   String get tabbar_home => 'Trang Chủ';
 
   @override
+  String get tabber_distionary => 'Từ Điển';
+
+  @override
   String get tabbar_character => 'Bảng Chữ Cái';
 
   @override
   String get tabbar_info => 'Thông Tin';
 
   @override
-  String get dashboard_hintSearch => 'Từ bạn muốn tra';
+  String get dashboard_folder => 'Thư Mục Của Tôi';
 
   @override
-  String get dashboard_folder => 'Thư Mục';
+  String get dashboard_folder_seemore => 'Xem Tất Cả';
 
   @override
-  String get dashboard_course => 'Học Phần';
+  String get dashboard_folder_content => 'chủ đề';
 
   @override
-  String get dashboard_topic => 'chủ đề';
+  String get dashboard_folder_nodata_title => 'Chưa có thư mục nào';
 
   @override
-  String get dashboard_popupDownload_title => 'Bạn có muốn tải xuống không';
+  String get dashboard_folder_nodata_content => 'Hãy tạo thư mục đầu tiên để sắp xếp từ vựng của bạn';
 
   @override
-  String get dashboard_popupDownload_btn_cancel => 'Hủy';
+  String get dashboard_comunication => 'Cộng Đồng';
 
   @override
-  String get dashboard_popupDownload_btn_dowload => 'Tải';
-
-  @override
-  String get dashboard_seemore => 'Xem Thêm';
-
-  @override
-  String get dashboard_btn_import => 'Nhập';
-
-  @override
-  String get tutorial_one_title => 'Cài đặt ứng dụng';
-
-  @override
-  String get tutorial_one_content => 'Hãy đảm bảo thiết bị của bạn đã cài đặt ứng dụng Gboard';
-
-  @override
-  String get tutorial_two_title => 'Vào Ứng Dụng Setting';
-
-  @override
-  String get tutorial_two_content => 'Bạn hãy vào ứng dụng setting để thiết lập bàn phím học viết tiếng nhật';
-
-  @override
-  String get tutorial_three_title => 'Tìm Kiếm Gboard';
-
-  @override
-  String get tutorial_three_content => 'Bạn hãy bấm tìm và tìm đến Gboard như trên ảnh';
-
-  @override
-  String get tutorial_four_title => 'Gboard';
-
-  @override
-  String get tutorial_four_content => 'Tiếp tục bấm vòa theo như hướng dẫn';
-
-  @override
-  String get tutorial_five_title => 'Languages';
-
-  @override
-  String get tutorial_five_content => 'Hãy bấm vào phần ngôn ngữ';
-
-  @override
-  String get tutorial_six_title => 'ADD KEYBOARD';
-
-  @override
-  String get tutorial_six_content => 'Bấm vô thêm bàn phím để thêm bàn phím tiếng nhật';
-
-  @override
-  String get tutorial_seven_title => 'Search Japanese';
-
-  @override
-  String get tutorial_seven_content => 'Hãy bấm tìm kiếm ngôn ngữ tiếng nhật';
-
-  @override
-  String get tutorial_eight_title => 'handwriting';
-
-  @override
-  String get tutorial_eight_content => 'Hãy chọn dạng bàn phím viết và bấm done';
-
-  @override
-  String get tutorial_nice_title => 'Thay đổi bàn phím';
-
-  @override
-  String get tutorial_nice_content => 'khi học viết nhớ chuyển sang bàn phím để tập viết để nhớ tốt hơn';
-
-  @override
-  String get tutorial_btn_back => 'trước';
-
-  @override
-  String get tutorial_btn_forward => 'sau';
-
-  @override
-  String get tutorial_btn_skip => 'bỏ qua';
-
-  @override
-  String get tutorial_one_done => 'xong';
+  String get dashboard_comunication_seemore => 'Xem Tất Cả';
 
   @override
   String course_owner(String user_nane) {
-    return 'tạo bởi $user_nane';
+    return '$user_nane';
   }
 
   @override
   String amount_word(String amount) {
-    return 'số lượng: $amount Từ';
+    return '$amount';
   }
 
   @override
-  String word_finish(String amount) {
-    return 'Hoàn Thành: $amount';
-  }
+  String get topic_persent => 'Phần Trăm';
 
   @override
-  String word_learning(String amount) {
-    return 'Chưa Hoàn Thành: $amount';
-  }
+  String get topic_word_finish => 'Hoàn Thành';
+
+  @override
+  String get topic_word_learning => 'Chưa Hoàn Thành';
 
   @override
   String get add_course => 'Học phần';
@@ -135,28 +65,260 @@ class AppLocalizationsVi extends AppLocalizations {
   String get add_folder => 'Thư Mục';
 
   @override
-  String get folderManager => 'Thêm Chủ Đề Học Phần';
+  String get folderSeemore_title => 'Thư Mục Của Tôi';
 
   @override
-  String get folderManager_addTopic => 'Thêm Chủ Đề';
+  String get folderSeemore_grid => 'Lưới';
 
   @override
-  String get folderManager_remove => 'xóa';
+  String get folderSeemore_tag_flex => 'Danh Sách';
 
   @override
-  String get folderManager_removeTopic => 'Xóa khỏi thư mục';
+  String get folderSeemore_content => 'Tất cả thư mục';
 
   @override
-  String get seemore_search => 'Tên thư mục';
+  String get folderSeemore_subContent => 'Thư Mục';
 
   @override
-  String get import_title => 'Chọn phước thức nhập';
+  String get folderManager_nodata_title => 'Bắt đầu tạo thư mục cho riêng bạn';
 
   @override
-  String get import_btn_file => 'Từ File';
+  String get folderManager_nodata_button => 'Thêm chủ đề học';
 
   @override
-  String get import_btn_qr => 'Từ QR';
+  String get folderManager_bottomSheet_addTopic => 'Thêm Chủ Đề Học';
+
+  @override
+  String get folderManager_bottomSheet_removeFolder => 'Xóa';
+
+  @override
+  String get folderManager_topic_bottomSheet_remove => 'Xóa khỏi thư mục';
+
+  @override
+  String get folderManager_Screen_addTopic_title => ' Thêm Chủ Đề Học Phần';
+
+  @override
+  String folderManager_Screen_addTopic_card_owner(String name) {
+    return 'tác giả: $name';
+  }
+
+  @override
+  String folderManager_Screen_addTopic_card_amountWord(int amount) {
+    return 'số từ: $amount';
+  }
+
+  @override
+  String get comunication_bottomSheet_notify_download_title => 'Bạn có muốn tải xuống không';
+
+  @override
+  String get comunication_bottomSheet_notify_download_btn => 'Tải';
+
+  @override
+  String get download_Screen_downloading_title => 'Đang Tải Chủ Đề';
+
+  @override
+  String get download_Screen_downloading_contetnt => 'Vui lòng chờ trong giây lát...';
+
+  @override
+  String get download_Screen_downloading_btn => 'Hủy';
+
+  @override
+  String get download_Screen_Success_title => 'Tải Thành Công';
+
+  @override
+  String get download_Screen_Success_contetnt => 'Chủ đề đã sẵn sàng để học';
+
+  @override
+  String get download_Screen_Success_btn => 'Bắt đầu học';
+
+  @override
+  String get dashboard_topic_nodata_title => 'Chưa có chủ đề nào';
+
+  @override
+  String get dashboard_topic_nodata_content => 'Hãy tạo chủ đề đầu tiên để bắt đầu học';
+
+  @override
+  String get communication_Screen_title => 'Cộng Đồng';
+
+  @override
+  String get communication_Screen_hint_search => 'Nhập tên chủ đề...';
+
+  @override
+  String get communication_Screen_subTitle => 'Bộ Sư Tập Cộng Đồng';
+
+  @override
+  String get dashboard_topic => 'Chủ để của tôi';
+
+  @override
+  String get dashboard_topic_seemore => 'Xem Tất Cả';
+
+  @override
+  String get topic_seemore_title => 'Chủ Đề Của Tôi';
+
+  @override
+  String get topic_seemore_subTitle => 'Chủ Đề';
+
+  @override
+  String get bottomSheet_add_topic => 'Học Phần';
+
+  @override
+  String get bottomSheet_add_folder => 'Thư Mục';
+
+  @override
+  String get popup_add_topic => 'Thêm Chủ Đề Mới';
+
+  @override
+  String get popup_add_topic_hint => 'Tên Chủ Đề';
+
+  @override
+  String get popup_add_topic_exit => 'Tên Chủ Đề Đã Tồn Tại';
+
+  @override
+  String get popup_add_topic_btn_create => 'Tạo';
+
+  @override
+  String get popup_add_topic_btn_cancle => 'Hủy';
+
+  @override
+  String get addWord_Screen_Input_Japan_Label => 'Từ vựng tiếng nhật';
+
+  @override
+  String get addWord_Screen_Input_Japan_Hint => 'Từ tiếng nhật';
+
+  @override
+  String get addWord_Screen_Input_WayRead_Label => 'Cách đọc (Hiragana)';
+
+  @override
+  String get addWord_Screen_Input_WayRead_Hint => 'cách đọc';
+
+  @override
+  String get addWord_Screen_Input_Mean_Label => 'Nghĩa của từ';
+
+  @override
+  String get addWord_Screen_Input_Mean_Hint => 'nghĩa';
+
+  @override
+  String get addWord_Screen_btn_add => 'Thêm Từ';
+
+  @override
+  String get addWord_bottomShet_warning_save_title => 'Cảnh Báo';
+
+  @override
+  String get addWord_bottomShet_warning_save_content => 'Khi lưu không thể chỉnh sữa';
+
+  @override
+  String get addWord_bottomShet_warning_save_btn => 'Lưu';
+
+  @override
+  String get addWord_bottomShet_success_save_title => 'Lưu Thành Công';
+
+  @override
+  String get addWord_bottomShet_success_save_content => 'Chủ đề bạn tạo đã được tạo thành công 🎉';
+
+  @override
+  String get addWord_bottomShet_success_save_btn => 'OK';
+
+  @override
+  String get listword_Screen_title => 'Chủ Đề';
+
+  @override
+  String get listword_Screen_AmountWord => 'từ vựng';
+
+  @override
+  String get listword_Screen_Learned => 'đã thuộc';
+
+  @override
+  String get listword_Screen_head_col1 => 'Tiếng Nhật';
+
+  @override
+  String get listword_Screen_head_col2 => 'Nghĩa';
+
+  @override
+  String get listword_Screen_head_col3 => 'Trạng Thái';
+
+  @override
+  String get listword_Screen_bottomSheet_public_title => 'Bạn có muốn chia sẻ không?';
+
+  @override
+  String get listword_Screen_bottomSheet_public_content => 'Khi chia sẻ, ai cũng có thể tải về';
+
+  @override
+  String get listword_Screen_bottomSheet_public_btn_pulic => 'Công Khai';
+
+  @override
+  String get listword_Screen_bottomSheet_public_btn_cancel => 'Hủy';
+
+  @override
+  String get listword_Screen_bottomSheet_public_succes_title => 'Chúc Mừng';
+
+  @override
+  String get listword_Screen_bottomSheet_public_succes_content => 'Bạn đã chia sẽ thành công bộ chủ đề của bạn';
+
+  @override
+  String get listword_Screen_bottomSheet_public_succes_btn_ok => 'OK';
+
+  @override
+  String get listword_Screen_bottomSheet_private_title => 'Bạn có muốn hủy chia sẻ không';
+
+  @override
+  String get listword_Screen_bottomSheet_private_btn_private => 'Hủy chia sẻ';
+
+  @override
+  String get listword_Screen_bottomSheet_private_btn_cancel => 'Không';
+
+  @override
+  String get listword_Screen_bottomSheet_private_success_title => 'Hủy Công Khai Thành Công';
+
+  @override
+  String get listword_Screen_bottomSheet_private_success_content => 'Bạn đã hủy chia sẽ chủ đề của bạn';
+
+  @override
+  String get listword_Screen_bottomSheet_private_success_OK => 'OK';
+
+  @override
+  String get listword_Screen_btn_learn => 'Học Ngay';
+
+  @override
+  String get keyboard_handwriting_btn_space => 'Khoảng trắng';
+
+  @override
+  String get keyboard_handwriting_btn_remove => 'Xóa';
+
+  @override
+  String get distionary_Screen_title => 'Từ Điển Tiếng Nhật';
+
+  @override
+  String get distionary_Screen_hint => 'Nhập Từ Muốn Tra';
+
+  @override
+  String get distionary_Screen_hint_title => 'Tra Từ Vựng';
+
+  @override
+  String get distionary_Screen_hint_content => 'Bắt đầu tra và học từ của bạn nào';
+
+  @override
+  String get distionary_Screen_mean => 'Nghĩa của từ';
+
+  @override
+  String get distionary_Screen_info => 'Thông tin từ';
+
+  @override
+  String get distionary_Screen_type => 'Danh từ: ';
+
+  @override
+  String get distionary_Screen_level => 'Cấp Độ: ';
+
+  @override
+  String get popup_remove_topic_title => 'Xóa chủ đề';
+
+  @override
+  String get popup_remove_topic_content => 'Bạn có muốn xóa không';
+
+  @override
+  String get popup_remove_topic_btn_cancle => 'Hủy';
+
+  @override
+  String get popup_remove_topic_btn_delete => 'Xóa';
 
   @override
   String get character_btn_learn => 'Học Chữ Cái';
@@ -428,6 +590,12 @@ class AppLocalizationsVi extends AppLocalizations {
   String get bottomSheet_Nointernet_Btn => 'OK';
 
   @override
+  String get bottomSheet_Error_title => 'Lỗi Tải Dữ Liệu';
+
+  @override
+  String get bottomSheet_Error_description => 'Hiện không có bản đồng bộ hóa dữ liệu nào';
+
+  @override
   String get bottomSheet_Warning_title => 'Cảnh Báo';
 
   @override
@@ -438,12 +606,6 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get bottomSheet_Warning_btn_cancle => 'Hủy';
-
-  @override
-  String get bottomSheet_Error_title => 'Lỗi Tải Dữ Liệu';
-
-  @override
-  String get bottomSheet_Error_description => 'Hiện không có bản đồng bộ hóa dữ liệu nào';
 
   @override
   String get language_title => 'Ngôn ngữ';

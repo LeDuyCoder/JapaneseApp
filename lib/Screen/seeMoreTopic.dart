@@ -12,6 +12,7 @@ import '../Config/databaseServer.dart';
 import '../Module/WordModule.dart';
 import '../Module/word.dart';
 import '../generated/app_localizations.dart';
+import 'downloadScreen.dart';
 
 class seeMoreTopic extends StatefulWidget{
   final Function() reloadScreen;
@@ -70,7 +71,7 @@ class _seeMoreTopic extends State<seeMoreTopic>{
     return await db.hasTopicID(id);
   }
 
-  Future<void> dowloadTopic(String id) async{
+  Future<bool> dowloadTopic(String id) async{
     DatabaseServer dbServer = new DatabaseServer();
     DatabaseHelper db = DatabaseHelper.instance;
 
@@ -94,9 +95,10 @@ class _seeMoreTopic extends State<seeMoreTopic>{
       await db.insertDataTopic(dataWords);
     }
 
-    Navigator.pop(context);
     setState(() {
     });
+
+    return true;
   }
 
   Future<bool> showDialogRenameTopic() async {
@@ -237,117 +239,85 @@ class _seeMoreTopic extends State<seeMoreTopic>{
     return true;
   }
 
-  void showDialogDowloadPulic(String id) {
-    showGeneralDialog(
+  void showBottomSheetDowloadPulic(String id, String nameTopic) {
+    showModalBottomSheet(
       context: context,
-      barrierDismissible: false,
-      barrierLabel: "Barrier",
-      barrierColor: Colors.black.withOpacity(0.5), // Màu nền tối mờ
-      transitionDuration: const Duration(milliseconds: 300),
-      pageBuilder: (_, __, ___) {
-        return const SizedBox(); // Trả về rỗng vì dùng transitionBuilder
-      },
-      transitionBuilder: (context, animation, secondaryAnimation, child) {
-        final curvedValue = Curves.easeInOut.transform(animation.value);
+      backgroundColor: Colors.transparent,
+      builder: (BuildContext context) {
+        return Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
+          ),
+          padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.warning,
+                color: Colors.orange, // màu icon
+                size: 60,
+              ),
+              const SizedBox(height: 20),
+              const AutoSizeText(
+                "Bạn có muốn tải xuống không ?",
+                style: TextStyle(fontFamily: "Itim", fontSize: 20),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: () async {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        PageRouteBuilder(
+                          pageBuilder: (context, animation, secondaryAnimation) => DownloadScreen(nameTopic: nameTopic, downloadTopic: () async {
+                            return dowloadTopic(id);
+                          },),
+                          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                            const begin = Offset(1.0, 0.0);
+                            const end = Offset.zero;
+                            const curve = Curves.ease;
 
-        return Transform.translate(
-          offset: Offset(0, -300 + (300 * curvedValue)),
-          child: Opacity(
-            opacity: animation.value,
-            child: Center(
-              child: Dialog(
-                backgroundColor: Colors.white,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(10),
-                    bottomRight: Radius.circular(10),
-                  ),
-                ),
-                child: StatefulBuilder(
-                  builder: (BuildContext context, setState) {
-                    return Container(
-                        decoration: const BoxDecoration(
-                          border: Border(
-                            top: BorderSide(
-                              color: Color.fromRGBO(20, 195, 142, 1.0), // Màu xanh cạnh trên ngoài cùng
-                              width: 10.0, // Độ dày của cạnh trên
-                            ),
+                            final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+                            return SlideTransition(
+                              position: animation.drive(tween),
+                              child: child,
+                            );
+                          },
+                        ),
+                      );
+                    },
+                    child: Container(
+                      width: MediaQuery.sizeOf(context).width * 0.2,
+                      height: MediaQuery.sizeOf(context).height * 0.04,
+                      decoration: BoxDecoration(
+                        color: Colors.orange.withOpacity(1),
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+                      child: const Center(
+                        child: Text(
+                          "Tải",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                        child: Container(
-                          height: 300,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Image.asset("assets/character/character6.png", width: MediaQuery.sizeOf(context).width*0.3,),
-                              const Column(
-                                children: [
-                                  SizedBox(height: 20),
-                                  AutoSizeText(
-                                    "Bạn có muốn tải xuống không ?",
-                                    style: TextStyle(fontFamily: "indieflower", fontSize: 15),
-                                  ),
-                                  SizedBox(height: 20),
-                                ],
-                              ),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () async {
-                                      Navigator.pop(context);
-                                    },
-                                    child: Container(
-                                      width: MediaQuery.sizeOf(context).width*0.3,
-                                      height: MediaQuery.sizeOf(context).height*0.05,
-                                      decoration: const BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                                          boxShadow: [
-                                          ]
-                                      ),
-                                      child: const Center(
-                                        child: Text("Hủy", style: TextStyle(color: Colors.red, fontSize: 15, fontWeight: FontWeight.bold),),
-                                      ),
-                                    ),
-
-                                  ),
-                                  SizedBox(width:10,),
-                                  GestureDetector(
-                                    onTap: () async {
-                                      dowloadTopic(id);
-                                    },
-                                    child: Container(
-                                      width: MediaQuery.sizeOf(context).width * 0.3,
-                                      height: MediaQuery.sizeOf(context).height * 0.05,
-                                      decoration: const BoxDecoration(
-                                        color: Colors.green,
-                                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                                      ),
-                                      child: const Center(
-                                        child: Text(
-                                          "Tải",
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ],
-                          ),
-                        )
-                    );
-                  },
-                ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
+              const SizedBox(height: 10),
+            ],
           ),
         );
       },
@@ -362,7 +332,7 @@ class _seeMoreTopic extends State<seeMoreTopic>{
           Navigator.pop(context);
           widget.reloadScreen();
         }, icon: Icon(Icons.arrow_back)),
-        title: Text("Cộng Đồng", style: TextStyle(color: AppColors.primary, fontSize: 30, fontFamily: "Itim"),),
+        title: Text(AppLocalizations.of(context)!.communication_Screen_title, style: TextStyle(color: AppColors.primary, fontSize: 30, fontFamily: "Itim"),),
         backgroundColor: Colors.white,
         elevation: 0,
         scrolledUnderElevation: 1,
@@ -401,7 +371,7 @@ class _seeMoreTopic extends State<seeMoreTopic>{
                 decoration: InputDecoration(
                   border: InputBorder.none, // bỏ border mặc định
                   prefixIcon: const Icon(Icons.search, color: Colors.black, size: 30,),
-                  hintText: AppLocalizations.of(context)!.seemore_search,
+                  // hintText: AppLocalizations.of(context)!.seemore_search,
                   hintStyle: const TextStyle(color: Colors.grey),
                   contentPadding: const EdgeInsets.symmetric(vertical: 18.0),
                 ),
@@ -411,7 +381,7 @@ class _seeMoreTopic extends State<seeMoreTopic>{
             Container(
               width: MediaQuery.sizeOf(context).width,
               margin: EdgeInsets.only(left: 20),
-              child: Text("Bộ Sưu Tập Cộng Đồng", style: TextStyle(fontFamily: "Itim", fontSize: 20, color: AppColors.textSecond.withOpacity(0.8)), textAlign: TextAlign.left,),
+              child: Text(AppLocalizations.of(context)!.communication_Screen_subTitle, style: TextStyle(fontFamily: "Itim", fontSize: 20, color: AppColors.textSecond.withOpacity(0.8)), textAlign: TextAlign.left,),
             ),
             SizedBox(height: 10),
             if(lenghtInput == 0)
@@ -438,7 +408,7 @@ class _seeMoreTopic extends State<seeMoreTopic>{
                               children: [
                                 FutureBuilder(future: hastTopic(Topic.id), builder: (context, topicData){
                                   if(topicData.connectionState == ConnectionState.waiting) return Container();
-                                  return topicServerWidget(name: Topic.name, owner: Topic.owner!, amount: Topic.count!, id: Topic.id, width: MediaQuery.sizeOf(context).width - 30, showBottomShetDownload: (String id) { showDialogDowloadPulic(Topic.id); },);
+                                  return topicServerWidget(name: Topic.name, owner: Topic.owner!, amount: Topic.count!, id: Topic.id, width: MediaQuery.sizeOf(context).width - 30, showBottomShetDownload: (String id) { showBottomSheetDowloadPulic(Topic.id, Topic.name); },);
                                 }),
                                 const SizedBox(height: 10,),
                               ],
@@ -497,7 +467,7 @@ class _seeMoreTopic extends State<seeMoreTopic>{
                                 children: [
                                   FutureBuilder(future: hastTopic(Topic.id), builder: (context, topicData){
                                     if(topicData.connectionState == ConnectionState.waiting) return Container();
-                                    return topicServerWidget(name: Topic.name, owner: Topic.owner!, amount: Topic.count!, id: Topic.id, width: MediaQuery.sizeOf(context).width - 30, showBottomShetDownload: (String id) { showDialogDowloadPulic(Topic.id); },);
+                                    return topicServerWidget(name: Topic.name, owner: Topic.owner!, amount: Topic.count!, id: Topic.id, width: MediaQuery.sizeOf(context).width - 30, showBottomShetDownload: (String id) { showBottomSheetDowloadPulic(Topic.id, Topic.name); },);
                                   }),
                                   const SizedBox(height: 10,),
                                 ],

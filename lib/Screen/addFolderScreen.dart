@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:japaneseapp/Screen/dashboardScreen.dart';
+import 'package:japaneseapp/Theme/colors.dart';
 
 import '../Config/dataHelper.dart';
 
@@ -28,7 +29,7 @@ class _addFolderScreen extends State<addFolderScreen>{
         }, icon: Icon(Icons.close, size: 40,)),
         actions: [
           IconButton(
-            icon: Icon(Icons.done, size: 40, color: Colors.green,),
+            icon: Icon(Icons.done, size: 40, color: AppColors.primary,),
             onPressed: () async {
               if(nameFolderInput.text == "") {
                 setState(() {
@@ -57,7 +58,7 @@ class _addFolderScreen extends State<addFolderScreen>{
         child: Column(
           children: [
             SizedBox(height: 20,),
-            Icon(Icons.folder_open, size: 80,),
+            Icon(Icons.folder_open, size: 80, color: AppColors.primary,),
             SizedBox(height: 10,),
             Container(
               width: 250,

@@ -25,9 +25,9 @@ android {
     signingConfigs {
         release {
             storeFile file("japneseappkeystore.jks")  // Đường dẫn tới file keystore
-            storePassword "2822005"       // Password của keystore
-            keyAlias "kiradev"                 // Alias (thường là 'my-alias' nếu bạn dùng hướng dẫn trước)
-            keyPassword "2822005"           // Password của key
+            storePassword "Duy2822005@"       // Password của keystore
+            keyAlias "keybuildAPP"                 // Alias (thường là 'my-alias' nếu bạn dùng hướng dẫn trước)
+            keyPassword "Duy2822005@"           // Password của key
         }
     }
 

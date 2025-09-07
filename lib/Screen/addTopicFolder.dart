@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../Config/dataHelper.dart';
 import '../Module/topic.dart';
+import '../generated/app_localizations.dart';
 
 class addTopicFolder extends StatefulWidget{
   final int idFolder;
@@ -55,7 +56,7 @@ class _addTopicFolder extends State<addTopicFolder>{
                   children: [
                     Text(Topic.name, style: TextStyle(fontSize: 20),),
                     Text(
-                        "Tác giả: ${Topic.owner} - số từ: ${Topic.count}",
+                        "${AppLocalizations.of(context)!.folderManager_Screen_addTopic_card_owner(Topic.owner!)} - ${AppLocalizations.of(context)!.folderManager_Screen_addTopic_card_amountWord(Topic.count!)}",
                         style: TextStyle(color: Colors.grey, fontSize: 15,),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -79,7 +80,7 @@ class _addTopicFolder extends State<addTopicFolder>{
           widget.reloadScreen();
           Navigator.pop(context);
         }, icon: Icon(Icons.close, size: 40,)),
-        title: Text("Thêm Chủ Đề Học Phần", style: TextStyle(fontSize: 20, color: Colors.black)),
+        title: Text(AppLocalizations.of(context)!.folderManager_Screen_addTopic_title, style: TextStyle(fontSize: 20, color: Colors.black)),
         backgroundColor: Colors.white,
       ),
       body: Container(

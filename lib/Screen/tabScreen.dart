@@ -72,12 +72,12 @@ class _TabScreenState extends State<TabScreen> {
                       Navigator.pop(context);
                       dashboardScreen.globalKey.currentState?.showPopupAddTopic();
                     },
-                    child: const Row(
+                    child: Row(
                       children: [
                         SizedBox(width: 10,),
                         Icon(Icons.menu_book, color: Color(0xFF2E7D32)),
                         SizedBox(width: 10),
-                        Text("Học phần",
+                        Text(AppLocalizations.of(context)!.add_course,
                             style: TextStyle(color: Colors.black, fontSize: 18)),
                       ],
                     ),
@@ -115,12 +115,12 @@ class _TabScreenState extends State<TabScreen> {
                         ),
                       );
                     },
-                    child: const Row(
+                    child: Row(
                       children: [
                         SizedBox(width: 10,),
                         const Icon(Icons.folder_open, color: Color(0xFF2E7D32)),
                         SizedBox(width: 10),
-                        const Text("Thư Mục",
+                        Text(AppLocalizations.of(context)!.add_folder,
                             style: TextStyle(color: Colors.black, fontSize: 18)),
                       ],
                     ),
@@ -212,11 +212,11 @@ class _TabScreenState extends State<TabScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildNavItem(Icons.home, "Trang Chủ", 0),
-                _buildNavItem(Icons.menu_book, "Từ Điển", 1),
+                _buildNavItem(Icons.home, AppLocalizations.of(context)!.tabbar_home, 0),
+                _buildNavItem(Icons.menu_book, AppLocalizations.of(context)!.tabber_distionary, 1),
                 const SizedBox(width: 40), // chừa chỗ cho FAB
-                _buildNavItem(Icons.translate, "Bảng Chữ Cái", 2),
-                _buildNavItem(Icons.person, "Thông Tin", 3),
+                _buildNavItem(Icons.translate, AppLocalizations.of(context)!.tabbar_character, 2),
+                _buildNavItem(Icons.person, AppLocalizations.of(context)!.tabbar_info, 3),
               ],
             ),
           ),

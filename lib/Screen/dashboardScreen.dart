@@ -25,6 +25,7 @@ import '../Widget/topicServerWidget.dart';
 import '../Widget/topicWidget.dart';
 import 'package:http/http.dart' as http;
 
+import '../generated/app_localizations.dart';
 import 'allTopicScreen.dart';
 
 class dashboardScreen extends StatefulWidget {
@@ -741,12 +742,12 @@ class _DashboardScreenState extends State<dashboardScreen> {
                       Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Row(
+                          Row(
                             children: [
                               Icon(Icons.add_circle_outline, color: AppColors.primary, size: 28),
                               SizedBox(width: 10),
                               Text(
-                                'Thêm Chủ Đề Mới',
+                                AppLocalizations.of(context)!.popup_add_topic,
                                 style: TextStyle(
                                   fontSize: 22,
                                   fontWeight: FontWeight.bold,
@@ -763,7 +764,7 @@ class _DashboardScreenState extends State<dashboardScreen> {
                               controller: nameTopicInput,
                               style: const TextStyle(fontSize: 18),
                               decoration: InputDecoration(
-                                hintText: "Tên Chủ Đề",
+                                hintText: AppLocalizations.of(context)!.popup_add_topic_hint,
                                 hintStyle: const TextStyle(color: Colors.grey, fontSize: 16),
                                 contentPadding: const EdgeInsets.symmetric(
                                   horizontal: 16.0,
@@ -801,8 +802,8 @@ class _DashboardScreenState extends State<dashboardScreen> {
                                   Navigator.pop(context);
                                 },
                                 icon: const Icon(Icons.close, color: Colors.red),
-                                label: const Text(
-                                  "Hủy",
+                                label: Text(
+                                  AppLocalizations.of(context)!.popup_add_topic_btn_cancle,
                                   style: TextStyle(color: Colors.red, fontSize: 16, fontWeight: FontWeight.w600),
                                 ),
                                 style: TextButton.styleFrom(
@@ -821,7 +822,7 @@ class _DashboardScreenState extends State<dashboardScreen> {
 
                                   if (await DatabaseHelper.instance.hasTopicName(nameTopicInput.text)) {
                                     setState(() {
-                                      textErrorName = "Tên Chủ Đề Đã Tồn Tại";
+                                      textErrorName = AppLocalizations.of(context)!.popup_add_topic_exit;
                                       isLoadingCreateNewFolder = false;
                                     });
                                   } else {
@@ -849,8 +850,8 @@ class _DashboardScreenState extends State<dashboardScreen> {
                                   }
                                 },
                                 icon: const Icon(Icons.check_circle, color: Colors.white),
-                                label: const Text(
-                                  "Tạo",
+                                label: Text(
+                                  AppLocalizations.of(context)!.popup_add_topic_btn_create,
                                   style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
                                 ),
                                 style: ElevatedButton.styleFrom(
@@ -1210,8 +1211,8 @@ class _DashboardScreenState extends State<dashboardScreen> {
                 size: 60,
               ),
               const SizedBox(height: 20),
-              const AutoSizeText(
-                "Bạn có muốn tải xuống không ?",
+              AutoSizeText(
+                AppLocalizations.of(context)!.comunication_bottomSheet_notify_download_title,
                 style: TextStyle(fontFamily: "Itim", fontSize: 20),
               ),
               const SizedBox(height: 20),
@@ -1249,9 +1250,9 @@ class _DashboardScreenState extends State<dashboardScreen> {
                         color: Colors.orange.withOpacity(1),
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                       ),
-                      child: const Center(
+                      child: Center(
                         child: Text(
-                          "Tải",
+                          AppLocalizations.of(context)!.comunication_bottomSheet_notify_download_btn,
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 15,
@@ -1322,12 +1323,12 @@ class _DashboardScreenState extends State<dashboardScreen> {
               return ListView(
                 children: [
                   SizedBox(height: 30,),
-                  const Row(
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Text("Thư Mục Của Tôi", style: TextStyle(color: AppColors.textPrimary, fontSize: 20, fontFamily: "Itim"),),
+                      Text(AppLocalizations.of(context)!.dashboard_folder, style: TextStyle(color: AppColors.textPrimary, fontSize: 20, fontFamily: "Itim"),),
                       SizedBox(width: 80,),
-                      Text("Xem Tất Cả", style: TextStyle(color: AppColors.primary, fontSize: 18),),
+                      Text(AppLocalizations.of(context)!.dashboard_folder_seemore, style: TextStyle(color: AppColors.primary, fontSize: 18),),
                     ],
                   ),
                   SizedBox(height: 10,),
@@ -1556,9 +1557,9 @@ class _DashboardScreenState extends State<dashboardScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Text("Chủ Đề Của Tôi", style: TextStyle(color: AppColors.textPrimary, fontSize: 20, fontFamily: "Itim"),),
+                      Text(AppLocalizations.of(context)!.dashboard_topic, style: TextStyle(color: AppColors.textPrimary, fontSize: 20, fontFamily: "Itim"),),
                       SizedBox(width: 80,),
-                      Text("Xem Tất Cả", style: TextStyle(color: AppColors.primary, fontSize: 18),),
+                      Text(AppLocalizations.of(context)!.dashboard_topic_seemore, style: TextStyle(color: AppColors.primary, fontSize: 18),),
 
                     ],
                   ),
@@ -1744,7 +1745,7 @@ class _DashboardScreenState extends State<dashboardScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      const Text("Thư Mục Của Tôi", style: TextStyle(color: AppColors.textPrimary, fontSize: 20, fontFamily: "Itim"),),
+                      Text(AppLocalizations.of(context)!.dashboard_folder, style: TextStyle(color: AppColors.textPrimary, fontSize: 20, fontFamily: "Itim"),),
                       const SizedBox(width: 80,),
                       GestureDetector(
                         onTap: () {
@@ -1767,30 +1768,54 @@ class _DashboardScreenState extends State<dashboardScreen> {
                             ),
                           );
                         },
-                        child: Text("Xem Tất Cả", style: TextStyle(color: AppColors.primary, fontSize: 18, fontFamily: "Itim"),),
+                        child: Text(AppLocalizations.of(context)!.dashboard_folder_seemore, style: TextStyle(color: AppColors.primary, fontSize: 18, fontFamily: "Itim"),),
                       )
                     ],
                   ),
                   SizedBox(height: 10,),
 
-                  Container(
-                      height: 160,
-                      width: MediaQuery.sizeOf(context).width,
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: [
-                            for (Map<String, dynamic> folder in snapshot.data!["folder"]!)
-                              folderWidget(idFolder: folder["id"], nameFolder: folder["namefolder"]!, reloadDashboard: reloadScreen, dateCreated: folder["datefolder"], amountTopic: folder["amountTopic"],),
-                          ],
-                        ),
-                      )
-                  ),
+                  if(snapshot.data!["folder"]!.length == 0)
+                    Container(
+                      padding: const EdgeInsets.all(24),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.folder_open, size: 48, color: Colors.grey.shade600),
+                          const SizedBox(height: 12),
+                          Text(
+                            AppLocalizations.of(context)!.dashboard_folder_nodata_title,
+                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            AppLocalizations.of(context)!.dashboard_folder_nodata_content,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
+                          ),
+                        ],
+                      ),
+                    )
+                  ,
+
+                  if(snapshot.data!["folder"]!.length != 0)
+                    Container(
+                        height: 160,
+                        width: MediaQuery.sizeOf(context).width,
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              for (Map<String, dynamic> folder in snapshot.data!["folder"]!)
+                                folderWidget(idFolder: folder["id"], nameFolder: folder["namefolder"]!, reloadDashboard: reloadScreen, dateCreated: folder["datefolder"], amountTopic: folder["amountTopic"],),
+                            ],
+                          ),
+                        )
+                    ),
                   SizedBox(height: 10,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Text("Cộng Đồng", style: TextStyle(color: AppColors.textPrimary, fontSize: 18, fontFamily: "Itim"),),
+                      Text(AppLocalizations.of(context)!.dashboard_comunication, style: TextStyle(color: AppColors.textPrimary, fontSize: 18, fontFamily: "Itim"),),
                       SizedBox(width: 80,),
                       GestureDetector(
                         onTap: (){
@@ -1813,7 +1838,7 @@ class _DashboardScreenState extends State<dashboardScreen> {
                             ),
                           );
                         },
-                        child: Text("Xem Tất Cả", style: TextStyle(fontFamily: "Itim", color: AppColors.primary, fontSize: 18),),
+                        child: Text(AppLocalizations.of(context)!.dashboard_comunication_seemore, style: TextStyle(fontFamily: "Itim", color: AppColors.primary, fontSize: 18),),
                       )
                     ],
                   ),
@@ -1956,7 +1981,7 @@ class _DashboardScreenState extends State<dashboardScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      const Text("Chủ Đề Của Tôi", style: TextStyle(color: AppColors.textPrimary, fontSize: 20, fontFamily: "Itim"),),
+                      Text(AppLocalizations.of(context)!.dashboard_topic, style: TextStyle(color: AppColors.textPrimary, fontSize: 20, fontFamily: "Itim"),),
                       const SizedBox(width: 80,),
                       GestureDetector(
                         onTap: () {
@@ -1979,10 +2004,10 @@ class _DashboardScreenState extends State<dashboardScreen> {
                             ),
                           );
                         },
-                        child: const Padding(
+                        child: Padding(
                           padding: EdgeInsets.all(8.0), // tạo vùng click thoải mái hơn
                           child: Text(
-                            "Xem Tất Cả",
+                            AppLocalizations.of(context)!.dashboard_topic_seemore,
                             style: TextStyle(color: AppColors.primary, fontSize: 18, fontFamily: "Itim"),
                           ),
                         ),
@@ -1993,18 +2018,51 @@ class _DashboardScreenState extends State<dashboardScreen> {
                   Container(
                     child: SingleChildScrollView(
                       scrollDirection: Axis.vertical,
-                      child: Column(
-                        children: [
-                          for (Map<String, dynamic> topicLocal in snapshot.data?["topic"])
-                            topicWidget(
-                              id: topicLocal["id"],
-                              nameTopic: topicLocal["name"],
-                              reloadDashBoard: () {
-                                reloadScreen();
-                              },
+                      child:  snapshot.data?["topic"].length > 0
+                          ? Column(
+                            children: [
+                                for (Map<String, dynamic> topicLocal in snapshot.data?["topic"])
+                                  topicWidget(
+                                    id: topicLocal["id"],
+                                    nameTopic: topicLocal["name"],
+                                    reloadDashBoard: () {
+                                      reloadScreen();
+                                    },
+                                  ),
+                            ]
+                          )
+                          : Container(
+                        margin: EdgeInsets.symmetric(horizontal: 20),
+                        padding: const EdgeInsets.all(24),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.grey,
+                              blurRadius: 10,
+                              offset: Offset(0, -2)
+                            )
+                          ]
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.topic, size: 48, color: Colors.grey.shade600),
+                            const SizedBox(height: 12),
+                            Text(
+                              AppLocalizations.of(context)!.dashboard_topic_nodata_title,
+                              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                             ),
-                        ],
-                      ),
+                            const SizedBox(height: 6),
+                            Text(
+                              AppLocalizations.of(context)!.dashboard_topic_nodata_content,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(fontSize: 14, color: Colors.grey),
+                            ),
+                          ],
+                        ),
+                      )
                     ),
                   )
                 ],

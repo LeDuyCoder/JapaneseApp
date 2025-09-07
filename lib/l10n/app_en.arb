@@ -2,45 +2,21 @@
   "@@locale": "en",
 
   "tabbar_home": "Home",
+  "tabber_distionary": "Dictionary",
   "tabbar_character": "Alphabet",
   "tabbar_info": "Info",
 
-  "dashboard_hintSearch": "Word you want to search",
-  "dashboard_folder": "Folder",
-  "dashboard_course": "Course",
-  "dashboard_topic": "Topic",
-  "dashboard_popupDownload_title": "Do you want to download?",
-  "dashboard_popupDownload_btn_cancel": "Cancel",
-  "dashboard_popupDownload_btn_dowload": "Download",
-  "dashboard_seemore": "See More",
-  "dashboard_btn_import": "Import",
+  "dashboard_folder": "My Folders",
+  "dashboard_folder_seemore": "See All",
+  "dashboard_folder_content": "topics",
 
-  "tutorial_one_title": "Install the App",
-  "tutorial_one_content": "Make sure your device has the Gboard app installed",
-  "tutorial_two_title": "Open Settings",
-  "tutorial_two_content": "Go to the settings app to set up the Japanese handwriting keyboard",
-  "tutorial_three_title": "Search for Gboard",
-  "tutorial_three_content": "Tap to search and find Gboard as shown in the image",
-  "tutorial_four_title": "Gboard",
-  "tutorial_four_content": "Continue tapping as instructed",
-  "tutorial_five_title": "Languages",
-  "tutorial_five_content": "Tap on the language section",
-  "tutorial_six_title": "Add Keyboard",
-  "tutorial_six_content": "Tap to add a keyboard and choose Japanese",
-  "tutorial_seven_title": "Search Japanese",
-  "tutorial_seven_content": "Search for the Japanese language",
-  "tutorial_eight_title": "Handwriting",
-  "tutorial_eight_content": "Choose the handwriting keyboard and tap Done",
-  "tutorial_nice_title": "Switch Keyboard",
-  "tutorial_nice_content": "Remember to switch keyboards when practicing writing to improve memory",
-  "tutorial_btn_back": "Back",
-  "tutorial_btn_forward": "Next",
-  "tutorial_btn_skip": "Skip",
-  "tutorial_one_done": "Done",
+  "dashboard_folder_nodata_title": "No folders yet",
+  "dashboard_folder_nodata_content": "Create your first folder to organize your vocabulary",
+  "dashboard_comunication": "Community",
+  "dashboard_comunication_seemore": "See All",
 
-  "course_owner": "Created by {user_nane}",
+  "course_owner": "{user_nane}",
   "@course_owner": {
-    "description": "Created by whom",
     "placeholders": {
       "user_nane": {
         "type": "String",
@@ -48,10 +24,8 @@
       }
     }
   },
-
-  "amount_word": "Amount: {amount} Words",
+  "amount_word": "{amount}",
   "@amount_word": {
-    "description": "Number of words",
     "placeholders": {
       "amount": {
         "type": "String",
@@ -60,47 +34,142 @@
     }
   },
 
-  "word_finish": "Completed: {amount}",
-  "@word_finish": {
-    "description": "Number of completed words",
-    "placeholders": {
-      "amount": {
-        "type": "String",
-        "example": "10"
-      }
-    }
-  },
-
-  "word_learning": "Incomplete: {amount}",
-  "@word_learning": {
-    "description": "Number of incomplete words",
-    "placeholders": {
-      "amount": {
-        "type": "String",
-        "example": "10"
-      }
-    }
-  },
+  "topic_persent": "Percentage",
+  "topic_word_finish": "Completed",
+  "topic_word_learning": "Not Completed",
 
   "add_course": "Course",
   "add_folder": "Folder",
 
-  "folderManager": "Add Course Topic",
-  "folderManager_addTopic": "Add Topic",
-  "folderManager_remove": "Delete",
-  "folderManager_removeTopic": "Remove from Folder",
+  "folderSeemore_title": "My Folders",
+  "folderSeemore_grid": "Grid",
+  "folderSeemore_tag_flex": "List",
 
-  "seemore_search": "Folder Name",
+  "folderSeemore_content": "All folders",
+  "folderSeemore_subContent": "Folder",
 
-  "import_title": "Choose Import Method",
-  "import_btn_file": "From File",
-  "import_btn_qr": "From QR",
+  "folderManager_nodata_title": "Start creating your own folder",
+  "folderManager_nodata_button": "Add learning topic",
 
-  "character_btn_learn": "Learn Characters",
+  "folderManager_bottomSheet_addTopic": "Add Learning Topic",
+  "folderManager_bottomSheet_removeFolder": "Delete",
 
+  "folderManager_topic_bottomSheet_remove": "Remove from folder",
+
+  "folderManager_Screen_addTopic_title": "Add Course Topic",
+  "folderManager_Screen_addTopic_card_owner": "author: {name}",
+  "@folderManager_Screen_addTopic_card_owner": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "folderManager_Screen_addTopic_card_amountWord": "words: {amount}",
+  "@folderManager_Screen_addTopic_card_amountWord": {
+    "placeholders": {
+      "amount": {
+        "type": "int"
+      }
+    }
+  },
+
+  "comunication_bottomSheet_notify_download_title": "Do you want to download?",
+  "comunication_bottomSheet_notify_download_btn": "Download",
+
+  "download_Screen_downloading_title": "Downloading Topic",
+  "download_Screen_downloading_contetnt": "Please wait a moment...",
+  "download_Screen_downloading_btn": "Cancel",
+  "download_Screen_Success_title": "Download Successful",
+  "download_Screen_Success_contetnt": "The topic is ready to learn",
+  "download_Screen_Success_btn": "Start learning",
+
+  "dashboard_topic_nodata_title": "No topics yet",
+  "dashboard_topic_nodata_content": "Create your first topic to start learning",
+
+  "communication_Screen_title": "Community",
+  "communication_Screen_hint_search": "Enter topic name...",
+  "communication_Screen_subTitle": "Community Collection",
+
+  "dashboard_topic": "My Topics",
+  "dashboard_topic_seemore": "See All",
+
+  "topic_seemore_title": "My Topics",
+  "topic_seemore_subTitle": "Topics",
+
+  "bottomSheet_add_topic": "Course",
+  "bottomSheet_add_folder": "Folder",
+
+  "popup_add_topic": "Add New Topic",
+  "popup_add_topic_hint": "Topic Name",
+  "popup_add_topic_exit": "Topic Name Already Exists",
+  "popup_add_topic_btn_create": "Create",
+  "popup_add_topic_btn_cancle": "Cancel",
+
+  "addWord_Screen_Input_Japan_Label": "Japanese Vocabulary",
+  "addWord_Screen_Input_Japan_Hint": "Japanese word",
+  "addWord_Screen_Input_WayRead_Label": "Reading (Hiragana)",
+  "addWord_Screen_Input_WayRead_Hint": "reading",
+  "addWord_Screen_Input_Mean_Label": "Word Meaning",
+  "addWord_Screen_Input_Mean_Hint": "meaning",
+  "addWord_Screen_btn_add": "Add Word",
+
+  "addWord_bottomShet_warning_save_title": "Warning",
+  "addWord_bottomShet_warning_save_content": "Once saved, it cannot be edited",
+  "addWord_bottomShet_warning_save_btn": "Save",
+
+  "addWord_bottomShet_success_save_title": "Saved Successfully",
+  "addWord_bottomShet_success_save_content": "The topic you created has been successfully saved 🎉",
+  "addWord_bottomShet_success_save_btn": "OK",
+
+  "listword_Screen_title": "Topic",
+  "listword_Screen_AmountWord": "vocabulary",
+  "listword_Screen_Learned": "learned",
+  "listword_Screen_head_col1": "Japanese",
+  "listword_Screen_head_col2": "Meaning",
+  "listword_Screen_head_col3": "Status",
+
+  "listword_Screen_bottomSheet_public_title": "Do you want to share?",
+  "listword_Screen_bottomSheet_public_content": "When shared, anyone can download",
+  "listword_Screen_bottomSheet_public_btn_pulic": "Public",
+  "listword_Screen_bottomSheet_public_btn_cancel": "Cancel",
+
+  "listword_Screen_bottomSheet_public_succes_title": "Congratulations",
+  "listword_Screen_bottomSheet_public_succes_content": "You have successfully shared your topic",
+  "listword_Screen_bottomSheet_public_succes_btn_ok": "OK",
+
+  "listword_Screen_bottomSheet_private_title": "Do you want to cancel sharing?",
+  "listword_Screen_bottomSheet_private_btn_private": "Unshare",
+  "listword_Screen_bottomSheet_private_btn_cancel": "No",
+
+  "listword_Screen_bottomSheet_private_success_title": "Unshared Successfully",
+  "listword_Screen_bottomSheet_private_success_content": "You have unshared your topic",
+  "listword_Screen_bottomSheet_private_success_OK": "OK",
+
+  "listword_Screen_btn_learn": "Learn Now",
+
+  "keyboard_handwriting_btn_space": "Space",
+  "keyboard_handwriting_btn_remove": "Delete",
+
+  "distionary_Screen_title": "Japanese Dictionary",
+  "distionary_Screen_hint": "Enter word to search",
+  "distionary_Screen_hint_title": "Search Vocabulary",
+  "distionary_Screen_hint_content": "Start searching and learning your words",
+
+  "distionary_Screen_mean": "Word Meaning",
+  "distionary_Screen_info": "Word Info",
+  "distionary_Screen_type": "Noun: ",
+  "distionary_Screen_level": "Level: ",
+
+  "popup_remove_topic_title": "Delete Topic",
+  "popup_remove_topic_content": "Do you want to delete?",
+  "popup_remove_topic_btn_cancle": "Cancel",
+  "popup_remove_topic_btn_delete": "Delete",
+
+  "character_btn_learn": "Learn Alphabet",
   "listWord_word_complete": "Completed {count}",
   "@listWord_word_complete": {
-    "description": "Number of completed words",
+    "description": "number of completed words",
     "placeholders": {
       "count": {
         "type": "String",
@@ -108,10 +177,9 @@
       }
     }
   },
-
-  "listWord_word_learning": "Incomplete {count}",
+  "listWord_word_learning": "Not Completed {count}",
   "@listWord_word_learning": {
-    "description": "Number of incomplete words",
+    "description": "number of uncompleted words",
     "placeholders": {
       "count": {
         "type": "String",
@@ -119,11 +187,10 @@
       }
     }
   },
-
   "listWord_btn_learn": "Learn Words",
-  "listWord_share_title": "Topic Name: {topic}",
+  "listWord_share_title": "Topic name {topic}",
   "@listWord_share_title": {
-    "description": "Topic name",
+    "description": "topic name",
     "placeholders": {
       "topic": {
         "type": "String",
@@ -131,10 +198,9 @@
       }
     }
   },
-
-  "listWord_share_amount_word": "Amount: {amount} Words",
+  "listWord_share_amount_word": "Total: {amount} words",
   "@listWord_share_amount_word": {
-    "description": "Number of words",
+    "description": "word count",
     "placeholders": {
       "amount": {
         "type": "String",
@@ -142,10 +208,9 @@
       }
     }
   },
-
   "listWord_share_type": "Type: {type}",
   "@listWord_share_type": {
-    "description": "Type of sharing",
+    "description": "Share type",
     "placeholders": {
       "type": {
         "type": "String",
@@ -156,7 +221,7 @@
   "listWord_btn_remove": "Delete",
   "listWord_btn_shared": "Share",
 
-  "learn_warningGboard": "Gboard is recommended for the best experience",
+  "learn_warningGboard": "It is recommended to use Gboard for the best experience",
   "learn_btn_check": "Check",
   "learn_bottomsheet_wrong_title": "Incorrect",
   "learn_bottomsheet_wrong_content": "The correct answer is",
@@ -165,45 +230,46 @@
 
   "learn_bottomsheet_right_title": "Correct Answer",
   "motivationalPhrases_1": "Keep going, you're doing great!",
-  "motivationalPhrases_2": "You did great this time, keep pushing forward!",
+  "motivationalPhrases_2": "Perfect this time, keep it up!",
   "motivationalPhrases_3": "Every step forward is progress!",
   "motivationalPhrases_4": "Believe in yourself and keep trying!",
   "motivationalPhrases_5": "You can do it, never give up!",
-  "motivationalPhrases_6": "Success comes to those who don’t quit!",
-  "motivationalPhrases_7": "Keep improving step by step!",
-  "motivationalPhrases_8": "Be strong, stay focused, and keep going!",
-  "motivationalPhrases_9": "Amazing effort! Aim even higher!",
-  "motivationalPhrases_10": "Your hard work will pay off soon!",
+  "motivationalPhrases_6": "Success comes to those who keep striving!",
+  "motivationalPhrases_7": "Keep improving, step by step!",
+  "motivationalPhrases_8": "Be strong, stay focused, and keep moving forward!",
+  "motivationalPhrases_9": "Great effort! Keep aiming higher!",
+  "motivationalPhrases_10": "Your hard work will soon pay off!",
   "learn_bottomsheet_right_btn": "Continue",
-  "learning_combine_title": "Match from Column A to Column B",
-  "learn_translate_title": "Translate the Sentence Below",
-  "learn_listen_title": "What Did You Hear?",
+
+  "learning_combine_title": "Match from column A to column B",
+  "learn_translate_title": "Translate the sentence below",
+  "learn_listen_title": "What do you hear?",
   "learn_chose_title": "Which word is correct?",
   "congraculate_title": "Completed",
-  "congraculate_content": "You’re Amazing!",
-  "congraculate_commited": "Time Spent",
-  "congraculate_amzing": "Wonderful",
+  "congraculate_content": "You are amazing",
+  "congraculate_commited": "Time",
+  "congraculate_amzing": "Awesome",
+
   "profile_level": "Level",
   "profile_topic": "Topic",
   "profile_title": "Title",
-
-  "levelTitles_1": "Scholar",
-  "levelTitles_2": "Wise One",
+  "levelTitles_1": "Learner",
+  "levelTitles_2": "Wise Scholar",
   "levelTitles_3": "Thinker",
-  "levelTitles_4": "Honorable Academic",
-  "levelTitles_5": "Academic Scholar",
+  "levelTitles_4": "Erudite Sage",
+  "levelTitles_5": "Academician",
   "levelTitles_6": "Literary Genius",
-  "levelTitles_7": "Sage",
+  "levelTitles_7": "Wise Saint",
   "levelTitles_8": "Debating Genius",
-  "levelTitles_9": "Master Learner",
-  "levelTitles_10": "Literary Gentleman",
-  "levelTitles_11": "Disciplined Scholar",
+  "levelTitles_9": "Master Scholar",
+  "levelTitles_10": "Virtuous Scholar",
+  "levelTitles_11": "Diligent Student",
   "levelTitles_12": "Enlightened One",
-  "levelTitles_13": "Profound Sage",
-  "levelTitles_14": "Elegant Master",
-  "levelTitles_15": "Gifted Intellectual",
+  "levelTitles_13": "Profound Philosopher",
+  "levelTitles_14": "Elegant Sage",
+  "levelTitles_15": "Talented Scholar",
 
-  "profile_date": "Month {month}, Year {year}",
+  "profile_date": "Month {month} Year {year}",
   "@profile_date": {
     "description": "Display month and year in profile",
     "placeholders": {
@@ -220,27 +286,27 @@
 
   "setting_title": "Settings",
   "setting_achivement_title": "Achievements",
-  "setting_achivement_content": "List of achievements unlocked",
+  "setting_achivement_content": "List of earned achievements",
   "setting_language_title": "Language",
   "setting_language_content": "Select display language",
-  "setting_async_title": "Data Sync",
+  "setting_async_title": "Sync Data",
   "setting_async_content": "Sync data to the cloud",
   "setting_downloadAsync_title": "Download Data",
-  "setting_downloadAsync_content": "Download synced data from your previous device",
+  "setting_downloadAsync_content": "Download synced data from your old device",
   "setting_signout_title": "Sign Out",
-  "setting_signout_content": "Sign out from the current account",
+  "setting_signout_content": "Sign out of your current account",
 
-  "achivement_title_one": "Achievements",
+  "achivement_title_one": "Achievement",
   "achivement_owl_title": "Night Owl",
-  "achivement_owl_description": "Studied between 12am and 2am",
-  "achivement_tryhard_title": "Early Bird Learner",
-  "achivement_tryhard_description": "Studied between 4am and 6am",
+  "achivement_owl_description": "Study between 12am and 2am",
+  "achivement_tryhard_title": "Hardworking Knowledge Seeker",
+  "achivement_tryhard_description": "Study between 4am and 6am",
   "achivement_habit_title": "Habit Builder",
-  "achivement_habit_description": "Studied for 28 consecutive days",
+  "achivement_habit_description": "Study for 28 consecutive days",
   "achivement_title_two": "Study Streak",
-  "achivement_streak_title": "{day}_Day Streak",
+  "achivement_streak_title": "{day}-Day Streak",
   "@achivement_streak_title": {
-    "description": "Study streak title",
+    "description": "study streak",
     "placeholders": {
       "day": {
         "type": "String",
@@ -248,9 +314,9 @@
       }
     }
   },
-  "achivement_streak_description": "Earned by studying {day} days in a row",
+  "achivement_streak_description": "Earned after studying {day} consecutive days",
   "@achivement_streak_description": {
-    "description": "Study streak description",
+    "description": "study streak description",
     "placeholders": {
       "day": {
         "type": "String",
@@ -258,11 +324,10 @@
       }
     }
   },
-
   "achivement_title_three": "Completed Topics",
   "achivement_topic_title": "{amount} Topics",
   "@achivement_topic_title": {
-    "description": "Topic count",
+    "description": "topic completion",
     "placeholders": {
       "amount": {
         "type": "String",
@@ -272,7 +337,7 @@
   },
   "achivement_topic_description": "Earned after completing {amount} topics",
   "@achivement_topic_description": {
-    "description": "Topic completion description",
+    "description": "topic completion description",
     "placeholders": {
       "amount": {
         "type": "String",
@@ -281,59 +346,54 @@
     }
   },
 
-  "bottomSheetAsync_Success_Description": "Data synced successfully",
+  "bottomSheetAsync_Success_Description": "Data has been successfully synced",
   "bottomSheetAsync_Success_Btn": "OK",
   "bottomSheet_Nointernet_title": "No Internet Connection",
   "bottomSheet_Nointernet_Description": "Please check your internet connection and try again",
   "bottomSheet_Nointernet_Btn": "OK",
-
+  "bottomSheet_Error_title": "Data Load Error",
+  "bottomSheet_Error_description": "No synced data available",
   "bottomSheet_Warning_title": "Warning",
-  "bottomSheet_Warning_Description": "Syncing will erase all local data on this device",
+  "bottomSheet_Warning_Description": "When syncing, all data on this device will be deleted",
   "bottomSheet_Warning_btn_ok": "OK",
   "bottomSheet_Warning_btn_cancle": "Cancel",
 
-  "bottomSheet_Error_title": "Data Download Error",
-  "bottomSheet_Error_description": "There is currently no data sync available",
-
   "language_title": "Language",
-  "language_bottomsheet_success": "Language updated successfully",
+  "language_bottomsheet_success": "Language Updated Successfully",
+  "error_connect_server": "Server Connection Error",
 
-  "error_connect_server": "Failed to connect to the server",
-
-  "login_title": "Welcome back, happy to see you",
+  "login_title": "Welcome back, glad to see you",
   "login_email_input_hint": "Email",
   "login_email_input_hint_focus": "Enter your email",
   "login_email_input_password": "Password",
-  "login_email_input_password_hint": "Enter your password",
+  "login_email_input_password_hint": "Enter Password",
   "login_btn": "Login",
   "login_create_question_account": "Don't have an account?",
   "login_create_btn_account": "Sign Up",
   "login_with_facebook": "Login with Facebook",
   "login_with_google": "Login with Google",
-
-  "login_invalid_email": "Invalid email address",
-  "login_user_disabled": "This account has been disabled",
+  "login_invalid_email": "Invalid Email",
+  "login_user_disabled": "Account Disabled",
   "login_user_not_found": "No account found with this email",
   "login_wrong_password": "Incorrect password",
-  "login_error": "An error has occurred",
+  "login_error": "An error occurred",
 
-  "register_title": "Hello, sign up to get started",
+  "register_title": "Hello, Sign up to start your journey",
   "register_email_input_hint": "Email",
   "register_email_input_hint_focus": "Enter your email",
   "register_user_input_hint": "Username",
-  "register_user_input_hint_focus": "Enter your username",
+  "register_user_input_hint_focus": "Enter username",
   "register_password_input_hint": "Password",
-  "register_password_input_hint_focus": "Enter your password",
-  "register_re_password_input_hint": "Re-enter Password",
-  "register_re_password_input_hint_focus": "Re-enter your password",
+  "register_password_input_hint_focus": "Enter Password",
+  "register_re_password_input_hint": "Confirm Password",
+  "register_re_password_input_hint_focus": "Re-enter Password",
   "register_btn": "Sign Up",
   "register_question_login": "Already have an account?",
   "register_btn_login": "Login",
-
   "register_email_already_in_use": "This email is already registered",
   "register_invalid_email": "Invalid email address",
-  "register_operation_not_allowed": "Email/password sign-in is not enabled",
-  "register_weak_password": "Password is too weak",
-  "register_error": "An error has occurred",
-  "register_success": "Account created successfully, return to login page"
+  "register_operation_not_allowed": "Email/password account not enabled",
+  "register_weak_password": "Weak Password",
+  "register_error": "An error occurred",
+  "register_success": "Account created successfully, please go back to login"
 }

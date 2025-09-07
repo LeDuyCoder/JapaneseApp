@@ -83,13 +83,11 @@ class _listWordScreen extends State<listWordScreen>{
 
   Future<void> shareFile(String filePath) async {
     try {
-      // Sử dụng shareXFiles để chia sẻ file
       await Share.shareXFiles([XFile(filePath)], text: 'Check out my custom file!');
     } catch (e) {
       print('Error sharing file: $e');
     }
   }
-
 
   Future<String> hanldDataWordsQr(String topic) async {
     String idTopic = "";
@@ -515,437 +513,451 @@ class _listWordScreen extends State<listWordScreen>{
     setState(() {});
   }
 
-  void showDialogPulic() {
-    showGeneralDialog(
+  void showBottomSheetPulic(BuildContext context) {
+    showModalBottomSheet(
       context: context,
-      barrierDismissible: true,
-      barrierLabel: "Barrier",
-      barrierColor: Colors.black.withOpacity(0.5), // Màu nền tối mờ
-      transitionDuration: const Duration(milliseconds: 300),
-      pageBuilder: (_, __, ___) {
-        return const SizedBox(); // Trả về rỗng vì dùng transitionBuilder
-      },
-      transitionBuilder: (context, animation, secondaryAnimation, child) {
-        final curvedValue = Curves.easeInOut.transform(animation.value);
-
-        return Transform.translate(
-          offset: Offset(0, -300 + (300 * curvedValue)),
-          child: Opacity(
-            opacity: animation.value,
-            child: Center(
-              child: Dialog(
-                backgroundColor: Colors.white,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(10),
-                    bottomRight: Radius.circular(10),
-                  ),
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent, // để custom full UI
+      builder: (context) {
+        return DraggableScrollableSheet(
+          initialChildSize: 0.4,
+          minChildSize: 0.3,
+          maxChildSize: 0.7,
+          builder: (_, controller) {
+            return Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(24),
+                  topRight: Radius.circular(24),
                 ),
-                child: StatefulBuilder(
-                  builder: (BuildContext context, setState) {
-                    return Container(
-                        decoration: const BoxDecoration(
-                          border: Border(
-                            top: BorderSide(
-                              color: Color.fromRGBO(20, 195, 142, 1.0), // Màu xanh cạnh trên ngoài cùng
-                              width: 10.0, // Độ dày của cạnh trên
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 15,
+                    offset: Offset(0, -5),
+                  ),
+                ],
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              child: SingleChildScrollView(
+                controller: controller,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // thanh nhỏ drag indicator
+                    Container(
+                      width: 40,
+                      height: 5,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+
+                    // hình nhân vật
+                    Image.asset(
+                      "assets/character/character6.png",
+                      width: MediaQuery.sizeOf(context).width * 0.3,
+                    ),
+                    const SizedBox(height: 20),
+
+                    // nội dung text
+                    Text(
+                      AppLocalizations.of(context)!.listword_Screen_bottomSheet_public_title,
+                      style: TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: "Itim",
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      AppLocalizations.of(context)!.listword_Screen_bottomSheet_public_content,
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontFamily: "Itim",
+                        color: Colors.black54,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 25),
+
+                    // nút bấm
+                    Row(
+                      children: [
+                        Expanded(
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primary,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              padding: const EdgeInsets.symmetric(vertical: 14),
+                            ),
+                            onPressed: () async {
+                              await pulicTopic();
+                            },
+                            child: Text(
+                              AppLocalizations.of(context)!.listword_Screen_bottomSheet_public_btn_pulic,
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         ),
-                        child: Container(
-                          height: 300,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Image.asset("assets/character/character6.png", width: MediaQuery.sizeOf(context).width*0.3,),
-                              const Column(
-                                children: [
-                                  SizedBox(height: 20),
-                                  AutoSizeText(
-                                    "Bạn có muốn chia sẽ không",
-                                    style: TextStyle(fontFamily: "indieflower", fontSize: 15),
-                                  ),
-
-                                  AutoSizeText(
-                                    "Khi chia sẽ ai cũng có thể tải",
-                                    style: TextStyle(fontFamily: "indieflower"),
-                                  ),
-                                  SizedBox(height: 20),
-                                ],
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.grey[800],
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
                               ),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () async {
-                                      await pulicTopic();
-                                    },
-                                    child: Container(
-                                      width: MediaQuery.sizeOf(context).width*0.3,
-                                      height: MediaQuery.sizeOf(context).height*0.05,
-                                      decoration: const BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                                          boxShadow: [
-                                          ]
-                                      ),
-                                      child: const Center(
-                                        child: Text("Công Khai", style: TextStyle(color: Colors.red, fontSize: 15, fontWeight: FontWeight.bold),),
-                                      ),
-                                    ),
-
-                                  ),
-                                  SizedBox(width:10,),
-                                  GestureDetector(
-                                    onTap: () async {
-                                      Navigator.pop(context);
-                                    },
-                                    child: Container(
-                                      width: MediaQuery.sizeOf(context).width * 0.3,
-                                      height: MediaQuery.sizeOf(context).height * 0.05,
-                                      decoration: const BoxDecoration(
-                                        color: Colors.green,
-                                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                                      ),
-                                      child: const Center(
-                                        child: Text(
-                                          "Cancel",
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                ],
+                              padding: const EdgeInsets.symmetric(vertical: 14),
+                            ),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text(
+                              AppLocalizations.of(context)!.listword_Screen_bottomSheet_public_btn_cancel,
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
                               ),
-                            ],
+                            ),
                           ),
-                        )
-                    );
-                  },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                  ],
                 ),
               ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void showBottomSheetPrivate(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent, // để bo góc full
+      builder: (context) {
+        return DraggableScrollableSheet(
+          initialChildSize: 0.35,
+          minChildSize: 0.3,
+          maxChildSize: 0.6,
+          builder: (_, controller) {
+            return Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(24),
+                  topRight: Radius.circular(24),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 15,
+                    offset: Offset(0, -5),
+                  ),
+                ],
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              child: SingleChildScrollView(
+                controller: controller,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // drag indicator
+                    Container(
+                      width: 40,
+                      height: 5,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+
+                    // hình minh họa
+                    Image.asset(
+                      "assets/character/character6.png",
+                      width: MediaQuery.sizeOf(context).width * 0.3,
+                    ),
+                    const SizedBox(height: 20),
+
+                    // nội dung
+                    Text(
+                        AppLocalizations.of(context)!.listword_Screen_bottomSheet_private_title,
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: "Itim",
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 25),
+
+                    // nút lựa chọn
+                    Row(
+                      children: [
+                        Expanded(
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primary,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              padding: const EdgeInsets.symmetric(vertical: 14),
+                            ),
+                            onPressed: () async {
+                              await priveTopic();
+                            },
+                            child: Text(
+                              AppLocalizations.of(context)!.listword_Screen_bottomSheet_private_btn_private,
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.grey[800],
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              padding: const EdgeInsets.symmetric(vertical: 14),
+                            ),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text(
+                              AppLocalizations.of(context)!.listword_Screen_bottomSheet_private_btn_cancel,
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void showBottomSheetPulicSuccess(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(24),
+              topRight: Radius.circular(24),
             ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black26,
+                blurRadius: 15,
+                offset: Offset(0, -5),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // drag indicator
+              Container(
+                width: 40,
+                height: 5,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // icon / ảnh minh họa
+              const Icon(Icons.check_circle,
+                  color: Color(0xFF4CAF50), size: 60),
+              const SizedBox(height: 20),
+
+              // text success
+              Text(
+                AppLocalizations.of(context)!.listword_Screen_bottomSheet_public_succes_title,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: "Itim",
+                ),
+                textAlign: TextAlign.center,
+              ),
+              Text(
+                AppLocalizations.of(context)!.listword_Screen_bottomSheet_public_succes_content,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontFamily: "Itim",
+                  color: AppColors.textSecond.withOpacity(0.6)
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 20),
+
+              // nút OK
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text(
+                    AppLocalizations.of(context)!.listword_Screen_bottomSheet_public_succes_btn_ok,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         );
       },
     );
   }
-  void showDialogPrivate() {
-    showGeneralDialog(
+
+  void showBottomSheetPrivateSuccess(BuildContext context) {
+    showModalBottomSheet(
       context: context,
-      barrierDismissible: true,
-      barrierLabel: "Barrier",
-      barrierColor: Colors.black.withOpacity(0.5), // Màu nền tối mờ
-      transitionDuration: const Duration(milliseconds: 300),
-      pageBuilder: (_, __, ___) {
-        return const SizedBox(); // Trả về rỗng vì dùng transitionBuilder
-      },
-      transitionBuilder: (context, animation, secondaryAnimation, child) {
-        final curvedValue = Curves.easeInOut.transform(animation.value);
-
-        return Transform.translate(
-          offset: Offset(0, -300 + (300 * curvedValue)),
-          child: Opacity(
-            opacity: animation.value,
-            child: Center(
-              child: Dialog(
-                backgroundColor: Colors.white,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(10),
-                    bottomRight: Radius.circular(10),
-                  ),
-                ),
-                child: StatefulBuilder(
-                  builder: (BuildContext context, setState) {
-                    return Container(
-                        decoration: const BoxDecoration(
-                          border: Border(
-                            top: BorderSide(
-                              color: Color.fromRGBO(195, 20, 35, 1.0), // Màu xanh cạnh trên ngoài cùng
-                              width: 10.0, // Độ dày của cạnh trên
-                            ),
-                          ),
-                        ),
-                        child: Container(
-                          height: 300,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Image.asset("assets/character/character6.png", width: MediaQuery.sizeOf(context).width*0.3,),
-                              const Column(
-                                children: [
-                                  SizedBox(height: 20),
-                                  AutoSizeText(
-                                    "Bạn có muốn hủy chia sẽ không",
-                                    style: TextStyle(fontFamily: "indieflower", fontSize: 15),
-                                  ),
-                                  SizedBox(height: 20),
-                                ],
-                              ),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () async {
-                                      await priveTopic();
-                                    },
-                                    child: Container(
-                                      width: MediaQuery.sizeOf(context).width*0.3,
-                                      height: MediaQuery.sizeOf(context).height*0.05,
-                                      decoration: const BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                                          boxShadow: [
-                                          ]
-                                      ),
-                                      child: const Center(
-                                        child: Text("Hủy", style: TextStyle(color: Colors.red, fontSize: 15, fontWeight: FontWeight.bold),),
-                                      ),
-                                    ),
-
-                                  ),
-                                  SizedBox(width:10,),
-                                  GestureDetector(
-                                    onTap: () async {
-                                      Navigator.pop(context);
-                                    },
-                                    child: Container(
-                                      width: MediaQuery.sizeOf(context).width * 0.3,
-                                      height: MediaQuery.sizeOf(context).height * 0.05,
-                                      decoration: const BoxDecoration(
-                                        color: Colors.green,
-                                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                                      ),
-                                      child: const Center(
-                                        child: Text(
-                                          "Không",
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ],
-                          ),
-                        )
-                    );
-                  },
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(24),
+              topRight: Radius.circular(24),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black26,
+                blurRadius: 15,
+                offset: Offset(0, -5),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // drag indicator
+              Container(
+                width: 40,
+                height: 5,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(10),
                 ),
               ),
-            ),
+              const SizedBox(height: 20),
+
+              // hình minh họa
+              Icon(Icons.check_circle,
+                  color: AppColors.primary, size: 60),
+              const SizedBox(height: 20),
+
+              // text success
+              Text(
+                AppLocalizations.of(context)!.listword_Screen_bottomSheet_private_success_title,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: "Itim",
+                ),
+                textAlign: TextAlign.center,
+              ),
+
+              Text(
+                AppLocalizations.of(context)!.listword_Screen_bottomSheet_private_success_content,
+                style: TextStyle(
+                  fontSize: 18,
+                  color: AppColors.textSecond.withOpacity(0.6),
+                  fontFamily: "Itim",
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 20),
+
+              // nút OK
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.redAccent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                    reloadScreen();
+                  },
+                  child: Text(
+                      AppLocalizations.of(context)!.listword_Screen_bottomSheet_private_success_OK,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         );
       },
     );
   }
-  void showDialogPulicSuccess() {
-    showGeneralDialog(
-      context: context,
-      barrierDismissible: true,
-      barrierLabel: "Barrier",
-      barrierColor: Colors.black.withOpacity(0.5), // Màu nền tối mờ
-      transitionDuration: const Duration(milliseconds: 300),
-      pageBuilder: (_, __, ___) {
-        return const SizedBox(); // Trả về rỗng vì dùng transitionBuilder
-      },
-      transitionBuilder: (context, animation, secondaryAnimation, child) {
-        final curvedValue = Curves.easeInOut.transform(animation.value);
 
-        return Transform.translate(
-          offset: Offset(0, -300 + (300 * curvedValue)),
-          child: Opacity(
-            opacity: animation.value,
-            child: Center(
-              child: Dialog(
-                backgroundColor: Colors.white,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(10),
-                    bottomRight: Radius.circular(10),
-                  ),
-                ),
-                child: StatefulBuilder(
-                  builder: (BuildContext context, setState) {
-                    return Container(
-                        decoration: const BoxDecoration(
-                          border: Border(
-                            top: BorderSide(
-                              color: Color.fromRGBO(20, 195, 142, 1.0), // Màu xanh cạnh trên ngoài cùng
-                              width: 10.0, // Độ dày của cạnh trên
-                            ),
-                          ),
-                        ),
-                        child: Container(
-                          height: 300,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Image.asset("assets/character/character6.png", width: MediaQuery.sizeOf(context).width*0.3,),
-                              const Column(
-                                children: [
-                                  SizedBox(height: 20),
-                                  AutoSizeText(
-                                    "Công Khai Thành Công",
-                                    style: TextStyle(fontFamily: "indieflower", fontSize: 15),
-                                  ),
-
-                                  SizedBox(height: 20),
-                                ],
-                              ),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () async {
-                                      Navigator.pop(context);
-                                    },
-                                    child: Container(
-                                      width: MediaQuery.sizeOf(context).width * 0.3,
-                                      height: MediaQuery.sizeOf(context).height * 0.05,
-                                      decoration: const BoxDecoration(
-                                        color: Colors.green,
-                                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                                      ),
-                                      child: const Center(
-                                        child: Text(
-                                          "OK",
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ],
-                          ),
-                        )
-                    );
-                  },
-                ),
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-  void showDialogPrivateSuccess() {
-    showGeneralDialog(
-      context: context,
-      barrierDismissible: true,
-      barrierLabel: "Barrier",
-      barrierColor: Colors.black.withOpacity(0.5), // Màu nền tối mờ
-      transitionDuration: const Duration(milliseconds: 300),
-      pageBuilder: (_, __, ___) {
-        return const SizedBox(); // Trả về rỗng vì dùng transitionBuilder
-      },
-      transitionBuilder: (context, animation, secondaryAnimation, child) {
-        final curvedValue = Curves.easeInOut.transform(animation.value);
-
-        return Transform.translate(
-          offset: Offset(0, -300 + (300 * curvedValue)),
-          child: Opacity(
-            opacity: animation.value,
-            child: Center(
-              child: Dialog(
-                backgroundColor: Colors.white,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(10),
-                    bottomRight: Radius.circular(10),
-                  ),
-                ),
-                child: StatefulBuilder(
-                  builder: (BuildContext context, setState) {
-                    return Container(
-                        decoration: const BoxDecoration(
-                          border: Border(
-                            top: BorderSide(
-                              color: Color.fromRGBO(195, 20, 20, 1.0), // Màu xanh cạnh trên ngoài cùng
-                              width: 10.0, // Độ dày của cạnh trên
-                            ),
-                          ),
-                        ),
-                        child: Container(
-                          height: 300,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Image.asset("assets/character/character6.png", width: MediaQuery.sizeOf(context).width*0.3,),
-                              const Column(
-                                children: [
-                                  SizedBox(height: 20),
-                                  AutoSizeText(
-                                    "Hủy Công Khai Thành Công",
-                                    style: TextStyle(fontFamily: "indieflower", fontSize: 15),
-                                  ),
-
-                                  SizedBox(height: 20),
-                                ],
-                              ),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () async {
-                                      Navigator.pop(context);
-                                    },
-                                    child: Container(
-                                      width: MediaQuery.sizeOf(context).width * 0.3,
-                                      height: MediaQuery.sizeOf(context).height * 0.05,
-                                      decoration: const BoxDecoration(
-                                        color: Colors.green,
-                                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                                      ),
-                                      child: const Center(
-                                        child: Text(
-                                          "OK",
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ],
-                          ),
-                        )
-                    );
-                  },
-                ),
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
 
   Future<void> isOwner() async{
     DatabaseHelper db = DatabaseHelper.instance;
@@ -965,8 +977,6 @@ class _listWordScreen extends State<listWordScreen>{
     List<Map<String, dynamic>> data = await db.getAllWordbyTopic(widget.topicName);
     User user = FirebaseAuth.instance.currentUser!;
 
-
-
     topic TopicPulic = new topic(id: widget.id, name: widget.topicName, owner: user.providerData[0].displayName, count: 0);
     await dbServer.insertTopic(TopicPulic);
 
@@ -985,8 +995,9 @@ class _listWordScreen extends State<listWordScreen>{
     if(execInsert){
       print("Kiểm Tra");
       Navigator.pop(context);
+      showBottomSheetPulicSuccess(context);
       reloadScreen();
-      showDialogPulicSuccess();
+
     }else{
       print("Error");
     }
@@ -998,9 +1009,8 @@ class _listWordScreen extends State<listWordScreen>{
     DatabaseHelper db = DatabaseHelper.instance;
     DatabaseServer dbServer = new DatabaseServer();
     dbServer.deleteTopic(widget.id);
-    Navigator.pop(context);
     reloadScreen();
-    showDialogPrivateSuccess();
+    showBottomSheetPrivateSuccess(context);
   }
 
   void showFlashCardDialog(BuildContext context, String word, String mean, String wayread) {
@@ -1036,7 +1046,7 @@ class _listWordScreen extends State<listWordScreen>{
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   child: Text(
-                    "Tiếng Nhật",
+                    AppLocalizations.of(context)!.listword_Screen_head_col1,
                     style: TextStyle(
                       color: AppColors.textSecond.withOpacity(0.5),
                       fontSize: 18,
@@ -1048,7 +1058,7 @@ class _listWordScreen extends State<listWordScreen>{
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   child: Text(
-                    "Nghĩa",
+                    AppLocalizations.of(context)!.listword_Screen_head_col2,
                     style: TextStyle(
                       color: AppColors.textSecond.withOpacity(0.5),
                       fontSize: 18,
@@ -1059,13 +1069,15 @@ class _listWordScreen extends State<listWordScreen>{
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 12),
-                  child: Text(
-                    "Trạng Thái",
-                    style: TextStyle(
-                      color: AppColors.textSecond.withOpacity(0.5),
-                      fontSize: 18,
-                      fontFamily: "Itim",
-                      fontWeight: FontWeight.bold,
+                  child: Center(
+                    child: Text(
+                      AppLocalizations.of(context)!.listword_Screen_head_col3,
+                      style: TextStyle(
+                        color: AppColors.textSecond.withOpacity(0.5),
+                        fontSize: 18,
+                        fontFamily: "Itim",
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
@@ -1136,8 +1148,8 @@ class _listWordScreen extends State<listWordScreen>{
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 12.0),
                       child: (wordItem["level"] / 2) >= 100.0
-                          ? const Text(
-                        "Hoàn Thành",
+                          ? Text(
+                        AppLocalizations.of(context)!.listword_Screen_Learned,
                         textAlign: TextAlign.center,
                         style: TextStyle(color: AppColors.textSucessState),
                       )
@@ -1252,8 +1264,8 @@ class _listWordScreen extends State<listWordScreen>{
         scrolledUnderElevation: 0,
         backgroundColor: AppColors.white,
         title: Container(
-          child: const Text(
-            "Chủ Đề",
+          child: Text(
+            AppLocalizations.of(context)!.listword_Screen_title,
             style: TextStyle(fontFamily: "Itim", fontSize: 35, color: AppColors.primary),
           ),
         ),
@@ -1268,12 +1280,12 @@ class _listWordScreen extends State<listWordScreen>{
             if(owner == FirebaseAuth.instance.currentUser!.displayName){
               if(topic.hasData){;
                 return IconButton(onPressed: (){
-                  showDialogPrivate();
+                  showBottomSheetPrivate(context);
                 }, icon: Icon(Icons.public_sharp, color: AppColors.primary,));
               }
 
               return IconButton(onPressed: (){
-                showDialogPulic();
+                showBottomSheetPulic(context);
               }, icon: Icon(Icons.public_sharp, color: Colors.grey,));
             }else{
               return Container();
@@ -1381,9 +1393,9 @@ class _listWordScreen extends State<listWordScreen>{
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("${snapshot.data![0].length} từ vựng", style: TextStyle(color: AppColors.textSecond.withOpacity(0.5), fontSize: 18, fontFamily: "Itim"),),
+                    Text("${snapshot.data![0].length} ${AppLocalizations.of(context)!.listword_Screen_AmountWord}", style: TextStyle(color: AppColors.textSecond.withOpacity(0.5), fontSize: 18, fontFamily: "Itim"),),
                     SizedBox(width: 30,),
-                    Text("${amountComplited} đã thuộc", style: TextStyle(color: AppColors.textSecond.withOpacity(0.5), fontSize: 18, fontFamily: "Itim"),)
+                    Text("${amountComplited} ${AppLocalizations.of(context)!.listword_Screen_Learned}", style: TextStyle(color: AppColors.textSecond.withOpacity(0.5), fontSize: 18, fontFamily: "Itim"),)
                   ],
                 ),
                 SizedBox(height: 20,),
@@ -1439,12 +1451,12 @@ class _listWordScreen extends State<listWordScreen>{
                       borderRadius: BorderRadius.circular(40),
                     ),
                     child:
-                    const Row(
+                    Row(
                       children: [
                         SizedBox(width: 20,),
                         Icon(Icons.play_arrow, color: AppColors.white, size: 25,),
                         SizedBox(width: 10,),
-                        Text("Học Ngay", style: TextStyle(color: AppColors.white, fontSize: 20, fontWeight: FontWeight.bold),)
+                        Text(AppLocalizations.of(context)!.listword_Screen_btn_learn, style: TextStyle(color: AppColors.white, fontSize: 20, fontWeight: FontWeight.bold),)
                       ],
                     ),
                   ),
@@ -1456,174 +1468,6 @@ class _listWordScreen extends State<listWordScreen>{
 
         return Container();
       })
-      // body: FutureBuilder(
-      //   future: hanldeDataWords(widget.topicName),
-      //   builder: (ctx, snapshot) {
-      //     if (!snapshot.hasData) {
-      //       return Center();
-      //     }
-      //
-      //     amountWord = snapshot.data![0].length;
-      //
-      //     return Container(
-      //       color: Colors.white,
-      //       height: MediaQuery.sizeOf(context).height - AppBar().preferredSize.height - 30,
-      //       width: MediaQuery.sizeOf(context).width,
-      //       child: SingleChildScrollView(
-      //         scrollDirection: Axis.vertical,
-      //         child: Column(
-      //           children: [
-      //             SizedBox(height: 10,),
-      //             Container(
-      //               width: MediaQuery.sizeOf(context).width,
-      //               child: Row(
-      //                 mainAxisAlignment: MainAxisAlignment.center,
-      //                 children: [
-      //                   Flexible(
-      //                     child: AutoSizeText(
-      //                       AppLocalizations.of(context)!.listWord_word_complete("${(snapshot.data![1] as num).toInt()}"),
-      //                       style: const TextStyle(
-      //                         fontSize: 20,
-      //                         fontFamily: "Itim",
-      //                         color: Colors.green,
-      //                         fontWeight: FontWeight.bold,
-      //                       ),
-      //                       minFontSize: 10,
-      //                       maxLines: 1,
-      //                       group: textGroup, // Đồng bộ kích thước chữ
-      //                     ),
-      //                   ),
-      //                   SizedBox(width: 10),
-      //                   Flexible(
-      //                     child: AutoSizeText(
-      //                       AppLocalizations.of(context)!.listWord_word_learning("${(snapshot.data![2] - snapshot.data![1] as num).toInt()}"),
-      //                       style: const TextStyle(
-      //                         fontSize: 20,
-      //                         fontFamily: "Itim",
-      //                         color: Colors.red,
-      //                         fontWeight: FontWeight.bold,
-      //                       ),
-      //                       minFontSize: 10,
-      //                       maxLines: 1,
-      //                       group: textGroup, // Đồng bộ kích thước chữ
-      //                     ),
-      //                   ),
-      //                 ],
-      //               ),
-      //             ),
-      //             SizedBox(height: 10,),
-      //             Container(
-      //               height: MediaQuery.sizeOf(context).height - AppBar().preferredSize.height - 180,
-      //               padding: EdgeInsets.symmetric(horizontal: 10),
-      //               child: SingleChildScrollView(
-      //                 scrollDirection: Axis.vertical,
-      //                 child: GridView.count(
-      //                   shrinkWrap: true,
-      //                   physics: NeverScrollableScrollPhysics(),
-      //                   crossAxisSpacing: 10,
-      //                   mainAxisSpacing: 10,
-      //                   crossAxisCount: 3,
-      //                   childAspectRatio: 1,
-      //                   children: snapshot.data![0].map<Widget>((word) {
-      //                     return Center(
-      //                       child: wd.wordWidget(
-      //                         topicName: widget.topicName,
-      //                         wordText: wordModule.word(
-      //                             word["word"],
-      //                             word["wayread"],
-      //                             word["mean"],
-      //                             widget.topicName,
-      //                             word["level"]
-      //                         ), reloadScreenListWord: () {
-      //                           reloadScreen();
-      //                         },
-      //                       ),
-      //                     );
-      //                   }).toList(),
-      //                 ),
-      //               ),
-      //             ),
-      //             SizedBox(height: 10),
-      //             Align(
-      //               alignment: Alignment.bottomCenter,
-      //               child: GestureDetector(
-      //                 onTapDown: (event) {
-      //                   setState(() {
-      //                     isPressButton = true;
-      //                   });
-      //                 },
-      //                 onTapUp: (event) {
-      //                   setState(() {
-      //                     isPressButton = false;
-      //                   });
-      //
-      //                   List<word> dataWords = [];
-      //                   for (Map<String, dynamic> wordData in snapshot.data![0]) {
-      //                     dataWords.add(
-      //                       word(
-      //                         wordData["word"],
-      //                         wordData["wayread"],
-      //                         wordData["mean"],
-      //                         wordData["topic"],
-      //                         wordData["level"],
-      //                       ),
-      //                     );
-      //                   }
-      //                   Navigator.push(
-      //                     context,
-      //                     MaterialPageRoute(
-      //                       builder: (ctx) => learnScreen(
-      //                         dataWords: dataWords,
-      //                         topic: widget.topicName,
-      //                         reload: () {
-      //                           setState(() {});
-      //                         },
-      //                       ),
-      //                     ),
-      //                   );
-      //                 },
-      //                 onTapCancel: () {
-      //                   setState(() {
-      //                     isPressButton = false;
-      //                   });
-      //                 },
-      //                 child: AnimatedContainer(
-      //                   duration: Duration(milliseconds: 100),
-      //                   curve: Curves.easeInOut,
-      //                   transform: Matrix4.translationValues(0, isPressButton ? 4 : 0, 0),
-      //                   width: MediaQuery.sizeOf(context).width * 0.8,
-      //                   height: MediaQuery.sizeOf(context).width * 0.13,
-      //                   decoration: BoxDecoration(
-      //                     color: Color.fromRGBO(97, 213, 88, 1.0),
-      //                     borderRadius: BorderRadius.all(Radius.circular(20)),
-      //                     boxShadow: isPressButton
-      //                         ? [] // Khi nhấn, không có boxShadow
-      //                         : [
-      //                       BoxShadow(
-      //                         color: Colors.green,
-      //                         offset: Offset(5, 6),
-      //                       ),
-      //                     ],
-      //                   ),
-      //                   child: Center(
-      //                     child: Text(
-      //                       AppLocalizations.of(context)!.listWord_btn_learn,
-      //                       style: TextStyle(
-      //                         color: Colors.white,
-      //                         fontSize: MediaQuery.sizeOf(context).height * 0.025,
-      //                         fontFamily: "Itim",
-      //                       ),
-      //                     ),
-      //                   ),
-      //                 ),
-      //               )
-      //             ),
-      //           ],
-      //         ),
-      //       ),
-      //     );
-      //   },
-      // )
     );
   }
 }

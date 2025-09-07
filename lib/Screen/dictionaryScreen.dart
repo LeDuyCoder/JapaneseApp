@@ -10,6 +10,7 @@ import 'package:translator/translator.dart';
 import 'package:http/http.dart' as http;
 
 import '../Config/config.dart';
+import '../generated/app_localizations.dart';
 
 class dictionaryScreen extends StatefulWidget{
   @override
@@ -77,7 +78,6 @@ class _dictionaryScreen extends State<dictionaryScreen>{
 
   Future<String> generateExample(String word, String languageCode) async {
     final String url = "https://tatoeba.org/en/api_v0/search?query=${word}&from=jpn&to=$languageCode";
-    print(url);
     try {
       final response = await http.get(Uri.parse(url));
 
@@ -225,7 +225,7 @@ class _dictionaryScreen extends State<dictionaryScreen>{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Từ Điển Tiếng Nhật", style: TextStyle(color: AppColors.primary, fontFamily: "Itim", fontSize: 30),),
+        title: Text(AppLocalizations.of(context)!.distionary_Screen_title, style: TextStyle(color: AppColors.primary, fontFamily: "Itim", fontSize: 30),),
         automaticallyImplyLeading: false,
         scrolledUnderElevation: 0,
         backgroundColor: AppColors.backgroundPrimary,
@@ -260,7 +260,7 @@ class _dictionaryScreen extends State<dictionaryScreen>{
                 decoration: InputDecoration(
                   border: InputBorder.none, // bỏ border mặc định
                   prefixIcon: Icon(Icons.search, color: Colors.black, size: 30,),
-                  hintText: "Nhập Từ Muốn Tra",
+                  hintText: AppLocalizations.of(context)!.distionary_Screen_hint,
                   hintStyle: TextStyle(color: Colors.grey),
                   contentPadding: EdgeInsets.symmetric(vertical: 18.0),
                 ),
@@ -358,7 +358,7 @@ class _dictionaryScreen extends State<dictionaryScreen>{
                       ),
                       SizedBox(height: 20),
                       Text(
-                        "Nghĩa của từ",
+                        AppLocalizations.of(context)!.distionary_Screen_mean,
                         style: TextStyle(
                           fontSize: 20,
                           color: AppColors.textPrimary,
@@ -425,7 +425,7 @@ class _dictionaryScreen extends State<dictionaryScreen>{
                         ),
                       SizedBox(height: 10),
                       Text(
-                        "Thông tin từ",
+                        AppLocalizations.of(context)!.distionary_Screen_info,
                         style: TextStyle(
                           fontSize: 20,
                           color: AppColors.textPrimary,
@@ -440,7 +440,20 @@ class _dictionaryScreen extends State<dictionaryScreen>{
                       Row(
                         children: [
                           Text(
-                            "Loại từ: Danh Từ",
+                            "${AppLocalizations.of(context)!.distionary_Screen_type} ${
+                                (
+                                    data != null &&
+                                        data?["data"] != null &&
+                                        data?["data"].isNotEmpty &&
+                                        data?["data"][0]["senses"] != null &&
+                                        data?["data"][0]["senses"].isNotEmpty &&
+                                        data?["data"][0]["senses"][0]["parts_of_speech"] != null &&
+                                        data?["data"][0]["senses"][0]["parts_of_speech"].isNotEmpty
+                                )
+                                    ? data!["data"][0]["senses"][0]["parts_of_speech"][0]
+                                    : ""
+
+                            }",
                             style: TextStyle(
                               fontSize: 15,
                               color: AppColors.textPrimary.withOpacity(0.6),
@@ -449,7 +462,18 @@ class _dictionaryScreen extends State<dictionaryScreen>{
                           ),
                           SizedBox(width: 10),
                           Text(
-                            "Cấp Độ: N5",
+                            "${AppLocalizations.of(context)!.distionary_Screen_level} ${
+                                (data != null &&
+                                    data!["data"] != null &&
+                                    data!["data"].isNotEmpty &&
+                                    data!["data"][0]["jlpt"] != null &&
+                                    data!["data"][0]["jlpt"].isNotEmpty &&
+                                    data!["data"][0]["jlpt"][0].contains("-") &&
+                                    data!["data"][0]["jlpt"][0].split("-").length > 1
+                                )
+                                    ? data!["data"][0]["jlpt"][0].split("-")[1].toUpperCase()
+                                    : "null"
+                            }",
                             style: TextStyle(
                               fontSize: 15,
                               color: AppColors.textPrimary.withOpacity(0.6),

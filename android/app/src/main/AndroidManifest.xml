@@ -16,7 +16,7 @@
 
     <application
         android:enableOnBackInvokedCallback="true"
-        android:label="Japanese Learn"
+        android:label="KuJiLinGo"
         android:name="${applicationName}"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"

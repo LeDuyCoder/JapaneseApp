@@ -9,6 +9,8 @@ import 'package:japaneseapp/Screen/dashboardScreen.dart';
 import 'package:japaneseapp/Theme/colors.dart';
 import 'package:japaneseapp/Widget/topicManagerWidget.dart';
 
+import '../generated/app_localizations.dart';
+
 class folderManagerScreen extends StatefulWidget{
   final String nameFolder;
   final int idFolder;
@@ -73,7 +75,7 @@ class _folderMangerScreen extends State<folderManagerScreen>{
 
               ListTile(
                 leading: const Icon(Icons.add_circle_outline_rounded, color: Colors.black),
-                title: const Text("Thêm Chủ Đề Học",
+                title: Text(AppLocalizations.of(context)!.folderManager_bottomSheet_addTopic,
                     style: TextStyle(color: Colors.black, fontSize: 18)),
                 onTap: () {
                   Navigator.pop(context);
@@ -82,7 +84,7 @@ class _folderMangerScreen extends State<folderManagerScreen>{
               // Nút chọn: Học phần
               ListTile(
                 leading: const Icon(Icons.restore_from_trash_rounded, color: Colors.red),
-                title: const Text("Xóa",
+                title: Text(AppLocalizations.of(context)!.folderManager_bottomSheet_removeFolder,
                     style: TextStyle(color: Colors.red, fontSize: 18)),
                 onTap: () async {
                   DatabaseHelper db = DatabaseHelper.instance;
@@ -210,7 +212,7 @@ class _folderMangerScreen extends State<folderManagerScreen>{
                                         children: [
                                           Image.asset("assets/StickyNode.png", width: 80,),
                                           SizedBox(height: 10,),
-                                          Text("Bắt đầu tạo thư mục cho riêng bạn", style: TextStyle(fontSize: 20),),
+                                          Text(AppLocalizations.of(context)!.folderManager_nodata_title, style: TextStyle(fontSize: 20),),
                                           SizedBox(height: 20,),
                                           GestureDetector(
                                             onTap: (){
@@ -219,15 +221,15 @@ class _folderMangerScreen extends State<folderManagerScreen>{
                                             child: Container(
                                                 width: 200,
                                                 height: 50,
-                                                decoration: BoxDecoration(
+                                                decoration: const BoxDecoration(
                                                     color: AppColors.primary,
                                                     borderRadius: BorderRadius.all(Radius.circular(10))
                                                 ),
-                                                child: const Column(
+                                                child: Column(
                                                   crossAxisAlignment: CrossAxisAlignment.center,
                                                   mainAxisAlignment: MainAxisAlignment.center,
                                                   children: [
-                                                    Text("Thêm chủ đề học", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 18),),
+                                                    Text(AppLocalizations.of(context)!.folderManager_nodata_button, style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 18),),
                                                   ],
                                                 )
                                             ),
