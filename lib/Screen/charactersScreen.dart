@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:japaneseapp/Config/dataJson.dart';
 import 'package:japaneseapp/Screen/hiraganaScreen.dart';
+import 'package:japaneseapp/Theme/colors.dart';
 
 class charactersScreen extends StatefulWidget{
   @override
@@ -53,12 +54,12 @@ class _charactersSCreen extends State<charactersScreen>{
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       TabBar(
-                        labelColor: Color(0xFF2E7D32), // Màu chữ khi tab được chọn
+                        labelColor: AppColors.primary, // Màu chữ khi tab được chọn
                         unselectedLabelColor: Colors.black, // Màu chữ khi chưa chọn
                         labelStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, fontFamily: "Itim"),
                         unselectedLabelStyle: TextStyle(fontSize: 16),
                         indicator: UnderlineTabIndicator(
-                          borderSide: BorderSide(width: 3.0, color: Color(0xFF2E7D32)), // Gạch dưới tab
+                          borderSide: BorderSide(width: 3.0, color: AppColors.primary), // Gạch dưới tab
                           insets: EdgeInsets.symmetric(horizontal: 16.0),
                         ),
                         tabs: [

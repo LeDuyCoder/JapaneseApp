@@ -144,7 +144,7 @@ class _dictionaryScreen extends State<dictionaryScreen>{
       status = "done";
     });
 
-    if (_isInterstitialAdReady && amountSearch >= 10) {
+    if (_isInterstitialAdReady && amountSearch >= 15) {
       _showInterstitialAd();
     }
   }
