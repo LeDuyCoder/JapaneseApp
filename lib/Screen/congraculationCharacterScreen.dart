@@ -12,6 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../Config/FunctionService.dart';
 import '../Config/config.dart';
 import '../Theme/colors.dart';
+import 'dashboardScreen.dart';
 
 class congraculationChacterScreen extends StatefulWidget{
   final List<String> listWordsTest, listWordsWrong;
@@ -371,16 +372,18 @@ class _congraculationChacterScreen extends State<congraculationChacterScreen>  w
                       GestureDetector(
                         onTap: () async {
                           await handleData();
-                          if (_isInterstitialAdReady) {
+                          if (_isInterstitialAdReady && dashboardScreen.countAdMod >= 2) {
                             _interstitialAd.show();
                             _interstitialAd.fullScreenContentCallback = FullScreenContentCallback(
                               onAdDismissedFullScreenContent: (ad) {
                                 ad.dispose();
                                 Navigator.pop(context);
+                                dashboardScreen.countAdMod = 0;
                               },
                               onAdFailedToShowFullScreenContent: (ad, error) {
                                 ad.dispose();
                                 Navigator.pop(context);
+                                dashboardScreen.countAdMod = 0;
                               },
                             );
                           } else {

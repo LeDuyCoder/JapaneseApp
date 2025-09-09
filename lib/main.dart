@@ -29,6 +29,12 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
   runApp(MyApp());
 }
 
@@ -64,7 +70,13 @@ class _MyApp extends State<MyApp>{
           colorScheme: ColorScheme.fromSeed(seedColor: AppColors.backgroundPrimary),
           useMaterial3: true,
         ),
-        home: splashScreen(changeLanguage: _changeLanguage,)
+        home: WillPopScope(
+          onWillPop: (){
+            return Future.value(false);
+          },
+          child: splashScreen(changeLanguage: _changeLanguage,),
+        )
+
     );
   }
 

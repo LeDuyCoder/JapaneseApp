@@ -192,17 +192,17 @@ class _achivementScreen extends State<achivementScreen>{
                   children: [
                     Container(
                       width: MediaQuery.sizeOf(context).width / 1.1,
-                      height: 550,
+                      height: 580,
                       decoration: const BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(20)),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.grey,
-                            offset: Offset(0, 2),
-                            blurRadius: 10
-                          )
-                        ]
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          boxShadow: [
+                            BoxShadow(
+                                color: AppColors.grey,
+                                offset: Offset(0, 2),
+                                blurRadius: 10
+                            )
+                          ]
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -231,30 +231,34 @@ class _achivementScreen extends State<achivementScreen>{
                                       showBottomSheetAchivementInfor(context, achievement["title"], achievement["description"], imagePath, achievement["check"](snapshot.data!));
                                     }
                                   },
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      ColorFiltered(
-                                        colorFilter: ColorFilter.mode(
-                                            Colors.white,
-                                            achievement["check"](snapshot.data!) ? BlendMode.dst : BlendMode.saturation
+                                  child: Container(
+                                    width: MediaQuery.sizeOf(context).width,
+                                    height: MediaQuery.sizeOf(context).height,
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        ColorFiltered(
+                                          colorFilter: ColorFilter.mode(
+                                              Colors.white,
+                                              achievement["check"](snapshot.data!) ? BlendMode.dst : BlendMode.saturation
+                                          ),
+                                          child: Image.asset(
+                                            imagePath,
+                                            scale: 3,
+                                          ),
                                         ),
-                                        child: Image.asset(
-                                          imagePath,
-                                          scale: 3,
+                                        SizedBox(height: 8),
+                                        Text(
+                                          achievement["title"],
+                                          style: const TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 14,
+                                            fontFamily: "Itim",
+                                          ),
+                                          textAlign: TextAlign.center,
                                         ),
-                                      ),
-                                      SizedBox(height: 8),
-                                      Text(
-                                        achievement["title"],
-                                        style: const TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 14,
-                                          fontFamily: "Itim",
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 );
                               },
@@ -265,76 +269,76 @@ class _achivementScreen extends State<achivementScreen>{
                     ),
                     SizedBox(height: 50,),
                     Container(
-                      width: MediaQuery.sizeOf(context).width / 1.1,
-                      height: 700,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
-                          boxShadow: [
-                            BoxShadow(
-                                color: AppColors.grey,
-                                offset: Offset(0, 2),
-                                blurRadius: 10
-                            )
-                          ]
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Center(child: Text(AppLocalizations.of(context)!.achivement_title_two, style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: AppColors.primary),)),
-                          SizedBox(height: 20,),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 15, right: 5),
-                            child: GridView.count(
-                              shrinkWrap: true,
-                              crossAxisCount: 2, // số cột muốn hiển thị
-                              mainAxisSpacing: 5, // khoảng cách dọc
-                              crossAxisSpacing: 5, // khoảng cách ngang
-                              physics: const NeverScrollableScrollPhysics(), // tránh conflict với scroll cha
-                              children: streakMilestones.map((streak) {
-                                String imagePath = "assets/achivement/dayStreak/${streak}day.png";
+                        width: MediaQuery.sizeOf(context).width / 1.1,
+                        height: 700,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                            boxShadow: [
+                              BoxShadow(
+                                  color: AppColors.grey,
+                                  offset: Offset(0, 2),
+                                  blurRadius: 10
+                              )
+                            ]
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Center(child: Text(AppLocalizations.of(context)!.achivement_title_two, style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: AppColors.primary),)),
+                            SizedBox(height: 20,),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 15, right: 5),
+                              child: GridView.count(
+                                shrinkWrap: true,
+                                crossAxisCount: 2, // số cột muốn hiển thị
+                                mainAxisSpacing: 5, // khoảng cách dọc
+                                crossAxisSpacing: 5, // khoảng cách ngang
+                                physics: const NeverScrollableScrollPhysics(), // tránh conflict với scroll cha
+                                children: streakMilestones.map((streak) {
+                                  String imagePath = "assets/achivement/dayStreak/${streak}day.png";
 
-                                return GestureDetector(
-                                  onTap: () {
-                                    showBottomSheetAchivementInfor(
-                                      context,
-                                      AppLocalizations.of(context)!.achivement_streak_title("$streak"),
-                                      AppLocalizations.of(context)!.achivement_streak_description("$streak"),
-                                      imagePath,
-                                      checkStreak(snapshot.data!["Streak"], streak),
-                                    );
-                                  },
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      ColorFiltered(
-                                        colorFilter: ColorFilter.mode(
-                                          Colors.white,
-                                          checkStreak(snapshot.data!["Streak"], streak)
-                                              ? BlendMode.dst
-                                              : BlendMode.saturation,
+                                  return GestureDetector(
+                                    onTap: () {
+                                      showBottomSheetAchivementInfor(
+                                        context,
+                                        AppLocalizations.of(context)!.achivement_streak_title("$streak"),
+                                        AppLocalizations.of(context)!.achivement_streak_description("$streak"),
+                                        imagePath,
+                                        checkStreak(snapshot.data!["Streak"], streak),
+                                      );
+                                    },
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        ColorFiltered(
+                                          colorFilter: ColorFilter.mode(
+                                            Colors.white,
+                                            checkStreak(snapshot.data!["Streak"], streak)
+                                                ? BlendMode.dst
+                                                : BlendMode.saturation,
+                                          ),
+                                          child: Image.asset(imagePath, scale: 14),
                                         ),
-                                        child: Image.asset(imagePath, scale: 14),
-                                      ),
-                                      const SizedBox(height: 8),
-                                      Text(
-                                        AppLocalizations.of(context)!
-                                            .achivement_streak_title("$streak"),
-                                        textAlign: TextAlign.center,
-                                        style: const TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 16,
-                                          fontFamily: "Itim",
+                                        const SizedBox(height: 8),
+                                        Text(
+                                          AppLocalizations.of(context)!
+                                              .achivement_streak_title("$streak"),
+                                          textAlign: TextAlign.center,
+                                          style: const TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 16,
+                                            fontFamily: "Itim",
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              }).toList(),
+                                      ],
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
                             ),
-                          ),
-                        ],
-                      )
+                          ],
+                        )
                     ),
                     SizedBox(height: 50,),
                     Container(

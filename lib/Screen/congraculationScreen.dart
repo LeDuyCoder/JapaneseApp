@@ -7,6 +7,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:japaneseapp/Config/dataHelper.dart';
 import 'package:japaneseapp/Module/word.dart';
+import 'package:japaneseapp/Screen/dashboardScreen.dart';
 import 'package:japaneseapp/Theme/colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -328,7 +329,7 @@ class _congraculationScreen extends State<congraculationScreen> with TickerProvi
                             );
                           }
 
-                          if (_isInterstitialAdReady) {
+                          if (_isInterstitialAdReady && dashboardScreen.countAdMod >= 2) {
                                 _interstitialAd.show();
 
 
@@ -343,6 +344,7 @@ class _congraculationScreen extends State<congraculationScreen> with TickerProvi
                                     ad.dispose();
                                     // Đóng các màn hình
                                     Navigator.pop(context);
+                                    dashboardScreen.countAdMod = 0;
                                   },
                                 );
                               } else {

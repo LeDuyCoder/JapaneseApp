@@ -31,6 +31,8 @@ import 'allTopicScreen.dart';
 class dashboardScreen extends StatefulWidget {
   final Function(Locale _locale) changeLanguage;
 
+  static int countAdMod = 0;
+  
   const dashboardScreen({Key? key, required this.changeLanguage}) : super(key: key);
 
   // Khai báo GlobalKey static 1 lần duy nhất
@@ -1274,330 +1276,213 @@ class _DashboardScreenState extends State<dashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          backgroundColor: AppColors.backgroundPrimary,
-          scrolledUnderElevation: 0,
-          elevation: 0,
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "KujiLingo",
-                style: TextStyle(
-                  color: AppColors.primary,
-                  fontSize: 40,
-                  fontFamily: "Itim",
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Container(
-                height: 45,
-                width: 45,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: AppColors.primary,
-                ),
-                child: Center(
-                  child: Text(
-                    getUserName(),
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+    return WillPopScope(
+      onWillPop: (){
+        return Future.value(false);
+      },
+      child: Scaffold(
+          appBar: AppBar(
+            automaticallyImplyLeading: false,
+            backgroundColor: AppColors.backgroundPrimary,
+            scrolledUnderElevation: 0,
+            elevation: 0,
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "KujiLingo",
+                  style: TextStyle(
+                    color: AppColors.primary,
+                    fontSize: 40,
+                    fontFamily: "Itim",
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-              )
-            ],
-          ),
-        ),
-      body: RefreshIndicator(
-        onRefresh: reload,
-        child:Container(
-          width: MediaQuery.sizeOf(context).width,
-          color: AppColors.backgroundPrimary,
-          child: FutureBuilder(future: hanldeGetData(), builder: (context, snapshot){
-            if(snapshot.connectionState == ConnectionState.waiting){
-              return ListView(
-                children: [
-                  SizedBox(height: 30,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Text(AppLocalizations.of(context)!.dashboard_folder, style: TextStyle(color: AppColors.textPrimary, fontSize: 20, fontFamily: "Itim"),),
-                      SizedBox(width: 80,),
-                      Text(AppLocalizations.of(context)!.dashboard_folder_seemore, style: TextStyle(color: AppColors.primary, fontSize: 18),),
-                    ],
+                Container(
+                  height: 45,
+                  width: 45,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppColors.primary,
                   ),
-                  SizedBox(height: 10,),
-                  Container(
-                      height: 160,
-                      width: MediaQuery.sizeOf(context).width,
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: [
-                            SizedBox(width: 10,),
-                            Container(
-                                width: 250,
-                                height: 140,
-                                decoration: const BoxDecoration(
-                                    color: AppColors.backgroundCardLoad,
-                                    borderRadius: BorderRadius.all(Radius.circular(20)),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey,
-                                        offset: Offset(0, 2),
-                                        blurRadius: 5,
-                                      )
-                                    ]
-                                ),
-                                child: Padding(
-                                    padding: EdgeInsets.only(left: 10, top: 0),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          width: 180,
-                                          height: 20,
-                                          decoration: BoxDecoration(
-                                              color: Colors.grey.withOpacity(0.3),
-                                              borderRadius: BorderRadius.circular(20)
-                                          ),
-                                        ),
-                                        SizedBox(height: 10,),
-                                        Container(
-                                          width: 220,
-                                          height: 20,
-                                          decoration: BoxDecoration(
-                                              color: Colors.grey.withOpacity(0.3),
-                                              borderRadius: BorderRadius.circular(20)
-                                          ),
-                                        )
-                                      ],
-                                    )
-                                )
-                            ),
-                            SizedBox(width: 10,),
-                            Container(
-                                width: 250,
-                                height: 140,
-                                decoration: const BoxDecoration(
-                                    color: AppColors.backgroundCardLoad,
-                                    borderRadius: BorderRadius.all(Radius.circular(20)),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey,
-                                        offset: Offset(0, 2),
-                                        blurRadius: 5,
-                                      )
-                                    ]
-                                ),
-                                child: Padding(
-                                    padding: EdgeInsets.only(left: 10, top: 0),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          width: 180,
-                                          height: 20,
-                                          decoration: BoxDecoration(
-                                              color: Colors.grey.withOpacity(0.3),
-                                              borderRadius: BorderRadius.circular(20)
-                                          ),
-                                        ),
-                                        SizedBox(height: 10,),
-                                        Container(
-                                          width: 220,
-                                          height: 20,
-                                          decoration: BoxDecoration(
-                                              color: Colors.grey.withOpacity(0.3),
-                                              borderRadius: BorderRadius.circular(20)
-                                          ),
-                                        )
-                                      ],
-                                    )
-                                )
-                            ),
-                          ],
-                        ),
-                      )
-                  ),
-                  SizedBox(height: 10,),
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Text("Cộng Đồng", style: TextStyle(color: AppColors.textPrimary, fontSize: 18, fontFamily: "Itim"),),
-                      SizedBox(width: 80,),
-                      Text("Xem Tất Cả", style: TextStyle(color: AppColors.primary, fontSize: 18),),
-                    ],
-                  ),
-                  Container(
-                    height: 140,
-                    width: MediaQuery.sizeOf(context).width,
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          Container(
-                              margin: EdgeInsets.only(left: 5, right: 10),
-                              padding: const EdgeInsets.only(left: 10, right: 15),
-                              width: 310,
-                              height: 120,
-                              decoration: const BoxDecoration(
-                                  color: AppColors.backgroundCardLoad,
-                                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: Colors.grey,
-                                        offset: Offset(0, 2),
-                                        blurRadius: 5
-                                    )
-                                  ]
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(height: 20,),
-                                  Container(
-                                    width: 180,
-                                    height: 20,
-                                    decoration: BoxDecoration(
-                                        color: Colors.grey.withOpacity(0.3),
-                                        borderRadius: BorderRadius.circular(20)
-                                    ),
-                                  ),
-                                  SizedBox(height: 10,),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Container(
-                                        width: 100,
-                                        height: 20,
-                                        decoration: BoxDecoration(
-                                            color: Colors.grey.withOpacity(0.3),
-                                            borderRadius: BorderRadius.circular(20)
-                                        ),
-                                      ),
-                                      Container(
-                                        width: 50,
-                                        height: 20,
-                                        decoration: BoxDecoration(
-                                            color: Colors.grey.withOpacity(0.3),
-                                            borderRadius: BorderRadius.circular(20)
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              )
-                          ),
-                          Container(
-                              margin: EdgeInsets.only(left: 5, right: 10),
-                              padding: const EdgeInsets.only(left: 10, right: 15),
-                              width: 310,
-                              height: 120,
-                              decoration: const BoxDecoration(
-                                  color: AppColors.backgroundCardLoad,
-                                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: Colors.grey,
-                                        offset: Offset(0, 2),
-                                        blurRadius: 5
-                                    )
-                                  ]
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(height: 20,),
-                                  Container(
-                                    width: 180,
-                                    height: 20,
-                                    decoration: BoxDecoration(
-                                        color: Colors.grey.withOpacity(0.3),
-                                        borderRadius: BorderRadius.circular(20)
-                                    ),
-                                  ),
-                                  SizedBox(height: 10,),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Container(
-                                        width: 100,
-                                        height: 20,
-                                        decoration: BoxDecoration(
-                                            color: Colors.grey.withOpacity(0.3),
-                                            borderRadius: BorderRadius.circular(20)
-                                        ),
-                                      ),
-                                      Container(
-                                        width: 50,
-                                        height: 20,
-                                        decoration: BoxDecoration(
-                                            color: Colors.grey.withOpacity(0.3),
-                                            borderRadius: BorderRadius.circular(20)
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              )
-                          )
-                        ],
+                  child: Center(
+                    child: Text(
+                      getUserName(),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
-                  SizedBox(height: 10,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Text(AppLocalizations.of(context)!.dashboard_topic, style: TextStyle(color: AppColors.textPrimary, fontSize: 20, fontFamily: "Itim"),),
-                      SizedBox(width: 80,),
-                      Text(AppLocalizations.of(context)!.dashboard_topic_seemore, style: TextStyle(color: AppColors.primary, fontSize: 18),),
-
-                    ],
-                  ),
-                  SizedBox(height: 10,),
-                  Container(
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.vertical,
-                        child: Column(
+                )
+              ],
+            ),
+          ),
+          body: RefreshIndicator(
+              onRefresh: reload,
+              child:Container(
+                width: MediaQuery.sizeOf(context).width,
+                color: AppColors.backgroundPrimary,
+                child: FutureBuilder(future: hanldeGetData(), builder: (context, snapshot){
+                  if(snapshot.connectionState == ConnectionState.waiting){
+                    return ListView(
+                      children: [
+                        SizedBox(height: 30,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
-                              child: GestureDetector(
-                                onTap: (){
-                                },
-                                child: Container(
-                                    width: MediaQuery.sizeOf(context).width,
+                            Text(AppLocalizations.of(context)!.dashboard_folder, style: TextStyle(color: AppColors.textPrimary, fontSize: 20, fontFamily: "Itim"),),
+                            SizedBox(width: 80,),
+                            Text(AppLocalizations.of(context)!.dashboard_folder_seemore, style: TextStyle(color: AppColors.primary, fontSize: 18),),
+                          ],
+                        ),
+                        SizedBox(height: 10,),
+                        Container(
+                            height: 160,
+                            width: MediaQuery.sizeOf(context).width,
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: [
+                                  SizedBox(width: 10,),
+                                  Container(
+                                      width: 250,
+                                      height: 140,
+                                      decoration: const BoxDecoration(
+                                          color: AppColors.backgroundCardLoad,
+                                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.grey,
+                                              offset: Offset(0, 2),
+                                              blurRadius: 5,
+                                            )
+                                          ]
+                                      ),
+                                      child: Padding(
+                                          padding: EdgeInsets.only(left: 10, top: 0),
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Container(
+                                                width: 180,
+                                                height: 20,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.grey.withOpacity(0.3),
+                                                    borderRadius: BorderRadius.circular(20)
+                                                ),
+                                              ),
+                                              SizedBox(height: 10,),
+                                              Container(
+                                                width: 220,
+                                                height: 20,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.grey.withOpacity(0.3),
+                                                    borderRadius: BorderRadius.circular(20)
+                                                ),
+                                              )
+                                            ],
+                                          )
+                                      )
+                                  ),
+                                  SizedBox(width: 10,),
+                                  Container(
+                                      width: 250,
+                                      height: 140,
+                                      decoration: const BoxDecoration(
+                                          color: AppColors.backgroundCardLoad,
+                                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.grey,
+                                              offset: Offset(0, 2),
+                                              blurRadius: 5,
+                                            )
+                                          ]
+                                      ),
+                                      child: Padding(
+                                          padding: EdgeInsets.only(left: 10, top: 0),
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Container(
+                                                width: 180,
+                                                height: 20,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.grey.withOpacity(0.3),
+                                                    borderRadius: BorderRadius.circular(20)
+                                                ),
+                                              ),
+                                              SizedBox(height: 10,),
+                                              Container(
+                                                width: 220,
+                                                height: 20,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.grey.withOpacity(0.3),
+                                                    borderRadius: BorderRadius.circular(20)
+                                                ),
+                                              )
+                                            ],
+                                          )
+                                      )
+                                  ),
+                                ],
+                              ),
+                            )
+                        ),
+                        SizedBox(height: 10,),
+                        const Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Text("Cộng Đồng", style: TextStyle(color: AppColors.textPrimary, fontSize: 18, fontFamily: "Itim"),),
+                            SizedBox(width: 80,),
+                            Text("Xem Tất Cả", style: TextStyle(color: AppColors.primary, fontSize: 18),),
+                          ],
+                        ),
+                        Container(
+                          height: 140,
+                          width: MediaQuery.sizeOf(context).width,
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: [
+                                Container(
+                                    margin: EdgeInsets.only(left: 5, right: 10),
+                                    padding: const EdgeInsets.only(left: 10, right: 15),
+                                    width: 310,
                                     height: 120,
-                                    padding: EdgeInsets.only(left: 10, right: 10, top: 10),
                                     decoration: const BoxDecoration(
+                                        color: AppColors.backgroundCardLoad,
+                                        borderRadius: BorderRadius.all(Radius.circular(20)),
                                         boxShadow: [
                                           BoxShadow(
-                                            color: Colors.grey,
-                                            offset: Offset(0, 2),
-                                            blurRadius: 10,
+                                              color: Colors.grey,
+                                              offset: Offset(0, 2),
+                                              blurRadius: 5
                                           )
-                                        ],
-                                        color: AppColors.backgroundCardLoad,
-                                        borderRadius: BorderRadius.all(Radius.circular(20))
+                                        ]
                                     ),
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         SizedBox(height: 20,),
+                                        Container(
+                                          width: 180,
+                                          height: 20,
+                                          decoration: BoxDecoration(
+                                              color: Colors.grey.withOpacity(0.3),
+                                              borderRadius: BorderRadius.circular(20)
+                                          ),
+                                        ),
+                                        SizedBox(height: 10,),
                                         Row(
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
                                             Container(
-                                              width: 180,
+                                              width: 100,
                                               height: 20,
                                               decoration: BoxDecoration(
                                                   color: Colors.grey.withOpacity(0.3),
@@ -1605,7 +1490,7 @@ class _DashboardScreenState extends State<dashboardScreen> {
                                               ),
                                             ),
                                             Container(
-                                              width: 70,
+                                              width: 50,
                                               height: 20,
                                               decoration: BoxDecoration(
                                                   color: Colors.grey.withOpacity(0.3),
@@ -1613,465 +1498,587 @@ class _DashboardScreenState extends State<dashboardScreen> {
                                               ),
                                             ),
                                           ],
-                                        ),
-                                        SizedBox(height: 10,),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                          children: [
-                                            Column(
-                                              children: [
-                                                Container(
-                                                  width: 80,
-                                                  height: 20,
-                                                  decoration: BoxDecoration(
-                                                      color: Colors.grey.withOpacity(0.3),
-                                                      borderRadius: BorderRadius.circular(20)
-                                                  ),
-                                                ),
-                                                SizedBox(height: 10,),
-                                                Container(
-                                                  width: 80,
-                                                  height: 20,
-                                                  decoration: BoxDecoration(
-                                                      color: Colors.grey.withOpacity(0.3),
-                                                      borderRadius: BorderRadius.circular(20)
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                            Column(
-                                              children: [
-                                                Container(
-                                                  width: 80,
-                                                  height: 20,
-                                                  decoration: BoxDecoration(
-                                                      color: Colors.grey.withOpacity(0.3),
-                                                      borderRadius: BorderRadius.circular(20)
-                                                  ),
-                                                ),
-                                                SizedBox(height: 10,),
-                                                Container(
-                                                  width: 80,
-                                                  height: 20,
-                                                  decoration: BoxDecoration(
-                                                      color: Colors.grey.withOpacity(0.3),
-                                                      borderRadius: BorderRadius.circular(20)
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                            Column(
-                                              children: [
-                                                Container(
-                                                  width: 80,
-                                                  height: 20,
-                                                  decoration: BoxDecoration(
-                                                      color: Colors.grey.withOpacity(0.3),
-                                                      borderRadius: BorderRadius.circular(20)
-                                                  ),
-                                                ),
-                                                SizedBox(height: 10,),
-                                                Container(
-                                                  width: 80,
-                                                  height: 20,
-                                                  decoration: BoxDecoration(
-                                                      color: Colors.grey.withOpacity(0.3),
-                                                      borderRadius: BorderRadius.circular(20)
-                                                  ),
-                                                )
-                                              ],
-                                            )
-                                          ],
                                         )
-
                                       ],
                                     )
                                 ),
-                              ),
-                            )
+                                Container(
+                                    margin: EdgeInsets.only(left: 5, right: 10),
+                                    padding: const EdgeInsets.only(left: 10, right: 15),
+                                    width: 310,
+                                    height: 120,
+                                    decoration: const BoxDecoration(
+                                        color: AppColors.backgroundCardLoad,
+                                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                                        boxShadow: [
+                                          BoxShadow(
+                                              color: Colors.grey,
+                                              offset: Offset(0, 2),
+                                              blurRadius: 5
+                                          )
+                                        ]
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(height: 20,),
+                                        Container(
+                                          width: 180,
+                                          height: 20,
+                                          decoration: BoxDecoration(
+                                              color: Colors.grey.withOpacity(0.3),
+                                              borderRadius: BorderRadius.circular(20)
+                                          ),
+                                        ),
+                                        SizedBox(height: 10,),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Container(
+                                              width: 100,
+                                              height: 20,
+                                              decoration: BoxDecoration(
+                                                  color: Colors.grey.withOpacity(0.3),
+                                                  borderRadius: BorderRadius.circular(20)
+                                              ),
+                                            ),
+                                            Container(
+                                              width: 50,
+                                              height: 20,
+                                              decoration: BoxDecoration(
+                                                  color: Colors.grey.withOpacity(0.3),
+                                                  borderRadius: BorderRadius.circular(20)
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      ],
+                                    )
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 10,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Text(AppLocalizations.of(context)!.dashboard_topic, style: TextStyle(color: AppColors.textPrimary, fontSize: 20, fontFamily: "Itim"),),
+                            SizedBox(width: 80,),
+                            Text(AppLocalizations.of(context)!.dashboard_topic_seemore, style: TextStyle(color: AppColors.primary, fontSize: 18),),
+
                           ],
                         ),
-                      )
-                  )
-                ],
-              );
-            }
-            if(snapshot.hasData){
-              return ListView(
-                children: [
-                  SizedBox(
-                    height: 10,
-                  ),
-                  if (_isOffline)
-                    Container(
-                    width: MediaQuery.sizeOf(context).width,
-                    height: 70,
-                    padding: const EdgeInsets.only(left: 20, right: 20),
-                    child: Container(
-                      width: 250,
-                      height: 70,
-                      padding: const EdgeInsets.only(left: 30, right: 30),
-                      decoration: BoxDecoration(
-                          color: AppColors.bakcgroundOffline,
-                          borderRadius: BorderRadius.all(Radius.circular(15)),
-                          border: Border.all(
-                            color: AppColors.lineOffline
-                          )
-                      ),
-                      child: Center(
-                        child: RichText(
-                          text: const TextSpan(
-                            children: [
-                              TextSpan(
-                                text: "Không có kết nối mạng. ",
-                                style: TextStyle(
-                                  color: Colors.orange,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              TextSpan(
-                                text: "Một số tính năng có thể không khả dụng.",
-                                style: TextStyle(
-                                  color: Colors.black87,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 30,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Text(AppLocalizations.of(context)!.dashboard_folder, style: TextStyle(color: AppColors.textPrimary, fontSize: 20, fontFamily: "Itim"),),
-                      const SizedBox(width: 80,),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            PageRouteBuilder(
-                              pageBuilder: (context, animation, secondaryAnimation) => allFolderScreen(),
-                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                const begin = Offset(1.0, 0.0);
-                                const end = Offset.zero;
-                                const curve = Curves.ease;
+                        SizedBox(height: 10,),
+                        Container(
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.vertical,
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
+                                    child: GestureDetector(
+                                      onTap: (){
+                                      },
+                                      child: Container(
+                                          width: MediaQuery.sizeOf(context).width,
+                                          height: 120,
+                                          padding: EdgeInsets.only(left: 10, right: 10, top: 10),
+                                          decoration: const BoxDecoration(
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.grey,
+                                                  offset: Offset(0, 2),
+                                                  blurRadius: 10,
+                                                )
+                                              ],
+                                              color: AppColors.backgroundCardLoad,
+                                              borderRadius: BorderRadius.all(Radius.circular(20))
+                                          ),
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              SizedBox(height: 20,),
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Container(
+                                                    width: 180,
+                                                    height: 20,
+                                                    decoration: BoxDecoration(
+                                                        color: Colors.grey.withOpacity(0.3),
+                                                        borderRadius: BorderRadius.circular(20)
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    width: 70,
+                                                    height: 20,
+                                                    decoration: BoxDecoration(
+                                                        color: Colors.grey.withOpacity(0.3),
+                                                        borderRadius: BorderRadius.circular(20)
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              SizedBox(height: 10,),
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                children: [
+                                                  Column(
+                                                    children: [
+                                                      Container(
+                                                        width: 80,
+                                                        height: 20,
+                                                        decoration: BoxDecoration(
+                                                            color: Colors.grey.withOpacity(0.3),
+                                                            borderRadius: BorderRadius.circular(20)
+                                                        ),
+                                                      ),
+                                                      SizedBox(height: 10,),
+                                                      Container(
+                                                        width: 80,
+                                                        height: 20,
+                                                        decoration: BoxDecoration(
+                                                            color: Colors.grey.withOpacity(0.3),
+                                                            borderRadius: BorderRadius.circular(20)
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                  Column(
+                                                    children: [
+                                                      Container(
+                                                        width: 80,
+                                                        height: 20,
+                                                        decoration: BoxDecoration(
+                                                            color: Colors.grey.withOpacity(0.3),
+                                                            borderRadius: BorderRadius.circular(20)
+                                                        ),
+                                                      ),
+                                                      SizedBox(height: 10,),
+                                                      Container(
+                                                        width: 80,
+                                                        height: 20,
+                                                        decoration: BoxDecoration(
+                                                            color: Colors.grey.withOpacity(0.3),
+                                                            borderRadius: BorderRadius.circular(20)
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                  Column(
+                                                    children: [
+                                                      Container(
+                                                        width: 80,
+                                                        height: 20,
+                                                        decoration: BoxDecoration(
+                                                            color: Colors.grey.withOpacity(0.3),
+                                                            borderRadius: BorderRadius.circular(20)
+                                                        ),
+                                                      ),
+                                                      SizedBox(height: 10,),
+                                                      Container(
+                                                        width: 80,
+                                                        height: 20,
+                                                        decoration: BoxDecoration(
+                                                            color: Colors.grey.withOpacity(0.3),
+                                                            borderRadius: BorderRadius.circular(20)
+                                                        ),
+                                                      )
+                                                    ],
+                                                  )
+                                                ],
+                                              )
 
-                                final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-                                return SlideTransition(
-                                  position: animation.drive(tween),
-                                  child: child,
-                                );
-                              },
-                            ),
-                          );
-                        },
-                        child: Text(AppLocalizations.of(context)!.dashboard_folder_seemore, style: TextStyle(color: AppColors.primary, fontSize: 18, fontFamily: "Itim"),),
-                      )
-                    ],
-                  ),
-                  SizedBox(height: 10,),
-
-                  if(snapshot.data!["folder"]!.length == 0)
-                    Container(
-                      padding: const EdgeInsets.all(24),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.folder_open, size: 48, color: Colors.grey.shade600),
-                          const SizedBox(height: 12),
-                          Text(
-                            AppLocalizations.of(context)!.dashboard_folder_nodata_title,
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 6),
-                          Text(
-                            AppLocalizations.of(context)!.dashboard_folder_nodata_content,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
-                          ),
-                        ],
-                      ),
-                    )
-                  ,
-
-                  if(snapshot.data!["folder"]!.length != 0)
-                    Container(
-                        height: 160,
-                        width: MediaQuery.sizeOf(context).width,
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: [
-                              for (Map<String, dynamic> folder in snapshot.data!["folder"]!)
-                                folderWidget(idFolder: folder["id"], nameFolder: folder["namefolder"]!, reloadDashboard: reloadScreen, dateCreated: folder["datefolder"], amountTopic: folder["amountTopic"],),
-                            ],
-                          ),
-                        )
-                    ),
-                  SizedBox(height: 10,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Text(AppLocalizations.of(context)!.dashboard_comunication, style: TextStyle(color: AppColors.textPrimary, fontSize: 18, fontFamily: "Itim"),),
-                      SizedBox(width: 80,),
-                      GestureDetector(
-                        onTap: (){
-                          Navigator.push(
-                            context,
-                            PageRouteBuilder(
-                              pageBuilder: (context, animation, secondaryAnimation) => seeMoreTopic(reloadScreen: reloadScreen),
-                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                const begin = Offset(1.0, 0.0);
-                                const end = Offset.zero;
-                                const curve = Curves.ease;
-
-                                final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-                                return SlideTransition(
-                                  position: animation.drive(tween),
-                                  child: child,
-                                );
-                              },
-                            ),
-                          );
-                        },
-                        child: Text(AppLocalizations.of(context)!.dashboard_comunication_seemore, style: TextStyle(fontFamily: "Itim", color: AppColors.primary, fontSize: 18),),
-                      )
-                    ],
-                  ),
-                  SizedBox(height: 10,),
-                  Container(
-                    width: MediaQuery.sizeOf(context).width,
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          if(snapshot.data!.containsKey("topicServer") && snapshot.data!.isEmpty)
-                            Container(
-                              width: MediaQuery.sizeOf(context).width,
-                              height: 180,
-                              child: Container(
-                                margin: const EdgeInsets.only(left: 20, right: 20, top: 20),
-                                width: MediaQuery.sizeOf(context).width,
-                                height: 180,
-                                decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(20),
-                                    boxShadow: const [
-                                      BoxShadow(
-                                          color: AppColors.grey,
-                                          offset: Offset(0, 2),
-                                          blurRadius: 10
-                                      )
-                                    ]
-                                ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    const Icon(Icons.folder, color: AppColors.grey, size: 50,),
-                                    const Text("Không có dữ liệu", style: TextStyle(fontFamily: "Itim" ,color: AppColors.textPrimary, fontSize: 20, fontWeight: FontWeight.bold),),
-                                    Padding(
-                                      padding: EdgeInsets.only(left: 50, right: 50),
-                                      child: Text("Hiện tại không có thư mục nào. Hãy đăng thư mục đầu tiên của bạn",
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            color: AppColors.textSecond.withOpacity(0.5),
-                                            fontSize: 15,
-                                            height: 1.8,
-                                            fontFamily: "Itim"
-                                        ),
+                                            ],
+                                          )
                                       ),
                                     ),
-                                  ],
-                                ),
+                                  )
+                                ],
                               ),
-                            ),
-                          if(snapshot.data!.containsKey("topicServer") && snapshot.data!.isNotEmpty)
-                            for(topic topicServer in snapshot.data?["topicServer"])
-                              topicServerWidget(
-                                  name: topicServer.name,
-                                  owner: topicServer.owner ?? '',
-                                  amount: topicServer.count??0,
-                                  id: topicServer.id,
-                                  showBottomShetDownload: (String id) {
-                                    showBottomSheetDowloadPulic(id, topicServer.name);
-                                  },
+                            )
+                        )
+                      ],
+                    );
+                  }
+                  if(snapshot.hasData){
+                    return ListView(
+                      children: [
+                        SizedBox(
+                          height: 10,
+                        ),
+                        if (_isOffline)
+                          Container(
+                            width: MediaQuery.sizeOf(context).width,
+                            height: 70,
+                            padding: const EdgeInsets.only(left: 20, right: 20),
+                            child: Container(
+                              width: 250,
+                              height: 70,
+                              padding: const EdgeInsets.only(left: 30, right: 30),
+                              decoration: BoxDecoration(
+                                  color: AppColors.bakcgroundOffline,
+                                  borderRadius: BorderRadius.all(Radius.circular(15)),
+                                  border: Border.all(
+                                      color: AppColors.lineOffline
+                                  )
                               ),
-                          if(!snapshot.data!.containsKey("topicServer"))
-                            ...[
-                              Container(
-                                width: MediaQuery.sizeOf(context).width,
-                                height: 250,
-                                child: Container(
-                                  margin: const EdgeInsets.only(left: 20, right: 20, top: 20),
-                                  width: MediaQuery.sizeOf(context).width,
-                                  height: 250,
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(20),
-                                      boxShadow: [
-                                        BoxShadow(
-                                            color: AppColors.grey,
-                                            offset: Offset(0, 2),
-                                            blurRadius: 10
-                                        )
-                                      ]
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                              child: Center(
+                                child: RichText(
+                                  text: const TextSpan(
                                     children: [
-                                      Text("Không thể kết nối", style: TextStyle(color: AppColors.textPrimary, fontSize: 20, fontWeight: FontWeight.bold),),
-                                      const Padding(
-                                        padding: EdgeInsets.only(left: 50, right: 50),
-                                        child: Text("Vui lòng kiểm tra lại internet của bạn và thử lại để xem nội dung cộng đồng",
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              color: AppColors.textSecond,
-                                              fontSize: 15,
-                                              height: 1.8
-                                          ),
+                                      TextSpan(
+                                        text: "Không có kết nối mạng. ",
+                                        style: TextStyle(
+                                          color: Colors.orange,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                      SizedBox(height: 20,),
-                                      InkWell(
-                                        onTap: () {
-                                          reloadScreen();
-                                        },
-                                        borderRadius: BorderRadius.circular(60),
-                                        child: Container(
-                                          width: 140,
-                                          height: 50,
-                                          decoration: BoxDecoration(
-                                            color: AppColors.primary,
-                                            borderRadius: BorderRadius.circular(60),
-                                          ),
-                                          child: const Row(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: [
-                                              Icon(ZondIcons.reload, color: AppColors.white),
-                                              SizedBox(width: 10),
-                                              Text(
-                                                "Thử Lại",
-                                                style: TextStyle(
-                                                  color: AppColors.white,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 18,
-                                                ),
-                                              )
-                                            ],
-                                          ),
+                                      TextSpan(
+                                        text: "Một số tính năng có thể không khả dụng.",
+                                        style: TextStyle(
+                                          color: Colors.black87,
                                         ),
-                                      )
+                                      ),
                                     ],
                                   ),
                                 ),
                               ),
-                            ]
-
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 20,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Text(AppLocalizations.of(context)!.dashboard_topic, style: TextStyle(color: AppColors.textPrimary, fontSize: 20, fontFamily: "Itim"),),
-                      const SizedBox(width: 80,),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            PageRouteBuilder(
-                              pageBuilder: (context, animation, secondaryAnimation) => allTopicScreen(),
-                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                const begin = Offset(1.0, 0.0);
-                                const end = Offset.zero;
-                                const curve = Curves.ease;
-
-                                final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-                                return SlideTransition(
-                                  position: animation.drive(tween),
-                                  child: child,
-                                );
-                              },
                             ),
-                          );
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.all(8.0), // tạo vùng click thoải mái hơn
-                          child: Text(
-                            AppLocalizations.of(context)!.dashboard_topic_seemore,
-                            style: TextStyle(color: AppColors.primary, fontSize: 18, fontFamily: "Itim"),
                           ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 10,),
-                  Container(
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.vertical,
-                      child:  snapshot.data?["topic"].length > 0
-                          ? Column(
-                            children: [
-                                for (Map<String, dynamic> topicLocal in snapshot.data?["topic"])
-                                  topicWidget(
-                                    id: topicLocal["id"],
-                                    nameTopic: topicLocal["name"],
-                                    reloadDashBoard: () {
-                                      reloadScreen();
+                        SizedBox(height: 30,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Text(AppLocalizations.of(context)!.dashboard_folder, style: TextStyle(color: AppColors.textPrimary, fontSize: 20, fontFamily: "Itim"),),
+                            const SizedBox(width: 80,),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  PageRouteBuilder(
+                                    pageBuilder: (context, animation, secondaryAnimation) => allFolderScreen(),
+                                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                      const begin = Offset(1.0, 0.0);
+                                      const end = Offset.zero;
+                                      const curve = Curves.ease;
+
+                                      final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+                                      return SlideTransition(
+                                        position: animation.drive(tween),
+                                        child: child,
+                                      );
                                     },
                                   ),
-                            ]
-                          )
-                          : Container(
-                        margin: EdgeInsets.symmetric(horizontal: 20),
-                        padding: const EdgeInsets.all(24),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(20),
-                          boxShadow: [
-                            BoxShadow(
-                              color: AppColors.grey,
-                              blurRadius: 10,
-                              offset: Offset(0, -2)
+                                );
+                              },
+                              child: Text(AppLocalizations.of(context)!.dashboard_folder_seemore, style: TextStyle(color: AppColors.primary, fontSize: 18, fontFamily: "Itim"),),
                             )
-                          ]
+                          ],
                         ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.topic, size: 48, color: Colors.grey.shade600),
-                            const SizedBox(height: 12),
-                            Text(
-                              AppLocalizations.of(context)!.dashboard_topic_nodata_title,
-                              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        SizedBox(height: 10,),
+
+                        if(snapshot.data!["folder"]!.length == 0)
+                          Container(
+                            padding: const EdgeInsets.all(24),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.folder_open, size: 48, color: Colors.grey.shade600),
+                                const SizedBox(height: 12),
+                                Text(
+                                  AppLocalizations.of(context)!.dashboard_folder_nodata_title,
+                                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                ),
+                                const SizedBox(height: 6),
+                                Text(
+                                  AppLocalizations.of(context)!.dashboard_folder_nodata_content,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
+                                ),
+                              ],
                             ),
-                            const SizedBox(height: 6),
-                            Text(
-                              AppLocalizations.of(context)!.dashboard_topic_nodata_content,
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(fontSize: 14, color: Colors.grey),
+                          )
+                        ,
+
+                        if(snapshot.data!["folder"]!.length != 0)
+                          Container(
+                              height: 160,
+                              width: MediaQuery.sizeOf(context).width,
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: [
+                                    for (Map<String, dynamic> folder in snapshot.data!["folder"]!)
+                                      folderWidget(idFolder: folder["id"], nameFolder: folder["namefolder"]!, reloadDashboard: reloadScreen, dateCreated: folder["datefolder"], amountTopic: folder["amountTopic"],),
+                                  ],
+                                ),
+                              )
+                          ),
+                        SizedBox(height: 10,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Text(AppLocalizations.of(context)!.dashboard_comunication, style: TextStyle(color: AppColors.textPrimary, fontSize: 18, fontFamily: "Itim"),),
+                            SizedBox(width: 80,),
+                            GestureDetector(
+                              onTap: (){
+                                Navigator.push(
+                                  context,
+                                  PageRouteBuilder(
+                                    pageBuilder: (context, animation, secondaryAnimation) => seeMoreTopic(reloadScreen: reloadScreen),
+                                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                      const begin = Offset(1.0, 0.0);
+                                      const end = Offset.zero;
+                                      const curve = Curves.ease;
+
+                                      final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+                                      return SlideTransition(
+                                        position: animation.drive(tween),
+                                        child: child,
+                                      );
+                                    },
+                                  ),
+                                );
+                              },
+                              child: Text(AppLocalizations.of(context)!.dashboard_comunication_seemore, style: TextStyle(fontFamily: "Itim", color: AppColors.primary, fontSize: 18),),
+                            )
+                          ],
+                        ),
+                        SizedBox(height: 10,),
+                        Container(
+                          width: MediaQuery.sizeOf(context).width,
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: [
+                                if(snapshot.data!.containsKey("topicServer") && snapshot.data!.isEmpty)
+                                  Container(
+                                    width: MediaQuery.sizeOf(context).width,
+                                    height: 180,
+                                    child: Container(
+                                      margin: const EdgeInsets.only(left: 20, right: 20, top: 20),
+                                      width: MediaQuery.sizeOf(context).width,
+                                      height: 180,
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.circular(20),
+                                          boxShadow: const [
+                                            BoxShadow(
+                                                color: AppColors.grey,
+                                                offset: Offset(0, 2),
+                                                blurRadius: 10
+                                            )
+                                          ]
+                                      ),
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          const Icon(Icons.folder, color: AppColors.grey, size: 50,),
+                                          const Text("Không có dữ liệu", style: TextStyle(fontFamily: "Itim" ,color: AppColors.textPrimary, fontSize: 20, fontWeight: FontWeight.bold),),
+                                          Padding(
+                                            padding: EdgeInsets.only(left: 50, right: 50),
+                                            child: Text("Hiện tại không có thư mục nào. Hãy đăng thư mục đầu tiên của bạn",
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  color: AppColors.textSecond.withOpacity(0.5),
+                                                  fontSize: 15,
+                                                  height: 1.8,
+                                                  fontFamily: "Itim"
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                if(snapshot.data!.containsKey("topicServer") && snapshot.data!.isNotEmpty)
+                                  for(topic topicServer in snapshot.data?["topicServer"])
+                                    topicServerWidget(
+                                      name: topicServer.name,
+                                      owner: topicServer.owner ?? '',
+                                      amount: topicServer.count??0,
+                                      id: topicServer.id,
+                                      showBottomShetDownload: (String id) {
+                                        showBottomSheetDowloadPulic(id, topicServer.name);
+                                      },
+                                    ),
+                                if(!snapshot.data!.containsKey("topicServer"))
+                                  ...[
+                                    Container(
+                                      width: MediaQuery.sizeOf(context).width,
+                                      height: 250,
+                                      child: Container(
+                                        margin: const EdgeInsets.only(left: 20, right: 20, top: 20),
+                                        width: MediaQuery.sizeOf(context).width,
+                                        height: 250,
+                                        decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius: BorderRadius.circular(20),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  color: AppColors.grey,
+                                                  offset: Offset(0, 2),
+                                                  blurRadius: 10
+                                              )
+                                            ]
+                                        ),
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            Text("Không thể kết nối", style: TextStyle(color: AppColors.textPrimary, fontSize: 20, fontWeight: FontWeight.bold),),
+                                            const Padding(
+                                              padding: EdgeInsets.only(left: 50, right: 50),
+                                              child: Text("Vui lòng kiểm tra lại internet của bạn và thử lại để xem nội dung cộng đồng",
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                    color: AppColors.textSecond,
+                                                    fontSize: 15,
+                                                    height: 1.8
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(height: 20,),
+                                            InkWell(
+                                              onTap: () {
+                                                reloadScreen();
+                                              },
+                                              borderRadius: BorderRadius.circular(60),
+                                              child: Container(
+                                                width: 140,
+                                                height: 50,
+                                                decoration: BoxDecoration(
+                                                  color: AppColors.primary,
+                                                  borderRadius: BorderRadius.circular(60),
+                                                ),
+                                                child: const Row(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: [
+                                                    Icon(ZondIcons.reload, color: AppColors.white),
+                                                    SizedBox(width: 10),
+                                                    Text(
+                                                      "Thử Lại",
+                                                      style: TextStyle(
+                                                        color: AppColors.white,
+                                                        fontWeight: FontWeight.bold,
+                                                        fontSize: 18,
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ]
+
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 20,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Text(AppLocalizations.of(context)!.dashboard_topic, style: TextStyle(color: AppColors.textPrimary, fontSize: 20, fontFamily: "Itim"),),
+                            const SizedBox(width: 80,),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  PageRouteBuilder(
+                                    pageBuilder: (context, animation, secondaryAnimation) => allTopicScreen(),
+                                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                      const begin = Offset(1.0, 0.0);
+                                      const end = Offset.zero;
+                                      const curve = Curves.ease;
+
+                                      final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+                                      return SlideTransition(
+                                        position: animation.drive(tween),
+                                        child: child,
+                                      );
+                                    },
+                                  ),
+                                );
+                              },
+                              child: Padding(
+                                padding: EdgeInsets.all(8.0), // tạo vùng click thoải mái hơn
+                                child: Text(
+                                  AppLocalizations.of(context)!.dashboard_topic_seemore,
+                                  style: TextStyle(color: AppColors.primary, fontSize: 18, fontFamily: "Itim"),
+                                ),
+                              ),
                             ),
                           ],
                         ),
-                      )
-                    ),
-                  )
-                ],
-              );
-            }
-            return Container();
-          }),
-        )
-      )
+                        SizedBox(height: 10,),
+                        Container(
+                          child: SingleChildScrollView(
+                              scrollDirection: Axis.vertical,
+                              child:  snapshot.data?["topic"].length > 0
+                                  ? Column(
+                                  children: [
+                                    for (Map<String, dynamic> topicLocal in snapshot.data?["topic"])
+                                      topicWidget(
+                                        id: topicLocal["id"],
+                                        nameTopic: topicLocal["name"],
+                                        reloadDashBoard: () {
+                                          reloadScreen();
+                                        },
+                                      ),
+                                  ]
+                              )
+                                  : Container(
+                                margin: EdgeInsets.symmetric(horizontal: 20),
+                                padding: const EdgeInsets.all(24),
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(20),
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: AppColors.grey,
+                                          blurRadius: 10,
+                                          offset: Offset(0, -2)
+                                      )
+                                    ]
+                                ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(Icons.topic, size: 48, color: Colors.grey.shade600),
+                                    const SizedBox(height: 12),
+                                    Text(
+                                      AppLocalizations.of(context)!.dashboard_topic_nodata_title,
+                                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                    ),
+                                    const SizedBox(height: 6),
+                                    Text(
+                                      AppLocalizations.of(context)!.dashboard_topic_nodata_content,
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(fontSize: 14, color: Colors.grey),
+                                    ),
+                                  ],
+                                ),
+                              )
+                          ),
+                        )
+                      ],
+                    );
+                  }
+                  return Container();
+                }),
+              )
+          )
+      ),
     );
 
 

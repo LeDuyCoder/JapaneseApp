@@ -274,8 +274,8 @@ class _registerScreen extends State<registerScreen>{
                     child: TextField(
                       controller: passController,
                       decoration: InputDecoration(
-                        labelText: AppLocalizations.of(context)!.register_user_input_hint,
-                        hintText: AppLocalizations.of(context)!.register_user_input_hint_focus,
+                        labelText: AppLocalizations.of(context)!.register_password_input_hint,
+                        hintText: AppLocalizations.of(context)!.register_password_input_hint_focus,
                         prefixIcon: Icon(Icons.lock),
                         suffixIcon: IconButton(
                           icon: Icon(_isShowPass ? Icons.visibility : Icons.visibility_off),
