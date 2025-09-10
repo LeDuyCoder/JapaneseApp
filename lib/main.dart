@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:japaneseapp/Config/FunctionService.dart';
 import 'package:japaneseapp/Screen/splashScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -59,6 +60,9 @@ class _MyApp extends State<MyApp>{
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+
+    FunctionService.checkAndBackup();
+
     //showNotification();
     return MaterialApp(
         locale: _locale,

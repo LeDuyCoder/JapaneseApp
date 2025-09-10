@@ -45,7 +45,7 @@ class _loginScreen extends State<loginScreen>{
         final OAuthCredential oAuthCredential = FacebookAuthProvider.credential(loginResult.accessToken!.tokenString);
 
         UserCredential result = await FirebaseAuth.instance.signInWithCredential(oAuthCredential);
-        await UpdateAsynchronyData();
+        await updateAsynchronyData();
 
         // Sign in to Firebase with the credential
         return result;
@@ -80,7 +80,7 @@ class _loginScreen extends State<loginScreen>{
 
       // Bước 5: Lấy User từ Firebase sau khi đăng nhập thành công
       final User? user = userCredential.user;
-      await UpdateAsynchronyData();
+      await updateAsynchronyData();
       return user;
     } catch (error) {
       print('Lỗi đăng nhập Google: $error');
@@ -93,45 +93,87 @@ class _loginScreen extends State<loginScreen>{
     return List<String>.from(list.map((item) => item.toString()));
   }
 
-  Future<void> UpdateAsynchronyData() async {
-    DatabaseHelper db = DatabaseHelper.instance;
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
+  Future<void> updateAsynchronyData() async {
+    final db = DatabaseHelper.instance;
+    final prefs = await SharedPreferences.getInstance();
 
     try {
-      // Get the Firestore instance
-      var userDoc = FirebaseFirestore.instance.collection("datas").doc(FirebaseAuth.instance.currentUser!.uid);
+      // Lấy document trên Firestore
+      final userDoc = FirebaseFirestore.instance
+          .collection("datas")
+          .doc(FirebaseAuth.instance.currentUser!.uid);
 
-      // Get the document snapshot
-      var docSnapshot = await userDoc.get();
+      final docSnapshot = await userDoc.get();
 
-      // Check if the document exists
-      if (docSnapshot.exists) {
-        // Document exists, retrieve the data
-        var data = docSnapshot.data(); // This will return a Map<String, dynamic> with the document data
-        String dataInDatabase = data!["data"][0];
-        await db.importSynchronyData(dataInDatabase);
-
-        Map<String, dynamic> dataPrefs = jsonDecode(data["data"][1]);
-        print(dataPrefs);
-        await prefs.clear();
-        await prefs.setInt("level", dataPrefs["level"]);
-        await prefs.setInt("exp", dataPrefs["exp"]);
-        await prefs.setInt("nextExp", dataPrefs["nextExp"]);
-        await prefs.setInt("Streak", dataPrefs["Streak"]);
-        await prefs.setString("lastCheckIn", dataPrefs["lastCheckIn"]);
-        await prefs.setStringList("checkInHistory", _convertToListString(dataPrefs["checkInHistory"]));
-        await prefs.setStringList("checkInHistoryTreak", _convertToListString(dataPrefs["checkInHistoryTreak"]));
-        await prefs.setStringList("achivement", _convertToListString(dataPrefs["achivement"]));
-
-        userDoc.delete();
-      } else {
-        DatabaseHelper db = DatabaseHelper.instance;
+      if (!docSnapshot.exists) {
+        // Nếu chưa có data trên server thì tạo mặc định trong DB local
         await db.createDataLevel();
+        return;
       }
-    } catch (e) {
-      print("Error retrieving data: $e");
+
+      final data = docSnapshot.data();
+      if (data == null || data["data"] == null) {
+        await db.createDataLevel();
+        return;
+      }
+
+      final Map<String, dynamic> dataMap = Map<String, dynamic>.from(data["data"]);
+
+      // --- 1. Khôi phục SQLite ---
+      final String sqliteData = dataMap["sqlite"] ?? "";
+      if (sqliteData.isNotEmpty) {
+        await db.importSynchronyData(sqliteData);
+      }
+
+      // --- 2. Khôi phục SharedPreferences ---
+      final Map<String, dynamic> dataPrefs =
+      Map<String, dynamic>.from(dataMap["prefs"] ?? {});
+
+      // ⚡ Không dùng prefs.clear() để tránh mất key khác, chỉ update key có
+      if (dataPrefs.containsKey("level")) {
+        await prefs.setInt("level", dataPrefs["level"]);
+      }
+      if (dataPrefs.containsKey("exp")) {
+        await prefs.setInt("exp", dataPrefs["exp"]);
+      }
+      if (dataPrefs.containsKey("nextExp")) {
+        await prefs.setInt("nextExp", dataPrefs["nextExp"]);
+      }
+      if (dataPrefs.containsKey("Streak")) {
+        await prefs.setInt("Streak", dataPrefs["Streak"]);
+      }
+      if (dataPrefs.containsKey("lastCheckIn")) {
+        await prefs.setString("lastCheckIn", dataPrefs["lastCheckIn"]);
+      }
+      if (dataPrefs.containsKey("checkInHistory")) {
+        await prefs.setStringList(
+          "checkInHistory",
+          _convertToListString(dataPrefs["checkInHistory"]),
+        );
+      }
+      if (dataPrefs.containsKey("checkInHistoryTreak")) {
+        await prefs.setStringList(
+          "checkInHistoryTreak",
+          _convertToListString(dataPrefs["checkInHistoryTreak"]),
+        );
+      }
+      if (dataPrefs.containsKey("achivement")) {
+        await prefs.setStringList(
+          "achivement",
+          _convertToListString(dataPrefs["achivement"]),
+        );
+      }
+
+      // --- 3. Tuỳ chọn: xoá doc sau khi tải về ---
+      // await userDoc.delete();
+
+      print("✅ UpdateAsynchronyData: dữ liệu đã được khôi phục thành công.");
+    } catch (e, st) {
+      print("❌ Error retrieving data: $e");
+      debugPrintStack(stackTrace: st);
     }
   }
+
 
 
   Future<void> signInEmail() async {
@@ -166,7 +208,7 @@ class _loginScreen extends State<loginScreen>{
 
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
-        await UpdateAsynchronyData();
+        await updateAsynchronyData();
         _userData = {
           'email': user.email,
           // Các thông tin khác

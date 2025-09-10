@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:japaneseapp/Config/dataHelper.dart';
@@ -76,7 +78,8 @@ class FunctionService{
       VoidCallback onWatchAd,
       SharedPreferences prefs,
       String today,
-      ) async {
+      ) async
+  {
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -227,5 +230,59 @@ class FunctionService{
   static Future<int> getTopicComplite() async {
     DatabaseHelper db = DatabaseHelper.instance;
     return (await db.countCompletedTopics());
+  }
+
+  static Future<bool> synchronyData() async {
+    try {
+      // Chạy song song DB + SharedPreferences
+      final results = await Future.wait([
+        DatabaseHelper.instance.getAllSynchronyData(),
+        SharedPreferences.getInstance(),
+      ]);
+
+      final dbData = results[0];
+      final prefs = results[1] as SharedPreferences;
+
+      // Gom prefs thành Map
+      final Map<String, dynamic> dataPrefs = {
+        for (var key in prefs.getKeys()) key: prefs.get(key)
+      };
+
+      // Payload final
+      final Map<String, dynamic> payload = {
+        "sqlite": dbData,
+        "prefs": dataPrefs,
+        "updatedAt": FieldValue.serverTimestamp(),
+      };
+
+      // Firestore
+      final userDoc = FirebaseFirestore.instance
+          .collection("datas")
+          .doc(FirebaseAuth.instance.currentUser!.uid);
+
+      await userDoc.set({"data": payload}, SetOptions(merge: true));
+
+      return true;
+    } catch (e, st) {
+      debugPrint("❌ Sync failed: $e");
+      debugPrintStack(stackTrace: st);
+    } finally {
+      return false;
+    }
+  }
+
+  static Future<void> checkAndBackup() async {
+    final prefs = await SharedPreferences.getInstance();
+    final lastBackup = prefs.getInt("lastBackup") ?? 0;
+    final now = DateTime.now().millisecondsSinceEpoch;
+
+    // 24h = 86400000 ms
+    if (now - lastBackup > 86400000) {
+      await synchronyData(); // Hàm backup bạn đã có
+      await prefs.setInt("lastBackup", now);
+      print("Đã backup sau 24h!");
+    } else {
+      print("Chưa tới 24h, bỏ qua backup");
+    }
   }
 }

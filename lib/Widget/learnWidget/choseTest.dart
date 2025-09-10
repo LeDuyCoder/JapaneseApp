@@ -11,6 +11,7 @@ class choseTest extends StatefulWidget {
   final Map<String, dynamic> data;
   final void Function() nextQuestion;
   final bool readText;
+  //final bool speak;
 
   const choseTest({super.key, required this.data, required this.nextQuestion, required this.readText});
 
@@ -76,7 +77,6 @@ class _choseTestState extends State<choseTest> {
   }
 
   void choseItem(int position, String text){
-
     if(widget.readText == true){
       readText(text, 1.0);
     }
@@ -93,6 +93,9 @@ class _choseTestState extends State<choseTest> {
 
   @override
   Widget build(BuildContext context) {
+    if(widget.data.containsKey('read')){
+      readText(widget.data["word"], 1.0);
+    }
     return Scaffold(
       body: Container(
         color: Colors.white,
