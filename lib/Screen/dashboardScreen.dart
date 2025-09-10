@@ -400,13 +400,13 @@ class _DashboardScreenState extends State<dashboardScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         const Center(
-                          child: Text("Danh Sách Từ Chia Sẽ", style: TextStyle(fontFamily: "Itim", fontSize: 25)),
+                          child: Text("Danh Sách Từ Chia Sẽ", style: TextStyle(fontSize: 25)),
                         ),
                         Padding(
                           padding: EdgeInsets.only(left: 10),
                           child: Row(
                             children: [
-                              const Text("Tạo Bởi: ", style: TextStyle(fontFamily: "Itim", fontSize: 20),),
+                              const Text("Tạo Bởi: ", style: TextStyle(fontFamily: "", fontSize: 20),),
                               Text(data["user"], style: TextStyle(fontFamily: "IslandMoments",),)
                             ],
                           ),
@@ -415,13 +415,13 @@ class _DashboardScreenState extends State<dashboardScreen> {
                           padding: EdgeInsets.only(left: 10),
                           child: Row(
                             children: [
-                              const Text("Số Lượng Từ: ", style: TextStyle(fontFamily: "Itim", fontSize: 20),),
+                              const Text("Số Lượng Từ: ", style: TextStyle(fontFamily: "", fontSize: 20),),
                               Text("${(data["listWords"] as List<dynamic>).length} Words", style: TextStyle(fontFamily: "IslandMoments"),)
                             ],
                           ),
                         ),
                         const SizedBox(height: 10,),
-                        const Text("Bạn Có Muốn Thêm Vao Danh Sách Từ Không ?", style: TextStyle(fontFamily: "Itim"),),
+                        const Text("Bạn Có Muốn Thêm Vao Danh Sách Từ Không ?", style: TextStyle(fontFamily: ""),),
                         const SizedBox(height: 20,),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.end,
@@ -440,7 +440,7 @@ class _DashboardScreenState extends State<dashboardScreen> {
                                     boxShadow: [
                                     ]
                                 ),
-                                child: Center(
+                                child: const Center(
                                   child: Text("Hủy", style: TextStyle(color: Colors.red, fontSize: 15, fontWeight: FontWeight.bold),),
                                 ),
                               ),
@@ -481,7 +481,7 @@ class _DashboardScreenState extends State<dashboardScreen> {
                                       )
                                     ]
                                 ),
-                                child: Center(
+                                child: const Center(
                                   child: Text("Xác Nhận", style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),),
                                 ),
                               ),
@@ -754,7 +754,7 @@ class _DashboardScreenState extends State<dashboardScreen> {
                                   fontSize: 22,
                                   fontWeight: FontWeight.bold,
                                   color: AppColors.primary,
-                                  fontFamily: "Itim",
+                                  fontFamily: "",
                                 ),
                               ),
                             ],
@@ -930,7 +930,7 @@ class _DashboardScreenState extends State<dashboardScreen> {
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
                             color: Color(0xFF388E3C),
-                            fontFamily: "Itim",
+                            fontFamily: "",
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -1215,7 +1215,7 @@ class _DashboardScreenState extends State<dashboardScreen> {
               const SizedBox(height: 20),
               AutoSizeText(
                 AppLocalizations.of(context)!.comunication_bottomSheet_notify_download_title,
-                style: TextStyle(fontFamily: "Itim", fontSize: 20),
+                style: TextStyle(fontFamily: "", fontSize: 20),
               ),
               const SizedBox(height: 20),
               Row(
@@ -1294,7 +1294,7 @@ class _DashboardScreenState extends State<dashboardScreen> {
                   style: TextStyle(
                     color: AppColors.primary,
                     fontSize: 40,
-                    fontFamily: "Itim",
+                    fontFamily: "",
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -1332,7 +1332,7 @@ class _DashboardScreenState extends State<dashboardScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            Text(AppLocalizations.of(context)!.dashboard_folder, style: TextStyle(color: AppColors.textPrimary, fontSize: 20, fontFamily: "Itim"),),
+                            Text(AppLocalizations.of(context)!.dashboard_folder, style: TextStyle(color: AppColors.textPrimary, fontSize: 20, fontFamily: ""),),
                             SizedBox(width: 80,),
                             Text(AppLocalizations.of(context)!.dashboard_folder_seemore, style: TextStyle(color: AppColors.primary, fontSize: 18),),
                           ],
@@ -1437,7 +1437,7 @@ class _DashboardScreenState extends State<dashboardScreen> {
                         const Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            Text("Cộng Đồng", style: TextStyle(color: AppColors.textPrimary, fontSize: 18, fontFamily: "Itim"),),
+                            Text("Cộng Đồng", style: TextStyle(color: AppColors.textPrimary, fontSize: 18, fontFamily: ""),),
                             SizedBox(width: 80,),
                             Text("Xem Tất Cả", style: TextStyle(color: AppColors.primary, fontSize: 18),),
                           ],
@@ -1563,7 +1563,7 @@ class _DashboardScreenState extends State<dashboardScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            Text(AppLocalizations.of(context)!.dashboard_topic, style: TextStyle(color: AppColors.textPrimary, fontSize: 20, fontFamily: "Itim"),),
+                            Text(AppLocalizations.of(context)!.dashboard_topic, style: TextStyle(color: AppColors.textPrimary, fontSize: 20, fontFamily: ""),),
                             SizedBox(width: 80,),
                             Text(AppLocalizations.of(context)!.dashboard_topic_seemore, style: TextStyle(color: AppColors.primary, fontSize: 18),),
 
@@ -1751,7 +1751,7 @@ class _DashboardScreenState extends State<dashboardScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            Text(AppLocalizations.of(context)!.dashboard_folder, style: TextStyle(color: AppColors.textPrimary, fontSize: 20, fontFamily: "Itim"),),
+                            Text(AppLocalizations.of(context)!.dashboard_folder, style: TextStyle(color: AppColors.textPrimary, fontSize: 20, fontFamily: ""),),
                             const SizedBox(width: 80,),
                             GestureDetector(
                               onTap: () {
@@ -1774,7 +1774,7 @@ class _DashboardScreenState extends State<dashboardScreen> {
                                   ),
                                 );
                               },
-                              child: Text(AppLocalizations.of(context)!.dashboard_folder_seemore, style: TextStyle(color: AppColors.primary, fontSize: 18, fontFamily: "Itim"),),
+                              child: Text(AppLocalizations.of(context)!.dashboard_folder_seemore, style: TextStyle(color: AppColors.primary, fontSize: 18, fontFamily: ""),),
                             )
                           ],
                         ),
@@ -1821,7 +1821,7 @@ class _DashboardScreenState extends State<dashboardScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            Text(AppLocalizations.of(context)!.dashboard_comunication, style: TextStyle(color: AppColors.textPrimary, fontSize: 18, fontFamily: "Itim"),),
+                            Text(AppLocalizations.of(context)!.dashboard_comunication, style: TextStyle(color: AppColors.textPrimary, fontSize: 18, fontFamily: ""),),
                             SizedBox(width: 80,),
                             GestureDetector(
                               onTap: (){
@@ -1844,7 +1844,7 @@ class _DashboardScreenState extends State<dashboardScreen> {
                                   ),
                                 );
                               },
-                              child: Text(AppLocalizations.of(context)!.dashboard_comunication_seemore, style: TextStyle(fontFamily: "Itim", color: AppColors.primary, fontSize: 18),),
+                              child: Text(AppLocalizations.of(context)!.dashboard_comunication_seemore, style: TextStyle(fontFamily: "", color: AppColors.primary, fontSize: 18),),
                             )
                           ],
                         ),
@@ -1879,7 +1879,7 @@ class _DashboardScreenState extends State<dashboardScreen> {
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
                                           const Icon(Icons.folder, color: AppColors.grey, size: 50,),
-                                          const Text("Không có dữ liệu", style: TextStyle(fontFamily: "Itim" ,color: AppColors.textPrimary, fontSize: 20, fontWeight: FontWeight.bold),),
+                                          const Text("Không có dữ liệu", style: TextStyle(fontFamily: "" ,color: AppColors.textPrimary, fontSize: 20, fontWeight: FontWeight.bold),),
                                           Padding(
                                             padding: EdgeInsets.only(left: 50, right: 50),
                                             child: Text("Hiện tại không có thư mục nào. Hãy đăng thư mục đầu tiên của bạn",
@@ -1888,7 +1888,7 @@ class _DashboardScreenState extends State<dashboardScreen> {
                                                   color: AppColors.textSecond.withOpacity(0.5),
                                                   fontSize: 15,
                                                   height: 1.8,
-                                                  fontFamily: "Itim"
+                                                  fontFamily: ""
                                               ),
                                             ),
                                           ),
@@ -1987,7 +1987,7 @@ class _DashboardScreenState extends State<dashboardScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            Text(AppLocalizations.of(context)!.dashboard_topic, style: TextStyle(color: AppColors.textPrimary, fontSize: 20, fontFamily: "Itim"),),
+                            Text(AppLocalizations.of(context)!.dashboard_topic, style: TextStyle(color: AppColors.textPrimary, fontSize: 20, fontFamily: ""),),
                             const SizedBox(width: 80,),
                             GestureDetector(
                               onTap: () {
@@ -2014,7 +2014,7 @@ class _DashboardScreenState extends State<dashboardScreen> {
                                 padding: EdgeInsets.all(8.0), // tạo vùng click thoải mái hơn
                                 child: Text(
                                   AppLocalizations.of(context)!.dashboard_topic_seemore,
-                                  style: TextStyle(color: AppColors.primary, fontSize: 18, fontFamily: "Itim"),
+                                  style: TextStyle(color: AppColors.primary, fontSize: 18, fontFamily: ""),
                                 ),
                               ),
                             ),

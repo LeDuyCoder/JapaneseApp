@@ -6,6 +6,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:uuid/v4.dart';
+import 'package:flutter/foundation.dart'; // compute
+import 'package:archive/archive.dart';    // dùng để gzip
+
 
 class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._init();
@@ -227,24 +230,7 @@ class DatabaseHelper {
     await db.update(nameTable, data, where: whereUpdate);
   }
 
-  Future<String> getAllSynchronyData() async {
-    final db = await instance.database;
 
-    // Lấy danh sách tất cả các bảng (trừ bảng hệ thống)
-    final List<Map<String, dynamic>> tables = await db.rawQuery(
-        "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%';"
-    );
-
-    Map<String, dynamic> allData = {};
-
-    for (var table in tables) {
-      String tableName = table['name'];
-      List<Map<String, dynamic>> tableData = await db.query(tableName);
-      allData[tableName] = tableData;
-    }
-
-    return jsonEncode(allData);
-  }
 
   Future<void> clearAllData() async {
     final db = await instance.database;
@@ -261,34 +247,96 @@ class DatabaseHelper {
     }
   }
 
-  Future<void> importSynchronyData(String jsonData) async {
+  Future<Map<String, dynamic>> decodeSynchronyData(String encoded) async {
+    final bytes = base64Decode(encoded);
+    final decompressed = GZipDecoder().decodeBytes(bytes);
+    return jsonDecode(utf8.decode(decompressed));
+  }
+
+  Future<String> getAllSynchronyData({List<String>? includeTables}) async {
     final db = await instance.database;
 
-    // Step 1: Clear all tables
+    // Lấy danh sách tất cả bảng
     final List<Map<String, dynamic>> tables = await db.rawQuery(
-        "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%';"
+      "SELECT name, sql FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%';",
     );
 
-    // Delete all rows from each table
-    for (var table in tables) {
+    Map<String, dynamic> allData = {};
+
+    // Lọc bảng nếu truyền includeTables
+    final filteredTables = includeTables != null
+        ? tables.where((t) => includeTables.contains(t['name']))
+        : tables;
+
+    // Query song song thay vì tuần tự
+    final futures = filteredTables.map((table) async {
       String tableName = table['name'];
+      String? schema = table['sql'];
+
+      List<Map<String, dynamic>> tableData = await db.query(tableName);
+
+      return {
+        "name": tableName,
+        "schema": schema,
+        "rows": tableData,
+      };
+    });
+
+    final results = await Future.wait(futures);
+
+    for (var r in results) {
+      final tableName = r["name"] as String;
+      final schema = r["schema"] as String?;
+      final rows = r["rows"] as List<Map<String, dynamic>>;
+
+      allData[tableName] = {
+        "schema": schema,
+        "rows": rows,
+      };
+    }
+
+    // Encode JSON
+    final jsonStr = jsonEncode(allData);
+
+    // Gzip nén JSON để tiết kiệm dung lượng
+    final compressed = GZipEncoder().encode(utf8.encode(jsonStr) as List<int>);
+
+    // Base64 để lưu vào Firestore
+    return base64Encode(compressed!);
+  }
+
+  Future<void> importSynchronyData(String encodedData) async {
+    final db = await instance.database;
+    final Map<String, dynamic> importedData = await decodeSynchronyData(encodedData);
+
+    final List<Map<String, dynamic>> tables = await db.rawQuery(
+      "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%';",
+    );
+
+    for (var table in tables) {
+      final tableName = table['name'] as String;
       await db.delete(tableName);
     }
 
-    // Step 2: Import the new data from JSON
-    Map<String, dynamic> importedData = jsonDecode(jsonData);
+    for (final entry in importedData.entries) {
+      final String tableName = entry.key;
+      final Map<String, dynamic> tableContent = Map<String, dynamic>.from(entry.value);
 
-    // Insert data into each table
-    for (String tableName in importedData.keys) {
-      List<Map<String, dynamic>> tableData = List<Map<String, dynamic>>.from(importedData[tableName]);
+      final String? schema = tableContent["schema"] as String?;
+      final List<dynamic> rowsRaw = tableContent["rows"] as List<dynamic>;
 
-      // Insert all rows for this table
-      for (var row in tableData) {
+      final List<Map<String, dynamic>> rows =
+      rowsRaw.map((r) => Map<String, dynamic>.from(r)).toList();
+
+      if (schema != null && schema.isNotEmpty) {
+        await db.execute("DROP TABLE IF EXISTS $tableName");
+        await db.execute(schema);
+      }
+
+      for (final row in rows) {
         await db.insert(tableName, row);
       }
     }
-
-    print("Data imported successfully.");
   }
 
 

@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 
@@ -6,6 +7,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:japaneseapp/Config/FunctionService.dart';
 import 'package:japaneseapp/Screen/achivementScreen.dart';
 import 'package:japaneseapp/Screen/languageScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -168,7 +170,7 @@ class _settingScreen extends State<settingScreen>{
                     ),
                     onPressed: () {
                       Navigator.of(context).pop();
-                      UpdateAsynchronyData();
+                      updateAsynchronyData();
                     },
                     icon: const Icon(Icons.check),
                     label: Text(
@@ -388,112 +390,105 @@ class _settingScreen extends State<settingScreen>{
   }
 
   Future<void> synchronyData(bool isLogout) async {
-    setState(() {
-      isLoading = true;
-    });
+    setState(() => isLoading = true);
 
     if (!await hasInternet()) {
-      setState(() {
-        isLoading = false;
-      });
+      setState(() => isLoading = false);
       showBottomSheetNoInternet(context);
-      return; // Dừng hẳn, không gọi Firestore
+      return;
     }
 
-    print("Có Internet, tiếp tục đồng bộ...");
+    if(await FunctionService.synchronyData()){
+      if (!isLogout) showBottomSheetPushDataSuccess(context);
+    }else{
+      setState(() => isLoading = false);
+    }
 
-    // --------- Có mạng thì mới chạy tiếp ----------
-    DatabaseHelper db = DatabaseHelper.instance;
+  }
 
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    Map<String, dynamic> dataPrefs = {
-      "level": prefs.getInt("level"),
-      "exp": prefs.getInt("exp"),
-      "nextExp": prefs.getInt("nextExp"),
-      "Streak": prefs.getStringList("checkInHistoryTreak")?.length ?? 0,
-      "lastCheckIn": prefs.getString("lastCheckIn"),
-      "checkInHistory": prefs.getStringList("checkInHistory"),
-      "checkInHistoryTreak": prefs.getStringList("checkInHistoryTreak"),
-      "achivement": prefs.getStringList("achivement"),
-    };
-
-    List<String> dataAsynchronyData = [];
-    dataAsynchronyData.add((await db.getAllSynchronyData()));
-    dataAsynchronyData.add(jsonEncode(dataPrefs));
+  Future<void> updateAsynchronyData() async {
+    setState(() => isLoading = true);
 
     try {
-      var userDoc = FirebaseFirestore.instance
+      final db = DatabaseHelper.instance;
+      final prefs = await SharedPreferences.getInstance();
+
+      final userDoc = FirebaseFirestore.instance
           .collection("datas")
           .doc(FirebaseAuth.instance.currentUser!.uid);
 
-      var docSnapshot = await userDoc.get();
+      final docSnapshot = await userDoc.get();
 
-      if (docSnapshot.exists) {
-        await userDoc.update({'data': FieldValue.delete()});
-      }
-
-      await userDoc.set({'data': dataAsynchronyData}, SetOptions(merge: true));
-
-      setState(() {
-        isLoading = false;
-      });
-
-      if(!isLogout)
-        showBottomSheetPushDataSuccess(context);
-    } catch (e) {
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
-
-  Future<void> UpdateAsynchronyData() async {
-    DatabaseHelper db = DatabaseHelper.instance;
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      isLoading = true;
-    });
-    try {
-      // Get the Firestore instance
-      var userDoc = FirebaseFirestore.instance.collection("datas").doc(FirebaseAuth.instance.currentUser!.uid);
-
-      // Get the document snapshot
-      var docSnapshot = await userDoc.get();
-
-      // Check if the document exists
-      if (docSnapshot.exists) {
-        // Document exists, retrieve the data
-        var data = docSnapshot.data(); // This will return a Map<String, dynamic> with the document data
-        String dataInDatabase = data!["data"][0];
-        await db.importSynchronyData(dataInDatabase);
-
-        Map<String, dynamic> dataPrefs = jsonDecode(data["data"][1]);
-        print(dataPrefs);
-        await prefs.clear();
-        await prefs.setInt("level", dataPrefs["level"]);
-        await prefs.setInt("exp", dataPrefs["exp"]);
-        await prefs.setInt("nextExp", dataPrefs["nextExp"]);
-        await prefs.setInt("Streak", dataPrefs["Streak"]);
-        await prefs.setString("lastCheckIn", dataPrefs["lastCheckIn"]);
-        await prefs.setStringList("checkInHistory", _convertToListString(dataPrefs["checkInHistory"]));
-        await prefs.setStringList("checkInHistoryTreak", _convertToListString(dataPrefs["checkInHistoryTreak"]));
-        await prefs.setStringList("achivement", _convertToListString(dataPrefs["achivement"]));
-
-        userDoc.delete();
-
-        showBottomSheetAsynchronySuccess(context);
-
-      } else {
+      if (!docSnapshot.exists) {
         showBottomSheetDownloadDataFail(context);
+        return;
       }
-    } catch (e) {
-      print("Error retrieving data: $e");
-    }
 
-    setState(() {
-      isLoading = false;
-    });
+      final data = docSnapshot.data();
+      if (data == null || data["data"] == null) {
+        showBottomSheetDownloadDataFail(context);
+        return;
+      }
+
+      final Map<String, dynamic> dataMap = Map<String, dynamic>.from(data["data"]);
+
+      // Restore SQLite
+      final String sqliteData = dataMap["sqlite"] ?? "";
+      if (sqliteData.isNotEmpty) {
+        await db.importSynchronyData(sqliteData);
+      }
+
+      // Restore SharedPreferences
+      final Map<String, dynamic> dataPrefs =
+      Map<String, dynamic>.from(dataMap["prefs"] ?? {});
+
+      if (dataPrefs.containsKey("level")) {
+        await prefs.setInt("level", dataPrefs["level"]);
+      }
+      if (dataPrefs.containsKey("exp")) {
+        await prefs.setInt("exp", dataPrefs["exp"]);
+      }
+      if (dataPrefs.containsKey("nextExp")) {
+        await prefs.setInt("nextExp", dataPrefs["nextExp"]);
+      }
+      if (dataPrefs.containsKey("Streak")) {
+        await prefs.setInt("Streak", dataPrefs["Streak"]);
+      }
+      if (dataPrefs.containsKey("lastCheckIn")) {
+        await prefs.setString("lastCheckIn", dataPrefs["lastCheckIn"]);
+      }
+      if (dataPrefs.containsKey("checkInHistory")) {
+        await prefs.setStringList(
+          "checkInHistory",
+          _convertToListString(dataPrefs["checkInHistory"]),
+        );
+      }
+      if (dataPrefs.containsKey("checkInHistoryTreak")) {
+        await prefs.setStringList(
+          "checkInHistoryTreak",
+          _convertToListString(dataPrefs["checkInHistoryTreak"]),
+        );
+      }
+      if (dataPrefs.containsKey("achivement")) {
+        await prefs.setStringList(
+          "achivement",
+          _convertToListString(dataPrefs["achivement"]),
+        );
+      }
+
+      // Nếu muốn xóa backup sau khi tải về thì giữ lại:
+      // await userDoc.delete();
+
+      showBottomSheetAsynchronySuccess(context);
+    } catch (e, st) {
+      debugPrint("❌ Error retrieving data: $e");
+      debugPrintStack(stackTrace: st);
+      showBottomSheetDownloadDataFail(context);
+    } finally {
+      setState(() => isLoading = false);
+    }
   }
+
 
   @override
   Widget build(BuildContext context) {

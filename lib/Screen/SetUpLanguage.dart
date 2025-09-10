@@ -50,14 +50,14 @@ class _setUpLanguage extends State<setUpLanguage>{
             padding: EdgeInsets.symmetric(horizontal: 16),
             child: Row(
               children: [
-                Text(langaugeCode, style: TextStyle(fontSize: 28, fontFamily: "Itim", fontWeight: FontWeight.bold),),
+                Text(langaugeCode, style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),),
                 SizedBox(width: 10,),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(languageName, style: TextStyle(fontSize: 20, fontFamily: "Itim", fontWeight: FontWeight.bold), textAlign: TextAlign.left,),
-                    Text(languageNameLanguage, style: TextStyle(fontSize: 20, fontFamily: "Itim", color: AppColors.textSecond.withOpacity(0.6)), textAlign: TextAlign.left),
+                    Text(languageName, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold), textAlign: TextAlign.left,),
+                    Text(languageNameLanguage, style: TextStyle(fontSize: 20, color: AppColors.textSecond.withOpacity(0.6)), textAlign: TextAlign.left),
                   ],
                 ),
                 Expanded(
@@ -79,20 +79,21 @@ class _setUpLanguage extends State<setUpLanguage>{
       body: Container(
         color: AppColors.backgroundPrimary,
         width: MediaQuery.sizeOf(context).width,
+        height: MediaQuery.sizeOf(context).height,
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: 50,),
-              Text("KuJiLinGo", style: TextStyle(color: AppColors.primary, fontSize: 60, fontFamily: "Itim", fontWeight: FontWeight.bold),),
-              Text("Học tiếng Nhật mọi lúc, mọi nời", style: TextStyle(color: AppColors.textSecond.withOpacity(0.6), fontSize: 22, fontFamily: "Itim", height: 0.5),),
-              SizedBox(height: 50,),
-              Text("Chọn ngôn ngữ chính của bạn", textAlign: TextAlign.center ,style: TextStyle(color: AppColors.textSecond.withOpacity(1), fontSize: 30, fontFamily: "Itim", height: 1),),
-              SizedBox(height: 30,),
+              const SizedBox(height: 50,),
+              const Text("KuJiLinGo", style: TextStyle(color: AppColors.primary, fontSize: 60, fontWeight: FontWeight.bold),),
+              Text("Học tiếng Nhật mọi lúc, mọi nời", style: TextStyle(color: AppColors.textSecond.withOpacity(0.6), fontSize: 22, height: 0.5),),
+              const SizedBox(height: 50,),
+              Text("Chọn ngôn ngữ chính của bạn", textAlign: TextAlign.center ,style: TextStyle(color: AppColors.textSecond.withOpacity(1), fontSize: 30, height: 1),),
+              const SizedBox(height: 30,),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: Text("Chọn ngôn ngữ bạn muốn sử dụng làm ngôn ngữ chính trong ứng dụng. Bạn có thể thay đổi thiết lập này sau trong phần cài đặt.", textAlign: TextAlign.center, style: TextStyle(color: AppColors.textSecond.withOpacity(0.6), fontSize: 17, fontFamily: "Itim", height: 1),),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Text("Chọn ngôn ngữ bạn muốn sử dụng làm ngôn ngữ chính trong ứng dụng. Bạn có thể thay đổi thiết lập này sau trong phần cài đặt.", textAlign: TextAlign.center, style: TextStyle(color: AppColors.textSecond.withOpacity(0.6), fontSize: 17),),
               ),
               const SizedBox(height: 50,),
               languageWidget("VN", "Tiếng Việt", "Vietnamese", "vi"),
@@ -140,12 +141,12 @@ class _setUpLanguage extends State<setUpLanguage>{
                         ],
                         borderRadius: BorderRadius.circular(20)
                     ),
-                    child: Padding(
+                    child: const Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text("Tiếp Tục", style: TextStyle(fontSize: 20, fontFamily: "Itim", fontWeight: FontWeight.bold, color: Colors.white),),
+                          Text("Tiếp Tục", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),),
                         ],
                       ),
                     )

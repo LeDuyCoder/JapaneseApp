@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:japaneseapp/Config/dataJson.dart';
 import 'package:japaneseapp/Screen/congraculationCharacterScreen.dart';
+import 'package:japaneseapp/Theme/colors.dart';
 import 'package:japaneseapp/Widget/learnWidget/combinationTest.dart';
 import 'package:japaneseapp/Widget/learnWidget/writeTestCharacterScreen.dart';
 import 'package:japaneseapp/Widget/learnWidget/writeTestScreen.dart';
@@ -143,7 +144,6 @@ class _learnCharactersScreen extends State<learnCharactersScreen> {
     return wrongAnswers.toList();
   }
 
-
   List<String> generateWrongAwnsersWayToExample(dynamic dataCharacter, List<String> charactersTest, String example) {
     Set<String> wrongAnswers = {};
     Random random = Random();
@@ -166,7 +166,6 @@ class _learnCharactersScreen extends State<learnCharactersScreen> {
     return wrongAnswers.toList();
   }
 
-
   Map<String, dynamic> generateDataChoseTest(dynamic jsonData, List<String> charactersTest, charHiKa.character character, int level){
     Map<String, dynamic> data;
 
@@ -184,6 +183,7 @@ class _learnCharactersScreen extends State<learnCharactersScreen> {
           "anwser": character.romaji,
           "listAnwserWrong": wrongAnswers,
           "numberRight": correctIndex,
+          "read": true
         };
         break;
       case "ExempleToWay":
@@ -401,58 +401,63 @@ class _learnCharactersScreen extends State<learnCharactersScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: FutureBuilder<bool>(
-        future: _loadQuestionsFuture,
-        builder: (context, snapshot) {
+    return WillPopScope(
+      onWillPop: (){
+        return Future.value(false);
+      },
+      child: Scaffold(
+        body: FutureBuilder<bool>(
+          future: _loadQuestionsFuture,
+          builder: (context, snapshot) {
 
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (snapshot.hasError || !snapshot.data!) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          }
-          if (mapQuesstion.isEmpty) {
-            return const Center(child: Text('No questions available.'));
-          }
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (snapshot.hasError || !snapshot.data!) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            }
+            if (mapQuesstion.isEmpty) {
+              return const Center(child: Text('No questions available.'));
+            }
 
-          return Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            color: Colors.white,
-            child: Column(
-              children: [
-                const SizedBox(height: 20),
-                Row(
-                  children: [
-                    IconButton(
-                      onPressed: () => showModalBottomSheet(
-                        context: context,
-                        builder: (ctx) => quitTab(),
+            return Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              color: Colors.white,
+              child: Column(
+                children: [
+                  const SizedBox(height: 20),
+                  Row(
+                    children: [
+                      IconButton(
+                        onPressed: () => showModalBottomSheet(
+                          context: context,
+                          builder: (ctx) => quitTab(),
+                        ),
+                        icon: const Icon(Icons.close, size: 50),
                       ),
-                      icon: const Icon(Icons.close, size: 50),
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 20),
-                        child: LinearProgressIndicator(
-                          value: (question + 1) / mapQuesstion.length,
-                          backgroundColor: Colors.grey[300],
-                          color: Colors.greenAccent,
-                          minHeight: 15,
-                          borderRadius: BorderRadius.circular(20),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 20),
+                          child: LinearProgressIndicator(
+                            value: (question + 1) / mapQuesstion.length,
+                            backgroundColor: Colors.grey[300],
+                            color: AppColors.primary,
+                            minHeight: 15,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                Expanded(
-                  child: mapQuesstion[question],
-                ),
-              ],
-            ),
-          );
-        },
+                    ],
+                  ),
+                  Expanded(
+                    child: mapQuesstion[question],
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }

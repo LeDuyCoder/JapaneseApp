@@ -114,90 +114,63 @@ class _registerScreen extends State<registerScreen>{
       builder: (BuildContext context) {
         return Dialog(
           backgroundColor: Colors.white,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(10),
-              bottomRight: Radius.circular(10),
-            ), // Bo góc popup
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16), // Bo góc toàn popup
           ),
-          child: StatefulBuilder(
-            builder: (BuildContext context, void Function(void Function()) setState) {
-              return Container(
-                  decoration: const BoxDecoration(
-                    border: Border(
-                      top: BorderSide(
-                        color: Colors.green, // Màu xanh cạnh trên ngoài cùng
-                        width: 10.0, // Độ dày của cạnh trên
+          child: Container(
+            decoration: const BoxDecoration(
+            ),
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min, // Fit nội dung
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.check_circle,
+                  color: Colors.green,
+                  size: 50,
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  AppLocalizations.of(context)!.register_success,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
+                const SizedBox(height: 24),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context); // Đóng dialog
+                      Navigator.pop(context); // Quay về trước đó
+                    },
+                    child: const Text(
+                      "Tiếp Tục",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
-                  child: Container(
-                    height: 150,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Column(
-                          children: [
-                            Container(
-                              width: MediaQuery.sizeOf(context).width - 100,
-                              height: 30,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Flexible(
-                                    child: AutoSizeText(
-                                      AppLocalizations.of(context)!.register_success,
-                                      overflow: TextOverflow.ellipsis,
-                                      softWrap: true,
-                                      maxLines: 2,
-                                      style: TextStyle(fontFamily: "Itim", fontSize: 35),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(height: 20),
-                          ],
-                        ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            GestureDetector(
-                              onTap: () async {
-                                Navigator.pop(context);
-                                Navigator.pop(context);
-                              },
-                              child: Container(
-                                width: MediaQuery.sizeOf(context).width*0.3,
-                                height: MediaQuery.sizeOf(context).height*0.04,
-                                decoration: const BoxDecoration(
-                                    color: Colors.green,
-                                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                                    boxShadow: [
-                                    ]
-                                ),
-                                child: const Center(
-                                  child: Text("Tiếp Tục", style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold, fontFamily: "Itim"),),
-                                ),
-                              ),
-
-                            ),
-                            SizedBox(width: 10,)
-                          ],
-                        ),
-                        SizedBox(height: 10,)
-                      ],
-                    ),
-                  )
-              );
-            },
+                ),
+              ],
+            ),
           ),
         );
       },
     );
   }
+
 
 
   @override
@@ -221,7 +194,7 @@ class _registerScreen extends State<registerScreen>{
                     child: Container(
                       height: MediaQuery.sizeOf(context).height*0.1,
                       width: MediaQuery.sizeOf(context).width,
-                      child: AutoSizeText(AppLocalizations.of(context)!.register_title, style: TextStyle(fontSize: MediaQuery.sizeOf(context).width*0.8, fontFamily: "Itim"),),
+                      child: AutoSizeText(AppLocalizations.of(context)!.register_title, style: TextStyle(fontSize: MediaQuery.sizeOf(context).width*0.8, fontWeight: FontWeight.bold),),
                     ),
                   ),
                   const SizedBox(height: 10,),
@@ -336,7 +309,8 @@ class _registerScreen extends State<registerScreen>{
                     onTap: (){
                       //showDialogRegisterSuccess();
                       FocusScope.of(context).unfocus();
-                      registerAccount();
+                      showDialogRegisterSuccess();
+                      //registerAccount();
                     },
                     child: Padding(
                       padding: EdgeInsets.only(left: 20, right: 20),
@@ -348,7 +322,7 @@ class _registerScreen extends State<registerScreen>{
                               borderRadius: BorderRadius.all(Radius.circular(15))
                           ),
                           child: Center(
-                            child: Text(AppLocalizations.of(context)!.register_btn, style: TextStyle(color: Colors.white, fontSize: 20, fontFamily: "Itim")),
+                            child: Text(AppLocalizations.of(context)!.register_btn, style: TextStyle(color: Colors.white, fontSize: 20)),
                           )
                       ),
                     ),
@@ -361,9 +335,9 @@ class _registerScreen extends State<registerScreen>{
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(AppLocalizations.of(context)!.register_question_login, style: TextStyle(fontFamily: "Itim"),),
+                        Text(AppLocalizations.of(context)!.register_question_login),
                         SizedBox(width: 5,),
-                        Text(AppLocalizations.of(context)!.register_btn_login, style: TextStyle(color: CupertinoColors.activeBlue, fontFamily: "Itim"),),
+                        Text(AppLocalizations.of(context)!.register_btn_login, style: TextStyle(color: CupertinoColors.activeBlue),),
                       ],
                     ),
                   ),
