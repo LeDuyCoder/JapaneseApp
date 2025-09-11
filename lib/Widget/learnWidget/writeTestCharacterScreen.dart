@@ -191,129 +191,144 @@ class _WriteTestCharacterScreenState extends State<WriteTestCharacterScreen> {
           scrollDirection: Axis.horizontal,
           child: Column(
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
+              Stack(
                 children: [
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    child: Center(
-                        child: Image.asset(widget.ImageAsset, scale: 3,)
-                    ),
-                  ),
-
-                  SizedBox(height: 10),
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.8,
-                    height: MediaQuery.of(context).size.width * 0.10,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(color: Colors.black, width: 1.0),
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: TextField(
-                        focusNode: textFieldFocusNode,
-                        readOnly: true,
-                        controller: dataInput,
-                        decoration: InputDecoration(
-                          icon: Icon(Icons.draw),
-                          border: InputBorder.none,
-                          hintText: AppLocalizations.of(context)!.learn_write_input,
-                          hintStyle: TextStyle(color: Colors.grey),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        child: Center(
+                            child: Image.asset(widget.ImageAsset, scale: 3,)
                         ),
                       ),
-                    ),
-                  ),
-                  SizedBox(height: 50),
-                  GestureDetector(
-                    onTapDown: (_) {
-                      setState(() {
-                        isPress = true;
-                      });
-                    },
-                    onTapUp: (_) async {
-                      setState(() {
-                        isPress = false;
-                      });
 
-                      if (dataInput.text == widget.testData) {
-                        await playSound("sound/correct.mp3");
-                        showModalBottomSheet(
-                            context: context,
-                            barrierColor: Color.fromRGBO(0, 0, 0, 0.1),
-                            isDismissible: false,
-                            enableDrag: false,
-                            builder: (ctx) =>
-                                rightTab(nextQuestion: () {
-                                  widget.nextLearned(true);
-                                }, isMean: false, context: context,));
-                      } else {
-                        await playSound("sound/wrong.mp3");
-                        showModalBottomSheet(
-                            context: context,
-                            barrierColor: Color.fromRGBO(0, 0, 0, 0.1),
-                            isDismissible: false,
-                            enableDrag: false,
-                            builder: (ctx) =>
-                                wrongTab(nextQuestion: () {
-                                  widget.nextLearned(false);
-                                }, rightAwnser: widget.testData,));
-                      }
-                    },
-                    onTapCancel: () {
-                      setState(() {
-                        isPress = false;
-                      });
-                    },
-                    child: AnimatedContainer(
-                      duration: Duration(milliseconds: 100),
-                      curve: Curves.easeInOut,
-                      transform: Matrix4.translationValues(0, isPress ? 4 : 0, 0),
-                      width: MediaQuery.of(context).size.width - 20,
-                      height: MediaQuery.of(context).size.width * 0.15,
-                      decoration: BoxDecoration(
-                        color: Color.fromRGBO(97, 213, 88, 1.0),
-                        borderRadius: BorderRadius.all(Radius.circular(20)),
-                        boxShadow: isPress
-                            ? []
-                            : [BoxShadow(color: Colors.green, offset: Offset(6, 6))],
-                      ),
-                      child: const Center(
-                        child: Text(
-                          "CHECK",
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
+                      SizedBox(height: 10),
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        height: MediaQuery.of(context).size.width * 0.10,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          border: Border.all(color: Colors.black, width: 1.0),
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
                         ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 20,),
-                ],
-              ),
-              Expanded(
-                child: Container(
-                    width: MediaQuery.sizeOf(context).width,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        AnimatedSlide(
-                          offset: keyboardOffset,
-                          duration: Duration(milliseconds: 400),
-                          curve: Curves.easeOut,
-                          child: CustomKeyboard(
-                            onStrokeComplete: (points) async {
-                              await sendHandwriting(points);
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          child: TextField(
+                            onTap: (){
+                              setState(() {
+                                keyboardOffset = const Offset(0, 0);
+                              });
                             },
-                            insertText: insertText, listWord: listWord, backSpace: deleteText,
+                            focusNode: textFieldFocusNode,
+                            readOnly: true,
+                            controller: dataInput,
+                            decoration: InputDecoration(
+                              icon: Icon(Icons.draw),
+                              border: InputBorder.none,
+                              hintText: AppLocalizations.of(context)!.learn_write_input,
+                              hintStyle: TextStyle(color: Colors.grey),
+                            ),
                           ),
-                        )
-                      ],
-                    )
-                ),
+                        ),
+                      ),
+                      SizedBox(height: 50),
+                      GestureDetector(
+                        onTapDown: (_) {
+                          setState(() {
+                            isPress = true;
+                          });
+                        },
+                        onTapUp: (_) async {
+                          setState(() {
+                            isPress = false;
+                          });
+
+                          if (dataInput.text == widget.testData) {
+                            await playSound("sound/correct.mp3");
+                            showModalBottomSheet(
+                                context: context,
+                                barrierColor: Color.fromRGBO(0, 0, 0, 0.1),
+                                isDismissible: false,
+                                enableDrag: false,
+                                builder: (ctx) =>
+                                    rightTab(nextQuestion: () {
+                                      widget.nextLearned(true);
+                                    }, isMean: false, context: context,));
+                          } else {
+                            await playSound("sound/wrong.mp3");
+                            showModalBottomSheet(
+                                context: context,
+                                barrierColor: Color.fromRGBO(0, 0, 0, 0.1),
+                                isDismissible: false,
+                                enableDrag: false,
+                                builder: (ctx) =>
+                                    wrongTab(nextQuestion: () {
+                                      widget.nextLearned(false);
+                                    }, rightAwnser: widget.testData,));
+                          }
+                        },
+                        onTapCancel: () {
+                          setState(() {
+                            isPress = false;
+                          });
+                        },
+                        child: AnimatedContainer(
+                          duration: Duration(milliseconds: 100),
+                          curve: Curves.easeInOut,
+                          transform: Matrix4.translationValues(0, isPress ? 4 : 0, 0),
+                          width: MediaQuery.of(context).size.width - 20,
+                          height: MediaQuery.of(context).size.width * 0.15,
+                          decoration: BoxDecoration(
+                            color: Color.fromRGBO(97, 213, 88, 1.0),
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                            boxShadow: isPress
+                                ? []
+                                : [BoxShadow(color: Colors.green, offset: Offset(6, 6))],
+                          ),
+                          child: const Center(
+                            child: Text(
+                              "CHECK",
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 20,),
+                    ],
+                  ),
+                  Container(
+                      height: MediaQuery.sizeOf(context).height-100,
+                      width: MediaQuery.sizeOf(context).width, // đặt vị trí bottom center
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          AnimatedSlide(
+                              offset: keyboardOffset,
+                              duration: const Duration(milliseconds: 400),
+                              curve: Curves.easeOut,
+                              child: CustomKeyboard(
+                                onStrokeComplete: (points) async {
+                                  await sendHandwriting(points);
+                                },
+                                insertText: insertText,
+                                listWord: listWord,
+                                backSpace: deleteText,
+                                closeKeyBoard: () {
+                                  setState(() {
+                                    keyboardOffset = const Offset(0, 1.5);
+                                  });
+                                },
+                              )
+                          )
+                        ],
+                      )
+                  )
+                ],
               )
             ],
           ),

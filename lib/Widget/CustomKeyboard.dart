@@ -9,12 +9,13 @@ class CustomKeyboard extends StatefulWidget {
   final Function(List<List<Offset>>) onStrokeComplete;
   final Function(String word) insertText;
   final Function() backSpace;
+  final Function() closeKeyBoard;
   final List<dynamic> listWord;
 
   const CustomKeyboard({
     required this.onStrokeComplete,
     required this.insertText,
-    Key? key, required this.listWord, required this.backSpace,
+    Key? key, required this.listWord, required this.backSpace, required this.closeKeyBoard,
   }) : super(key: key);
 
   @override
@@ -86,7 +87,6 @@ class _CustomKeyboardState extends State<CustomKeyboard> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.listWord);
     return Container(
       width: MediaQuery.sizeOf(context).width,
       child: Column(
@@ -219,9 +219,24 @@ class _CustomKeyboardState extends State<CustomKeyboard> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              GestureDetector(
+                onTap: (){
+                  widget.closeKeyBoard();
+                },
+                child: Container(
+                  margin: EdgeInsets.all(4),
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                      color: Color.fromRGBO(230, 230, 230, 1.0),
+                      borderRadius: BorderRadius.circular(10)
+                  ),
+                  child: Icon(Icons.arrow_drop_down),
+                ),
+              ),
               Container(
-                margin: EdgeInsets.all(8),
-                width: MediaQuery.sizeOf(context).width / 1.5,
+                margin: EdgeInsets.all(4),
+                width: MediaQuery.sizeOf(context).width / 2,
                 child: ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color.fromRGBO(230, 230, 230, 1.0),
