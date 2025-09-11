@@ -314,7 +314,7 @@ class _WriteTestScreenState extends State<WriteTestScreen> {
                       onStrokeComplete: (points) async {
                         await sendHandwriting(points);
                       },
-                      insertText: insertText, listWord: listWord, backSpace: deleteText,
+                      insertText: insertText, listWord: listWord, backSpace: deleteText, closeKeyBoard: () {  },
                     ),
                   )
                 ],
