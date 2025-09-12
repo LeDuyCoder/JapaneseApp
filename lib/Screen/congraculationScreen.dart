@@ -195,7 +195,7 @@ class _congraculationScreen extends State<congraculationScreen> with TickerProvi
                       const SizedBox(
                         height: 20,
                       ),
-                      Text("Chic Mừng", style: TextStyle(color: AppColors.primary, fontSize: 40, fontFamily: "Itim"),),
+                      Text("Chúc Mừng", style: TextStyle(color: AppColors.primary, fontSize: 40, fontFamily: "Itim"),),
                       Text("Bạn đã hoàn thành", style: TextStyle(color: AppColors.black, fontSize: 25, fontFamily: "Itim", height: 0.8),),
                       SizedBox(height: 30,),
                       Container(

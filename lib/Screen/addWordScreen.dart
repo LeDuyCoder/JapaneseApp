@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
@@ -7,6 +9,8 @@ import '../Config/dataHelper.dart';
 import '../Theme/colors.dart';
 import '../Widget/addWordWidget.dart';
 import '../generated/app_localizations.dart';
+
+import 'package:http/http.dart' as http;
 
 
 class addWordScreen extends StatefulWidget{
@@ -33,6 +37,160 @@ class _addWordScreen extends State<addWordScreen>{
   List<word> listVocabulary = [];
 
   bool isLoading = false;
+
+  /// Hiển thị popup chọn cách đọc, có thiết kế hiện đại với màu chủ đạo đỏ
+  Future<String?> showReadingPickerDialog({
+    required BuildContext context,
+    required List<String> readings,
+  }) async {
+    int? selectedIndex;
+
+    return showDialog<String>(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Dialog(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              child: Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      'Chọn cách đọc',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.red,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: readings.length,
+                      itemBuilder: (context, index) {
+                        final isSelected = selectedIndex == index;
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 6),
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                selectedIndex = index;
+                              });
+                            },
+                            child: Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                border: Border.all(
+                                  color: isSelected ? Colors.red : Colors.grey,
+                                  width: 1,
+                                ),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Text(
+                                readings[index],
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                  color: isSelected ? AppColors.primary : Colors.black,
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            if (selectedIndex != null) {
+                              Navigator.of(context).pop(readings[selectedIndex!]);
+                            }
+                          },
+                          child: const Text(
+                            'Xác Nhận',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: const Text(
+                            'Huỷ',
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+
+  Future<void> generateWayRead(String kanji) async {
+    final url = 'https://jisho.org/api/v1/search/words?keyword=$kanji';
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      print(data);
+      if(!data["data"][0].containsKey("japanese")){
+          readWayInput.text = kanji;
+      }else{
+        if(data["data"][0]["japanese"][0].length > 1){
+          List<String>? listReadWays = [];
+          for (var item in data["data"][0]["japanese"]) {
+            if (item["reading"] != null) {
+              listReadWays.add(item["reading"]);
+            }
+          }
+
+          if(listReadWays.length == 2 && listReadWays[0] == listReadWays[1]){
+            setState(() {
+              readWayInput.text = listReadWays[0];
+            });
+          }else{
+            String? resultChoseReading = await showReadingPickerDialog(context: context, readings: listReadWays);
+            setState(() {
+              readWayInput.text = resultChoseReading??"";
+            });
+          }
+        }else{
+          setState(() {
+            readWayInput.text = data["data"][0]["japanese"][0]["reading"];
+          });
+        }
+      }
+
+
+    } else {
+      throw Exception('Không tìm thấy thông tin cho kanji: $kanji');
+    }
+  }
+
 
   void showBottomSheetSaveData(BuildContext contextOrigin) {
     showModalBottomSheet(
@@ -342,36 +500,51 @@ class _addWordScreen extends State<addWordScreen>{
                             ),),
                           ),
                           Container(
-                            padding: const EdgeInsets.only(left: 20, top:10, right: 20,),
-                            width: MediaQuery.sizeOf(context).width,
-                            height: 100,
-                            child: TextField(
-                              controller: readWayInput,
-                              decoration: InputDecoration(
-                                  hintText: AppLocalizations.of(context)!.addWord_Screen_Input_WayRead_Hint,
-                                  hintStyle: TextStyle(color: Colors.grey), // Màu chữ gợi ý
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                  contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 12.0,
-                                    vertical: 20.0,
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: const BorderSide(
-                                      color: Colors.grey,
-                                      width: 2.0,
+                            child: Row(
+                              children: [
+                                Expanded( // Đây là phần quan trọng!
+                                  child: Container(
+                                    padding: const EdgeInsets.only(left: 20, top: 10, right: 10),
+                                    height: 100,
+                                    child: TextField(
+                                      controller: readWayInput,
+                                      decoration: InputDecoration(
+                                        hintText: AppLocalizations.of(context)!.addWord_Screen_Input_WayRead_Hint,
+                                        hintStyle: TextStyle(color: Colors.grey),
+                                        filled: true,
+                                        fillColor: Colors.white,
+                                        contentPadding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 20.0),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide: const BorderSide(color: Colors.grey, width: 2.0),
+                                          borderRadius: BorderRadius.circular(8.0),
+                                        ),
+                                        errorBorder: OutlineInputBorder(
+                                          borderSide: const BorderSide(color: Colors.red, width: 3.0),
+                                          borderRadius: BorderRadius.circular(10.0),
+                                        ),
+                                        errorText: errorMessageReadWay,
+                                      ),
                                     ),
-                                    borderRadius: BorderRadius.circular(8.0),
                                   ),
-                                  errorBorder: OutlineInputBorder(
-                                    borderSide: const BorderSide(
-                                      color: Colors.red,
-                                      width: 3.0,
+                                ),
+                                GestureDetector(
+                                  onTap: () async {
+                                    if(japanWordInput.text.trim().replaceAll(" ", "") != "") {
+                                      await generateWayRead(japanWordInput.text);
+                                    }
+                                  },
+                                  child: Container(
+                                    margin: const EdgeInsets.only(bottom: 20 , right: 10),
+                                    height: 60,
+                                    width: 60,
+                                    decoration: BoxDecoration(
+                                        color: AppColors.primary,
+                                        borderRadius: BorderRadius.circular(10)
                                     ),
-                                    borderRadius: BorderRadius.circular(10.0),
+                                    child: Icon(Icons.create, color: Colors.white,),
                                   ),
-                                  errorText: errorMessageReadWay
-                              ),
+                                )
+                              ],
                             ),
                           ),
                           Padding(
