@@ -116,12 +116,15 @@ class _DashboardScreenState extends State<dashboardScreen> {
           .getAllDataTopic(5)
           .timeout(const Duration(seconds: 10));
 
+      print(dataServer);
+
       if (dataServer == null) {
         data = {
           "topic": await db.getAllTopic(),
           "folder": await db.getAllFolder(),
         };
-      } else {
+      }
+      else {
         // nếu server có dữ liệu → gộp local + server
         data = {
           "topic": await db.getAllTopic(),
@@ -130,16 +133,19 @@ class _DashboardScreenState extends State<dashboardScreen> {
         };
       }
     } on TimeoutException catch (_) {
+      print(_.message);
       data = {
         "topic": await db.getAllTopic(),
         "folder": await db.getAllFolder(),
       };
     } on SocketException catch (_) {
+      print(_.message);
       data = {
         "topic": await db.getAllTopic(),
         "folder": await db.getAllFolder(),
       };
     } catch (e) {
+      print(e.toString());
       data = {
         "topic": await db.getAllTopic(),
         "folder": await db.getAllFolder(),

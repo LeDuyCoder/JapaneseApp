@@ -223,7 +223,8 @@ class _dictionaryScreen extends State<dictionaryScreen>{
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WillPopScope(
+        child: Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.distionary_Screen_title, style: TextStyle(color: AppColors.primary, fontFamily: "Itim", fontSize: 30),),
         automaticallyImplyLeading: false,
@@ -404,24 +405,24 @@ class _dictionaryScreen extends State<dictionaryScreen>{
                       SizedBox(height: 10),
                       if (example != "" && example.isNotEmpty)
                         Container(
-                          constraints: BoxConstraints(minHeight: 50),
-                          decoration: const BoxDecoration(
-                            border: Border(
-                              left: BorderSide(color: AppColors.primary, width: 2),
+                            constraints: BoxConstraints(minHeight: 50),
+                            decoration: const BoxDecoration(
+                              border: Border(
+                                left: BorderSide(color: AppColors.primary, width: 2),
+                              ),
                             ),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.only(left: 10),
-                                child: Text(
-                                  example,
-                                  style: TextStyle(fontSize: 15, fontFamily: "Itim"),
-                                ),
-                              )
-                            ],
-                          )
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(left: 10),
+                                  child: Text(
+                                    example,
+                                    style: TextStyle(fontSize: 15, fontFamily: "Itim"),
+                                  ),
+                                )
+                              ],
+                            )
                         ),
                       SizedBox(height: 10),
                       Text(
@@ -680,7 +681,10 @@ class _dictionaryScreen extends State<dictionaryScreen>{
           ],
         ),
       ),
-    );
+    ),
+        onWillPop: (){
+          return Future.value(false);
+        });
   }
 
 }

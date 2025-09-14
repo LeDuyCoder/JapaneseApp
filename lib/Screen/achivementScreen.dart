@@ -218,7 +218,7 @@ class _achivementScreen extends State<achivementScreen>{
                                 crossAxisCount: 2,
                                 mainAxisSpacing: 5,
                                 crossAxisSpacing: 5,
-                                childAspectRatio: 1,
+                                childAspectRatio: 3/4,
                               ),
                               itemCount: achievements.length,
                               itemBuilder: (context, index) {
@@ -270,7 +270,7 @@ class _achivementScreen extends State<achivementScreen>{
                     SizedBox(height: 50,),
                     Container(
                         width: MediaQuery.sizeOf(context).width / 1.1,
-                        height: 700,
+                        height: 800,
                         decoration: const BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -294,6 +294,7 @@ class _achivementScreen extends State<achivementScreen>{
                                 crossAxisCount: 2, // số cột muốn hiển thị
                                 mainAxisSpacing: 5, // khoảng cách dọc
                                 crossAxisSpacing: 5, // khoảng cách ngang
+                                childAspectRatio: 4/5,
                                 physics: const NeverScrollableScrollPhysics(), // tránh conflict với scroll cha
                                 children: streakMilestones.map((streak) {
                                   String imagePath = "assets/achivement/dayStreak/${streak}day.png";

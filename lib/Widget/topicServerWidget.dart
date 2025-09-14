@@ -38,7 +38,7 @@ class _topicServerWidget extends State<topicServerWidget>{
       },
       child: Ink(
         child: Container(
-            margin: EdgeInsets.only(left: 5, right: 10),
+            margin: EdgeInsets.only(left: 5, right: 10, top: 5, bottom: 5),
             padding: const EdgeInsets.only(left: 25, right: 15),
             width: widget.width ?? 310,
             height: 120,
@@ -72,7 +72,7 @@ class _topicServerWidget extends State<topicServerWidget>{
                     })
                   ],
                 ),
-                Divider(
+                const Divider(
                   color: Colors.grey, // Màu của đường kẻ
                   thickness: 1,
                   indent: 0,

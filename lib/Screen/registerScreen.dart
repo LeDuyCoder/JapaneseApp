@@ -307,10 +307,9 @@ class _registerScreen extends State<registerScreen>{
                   SizedBox(height: 20,),
                   GestureDetector(
                     onTap: (){
-                      //showDialogRegisterSuccess();
                       FocusScope.of(context).unfocus();
                       showDialogRegisterSuccess();
-                      //registerAccount();
+                      registerAccount();
                     },
                     child: Padding(
                       padding: EdgeInsets.only(left: 20, right: 20),

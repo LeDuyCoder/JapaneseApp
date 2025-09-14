@@ -9,7 +9,9 @@ class topic{
       id: json['id'],
       name: json['nameTopic'],
       owner: json['owner'],
-      count: int.tryParse(json['word_counts'] ?? '0') ?? 0,
+      count: (json['word_count'] is int)
+          ? json['word_count'] as int
+          : int.tryParse(json['word_count']?.toString() ?? '0') ?? 0,
     );
 
     return newTopic;

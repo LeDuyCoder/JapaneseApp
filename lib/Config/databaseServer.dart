@@ -131,7 +131,7 @@ class DatabaseServer {
     try {
       final response = await http.post(
         url,
-        headers: {'Content-Type': 'application/json'},
+        headers: {'Content-Type': 'application/json; charset=UTF-8'},
         body: jsonEncode(words.map((w) => w.toJson()).toList()),
       );
 
