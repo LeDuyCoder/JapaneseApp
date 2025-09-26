@@ -74,8 +74,12 @@ class _charactersSCreen extends State<charactersScreen>{
                   body: Container(
                     child: TabBarView(
                       children: [
-                        Center(child: hiraganaScreen(data: snapshot.data![0], type: "hiragana", width: MediaQuery.sizeOf(context).height - AppBar().preferredSize.height)),
-                        Center(child: hiraganaScreen(data: snapshot.data![1], type: "katakana", width: MediaQuery.sizeOf(context).height - AppBar().preferredSize.height)),
+                        Center(child: hiraganaScreen(data: snapshot.data![0], type: "hiragana", width: MediaQuery.sizeOf(context).height - AppBar().preferredSize.height, reload: () { setState(() {
+
+                        }); },)),
+                        Center(child: hiraganaScreen(data: snapshot.data![1], type: "katakana", width: MediaQuery.sizeOf(context).height - AppBar().preferredSize.height, reload: () { setState(() {
+
+                        }); },)),
                       ],
                     ),
                   ),

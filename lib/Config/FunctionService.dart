@@ -199,7 +199,7 @@ class FunctionService{
     int daysDifference = now.difference(lastCheckDate).inDays;
 
     // Nếu khoảng cách > 1 ngày, reset streak
-    if (daysDifference > 1) {
+    if (daysDifference == 2) {
       showRewardAdSheet(ctx, (){
         _showRewardedAd(prefs, today);
       }, prefs, today);

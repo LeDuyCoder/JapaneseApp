@@ -7,9 +7,11 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:icons_plus/icons_plus.dart';
 import 'package:japaneseapp/Config/FunctionService.dart';
 import 'package:japaneseapp/Screen/achivementScreen.dart';
 import 'package:japaneseapp/Screen/languageScreen.dart';
+import 'package:japaneseapp/Screen/rankScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Config/dataHelper.dart';
@@ -525,6 +527,31 @@ class _settingScreen extends State<settingScreen>{
                           context,
                           PageRouteBuilder(
                             pageBuilder: (context, animation, secondaryAnimation) => achivementScreen(),
+                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                              const begin = Offset(-1.0, 0.0);
+                              const end = Offset.zero;
+                              const curve = Curves.ease;
+                              final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                              return SlideTransition(
+                                position: animation.drive(tween),
+                                child: child,
+                              );
+                            },
+                          ),
+                        );
+                      }
+                  ),
+                  SizedBox(height: 20,),
+                  ListTile(
+                      leading: Icon(FontAwesome.ranking_star_solid, color: Colors.black,),
+                      title: const Text("Bảng xếp hạng", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                      subtitle: const Text("Danh sách đua top tuần"),
+                      trailing: Icon(Icons.arrow_forward_ios, color: Colors.black,),
+                      onTap: (){
+                        Navigator.push(
+                          context,
+                          PageRouteBuilder(
+                            pageBuilder: (context, animation, secondaryAnimation) => rankScreen(),
                             transitionsBuilder: (context, animation, secondaryAnimation, child) {
                               const begin = Offset(-1.0, 0.0);
                               const end = Offset.zero;
