@@ -2,11 +2,13 @@ import 'dart:convert';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_update/in_app_update.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:japaneseapp/Config/dataHelper.dart';
+import 'package:japaneseapp/Config/databaseServer.dart';
 import 'package:japaneseapp/Screen/SetUpLanguage.dart';
 import 'package:japaneseapp/Screen/controllScreen.dart';
 import 'package:japaneseapp/Screen/loginScreen.dart';
@@ -31,9 +33,6 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
   late Animation<double> _animation;
 
   AppUpdateInfo? _updateInfo;
-
-  String version_check = "", message_old_version = "";
-  String version = "1.4.2";
 
   late AudioPlayer _audioPlayer;
 
@@ -74,10 +73,18 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
     _controller.forward();
     playIntro();
     _initializeDatabase();
-
     checkForUpdate();
+    addUser();
   }
 
+  Future<void> addUser() async{
+    DatabaseServer databaseServer = new DatabaseServer();
+    if(FirebaseAuth.instance.currentUser != null) {
+      print("demo addUsser");
+      databaseServer.addUser(FirebaseAuth.instance.currentUser!.uid,
+          FirebaseAuth.instance.currentUser!.displayName!);
+    }
+  }
 
   Duration getDelayUntilNext11PM() {
     DateTime now = DateTime.now();
@@ -89,106 +96,6 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
     }
 
     return next11PM.difference(now);
-  }
-  void showDialogNotificationVersion() {
-    showDialog(
-      barrierDismissible: true,
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          backgroundColor: Colors.white,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(10),
-              bottomRight: Radius.circular(10),
-            ), // Bo góc popup
-          ),
-          child: StatefulBuilder(
-            builder: (BuildContext context, void Function(void Function()) setState) {
-              return Container(
-                  decoration: const BoxDecoration(
-                    border: Border(
-                      top: BorderSide(
-                        color: Colors.red, // Màu xanh cạnh trên ngoài cùng
-                        width: 10.0, // Độ dày của cạnh trên
-                      ),
-                    ),
-                  ),
-                  child: Container(
-                    height: 200,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Column(
-                          children: [
-                            SizedBox(height: 20),
-                            Container(
-                              width: MediaQuery.sizeOf(context).width - 100,
-                              height: 30,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Flexible(
-                                    child: AutoSizeText(
-                                      message_old_version, // Nội dung văn bản
-                                      overflow: TextOverflow.ellipsis,
-                                      softWrap: true,
-                                      maxLines: 2,
-                                      style: TextStyle(fontFamily: "indieflower"),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(height: 20),
-                          ],
-                        ),
-                        SizedBox(width: 20),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            GestureDetector(
-                              onTap: () async {
-                                if (!(await checkFlag("firstJoint"))) {
-                                  await setFlag("firstJoint", true);
-                                  Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => TabScreen(changeLanguage: widget.changeLanguage,)));
-                                } else {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => loginScreen())
-                                  );
-                                }
-                              },
-                              child: Container(
-                                width: MediaQuery.sizeOf(context).width*0.3,
-                                height: MediaQuery.sizeOf(context).height*0.05,
-                                decoration: const BoxDecoration(
-                                    color: Colors.red,
-                                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                                    boxShadow: [
-                                    ]
-                                ),
-                                child: const Center(
-                                  child: Text("Next", style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),),
-                                ),
-                              ),
-
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  )
-              );
-            },
-          ),
-        );
-      },
-    );
   }
 
   Future<bool> checkFlag(String flagKey) async {
@@ -297,22 +204,6 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
     }
   }
 
-  Future<void> fetchData() async {
-    const String apiUrl = 'https://api.npoint.io/e00f658fac808c7f708d';
-    try {
-      final response = await http.get(Uri.parse(apiUrl));
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        version_check = data["version"];
-        message_old_version = data["noteWrongVersion"];
-      } else {
-        print('Lỗi: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Lỗi kết nối: $e');
-    }
-  }
 
   @override
   void dispose() {

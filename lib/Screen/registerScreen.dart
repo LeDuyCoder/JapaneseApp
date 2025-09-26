@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../Config/databaseServer.dart';
 import '../generated/app_localizations.dart';
 
 class registerScreen extends StatefulWidget{
@@ -68,6 +69,8 @@ class _registerScreen extends State<registerScreen>{
               'createdAt': FieldValue.serverTimestamp(),
             });
 
+            addUser();
+
             setState(() {
               _isLoading = false;
             });
@@ -105,6 +108,12 @@ class _registerScreen extends State<registerScreen>{
       // Re-throw any other errors
       throw e.toString();
     }
+  }
+
+  Future<void> addUser() async{
+    DatabaseServer databaseServer = new DatabaseServer();
+    databaseServer.addUser(FirebaseAuth.instance.currentUser!.uid,
+        FirebaseAuth.instance.currentUser!.uid);
   }
 
   void showDialogRegisterSuccess() {
@@ -307,10 +316,9 @@ class _registerScreen extends State<registerScreen>{
                   SizedBox(height: 20,),
                   GestureDetector(
                     onTap: (){
-                      //showDialogRegisterSuccess();
                       FocusScope.of(context).unfocus();
                       showDialogRegisterSuccess();
-                      //registerAccount();
+                      registerAccount();
                     },
                     child: Padding(
                       padding: EdgeInsets.only(left: 20, right: 20),

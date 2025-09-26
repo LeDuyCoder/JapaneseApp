@@ -29,8 +29,9 @@ class DatabaseHelper {
     // Đảm bảo rằng phiên bản đã được tăng lên để gọi lại onCreate nếu cần thiết
     return await openDatabase(
       path,
-      version: 1,
+      version: 2,
       onCreate: _createDB,
+      onUpgrade: _updateDB
     );
   }
 
@@ -87,6 +88,19 @@ class DatabaseHelper {
         );
       ''');
 
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS vocabulary (
+            word_jp TEXT NOT NULL,
+            word_kana TEXT NOT NULL,
+            word_mean TEXT,
+            example_jp TEXT,
+            example_vi TEXT,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (word_jp, word_kana)
+        );
+      ''');
+
+
       var tables = await db.rawQuery("SELECT name FROM sqlite_master WHERE type='table';");
       print(tables);
       print("Tables created/updated successfully.");
@@ -95,6 +109,21 @@ class DatabaseHelper {
     }
   }
 
+  Future<void> _updateDB(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS vocabulary (
+            word_jp TEXT NOT NULL,
+            word_kana TEXT NOT NULL,
+            word_mean TEXT,
+            example_jp TEXT,
+            example_vi TEXT,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (word_jp, word_kana)
+        );
+      ''');
+    }
+  }
 
   Future<List<Map<String, dynamic>>> getAllFolder() async {
     final db = await instance.database;
@@ -191,7 +220,6 @@ class DatabaseHelper {
     );
   }
 
-
   Future<void> insertDataTopic(List<Map<String, dynamic>> dataInsert) async {
     final db = await instance.database;
     try {
@@ -229,8 +257,6 @@ class DatabaseHelper {
     final db = await instance.database;
     await db.update(nameTable, data, where: whereUpdate);
   }
-
-
 
   Future<void> clearAllData() async {
     final db = await instance.database;
@@ -339,7 +365,6 @@ class DatabaseHelper {
     }
   }
 
-
   Future<void> close() async {
     final db = await instance.database;
     db.close();
@@ -407,7 +432,8 @@ class DatabaseHelper {
   }
 
   Future<void> insertCharacter(
-      String charName, int level, int setLevel, String typeword) async {
+      String charName, int level, int setLevel, String typeword) async
+  {
     final db = await instance.database;
     await db.insert(
       'characterjp',
@@ -590,4 +616,61 @@ class DatabaseHelper {
       await prefs.setString("katakana", jsonEncode(data));
     }
   }
+
+  Future<int> addVocabularyInDistionary(
+      Database db, {
+        required String wordJp,
+        required String wordKana,
+        String? wordMean,
+        String? exampleJp,
+        String? exampleVi,
+      }) async
+  {
+    return await db.insert(
+      'vocabulary',
+      {
+        'word_jp': wordJp,
+        'word_kana': wordKana,
+        'word_mean': wordMean,
+        'example_jp': exampleJp,
+        'example_vi': exampleVi,
+      },
+      conflictAlgorithm: ConflictAlgorithm.ignore,
+    );
+  }
+  
+  Future<List<Map<String, dynamic>>> getVocabularyInDictionary(
+      Database db, {
+        String? wordJp,
+      }) async
+  {
+    if (wordJp == null) {
+      return await db.query('vocabulary');
+    } else {
+      return await db.query(
+        'vocabulary',
+        where: 'word_jp = ?',
+        whereArgs: [wordJp],
+      );
+    }
+  }
+
+  Future<bool> isVocabularyExist(
+      Database db, {
+        required String wordJp,
+        required String wordKana,
+      }) async
+  {
+    final result = await db.query(
+      'vocabulary',
+      where: 'word_jp = ? AND word_kana = ?',
+      whereArgs: [wordJp, wordKana],
+    );
+    return result.isNotEmpty;
+  }
+
+
+
+
+
 }

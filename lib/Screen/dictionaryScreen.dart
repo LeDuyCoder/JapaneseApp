@@ -19,7 +19,6 @@ class dictionaryScreen extends StatefulWidget{
 
 class _dictionaryScreen extends State<dictionaryScreen>{
   int sizeArgs = 0;
-  Timer? _debounce;
   TextEditingController inputWord = TextEditingController();
   Map<dynamic, dynamic>? data;
   String status = "wating";
@@ -27,7 +26,7 @@ class _dictionaryScreen extends State<dictionaryScreen>{
   late InterstitialAd? _interstitialAd;
   bool _isInterstitialAdReady = false;
   int amountSearch = 0;
-  String _lastQuery = "";
+
 
   @override
   void initState() {
@@ -94,36 +93,6 @@ class _dictionaryScreen extends State<dictionaryScreen>{
     } catch (e) {
       return "";
     }
-  }
-
-
-  void _onSearchChanged(String query) {
-    // Update trạng thái UI
-    if (query.isNotEmpty) {
-      setState(() => status = "typing");
-    } else {
-      setState(() => status = "waiting");
-    }
-
-    // Hủy debounce cũ
-    if (_debounce?.isActive ?? false) _debounce!.cancel();
-
-    // Tạo debounce mới
-    _debounce = Timer(const Duration(milliseconds: 600), () {
-      if (query.isEmpty || query == _lastQuery) return;
-
-      setState(() => status = "loading");
-      _lastQuery = query;
-      _callApi(query).then((_) {
-        if (query == _lastQuery) {
-          setState(() => status = "done");
-        }
-      }).catchError((e) {
-        if (query == _lastQuery) {
-          setState(() => status = "error");
-        }
-      });
-    });
   }
 
   Future<void> _callApi(String query) async {
@@ -208,22 +177,33 @@ class _dictionaryScreen extends State<dictionaryScreen>{
   }
 
   Widget wordSameWidget(String word){
-    return Container(
-      margin: EdgeInsets.only(right: 10),
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8), // Giữ padding nhưng điều chỉnh cho phù hợp
-      decoration: BoxDecoration(
-          color: AppColors.grey.withOpacity(0.4),
-          borderRadius: BorderRadius.circular(10)
-      ),
-      child: Text(
-        word,
+    return GestureDetector(
+      onTap: (){
+        setState(() {
+          inputWord.text = word;
+          status = "loading";
+        });
+
+        _callApi(word);
+      },
+      child: Container(
+        margin: EdgeInsets.only(right: 10),
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8), // Giữ padding nhưng điều chỉnh cho phù hợp
+        decoration: BoxDecoration(
+            color: AppColors.grey.withOpacity(0.4),
+            borderRadius: BorderRadius.circular(10)
+        ),
+        child: Text(
+          word,
+        ),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WillPopScope(
+        child: Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.distionary_Screen_title, style: TextStyle(color: AppColors.primary, fontFamily: "Itim", fontSize: 30),),
         automaticallyImplyLeading: false,
@@ -238,33 +218,57 @@ class _dictionaryScreen extends State<dictionaryScreen>{
             const SizedBox(
               height: 20,
             ),
-            Container(
-              margin: EdgeInsets.only(left: 10, right: 20),
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              width: MediaQuery.sizeOf(context).width,
-              height: 60,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(15.0), // pill shape
-                boxShadow: const [
-                  BoxShadow(
-                    color: Colors.black26, // shadow mờ hơn
-                    offset: Offset(0, 2),
-                    blurRadius: 8,
+            Row(
+              children: [
+                Expanded(
+                  child: Container(
+                      margin: EdgeInsets.only(left: 10, right: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      width: MediaQuery.sizeOf(context).width,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(15.0), // pill shape
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.black26, // shadow mờ hơn
+                            offset: Offset(0, 2),
+                            blurRadius: 8,
+                          ),
+                        ],
+                      ),
+                      child: TextField(
+                        controller: inputWord,
+                        decoration: InputDecoration(
+                          border: InputBorder.none, // bỏ border mặc định
+                          prefixIcon: Icon(Icons.translate, color: Colors.black, size: 30,),
+                          hintText: AppLocalizations.of(context)!.distionary_Screen_hint,
+                          hintStyle: TextStyle(color: Colors.grey),
+                          contentPadding: EdgeInsets.symmetric(vertical: 18.0),
+                        ),
+                      )
                   ),
-                ],
-              ),
-              child: TextField(
-                controller: inputWord,
-                onChanged: _onSearchChanged,
-                decoration: InputDecoration(
-                  border: InputBorder.none, // bỏ border mặc định
-                  prefixIcon: Icon(Icons.search, color: Colors.black, size: 30,),
-                  hintText: AppLocalizations.of(context)!.distionary_Screen_hint,
-                  hintStyle: TextStyle(color: Colors.grey),
-                  contentPadding: EdgeInsets.symmetric(vertical: 18.0),
                 ),
-              ),
+                GestureDetector(
+                  onTap: (){
+                    setState(() {
+                      status = "loading";
+                    });
+
+                    _callApi(inputWord.text.trim());
+                  },
+                  child: Container(
+                    width: 58,
+                    height: 58,
+                    margin: EdgeInsets.only(right: 10),
+                    decoration: BoxDecoration(
+                      color: AppColors.primary,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Icon(Icons.search, color: Colors.white,),
+                  ),
+                )
+              ],
             ),
             SizedBox(
               height: 20,
@@ -321,7 +325,7 @@ class _dictionaryScreen extends State<dictionaryScreen>{
               ),
             if( status == "done")
               Container(
-                margin: EdgeInsets.only(left: 10, right: 20),
+                margin: EdgeInsets.only(left: 10, right: 10),
                 padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 40),
                 width: MediaQuery.sizeOf(context).width,
                 constraints: const BoxConstraints(
@@ -350,7 +354,7 @@ class _dictionaryScreen extends State<dictionaryScreen>{
                         style: TextStyle(fontSize: 25),
                       ),
                       Text(
-                        data!["data"][0]["japanese"][0]["reading"],
+                        data!["data"][0]["japanese"][0]["reading"]??"",
                         style: TextStyle(
                           fontSize: 20,
                           color: AppColors.textSecond.withOpacity(0.5),
@@ -404,24 +408,24 @@ class _dictionaryScreen extends State<dictionaryScreen>{
                       SizedBox(height: 10),
                       if (example != "" && example.isNotEmpty)
                         Container(
-                          constraints: BoxConstraints(minHeight: 50),
-                          decoration: const BoxDecoration(
-                            border: Border(
-                              left: BorderSide(color: AppColors.primary, width: 2),
+                            constraints: BoxConstraints(minHeight: 50),
+                            decoration: const BoxDecoration(
+                              border: Border(
+                                left: BorderSide(color: AppColors.primary, width: 2),
+                              ),
                             ),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.only(left: 10),
-                                child: Text(
-                                  example,
-                                  style: TextStyle(fontSize: 15, fontFamily: "Itim"),
-                                ),
-                              )
-                            ],
-                          )
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(left: 10),
+                                  child: Text(
+                                    example,
+                                    style: TextStyle(fontSize: 15, fontFamily: "Itim"),
+                                  ),
+                                )
+                              ],
+                            )
                         ),
                       SizedBox(height: 10),
                       Text(
@@ -680,7 +684,10 @@ class _dictionaryScreen extends State<dictionaryScreen>{
           ],
         ),
       ),
-    );
+    ),
+        onWillPop: (){
+          return Future.value(false);
+        });
   }
 
 }

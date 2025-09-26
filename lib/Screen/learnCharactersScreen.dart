@@ -27,12 +27,11 @@ class learnCharactersScreen extends StatefulWidget {
 }
 
 class _learnCharactersScreen extends State<learnCharactersScreen> {
-  int maxQuestion = 15;
+  int maxQuestion = 20;
   int question = 0;
   List<Widget> mapQuesstion = [];
   late Future<bool> _loadQuestionsFuture;
   Widget? view;
-
   late TimerService _timerService;
   int _currentSeconds = 0;
 

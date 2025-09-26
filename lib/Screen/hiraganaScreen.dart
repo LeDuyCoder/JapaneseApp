@@ -13,8 +13,9 @@ class hiraganaScreen extends StatefulWidget{
   final String type;
   final dynamic data;
   final double width;
+  final Function() reload;
 
-  const hiraganaScreen({super.key, this.data, required this.type, required this.width});
+  const hiraganaScreen({super.key, this.data, required this.type, required this.width, required this.reload});
 
   @override
   State<StatefulWidget> createState() => _hiraganaScreen();
@@ -525,14 +526,14 @@ class _hiraganaScreen extends State<hiraganaScreen>{
       // Đặt chiều cao cố định
       child: Container(
         decoration: BoxDecoration(
-          color: isFull ? Color.fromRGBO(255, 255, 224, 1.0) : Colors.white,
+          color: isFull ? const Color.fromRGBO(255, 224, 224, 1.0) : Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(20)),
           border: Border.all(
-              color: isFull ? Color.fromRGBO(238, 230, 0, 1.0) : Colors.grey),
+              color: isFull ? Color.fromRGBO(238, 0, 0, 1.0) : Colors.grey),
           boxShadow: [
             BoxShadow(
                 color: isFull
-                    ? Color.fromRGBO(238, 230, 0, 1.0)
+                    ? AppColors.primary.withOpacity(0.8)
                     : Colors.grey.shade400,
                 offset: Offset(4, 4))
           ],
@@ -549,7 +550,7 @@ class _hiraganaScreen extends State<hiraganaScreen>{
                 fontSize: MediaQuery.sizeOf(context).height * 0.02,
                 fontFamily: "Itim",
                 color: isFull
-                    ? const Color.fromRGBO(255, 196, 0, 1.0)
+                    ? AppColors.primary
                     : Colors.black,
               ),
               minFontSize: 10, // Giảm để tránh mất chữ
@@ -562,7 +563,7 @@ class _hiraganaScreen extends State<hiraganaScreen>{
                 fontSize: MediaQuery.sizeOf(context).height * 0.015,
                 fontFamily: "Itim",
                 color: isFull
-                    ? const Color.fromRGBO(255, 196, 0, 1.0)
+                    ? AppColors.primary
                     : Colors.black,
               ),
               minFontSize: 5,
@@ -575,7 +576,7 @@ class _hiraganaScreen extends State<hiraganaScreen>{
               child: LinearProgressIndicator(
                 backgroundColor: Colors.grey.shade300,
                 color: isFull
-                    ? const Color.fromRGBO(255, 216, 0, 1.0)
+                    ? AppColors.primary
                     : Colors.green,
                 value: level / 27,
                 borderRadius: const BorderRadius.all(Radius.circular(20)),

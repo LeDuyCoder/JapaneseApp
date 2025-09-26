@@ -2,10 +2,12 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:japaneseapp/Config/dataHelper.dart';
+import 'package:japaneseapp/Config/databaseServer.dart';
 import 'package:japaneseapp/Module/character.dart' as charHiKa;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -36,6 +38,9 @@ class _congraculationChacterScreen extends State<congraculationChacterScreen>  w
   late InterstitialAd _interstitialAd;
   bool _isInterstitialAdReady = false;
 
+  int expRank = 0;
+  int coin = 0;
+
   late AnimationController _controllerProcess;
   late Animation<double> _animationProcess;
 
@@ -47,6 +52,20 @@ class _congraculationChacterScreen extends State<congraculationChacterScreen>  w
     _controllerProcess.forward(from: 0); // bắt đầu lại từ 0 mỗi lần gọi
   }
 
+  void randomizeValues() async {
+    Random rand = Random();
+
+    setState(() {
+      expRank = rand.nextInt(5) + 1; // random từ 0 đến 100 (bạn có thể chỉnh phạm vi này)
+      coin = rand.nextInt(3) + 1; // random từ 1 đến 10
+    });
+
+    DatabaseServer databaseServer = new DatabaseServer();
+    databaseServer.addCoin(FirebaseAuth.instance.currentUser!.uid, coin);
+    databaseServer.addScore(FirebaseAuth.instance.currentUser!.uid, expRank);
+
+
+  }
 
   @override
   void initState() {
@@ -56,7 +75,6 @@ class _congraculationChacterScreen extends State<congraculationChacterScreen>  w
       vsync: this,
       duration: const Duration(seconds: 2),
     );
-
   }
 
   void _loadInterstitialAd() {
@@ -219,6 +237,7 @@ class _congraculationChacterScreen extends State<congraculationChacterScreen>  w
       return formattedTime;
     }
     playSound("sound/completed.mp3");
+    randomizeValues();
     return Scaffold(
       body: FutureBuilder(future: getProfile(), builder: (ctx, snapshot){
         if(snapshot.hasData){
@@ -261,7 +280,7 @@ class _congraculationChacterScreen extends State<congraculationChacterScreen>  w
                       const SizedBox(
                         height: 20,
                       ),
-                      Text("Chic Mừng", style: TextStyle(color: AppColors.primary, fontSize: 40, fontFamily: "Itim"),),
+                      Text("Chúc Mừng", style: TextStyle(color: AppColors.primary, fontSize: 40, fontFamily: "Itim"),),
                       Text("Bạn đã hoàn thành", style: TextStyle(color: AppColors.black, fontSize: 25, fontFamily: "Itim", height: 0.8),),
                       SizedBox(height: 30,),
                       Container(
@@ -365,6 +384,50 @@ class _congraculationChacterScreen extends State<congraculationChacterScreen>  w
                             Text("Cấp ${snapshot.data!["level"] + 1}", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.grey.withOpacity(0.5))),
                           ],
                         ),
+                      ),
+                      SizedBox(height: 25,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Text("+${expRank}", style: TextStyle(color: Colors.black, fontSize: 30, fontFamily: "Itim", height: 0.8),),
+                                  SizedBox(width: 5,),
+                                  Image.asset("assets/exp.png", width: 50, height: 50,),
+                                ],
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: 10),
+                                child: Text("Điểm Rank", style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),),
+                              )
+                            ],
+                          ),
+                          SizedBox(width: 50,),
+                          Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Text("+${coin}", style: TextStyle(color: Colors.black, fontSize: 30, fontFamily: "Itim", height: 0.8),),
+                                  SizedBox(width: 5,),
+                                  SizedBox(
+                                    width: 40,
+                                    height: 50,
+                                    child: Transform.scale(
+                                      scale: 1,  // tỷ lệ thu nhỏ ảnh bên trong
+                                      child: Image.asset("assets/kujicoin.png"),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: 10),
+                                child: Text("kujicoin", style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),),
+                              )
+                            ],
+                          )
+                        ],
                       ),
                       SizedBox(height: 50,),
                       Text("Bài tiếp theo", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20),),
