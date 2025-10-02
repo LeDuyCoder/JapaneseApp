@@ -1,12 +1,24 @@
 import 'dart:async';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:japaneseapp/Theme/colors.dart';
+import 'package:kana_kit/kana_kit.dart';
+import 'package:speech_to_text/speech_to_text.dart';
+
+import '../ResultPopup.dart';
 
 
 class readTest extends StatefulWidget{
+
+  final String word;
+  final String kana;
+  final String mean;
+  final void Function() nextQuestion;
+
+  const readTest({super.key, required this.word, required this.kana, required this.mean, required this.nextQuestion});
+
   @override
   State<StatefulWidget> createState() => _readTest();
 
@@ -20,7 +32,12 @@ class _readTest extends State<readTest> with SingleTickerProviderStateMixin{
   Timer? _timer;
   String _timeDisplay = "00:00";
   double _confidence = 1.0;
-  // late SpeechToText _speech;
+  late SpeechToText _speech;
+  String _answer = "";
+
+  final kanaKit = KanaKit();
+  final AudioPlayer _audioPlayer = AudioPlayer();
+
 
   @override
   void initState() {
@@ -28,6 +45,7 @@ class _readTest extends State<readTest> with SingleTickerProviderStateMixin{
     _controller =
     AnimationController(vsync: this, duration: const Duration(seconds: 2))
       ..repeat(); // quay vòng
+    _speech = SpeechToText();
   }
 
   @override
@@ -36,64 +54,134 @@ class _readTest extends State<readTest> with SingleTickerProviderStateMixin{
     super.dispose();
   }
 
-  void _toggleListening() {
+  Future<void> playSound(String filePath) async {
+    try {
+      await _audioPlayer.play(AssetSource(filePath));
+      print("Đang phát âm thanh: $filePath");
+    } catch (e) {
+      print("Lỗi khi phát âm thanh: $e");
+    }
+  }
+
+  Future<void> _toggleListening() async {
+    if (isListening) {
+      await stopListening();
+    } else {
+      startListening();
+    }
+  }
+
+  void startListening() {
     setState(() {
-      if (isListening) {
-        // stop
-        isListening = false;
-        _stopwatch.stop();
-        _timer?.cancel();
-        setState(() {
-          _timeDisplay = "00:00";
-        });
+      isListening = true;
+      _stopwatch
+        ..reset()
+        ..start();
+      _timeDisplay = "00:00";
+    });
+
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      final elapsed = _stopwatch.elapsed.inSeconds;
+      if (elapsed >= 5) {
+        stopListening(handled: true); // auto stop sau 5 giây
       } else {
-        // start
-        isListening = true;
-        _stopwatch.reset();
-        _stopwatch.start();
-        _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-          if(_stopwatch.elapsed.inSeconds >= 5){
-            hanldAfterRecord();
-            _toggleListening();
-          }
-          setState(() {
-            _timeDisplay = _formatTime(_stopwatch.elapsed);
-          });
+        setState(() {
+          _timeDisplay = _formatTime(_stopwatch.elapsed);
         });
       }
     });
+
+    _listen();
   }
 
-  void hanldAfterRecord(){
+  Future<void> stopListening({bool handled = true}) async {
+    _timer?.cancel();
+    _stopwatch.stop();
+
     setState(() {
+      isListening = false;
       _timeDisplay = "00:00";
     });
-    print("Xử lí thành công");
+
+    _speech.stop();
+
+    if (handled) {
+      await hanldAnwser();
+    }
   }
 
-  // void _listen() async {
-  //   if (!isListening) {
-  //     bool available = await _speech.initialize(
-  //       onStatus: (val) => print("Status: $val"),
-  //       onError: (val) => print("Error: $val"),
-  //     );
-  //     if (available) {
-  //       setState(() => isListening = true);
-  //       _speech.listen(
-  //         onResult: (val) => setState(() {
-  //           print(val.recognizedWords);
-  //           if (val.hasConfidenceRating && val.confidence > 0) {
-  //             _confidence = val.confidence;
-  //           }
-  //         }),
-  //         localeId: "ja-JP", // hoặc "ja-JP" nếu bạn muốn nhận diện tiếng Nhật
-  //       );
-  //     }
-  //   } else {
-  //     setState(() => isListening = false);
-  //     _speech.stop();
-  //   }
-  // }
+  void _listen() async {
+    bool available = await _speech.initialize(
+      onStatus: (val) => print("Status: $val"),
+      onError: (val) => print("Error: $val"),
+    );
+
+    if (available) {
+      _speech.listen(
+        onResult: (val) {
+          _answer = val.recognizedWords;
+          print(val.recognizedWords);
+          setState(() {
+            if (val.hasConfidenceRating && val.confidence > 0) {
+              _confidence = val.confidence;
+            }
+          });
+        },
+        localeId: "ja-JP",
+      );
+    } else {
+      stopListening();
+    }
+  }
+
+  String toRomaji(String text) {
+    return kanaKit.toRomaji(text).trim().toLowerCase();
+  }
+
+  Future<void> hanldAnwser() async {
+    String userAnswer = toRomaji(_answer);
+    String correctKana = toRomaji(widget.kana);
+    String correctWord = toRomaji(widget.word);
+
+    print("==Test==");
+    print(userAnswer);
+    print(correctKana);
+    print(correctWord);
+
+    bool isCorrect = userAnswer == correctKana || userAnswer == correctWord;
+
+    if (isCorrect) {
+      await playSound("sound/correct.mp3");
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => ResultPopup(
+          isCorrect: true,
+          correctWord: widget.word,
+          furigana: widget.kana,
+          meaning: widget.mean,
+          onPressButton: () {
+            widget.nextQuestion();
+          },
+        ),
+      );
+    } else {
+      await playSound("sound/wrong.mp3");
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => ResultPopup(
+          isCorrect: false,
+          correctWord: widget.word,
+          furigana: widget.kana,
+          meaning: widget.mean,
+          onPressButton: () {
+            widget.nextQuestion();
+          },
+        ),
+      );
+    }
+  }
 
 
   String _formatTime(Duration d) {
@@ -128,8 +216,8 @@ class _readTest extends State<readTest> with SingleTickerProviderStateMixin{
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("りょこう", style: TextStyle(fontSize: 25),),
-                  AutoSizeText("旅行", style: TextStyle(fontSize: 45, fontWeight: FontWeight.bold),),
+                  Text(widget.kana, style: TextStyle(fontSize: 25),),
+                  AutoSizeText(widget.word, style: TextStyle(fontSize: 45, fontWeight: FontWeight.bold),),
                   SizedBox(
                     height: 200,
                   ),
@@ -142,7 +230,9 @@ class _readTest extends State<readTest> with SingleTickerProviderStateMixin{
                   SizedBox(height: 10,),
                   Center(
                     child: GestureDetector(
-                      onTap: _toggleListening,
+                      onTap: () async {
+                        await _toggleListening();
+                      },
                       child: Stack(
                         alignment: Alignment.center,
                         children: [

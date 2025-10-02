@@ -6,7 +6,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:uuid/v4.dart';
-import 'package:flutter/foundation.dart'; // compute
 import 'package:archive/archive.dart';    // dùng để gzip
 
 
@@ -328,7 +327,7 @@ class DatabaseHelper {
     final compressed = GZipEncoder().encode(utf8.encode(jsonStr) as List<int>);
 
     // Base64 để lưu vào Firestore
-    return base64Encode(compressed!);
+    return base64Encode(compressed);
   }
 
   Future<void> importSynchronyData(String encodedData) async {

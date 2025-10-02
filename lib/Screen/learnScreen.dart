@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:japaneseapp/Module/word.dart';
 import 'package:japaneseapp/Screen/congraculationScreen.dart';
+import 'package:japaneseapp/Screen/splashScreen.dart';
 import 'package:japaneseapp/Theme/colors.dart';
 import 'package:japaneseapp/Widget/learnWidget/choseTest.dart';
 import 'package:japaneseapp/Widget/learnWidget/combinationTest.dart';
@@ -59,8 +60,8 @@ class _learnScreen extends State<learnScreen> {
   }
 
   int randomInRange(int min, int max) {
-    var random = Random();
-    return min + random.nextInt(max - min);
+    if (max <= min) return min; // tránh nextInt(0) lỗi
+    return min + Random().nextInt(max - min);
   }
 
   List<String> hanldStringChoseVN(String mean) {
@@ -81,6 +82,7 @@ class _learnScreen extends State<learnScreen> {
   }
 
   void updateView(String feature) {
+    print("feature: ${feature}");
     setState(() {
       view = feature == "sort"
           ? sortText(
@@ -112,25 +114,33 @@ class _learnScreen extends State<learnScreen> {
           })
           : feature == "write"
           ? WriteTestScreen(
-        testData: dataMap[numberCount]["word"],
-        nextLearned: (bool isRight) {
-          handleNext(true);
-        },
-        mean: dataMap[numberCount]["mean"],
-      )
-          : choseTest(
-        data: {
-          "word": dataMap[numberCount]["word"],
-          "anwser": dataMap[numberCount]["anwser"],
-          "listAnwserWrong": dataMap[numberCount]
-          ["listAnwserWrong"],
-          "numberRight": dataMap[numberCount]["numberRight"],
-        },
-        nextQuestion: () {
-          handleNext(true);
-        },
-        readText: false,
-      );
+            testData: dataMap[numberCount]["word"],
+            nextLearned: (bool isRight) {
+              handleNext(true);
+            },
+            mean: dataMap[numberCount]["mean"],
+          )
+          : feature == "chose" ? choseTest(
+              data: {
+                "word": dataMap[numberCount]["word"],
+                "anwser": dataMap[numberCount]["anwser"],
+                "listAnwserWrong": dataMap[numberCount]
+                ["listAnwserWrong"],
+                "numberRight": dataMap[numberCount]["numberRight"],
+              },
+              nextQuestion: () {
+                handleNext(true);
+              },
+              readText: false,
+            )
+          : readTest(
+              word: dataMap[numberCount]["word"],
+              kana: dataMap[numberCount]["kana"],
+              mean: dataMap[numberCount]["mean"],
+              nextQuestion: () {
+                handleNext(true);
+              },
+          );
     });
   }
 
@@ -167,16 +177,34 @@ class _learnScreen extends State<learnScreen> {
 
   String generateWrongAwnser(
       String typeAwnser, String rightAwnser, List<word> dataWords) {
-    word RanWord;
-    do {
-      RanWord = dataWords[randomInRange(0, widget.dataWords.length)] as word;
-    } while (rightAwnser == RanWord.mean || rightAwnser == RanWord.vocabulary);
+    if (dataWords.isEmpty) return "";
 
-    if (typeAwnser == "JapToVN") {
-      return RanWord.mean;
+    // nếu chỉ có 1 từ thì không có đáp án sai -> trả luôn chính nó
+    if (dataWords.length == 1) {
+      return typeAwnser == "JapToVN"
+          ? dataWords.first.mean
+          : dataWords.first.vocabulary;
     }
 
-    return RanWord.vocabulary;
+    word ranWord = dataWords[randomInRange(0, dataWords.length)];
+    int tries = 0;
+
+    // tránh chọn trùng với đáp án đúng
+    while ((ranWord.mean == rightAwnser || ranWord.vocabulary == rightAwnser) &&
+        tries < 50) {
+      ranWord = dataWords[randomInRange(0, dataWords.length)];
+      tries++;
+    }
+
+    // fallback nếu vẫn trùng
+    if (ranWord.mean == rightAwnser || ranWord.vocabulary == rightAwnser) {
+      ranWord = dataWords.firstWhere(
+            (w) => w.mean != rightAwnser && w.vocabulary != rightAwnser,
+        orElse: () => dataWords.first,
+      );
+    }
+
+    return typeAwnser == "JapToVN" ? ranWord.mean : ranWord.vocabulary;
   }
 
   Future<void> generateQuestion(List<word> dataWords) async {
@@ -190,10 +218,13 @@ class _learnScreen extends State<learnScreen> {
           "combination",
           "chose",
           "write",
-          "write",
-          "write",
         ];
+        if(splashScreen.featureState.readTesting){
+          feture.add("read");
+        }
         String newQuestion = feture[randomInRange(0, feture.length)];
+        print(feture);
+        print(newQuestion);
         if (fetureChose != newQuestion) {
           fetureChose = newQuestion;
           if (fetureChose == "sort" || fetureChose == "listen") {
@@ -226,7 +257,8 @@ class _learnScreen extends State<learnScreen> {
                 i++;
               }
             }
-          } else if (fetureChose == "combination") {
+          }
+          else if (fetureChose == "combination") {
             List<word> wordsRandom = [];
             int numberWord = 0;
 
@@ -284,7 +316,8 @@ class _learnScreen extends State<learnScreen> {
                 "listColumB": listAwnser,
               },
             );
-          } else if (fetureChose == "chose") {
+          }
+          else if (fetureChose == "chose") {
             word wordCheckRandom =
             widget.dataWords[randomInRange(0, widget.dataWords.length)];
 
@@ -336,7 +369,8 @@ class _learnScreen extends State<learnScreen> {
                 "numberRight": randomInRange(1, 5),
               },
             );
-          } else if (fetureChose == "write") {
+          }
+          else if (fetureChose == "write") {
             word wordCheckRandom =
             widget.dataWords[randomInRange(0, widget.dataWords.length)];
 
@@ -346,6 +380,18 @@ class _learnScreen extends State<learnScreen> {
               "mean": wordCheckRandom.mean
             });
           }
+          else if ((fetureChose == "read")){
+            word wordCheckRandom =
+            widget.dataWords[randomInRange(0, widget.dataWords.length)];
+
+            dataMap.add({
+              "feture": fetureChose,
+              "word": wordCheckRandom.vocabulary,
+              "kana": wordCheckRandom.wayread,
+              "mean": wordCheckRandom.mean
+            });
+          }
+          i++;
         }
       }
 
@@ -406,7 +452,7 @@ class _learnScreen extends State<learnScreen> {
               ],
             ),
             view != null
-                ? Expanded(child: readTest())//view!)
+                ? Expanded(child: view!)
                 : Center(
               child: Container(
                 height: 50,

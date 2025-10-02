@@ -6,7 +6,6 @@ import 'package:japaneseapp/Screen/learnCharactersScreen.dart';
 import 'package:japaneseapp/Theme/colors.dart';
 
 import '../generated/app_localizations.dart';
-import 'congraculationCharacterScreen.dart';
 
 class hiraganaScreen extends StatefulWidget{
 

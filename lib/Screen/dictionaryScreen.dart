@@ -10,7 +10,6 @@ import 'package:japaneseapp/Config/dataHelper.dart';
 import 'package:japaneseapp/Screen/WordbookScreen.dart';
 import 'package:japaneseapp/Theme/colors.dart';
 import 'package:language_detector/language_detector.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:translator/translator.dart';
 import 'package:http/http.dart' as http;
 

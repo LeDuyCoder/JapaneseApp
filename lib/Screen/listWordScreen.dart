@@ -12,16 +12,13 @@ import 'package:japaneseapp/Module/topic.dart';
 import 'package:japaneseapp/Module/word.dart';
 import 'package:japaneseapp/Screen/learnScreen.dart';
 import 'package:japaneseapp/Theme/colors.dart';
-import 'package:japaneseapp/Widget/wordWidget.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:japaneseapp/Module/word.dart' as wordModule;
 
 import '../Service/Server/ServiceLocator.dart';
 import '../Widget/FlashCardWidget.dart';
 import '../generated/app_localizations.dart';
-import '../Widget/wordWidget.dart' as wd;
 
 class listWordScreen extends StatefulWidget{
   final String topicName;
@@ -49,7 +46,7 @@ class _listWordScreen extends State<listWordScreen>{
 
     if(dataWords.isNotEmpty) {
       for (Map<String, dynamic> word in dataWords) {
-        sumComplitted += word['level'] as int ?? 0;
+        sumComplitted += word['level'] as int;
       }
     }
 
@@ -1004,7 +1001,6 @@ class _listWordScreen extends State<listWordScreen>{
   }
 
   Future<void> priveTopic() async{
-    DatabaseHelper db = DatabaseHelper.instance;
     ServiceLocator.topicService.deleteTopic(widget.id);
     reloadScreen();
     showBottomSheetPrivateSuccess(context);

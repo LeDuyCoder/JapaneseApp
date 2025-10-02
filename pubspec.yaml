@@ -81,6 +81,9 @@ dependencies:
   animated_text_kit: ^4.2.3
   google_generative_ai: ^0.4.7
   in_app_update: ^4.2.3
+  flutter_dotenv: ^6.0.0
+  speech_to_text: ^6.0.0
+  kana_kit: ^2.1.1
 
 flutter_launcher_icons:
   ios: true
@@ -129,6 +132,7 @@ flutter:
     - assets/hiragana/
     - assets/animation/
     - assets/rank/
+    - .env
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 

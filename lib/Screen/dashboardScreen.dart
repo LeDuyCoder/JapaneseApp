@@ -14,6 +14,7 @@ import 'package:japaneseapp/Screen/allFolderScreen.dart';
 import 'package:japaneseapp/Screen/downloadScreen.dart';
 import 'package:japaneseapp/Screen/qrScreen.dart';
 import 'package:japaneseapp/Screen/seeMoreTopic.dart';
+import 'package:japaneseapp/Screen/splashScreen.dart';
 import 'package:japaneseapp/Theme/colors.dart';
 import 'package:japaneseapp/Widget/folerWidget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -60,7 +61,6 @@ class _DashboardScreenState extends State<dashboardScreen> {
   String nameTopic = "";
 
   bool _isOffline = false;
-  bool timerView = false;
 
   StreamSubscription<List<ConnectivityResult>>? _subscription;
 
@@ -118,8 +118,6 @@ class _DashboardScreenState extends State<dashboardScreen> {
   Future<Map<String, dynamic>> hanldeGetData() async {
     final db = await DatabaseHelper.instance;
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-
-    timerView = sharedPreferences.getBool("timerView") ?? false;
 
     Map<String, dynamic> data;
 
@@ -1766,7 +1764,7 @@ class _DashboardScreenState extends State<dashboardScreen> {
                             ),
                           ),
                         SizedBox(height: 20,),
-                        if(timerView)
+                        if(splashScreen.featureState.timerView)
                           const Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [

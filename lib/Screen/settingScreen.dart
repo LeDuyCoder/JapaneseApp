@@ -1,5 +1,3 @@
-import 'dart:collection';
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -8,10 +6,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:japaneseapp/Screen/settingFeatureLearn.dart';
+import 'package:japaneseapp/Screen/splashScreen.dart';
 import 'package:japaneseapp/Service/FunctionService.dart';
 import 'package:japaneseapp/Screen/achivementScreen.dart';
 import 'package:japaneseapp/Screen/languageScreen.dart';
 import 'package:japaneseapp/Screen/rankScreen.dart';
+import 'package:japaneseapp/State/FeatureState.dart';
 import 'package:japaneseapp/Theme/colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -29,12 +30,6 @@ class settingScreen extends StatefulWidget{
 
 class _settingScreen extends State<settingScreen>{
   bool isLoading = false;
-  bool timerView = false;
-
-  Future<void> loadData() async {
-    final prefs = await SharedPreferences.getInstance();
-    timerView = prefs.getBool("timerView") ?? false;
-  }
 
   void showCustomDialog(BuildContext context, String title, String message, Color borderColor) {
     showDialog(
@@ -489,6 +484,7 @@ class _settingScreen extends State<settingScreen>{
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
+        scrolledUnderElevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black, size: 30,),
           onPressed: () {
@@ -498,168 +494,180 @@ class _settingScreen extends State<settingScreen>{
       ),
       body: Stack(
         children: [
-          FutureBuilder(future: loadData(), builder: (context, snapshot){
-            return Container(
-                width: MediaQuery.sizeOf(context).width,
-                color: Colors.white,
-                child: Column(
-                  children: [
-                    Text(AppLocalizations.of(context)!.setting_title, style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
-                    SizedBox(height: 10,),
-                    Divider(
-                      color: Colors.grey[300],
-                      thickness: 1,
-                    ),
-                    ListTile(
-                        leading: Icon(Icons.golf_course, color: Colors.black,),
-                        title: Text(AppLocalizations.of(context)!.setting_achivement_title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
-                        subtitle: Text(AppLocalizations.of(context)!.setting_achivement_content),
-                        trailing: Icon(Icons.arrow_forward_ios, color: Colors.black,),
-                        onTap: (){
-                          Navigator.push(
-                            context,
-                            PageRouteBuilder(
-                              pageBuilder: (context, animation, secondaryAnimation) => achivementScreen(),
-                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                const begin = Offset(-1.0, 0.0);
-                                const end = Offset.zero;
-                                const curve = Curves.ease;
-                                final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-                                return SlideTransition(
-                                  position: animation.drive(tween),
-                                  child: child,
-                                );
-                              },
-                            ),
-                          );
-                        }
-                    ),
-                    SizedBox(height: 20,),
-                    ListTile(
-                        leading: Icon(FontAwesome.ranking_star_solid, color: Colors.black,),
-                        title: const Text("Bảng xếp hạng", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
-                        subtitle: const Text("Danh sách đua top tuần"),
-                        trailing: Icon(Icons.arrow_forward_ios, color: Colors.black,),
-                        onTap: (){
-                          Navigator.push(
-                            context,
-                            PageRouteBuilder(
-                              pageBuilder: (context, animation, secondaryAnimation) => rankScreen(),
-                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                const begin = Offset(-1.0, 0.0);
-                                const end = Offset.zero;
-                                const curve = Curves.ease;
-                                final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-                                return SlideTransition(
-                                  position: animation.drive(tween),
-                                  child: child,
-                                );
-                              },
-                            ),
-                          );
-                        }
-                    ),
-                    SizedBox(height: 20,),
-                    Divider(
-                      color: Colors.grey[300],
-                      thickness: 1,
-                    ),
-                    ListTile(
-                        leading: Icon(Icons.language, color: Colors.black,),
-                        title: Text(AppLocalizations.of(context)!.setting_language_title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
-                        subtitle: Text(AppLocalizations.of(context)!.setting_language_content),
-                        trailing: Icon(Icons.arrow_forward_ios, color: Colors.black,),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            PageRouteBuilder(
-                              pageBuilder: (context, animation, secondaryAnimation) => languageScreen(changeLanguage: widget.changeLanguage,),
-                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                const begin = Offset(-1.0, 0.0);
-                                const end = Offset.zero;
-                                const curve = Curves.ease;
-                                final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-                                return SlideTransition(
-                                  position: animation.drive(tween),
-                                  child: child,
-                                );
-                              },
-                            ),
-                          );
-                        }
-                    ),
-                    ListTile(
-                        leading: Icon(Icons.sync, color: Colors.black,),
-                        title: Text(AppLocalizations.of(context)!.setting_async_title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
-                        subtitle: Text(AppLocalizations.of(context)!.setting_async_content),
-                        trailing: Icon(Icons.arrow_forward_ios, color: Colors.black,),
-                        onTap: () async {
-                          await synchronyData(false);
-                        }
-                    ),
-                    ListTile(
-                        leading: Icon(Icons.download, color: Colors.black,),
-                        title: Text(AppLocalizations.of(context)!.setting_downloadAsync_title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
-                        subtitle: Text(AppLocalizations.of(context)!.setting_downloadAsync_content),
-                        trailing: Icon(Icons.arrow_forward_ios, color: Colors.black,),
-                        onTap: () async {
-                          if(!await hasInternet()){
-                            showBottomSheetNoInternet(context);
-                          }else{
-                            showBottomSheetConfirmAsynchrony(context);
-                          }
-                        }
-                    ),
-                    Divider(
-                      color: Colors.grey[300],
-                      thickness: 1,
-                    ),
-
-                    ListTile(
-                        title: Text("Đồng Hồ", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
-                        subtitle: Text("mở giao điện xem thời gian trên dashboard"),
-                        trailing: Switch(
-                          value: timerView,
-                          activeColor: AppColors.primary,       // màu của nút (thumb) khi bật
-                          onChanged: (bool value) async {
-                            SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-                            sharedPreferences.setBool("timerView", value);
-
-                            setState(() {
-                              timerView = value;
-                            });
-                          },
+          Container(
+            width: MediaQuery.sizeOf(context).width,
+            color: Colors.white,
+            child: Column(
+              children: [
+                Text(AppLocalizations.of(context)!.setting_title, style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
+                SizedBox(height: 10,),
+                Divider(
+                  color: Colors.grey[300],
+                  thickness: 1,
+                ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: Column(
+                      children: [
+                        ListTile(
+                            leading: Icon(Icons.golf_course, color: Colors.black,),
+                            title: Text(AppLocalizations.of(context)!.setting_achivement_title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                            subtitle: Text(AppLocalizations.of(context)!.setting_achivement_content),
+                            trailing: Icon(Icons.arrow_forward_ios, color: Colors.black,),
+                            onTap: (){
+                              Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                  pageBuilder: (context, animation, secondaryAnimation) => achivementScreen(),
+                                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                    const begin = Offset(-1.0, 0.0);
+                                    const end = Offset.zero;
+                                    const curve = Curves.ease;
+                                    final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                                    return SlideTransition(
+                                      position: animation.drive(tween),
+                                      child: child,
+                                    );
+                                  },
+                                ),
+                              );
+                            }
                         ),
-                    ),
+                        SizedBox(height: 20,),
+                        ListTile(
+                            leading: Icon(FontAwesome.ranking_star_solid, color: Colors.black,),
+                            title: const Text("Bảng xếp hạng", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                            subtitle: const Text("Danh sách đua top tuần"),
+                            trailing: Icon(Icons.arrow_forward_ios, color: Colors.black,),
+                            onTap: (){
+                              Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                  pageBuilder: (context, animation, secondaryAnimation) => rankScreen(),
+                                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                    const begin = Offset(-1.0, 0.0);
+                                    const end = Offset.zero;
+                                    const curve = Curves.ease;
+                                    final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                                    return SlideTransition(
+                                      position: animation.drive(tween),
+                                      child: child,
+                                    );
+                                  },
+                                ),
+                              );
+                            }
+                        ),
+                        SizedBox(height: 20,),
+                        Divider(
+                          color: Colors.grey[300],
+                          thickness: 1,
+                        ),
+                        ListTile(
+                            leading: Icon(Icons.language, color: Colors.black,),
+                            title: Text(AppLocalizations.of(context)!.setting_language_title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                            subtitle: Text(AppLocalizations.of(context)!.setting_language_content),
+                            trailing: Icon(Icons.arrow_forward_ios, color: Colors.black,),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                  pageBuilder: (context, animation, secondaryAnimation) => languageScreen(changeLanguage: widget.changeLanguage,),
+                                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                    const begin = Offset(-1.0, 0.0);
+                                    const end = Offset.zero;
+                                    const curve = Curves.ease;
+                                    final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                                    return SlideTransition(
+                                      position: animation.drive(tween),
+                                      child: child,
+                                    );
+                                  },
+                                ),
+                              );
+                            }
+                        ),
+                        ListTile(
+                            leading: Icon(Icons.sync, color: Colors.black,),
+                            title: Text(AppLocalizations.of(context)!.setting_async_title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                            subtitle: Text(AppLocalizations.of(context)!.setting_async_content),
+                            trailing: Icon(Icons.arrow_forward_ios, color: Colors.black,),
+                            onTap: () async {
+                              await synchronyData(false);
+                            }
+                        ),
+                        ListTile(
+                            leading: Icon(Icons.download, color: Colors.black,),
+                            title: Text(AppLocalizations.of(context)!.setting_downloadAsync_title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                            subtitle: Text(AppLocalizations.of(context)!.setting_downloadAsync_content),
+                            trailing: Icon(Icons.arrow_forward_ios, color: Colors.black,),
+                            onTap: () async {
+                              if(!await hasInternet()){
+                                showBottomSheetNoInternet(context);
+                              }else{
+                                showBottomSheetConfirmAsynchrony(context);
+                              }
+                            }
+                        ),
+                        Divider(
+                          color: Colors.grey[300],
+                          thickness: 1,
+                        ),
 
-                    Divider(
-                      color: Colors.grey[300],
-                      thickness: 1,
+                        ListTile(
+                          title: Text("Đồng Hồ", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                          subtitle: Text("mở giao điện xem thời gian trên dashboard"),
+                          trailing: Switch(
+                            value: splashScreen.featureState.timerView,
+                            activeColor: AppColors.primary,       // màu của nút (thumb) khi bật
+                            onChanged: (bool value) async {
+                              setState(() {
+                                splashScreen.featureState.setStateFeture(KeyFeature.timerView, value);
+                              });
+                            },
+                          ),
+                        ),
+                        ListTile(
+                            title: Text("Tính Năng Học", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                            subtitle: Text("Thiết lập tính năng học tập"),
+                            trailing: Icon(Icons.arrow_forward_ios, color: Colors.black,),
+                            onTap: () async {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => settingFeatureLearn()));
+                            }
+                        ),
+
+                        Divider(
+                          color: Colors.grey[300],
+                          thickness: 1,
+                        ),
+                        ListTile(
+                            leading: Icon(Icons.logout, color: Colors.red,),
+                            title: Text(AppLocalizations.of(context)!.setting_signout_title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.red),),
+                            subtitle: Text(AppLocalizations.of(context)!.setting_signout_content, style: TextStyle(color: Colors.red),),
+                            trailing: Icon(Icons.arrow_forward_ios, color: Colors.red,),
+                            onTap: () async {
+                              if(await hasInternet()){
+                                final SharedPreferences prefs = await SharedPreferences.getInstance();
+                                final DatabaseHelper db = DatabaseHelper.instance;
+                                await synchronyData(true);
+                                prefs.clear();
+                                db.clearAllData();
+                                await FirebaseAuth.instance.signOut();
+                                Navigator.pop(context);
+                              }else{
+                                showBottomSheetNoInternet(context);
+                              }
+                            }
+                        ),
+                        SizedBox(height: 50,),
+                      ],
                     ),
-                    ListTile(
-                        leading: Icon(Icons.logout, color: Colors.red,),
-                        title: Text(AppLocalizations.of(context)!.setting_signout_title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.red),),
-                        subtitle: Text(AppLocalizations.of(context)!.setting_signout_content, style: TextStyle(color: Colors.red),),
-                        trailing: Icon(Icons.arrow_forward_ios, color: Colors.red,),
-                        onTap: () async {
-                          if(await hasInternet()){
-                            final SharedPreferences prefs = await SharedPreferences.getInstance();
-                            final DatabaseHelper db = DatabaseHelper.instance;
-                            await synchronyData(true);
-                            prefs.clear();
-                            db.clearAllData();
-                            await FirebaseAuth.instance.signOut();
-                            Navigator.pop(context);
-                          }else{
-                            showBottomSheetNoInternet(context);
-                          }
-                        }
-                    ),
-                  ],
+                  ),
                 )
-            );
-
-          }),
+              ],
+            )
+          ),
           if(isLoading)
             Container(
               width: MediaQuery.sizeOf(context).width,

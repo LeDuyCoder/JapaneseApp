@@ -8,6 +8,7 @@ import 'package:in_app_update/in_app_update.dart';
 import 'package:japaneseapp/Config/dataHelper.dart';
 import 'package:japaneseapp/Screen/SetUpLanguage.dart';
 import 'package:japaneseapp/Screen/controllScreen.dart';
+import 'package:japaneseapp/State/FeatureState.dart';
 import 'package:japaneseapp/Utilities/NetworkUtils.dart';
 
 import 'package:permission_handler/permission_handler.dart';
@@ -19,6 +20,7 @@ import '../Service/Server/ServiceLocator.dart';
 
 class splashScreen extends StatefulWidget{
   final Function(Locale _locale) changeLanguage;
+  static late FeatureState featureState;
 
   const splashScreen({super.key, required this.changeLanguage});
 
@@ -73,7 +75,21 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
     _initializeDatabase();
     checkForUpdate();
     addUser();
+    loadStateFeature();
   }
+
+  Future<void> loadStateFeature() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    if(sharedPreferences.containsKey("feature")) {
+      splashScreen.featureState =
+          FeatureState.fromJsonString(sharedPreferences.getString("feature")!);
+    }else{
+      FeatureState featureState = new FeatureState(false, true);
+      splashScreen.featureState = featureState;
+      sharedPreferences.setString("feature", featureState.toJsonString());
+    }
+  }
+
 
   Future<void> showNoInternetDialog(BuildContext context) async {
     return showDialog(

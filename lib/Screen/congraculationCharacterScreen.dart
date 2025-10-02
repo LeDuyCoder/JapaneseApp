@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:math';
 
 import 'package:audioplayers/audioplayers.dart';
@@ -70,6 +69,7 @@ class _congraculationChacterScreen extends State<congraculationChacterScreen>  w
 
   @override
   void initState() {
+    super.initState();
     _loadInterstitialAd();
 
     _controllerProcess = AnimationController(
