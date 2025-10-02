@@ -75,7 +75,7 @@ class _TabScreenState extends State<TabScreen> {
                     child: Row(
                       children: [
                         SizedBox(width: 10,),
-                        Icon(Icons.menu_book, color: Color(0xFF2E7D32)),
+                        Icon(Icons.menu_book, color: AppColors.primary),
                         SizedBox(width: 10),
                         Text(AppLocalizations.of(context)!.add_course,
                             style: TextStyle(color: Colors.black, fontSize: 18)),
@@ -118,7 +118,7 @@ class _TabScreenState extends State<TabScreen> {
                     child: Row(
                       children: [
                         SizedBox(width: 10,),
-                        const Icon(Icons.folder_open, color: Color(0xFF2E7D32)),
+                        const Icon(Icons.folder_open, color: AppColors.primary),
                         SizedBox(width: 10),
                         Text(AppLocalizations.of(context)!.add_folder,
                             style: TextStyle(color: Colors.black, fontSize: 18)),

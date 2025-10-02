@@ -16,11 +16,13 @@ import 'package:japaneseapp/Screen/qrScreen.dart';
 import 'package:japaneseapp/Screen/seeMoreTopic.dart';
 import 'package:japaneseapp/Theme/colors.dart';
 import 'package:japaneseapp/Widget/folerWidget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Config/dataHelper.dart';
-import '../Config/databaseServer.dart';
 import '../Module/WordModule.dart';
 import '../Module/word.dart';
+import '../Service/Server/ServiceLocator.dart';
+import '../Widget/JapaneseClockText.dart';
 import '../Widget/topicServerWidget.dart';
 import '../Widget/topicWidget.dart';
 import 'package:http/http.dart' as http;
@@ -58,7 +60,16 @@ class _DashboardScreenState extends State<dashboardScreen> {
   String nameTopic = "";
 
   bool _isOffline = false;
+  bool timerView = false;
+
   StreamSubscription<List<ConnectivityResult>>? _subscription;
+
+  String formatJapaneseTime(DateTime dateTime) {
+    String hour = dateTime.hour.toString().padLeft(2, '0');
+    String minute = dateTime.minute.toString().padLeft(2, '0');
+    String second = dateTime.second.toString().padLeft(2, '0');
+    return "$hour時$minute分$second秒";
+  }
 
   @override
   void initState() {
@@ -106,13 +117,15 @@ class _DashboardScreenState extends State<dashboardScreen> {
 
   Future<Map<String, dynamic>> hanldeGetData() async {
     final db = await DatabaseHelper.instance;
-    DatabaseServer dbServer = DatabaseServer();
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+    timerView = sharedPreferences.getBool("timerView") ?? false;
 
     Map<String, dynamic> data;
 
     try {
       // thử gọi server với timeout
-      var dataServer = await dbServer
+      var dataServer = await ServiceLocator.topicService
           .getAllDataTopic(5)
           .timeout(const Duration(seconds: 10));
 
@@ -1031,10 +1044,9 @@ class _DashboardScreenState extends State<dashboardScreen> {
 
   Future<bool> dowloadTopic(String id) async{
 
-    DatabaseServer dbServer = new DatabaseServer();
     DatabaseHelper db = DatabaseHelper.instance;
 
-    topic? Topic = await dbServer.getDataTopicbyID(id);
+    topic? Topic = await ServiceLocator.topicService.getDataTopicByID(id);
     nameTopic = Topic!.name;
     List<Map<String, dynamic>> dataWords = [];
 
@@ -1043,7 +1055,7 @@ class _DashboardScreenState extends State<dashboardScreen> {
      }
 
     if(!await db.hasTopicName(nameTopic)){
-      List<Word> listWord = await dbServer.fetchWordsByTopicID(id);
+      List<Word> listWord = await ServiceLocator.wordService.fetchWordsByTopicID(id);
       for(Word wordDB in listWord){
         dataWords.add(
             new word(wordDB.word, wordDB.wayread, wordDB.mean, nameTopic==""?Topic.name:nameTopic, 0).toMap()
@@ -1295,7 +1307,7 @@ class _DashboardScreenState extends State<dashboardScreen> {
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
+                const Text(
                   "KujiLingo",
                   style: TextStyle(
                     color: AppColors.primary,
@@ -1753,7 +1765,24 @@ class _DashboardScreenState extends State<dashboardScreen> {
                               ),
                             ),
                           ),
-                        SizedBox(height: 30,),
+                        SizedBox(height: 20,),
+                        if(timerView)
+                          const Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.access_time_filled_rounded, color: AppColors.primary,),
+                                  SizedBox(width: 10,),
+                                  JapaneseClockText(
+                                    style: TextStyle(fontSize: 24, color: AppColors.primary, fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        SizedBox(height: 10,),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [

@@ -638,7 +638,7 @@ class DatabaseHelper {
       conflictAlgorithm: ConflictAlgorithm.ignore,
     );
   }
-  
+
   Future<List<Map<String, dynamic>>> getVocabularyInDictionary(
       Database db, {
         String? wordJp,
@@ -669,6 +669,23 @@ class DatabaseHelper {
     return result.isNotEmpty;
   }
 
+  // Lấy toàn bộ từ vựng trong dictionary
+  Future<List<Map<String, dynamic>>> getAllVocabulary(Database db) async {
+    return await db.query('vocabulary');
+  }
+
+  // Xóa một từ vựng theo wordJp và wordKana
+  Future<int> removeVocabulary(
+      Database db, {
+        required String wordJp,
+        required String wordKana,
+      }) async {
+    return await db.delete(
+      'vocabulary',
+      where: 'word_jp = ? AND word_kana = ?',
+      whereArgs: [wordJp, wordKana],
+    );
+  }
 
 
 

@@ -46,7 +46,7 @@ class _choseColumeWidget extends State<choseColumeWidget>{
             ]
         ),
         child: Center(
-          child: AutoSizeText(widget.text, style: TextStyle(fontSize: MediaQuery.sizeOf(context).width*0.045, color: widget.isCancle ? const Color.fromRGBO(213, 213, 213, 1.0) : widget.isWrong ? Color.fromRGBO(
+          child: AutoSizeText(widget.text, textAlign: TextAlign.center, style: TextStyle(fontSize: MediaQuery.sizeOf(context).width*0.045, color: widget.isCancle ? const Color.fromRGBO(213, 213, 213, 1.0) : widget.isWrong ? Color.fromRGBO(
               80, 3, 3, 1.0) : widget.isChoose ? AppColors.primary : Colors.grey,),),
         ),
       ),

@@ -6,7 +6,7 @@ import 'package:japaneseapp/Config/dataHelper.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'config.dart';
+import '../Config/config.dart';
 
 class FunctionService{
 
@@ -255,6 +255,11 @@ class FunctionService{
         "updatedAt": FieldValue.serverTimestamp(),
       };
 
+
+      if(FirebaseAuth.instance.currentUser == null) {
+        return false;
+      }
+
       // Firestore
       final userDoc = FirebaseFirestore.instance
           .collection("datas")
@@ -277,7 +282,7 @@ class FunctionService{
     final now = DateTime.now().millisecondsSinceEpoch;
 
     // 24h = 86400000 ms
-    if (now - lastBackup > 86400000) {
+    if (now - lastBackup > 43200000) {
       await synchronyData(); // Hàm backup bạn đã có
       await prefs.setInt("lastBackup", now);
       print("Đã backup sau 24h!");

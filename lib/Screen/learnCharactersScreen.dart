@@ -7,13 +7,14 @@ import 'package:japaneseapp/Config/dataJson.dart';
 import 'package:japaneseapp/Screen/congraculationCharacterScreen.dart';
 import 'package:japaneseapp/Theme/colors.dart';
 import 'package:japaneseapp/Widget/learnWidget/combinationTest.dart';
+import 'package:japaneseapp/Widget/learnWidget/readTest.dart';
 import 'package:japaneseapp/Widget/learnWidget/writeTestCharacterScreen.dart';
 import 'package:japaneseapp/Widget/learnWidget/writeTestScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:japaneseapp/Module/character.dart' as charHiKa;
 import 'package:japaneseapp/Widget/learnWidget/choseTest.dart';
-import '../Config/timeService.dart';
+import '../Service/timeService.dart';
 import '../Widget/quitTab.dart';
 
 class learnCharactersScreen extends StatefulWidget {
@@ -27,7 +28,7 @@ class learnCharactersScreen extends StatefulWidget {
 }
 
 class _learnCharactersScreen extends State<learnCharactersScreen> {
-  int maxQuestion = 20;
+  int maxQuestion = 15;
   int question = 0;
   List<Widget> mapQuesstion = [];
   late Future<bool> _loadQuestionsFuture;
@@ -101,25 +102,47 @@ class _learnCharactersScreen extends State<learnCharactersScreen> {
   }
 
   String CoverWayRead(dynamic jsonData, String wordJapanese) {
-    int index = (widget.typeCharacter == "hiragana") ? 0 : 1;
-    List<Map<dynamic, dynamic>> sectionList = List<Map<dynamic, dynamic>>.from(jsonData[index]);
+    int indexType = (widget.typeCharacter == "hiragana") ? 0 : 1;
+    List<Map<dynamic, dynamic>> sectionList =
+    List<Map<dynamic, dynamic>>.from(jsonData[indexType]);
     StringBuffer newWordJapanese = StringBuffer();
 
-    for (var char in wordJapanese.runes) {
-      String charStr = String.fromCharCode(char);
+    int i = 0;
+    while (i < wordJapanese.length) {
+      String matchedRomaji = "";
 
-      var matchingSection = sectionList.firstWhere(
-            (section) => section.containsKey(charStr),
-        orElse: () => {},
-      );
-
-      if (matchingSection.isNotEmpty) { // Kiểm tra nếu matchingSection không rỗng
-        newWordJapanese.write((matchingSection[charStr]["romaji"]));
+      // Ưu tiên thử lấy 2 ký tự
+      if (i + 1 < wordJapanese.length) {
+        String twoChars = wordJapanese.substring(i, i + 2);
+        var match2 = sectionList.firstWhere(
+              (section) => section.containsKey(twoChars),
+          orElse: () => {},
+        );
+        if (match2.isNotEmpty) {
+          matchedRomaji = match2[twoChars]["romaji"];
+          i += 2; // bỏ qua 2 ký tự
+        }
       }
+
+      // Nếu không khớp 2 ký tự, thử 1 ký tự
+      if (matchedRomaji.isEmpty) {
+        String oneChar = wordJapanese.substring(i, i + 1);
+        var match1 = sectionList.firstWhere(
+              (section) => section.containsKey(oneChar),
+          orElse: () => {},
+        );
+        if (match1.isNotEmpty) {
+          matchedRomaji = match1[oneChar]["romaji"];
+        }
+        i += 1;
+      }
+
+      newWordJapanese.write(matchedRomaji);
     }
 
     return newWordJapanese.toString();
   }
+
 
   List<String> generateWrongAwnsersExempleToWay(dynamic dataCharacter, List<String> charactersTest, String example) {
     Set<String> wrongAnswers = {};

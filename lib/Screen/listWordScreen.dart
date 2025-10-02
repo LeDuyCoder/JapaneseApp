@@ -18,7 +18,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:japaneseapp/Module/word.dart' as wordModule;
 
-import '../Config/databaseServer.dart';
+import '../Service/Server/ServiceLocator.dart';
 import '../Widget/FlashCardWidget.dart';
 import '../generated/app_localizations.dart';
 import '../Widget/wordWidget.dart' as wd;
@@ -965,20 +965,18 @@ class _listWordScreen extends State<listWordScreen>{
   }
 
   Future<topic?> isExistTopic() async{
-    DatabaseServer db = new DatabaseServer();
     await isOwner();
-    topic? isTopic = await db.getDataTopicbyID(widget.id).timeout(Duration(seconds: 10));
+    topic? isTopic = await ServiceLocator.topicService.getDataTopicByID(widget.id).timeout(Duration(seconds: 10));
     return isTopic;
   }
 
   Future<void> pulicTopic() async{
     DatabaseHelper db = DatabaseHelper.instance;
-    DatabaseServer dbServer = new DatabaseServer();
     List<Map<String, dynamic>> data = await db.getAllWordbyTopic(widget.topicName);
     User user = FirebaseAuth.instance.currentUser!;
 
     topic TopicPulic = new topic(id: widget.id, name: widget.topicName, owner: user.providerData[0].displayName, count: 0);
-    await dbServer.insertTopic(TopicPulic);
+    await ServiceLocator.topicService.insertTopic(TopicPulic);
 
     List<Word> listWordPulics = [];
     for(Map<String, dynamic> word in data){
@@ -991,7 +989,7 @@ class _listWordScreen extends State<listWordScreen>{
       ));
     }
 
-    bool execInsert = await dbServer.insertDataWord(listWordPulics);
+    bool execInsert = await ServiceLocator.wordService.insertDataWord(listWordPulics);
     if(execInsert){
       print("Kiểm Tra");
       Navigator.pop(context);
@@ -1007,8 +1005,7 @@ class _listWordScreen extends State<listWordScreen>{
 
   Future<void> priveTopic() async{
     DatabaseHelper db = DatabaseHelper.instance;
-    DatabaseServer dbServer = new DatabaseServer();
-    dbServer.deleteTopic(widget.id);
+    ServiceLocator.topicService.deleteTopic(widget.id);
     reloadScreen();
     showBottomSheetPrivateSuccess(context);
   }

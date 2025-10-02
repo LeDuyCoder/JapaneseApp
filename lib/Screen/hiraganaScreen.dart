@@ -43,6 +43,7 @@ class _hiraganaScreen extends State<hiraganaScreen>{
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(future: loadDataCharacters(), builder: (ctx, snapshotData){
+
       if(snapshotData.connectionState == ConnectionState.waiting){
         return Center(
           child: Container(
@@ -208,14 +209,14 @@ class _hiraganaScreen extends State<hiraganaScreen>{
                                         dynamic>).containsKey(
                                         widget.data[1][keys.elementAt(
                                             index)]["text"]) ? snapshotData
-                                        .data!["1"][widget.data[1][keys.elementAt(
+                                        .data!["2"][widget.data[1][keys.elementAt(
                                         index)]["text"]][0]["level"] : 0) >= 27,
                                     (snapshotData.data!["2"] as Map<
                                         dynamic,
                                         dynamic>).containsKey(
                                         widget.data[1][keys.elementAt(
                                             index)]["text"]) ? snapshotData
-                                        .data!["1"][widget.data[1][keys.elementAt(
+                                        .data!["2"][widget.data[1][keys.elementAt(
                                         index)]["text"]][0]["level"] : 0,
                                     context
                                 ),

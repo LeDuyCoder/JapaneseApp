@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../Config/databaseServer.dart';
+import '../Service/Server/ServiceLocator.dart';
 import '../generated/app_localizations.dart';
 
 class registerScreen extends StatefulWidget{
@@ -111,9 +111,8 @@ class _registerScreen extends State<registerScreen>{
   }
 
   Future<void> addUser() async{
-    DatabaseServer databaseServer = new DatabaseServer();
-    databaseServer.addUser(FirebaseAuth.instance.currentUser!.uid,
-        FirebaseAuth.instance.currentUser!.uid);
+    ServiceLocator.userService.addUser(FirebaseAuth.instance.currentUser!.uid,
+        FirebaseAuth.instance.currentUser!.displayName!);
   }
 
   void showDialogRegisterSuccess() {

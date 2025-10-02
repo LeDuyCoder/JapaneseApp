@@ -1,17 +1,24 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:japaneseapp/Config/FunctionService.dart';
+import 'package:japaneseapp/Service/FunctionService.dart';
 import 'package:japaneseapp/Screen/splashScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'Listener/NetworkListener.dart';
 import 'Theme/colors.dart';
 import 'firebase_options.dart';
 import 'generated/app_localizations.dart';
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 void main() async {
+
+  await dotenv.load(fileName: '.env');
+
   WidgetsFlutterBinding.ensureInitialized();
   // Set full screen mode
   SystemChrome.setEnabledSystemUIMode(
@@ -51,6 +58,7 @@ class _MyApp extends State<MyApp>{
 
   Locale _locale = const Locale('vi');
 
+
   void _changeLanguage(Locale newLocale) {
     setState(() {
       _locale = newLocale;
@@ -70,6 +78,12 @@ class _MyApp extends State<MyApp>{
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         title: 'Flutter Demo',
+        navigatorKey: navigatorKey,
+        builder: (context, child) {
+          // init listener ở đây để toàn app đều nhận
+          NetworkListener().init();
+          return child!;
+        },
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: AppColors.backgroundPrimary),
           useMaterial3: true,

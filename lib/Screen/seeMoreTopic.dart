@@ -8,9 +8,9 @@ import 'package:japaneseapp/Theme/colors.dart';
 import 'package:japaneseapp/Widget/topicServerWidget.dart';
 
 import '../Config/dataHelper.dart';
-import '../Config/databaseServer.dart';
 import '../Module/WordModule.dart';
 import '../Module/word.dart';
+import '../Service/Server/ServiceLocator.dart';
 import '../generated/app_localizations.dart';
 import 'downloadScreen.dart';
 
@@ -57,13 +57,11 @@ class _seeMoreTopic extends State<seeMoreTopic>{
   int limit = 5;
 
   Future<List<topic>> getListTopic() async {
-    DatabaseServer dbServer = new DatabaseServer();
-    return await dbServer.getAllDataTopic(limit).timeout(Duration(seconds: 10)) as List<topic>;
+    return await ServiceLocator.topicService.getAllDataTopic(limit).timeout(const Duration(seconds: 10));
   }
 
   Future<List<topic>> getListTopicsSearch(String keyword) async {
-    DatabaseServer dbServer = new DatabaseServer();
-    return await dbServer.getTopicsSearch(keyword).timeout(Duration(seconds: 10));
+    return await ServiceLocator.topicService.getTopicsSearch(keyword).timeout(Duration(seconds: 10));
   }
 
   Future<bool> hastTopic(String id) async {
@@ -72,10 +70,9 @@ class _seeMoreTopic extends State<seeMoreTopic>{
   }
 
   Future<bool> dowloadTopic(String id) async{
-    DatabaseServer dbServer = new DatabaseServer();
     DatabaseHelper db = DatabaseHelper.instance;
 
-    topic? Topic = await dbServer.getDataTopicbyID(id);
+    topic? Topic = await ServiceLocator.topicService.getDataTopicByID(id);
     nameTopic = Topic!.name;
     List<Map<String, dynamic>> dataWords = [];
 
@@ -84,7 +81,7 @@ class _seeMoreTopic extends State<seeMoreTopic>{
     }
 
     if(!await db.hasTopicName(nameTopic)){
-      List<Word> listWord = await dbServer.fetchWordsByTopicID(id);
+      List<Word> listWord = await ServiceLocator.wordService.fetchWordsByTopicID(id);
       for(Word wordDB in listWord){
         dataWords.add(
             new word(wordDB.word, wordDB.wayread, wordDB.mean, nameTopic==""?Topic.name:nameTopic, 0).toMap()

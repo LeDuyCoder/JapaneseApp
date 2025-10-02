@@ -1,23 +1,21 @@
 import 'dart:convert';
 
 import 'package:audioplayers/audioplayers.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_update/in_app_update.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:japaneseapp/Config/dataHelper.dart';
-import 'package:japaneseapp/Config/databaseServer.dart';
 import 'package:japaneseapp/Screen/SetUpLanguage.dart';
 import 'package:japaneseapp/Screen/controllScreen.dart';
-import 'package:japaneseapp/Screen/loginScreen.dart';
-import 'package:japaneseapp/Screen/tabScreen.dart';
+import 'package:japaneseapp/Utilities/NetworkUtils.dart';
 
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:animated_text_kit/animated_text_kit.dart';
+
+import '../Service/Server/ServiceLocator.dart';
 
 class splashScreen extends StatefulWidget{
   final Function(Locale _locale) changeLanguage;
@@ -77,11 +75,66 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
     addUser();
   }
 
+  Future<void> showNoInternetDialog(BuildContext context) async {
+    return showDialog(
+      context: context,
+      barrierDismissible: false, // không cho tắt bằng cách bấm ra ngoài
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: const Row(
+            children: [
+              Icon(Icons.wifi_off, color: Colors.red, size: 28),
+              SizedBox(width: 8),
+              Text(
+                "Không có kết nối",
+                style: TextStyle(
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          content: const Text(
+            "Vui lòng kiểm tra lại kết nối mạng và thử lại.",
+            style: TextStyle(fontSize: 16),
+          ),
+          actions: [
+            TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.blue,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              onPressed: () async {
+                Navigator.pop(context);
+                await Future.delayed(const Duration(seconds: 2));
+                checkInternet(); // hàm bạn tự định nghĩa
+              },
+              child: const Text("Thử lại"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> checkInternet() async {
+    if((await NetworkUtils.hasNetwork())){
+      sendToScreen();
+    }else{
+      showNoInternetDialog(context);
+    }
+  }
+
   Future<void> addUser() async{
-    DatabaseServer databaseServer = new DatabaseServer();
     if(FirebaseAuth.instance.currentUser != null) {
       print("demo addUsser");
-      databaseServer.addUser(FirebaseAuth.instance.currentUser!.uid,
+      ServiceLocator.userService.addUser(FirebaseAuth.instance.currentUser!.uid,
           FirebaseAuth.instance.currentUser!.displayName!);
     }
   }
@@ -126,18 +179,7 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
     await db.createDataLevel();
     await Future.delayed(Duration(seconds: 2));
 
-    sendToScreen();
-    // bool isConnected = await InternetConnectionChecker.instance.hasConnection;
-    // if(isConnected) {
-    //   // await fetchData();
-    //   // if(version_check == version) {
-    //   //   sendToScreen();
-    //   // }else{
-    //   //   showDialogNotificationVersion();
-    //   // }
-    // }else{
-    //
-    // }
+    await checkInternet();
   }
 
   Future<void> checkForUpdate() async {

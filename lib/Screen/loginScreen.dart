@@ -11,6 +11,7 @@ import 'package:japaneseapp/Screen/registerScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Config/dataHelper.dart';
+import '../Service/Server/ServiceLocator.dart';
 import '../Theme/colors.dart';
 import '../generated/app_localizations.dart';
 
@@ -81,6 +82,7 @@ class _loginScreen extends State<loginScreen>{
       // Bước 5: Lấy User từ Firebase sau khi đăng nhập thành công
       final User? user = userCredential.user;
       await updateAsynchronyData();
+      await addUser();
       return user;
     } catch (error) {
       print('Lỗi đăng nhập Google: $error');
@@ -175,6 +177,13 @@ class _loginScreen extends State<loginScreen>{
   }
 
 
+  Future<void> addUser() async{
+    if(FirebaseAuth.instance.currentUser != null) {
+      print("demo addUsser");
+      ServiceLocator.userService.addUser(FirebaseAuth.instance.currentUser!.uid,
+          FirebaseAuth.instance.currentUser!.displayName!);
+    }
+  }
 
   Future<void> signInEmail() async {
     // Reset error messages
@@ -207,6 +216,9 @@ class _loginScreen extends State<loginScreen>{
       );
 
       final user = FirebaseAuth.instance.currentUser;
+
+       await addUser();
+
       if (user != null) {
         await updateAsynchronyData();
         _userData = {
@@ -367,36 +379,36 @@ class _loginScreen extends State<loginScreen>{
             const Center(
               child: Text("________ OR ________", style: TextStyle(fontFamily: "Itim", color: Colors.grey, fontSize: 20),),
             ),
-            SizedBox(height: 10,),
-            GestureDetector(
-              onTap: (){
-                signInFacebook();
-              },
-              child: Padding(
-                padding: EdgeInsets.only(left: 20, right: 20),
-                child: Container(
-                    height: MediaQuery.sizeOf(context).width*0.14,
-                    width: MediaQuery.sizeOf(context).width,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(
-                            color: Colors.grey
-                        ),
-                        borderRadius: BorderRadius.all(Radius.circular(15))
-                    ),
-                    child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(Icons.facebook_outlined, color: Colors.blue,),
-                            const SizedBox(width: 10,),
-                            Text(AppLocalizations.of(context)!.login_with_facebook, style: TextStyle(fontFamily: "Itim"),)
-                          ],
-                        )
-                    )
-                ),
-              ),
-            ),
+            // SizedBox(height: 10,),
+            // GestureDetector(
+            //   onTap: (){
+            //     signInFacebook();
+            //   },
+            //   child: Padding(
+            //     padding: EdgeInsets.only(left: 20, right: 20),
+            //     child: Container(
+            //         height: MediaQuery.sizeOf(context).width*0.14,
+            //         width: MediaQuery.sizeOf(context).width,
+            //         decoration: BoxDecoration(
+            //             color: Colors.white,
+            //             border: Border.all(
+            //                 color: Colors.grey
+            //             ),
+            //             borderRadius: BorderRadius.all(Radius.circular(15))
+            //         ),
+            //         child: Center(
+            //             child: Row(
+            //               mainAxisAlignment: MainAxisAlignment.center,
+            //               children: [
+            //                 const Icon(Icons.facebook_outlined, color: Colors.blue,),
+            //                 const SizedBox(width: 10,),
+            //                 Text(AppLocalizations.of(context)!.login_with_facebook, style: TextStyle(fontFamily: "Itim"),)
+            //               ],
+            //             )
+            //         )
+            //     ),
+            //   ),
+            // ),
             SizedBox(height: 10,),
             GestureDetector(
               onTap: (){

@@ -13,9 +13,9 @@ import 'package:japaneseapp/Theme/colors.dart';
 import 'package:japaneseapp/Utilities/WeekUtils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../Config/FunctionService.dart';
+import '../Service/FunctionService.dart';
 import '../Config/config.dart';
-import '../Config/databaseServer.dart';
+import '../Service/Server/ServiceLocator.dart';
 
 class congraculationScreen extends StatefulWidget{
   final List<word> listWordsTest, listWordsWrong;
@@ -55,26 +55,25 @@ class _congraculationScreen extends State<congraculationScreen> with TickerProvi
   Future<void> randomizeValues() async {
     Random rand = Random();
 
-    DatabaseServer databaseServer = new DatabaseServer();
-    int score = (await databaseServer.getScore(WeekUtils.getCurrentWeekString(), FirebaseAuth.instance.currentUser!.uid))["score"];
+    int score = (await ServiceLocator.scoreService.getScore(WeekUtils.getCurrentWeekString(), FirebaseAuth.instance.currentUser!.uid))["score"];
 
     setState(() {
       if(score > 1501) {
         if(widget.listWordsTest.isEmpty) {
-          expRank = rand.nextInt(20) + 1;
+          expRank = rand.nextInt(31);
         } else {
-          score -= rand.nextInt(20) + 1;  // trừ 10 điểm nếu trả lời sai
+          score -= rand.nextInt(15);  // trừ 10 điểm nếu trả lời sai
           if(score < 0) score = 0; // tránh điểm âm
         }
       }else{
-        expRank = rand.nextInt(20) + 1;
+        expRank = rand.nextInt(31);
       }
       // random từ 0 đến 100 (bạn có thể chỉnh phạm vi này)
-      coin = rand.nextInt(3) + 1; // random từ 1 đến 10
+      coin = rand.nextInt(10); // random từ 1 đến 10
     });
 
-    databaseServer.addCoin(FirebaseAuth.instance.currentUser!.uid, coin);
-    databaseServer.addScore(FirebaseAuth.instance.currentUser!.uid, expRank);
+    ServiceLocator.userService.addCoin(FirebaseAuth.instance.currentUser!.uid, coin);
+    ServiceLocator.scoreService.addScore(FirebaseAuth.instance.currentUser!.uid, expRank);
   }
 
   @override
@@ -210,249 +209,255 @@ class _congraculationScreen extends State<congraculationScreen> with TickerProvi
                   width: MediaQuery.sizeOf(context).width,
                   height: MediaQuery.sizeOf(context).height,
                   color: Colors.white.withOpacity(0.15),
-                  child: Column(
-                    children: [
-                      SizedBox(height: 60,),
-                      Container(
-                        width: 80,
-                        height: 80,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.red,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.red.withOpacity(0.6), // màu glow
-                              spreadRadius: 1, // độ lan của ánh sáng
-                              blurRadius: 15,  // độ mờ
-                            ),
-                          ],
-                        ),
-                        child: const Icon(
-                          HeroIcons.trophy, // icon bên trong
-                          color: Colors.white,
-                          size: 40,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Text("Chúc Mừng", style: TextStyle(color: AppColors.primary, fontSize: 40, fontFamily: "Itim"),),
-                      Text("Bạn đã hoàn thành", style: TextStyle(color: AppColors.black, fontSize: 25, fontFamily: "Itim", height: 0.8),),
-                      SizedBox(height: 30,),
-                      Container(
-                        width: MediaQuery.sizeOf(context).width / 1.1,
-                        height: 80,
-                        decoration: BoxDecoration(
-                          color: AppColors.grey.withOpacity(0.15),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              "Bài Học",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontFamily: "itim",
-                                fontSize: 18,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: Column(
+                      children: [
+                        SizedBox(height: 60,),
+                        Container(
+                          width: 80,
+                          height: 80,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.red,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.red.withOpacity(0.6), // màu glow
+                                spreadRadius: 1, // độ lan của ánh sáng
+                                blurRadius: 15,  // độ mờ
                               ),
-                            ),
-                            Row(
-                              children: [
-                                const Text(
-                                  "Thời gian hoàn thành: ",
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    fontFamily: "itim",
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                Text(
-                                  formatTime(widget.timeTest * 1.0),
-                                  style: const TextStyle(
-                                    color: AppColors.primary,
-                                    fontFamily: "itim",
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Container(
-                        width: MediaQuery.sizeOf(context).width / 1.1,
-                        height: 130,
-                        decoration: BoxDecoration(
-                          color: AppColors.primary,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text("+${snapshot.data!["expFlus"]}", style: TextStyle(color: Colors.white, fontSize: 40, fontFamily: "Itim", height: 0.8),),
-                            const Text("Điểm Kinh Nghiệm", style: TextStyle(color: Colors.white, fontSize: 20, fontFamily: "Itim", height: 1.2),)
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text("Tiến Trình Level", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
-                            Text("${snapshot.data!["exp"]}/${snapshot.data!["nextExp"]}", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: SizedBox(
-                          height: 10,
-                          child: AnimatedBuilder(
-                            animation: _animationProcess,
-                            builder: (context, child) {
-                              return LinearProgressIndicator(
-                                borderRadius: const BorderRadius.all(Radius.circular(360)),
-                                value: _animationProcess.value,
-                                backgroundColor: Colors.grey.withOpacity(0.2),
-                                valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
-                              );
-                            },
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 10,),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text("Cấp ${snapshot.data!["level"]}", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
-                            Text("Cấp ${snapshot.data!["level"] + 1}", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.grey.withOpacity(0.5))),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 25,),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Column(
-                            children: [
-                              Row(
-                                children: [
-                                  Text("+${expRank}", style: TextStyle(color: Colors.black, fontSize: 30, fontFamily: "Itim", height: 0.8),),
-                                  SizedBox(width: 5,),
-                                  Image.asset("assets/exp.png", width: 50, height: 50,),
-                                ],
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(top: 10),
-                                child: Text("Điểm Rank", style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),),
-                              )
                             ],
                           ),
-                          SizedBox(width: 50,),
-                          Column(
+                          child: const Icon(
+                            HeroIcons.trophy, // icon bên trong
+                            color: Colors.white,
+                            size: 40,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Text("Chúc Mừng", style: TextStyle(color: AppColors.primary, fontSize: 40, fontFamily: "Itim"),),
+                        Text("Bạn đã hoàn thành", style: TextStyle(color: AppColors.black, fontSize: 25, fontFamily: "Itim", height: 0.8),),
+                        SizedBox(height: 30,),
+                        Container(
+                          width: MediaQuery.sizeOf(context).width / 1.1,
+                          height: 80,
+                          decoration: BoxDecoration(
+                            color: AppColors.grey.withOpacity(0.15),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              const Text(
+                                "Bài Học",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontFamily: "itim",
+                                  fontSize: 18,
+                                ),
+                              ),
                               Row(
                                 children: [
-                                  Text("+${coin}", style: TextStyle(color: Colors.black, fontSize: 30, fontFamily: "Itim", height: 0.8),),
-                                  SizedBox(width: 5,),
-                                  SizedBox(
-                                    width: 40,
-                                    height: 50,
-                                    child: Transform.scale(
-                                      scale: 1,  // tỷ lệ thu nhỏ ảnh bên trong
-                                      child: Image.asset("assets/kujicoin.png"),
+                                  const Text(
+                                    "Thời gian hoàn thành: ",
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontFamily: "itim",
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  Text(
+                                    formatTime(widget.timeTest * 1.0),
+                                    style: const TextStyle(
+                                      color: AppColors.primary,
+                                      fontFamily: "itim",
+                                      fontSize: 16,
                                     ),
                                   ),
                                 ],
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(top: 10),
-                                child: Text("kujicoin", style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),),
                               )
                             ],
-                          )
-                        ],
-                      ),
-                      SizedBox(height: 50,),
-                      Text("Bài tiếp theo", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20),),
-                      SizedBox(height: 10,),
-                      GestureDetector(
-                        onTap: () async {
-
-                          final List<word> filteredWords = widget.listWordsTest.where((word wordCheck) {
-                            final int wrongCount = widget.listWordsWrong.where((wordWrongCheck) => wordWrongCheck == wordCheck).length;
-                            return wrongCount < 2; // Chỉ giữ lại những từ sai ít hơn 2 lần
-                          }).toList();
-
-                          // Chuẩn bị dữ liệu cập nhật
-                          final List<Map<String, dynamic>> dataUpdate = filteredWords.map((word wordUP) {
-                            return {
-                              "dataUpdate": {"level": wordUP.level < 28 ? wordUP.level + 1 : wordUP.level},
-                              "word": wordUP.vocabulary,
-                            };
-                          }).toList();
-
-                          // Cập nhật cơ sở dữ liệu
-                          final DatabaseHelper db = DatabaseHelper.instance;
-                          for (final data in dataUpdate) {
-                            await db.updateDatabase(
-                              "words",
-                              data["dataUpdate"],
-                              "word = '${data["word"]}' and topic = '${widget.topic}'",
-                            );
-                          }
-
-                          if (_isInterstitialAdReady && dashboardScreen.countAdMod >= 2) {
-                                _interstitialAd.show();
-
-
-                                _interstitialAd.fullScreenContentCallback = FullScreenContentCallback(
-                                  onAdDismissedFullScreenContent: (ad) {
-                                    ad.dispose();
-                                    _loadInterstitialAd(); // tải lại cho lần sau
-
-                                    Navigator.pop(context);
-                                  },
-                                  onAdFailedToShowFullScreenContent: (ad, error) {
-                                    ad.dispose();
-                                    // Đóng các màn hình
-                                    Navigator.pop(context);
-                                    dashboardScreen.countAdMod = 0;
-                                  },
-                                );
-                              } else {
-                            Navigator.pop(context);
-                          }
-
-                          widget.reload();
-
-                        },
-                        child: Container(
-                          width: MediaQuery.sizeOf(context).width / 1.1,
-                          height: 60,
-                          decoration: BoxDecoration(
-                            color: AppColors.primary,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                          child: const Center(
-                            child: Text("Bắt Đầu Lượt Học Tiếp", style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),),
                           ),
                         ),
-                      ),
-                    ],
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Container(
+                          width: MediaQuery.sizeOf(context).width / 1.1,
+                          height: 130,
+                          decoration: BoxDecoration(
+                            color: AppColors.primary,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text("+${snapshot.data!["expFlus"]}", style: TextStyle(color: Colors.white, fontSize: 40, fontFamily: "Itim", height: 0.8),),
+                              const Text("Điểm Kinh Nghiệm", style: TextStyle(color: Colors.white, fontSize: 20, fontFamily: "Itim", height: 1.2),)
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text("Tiến Trình Level", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                              Text("${snapshot.data!["exp"]}/${snapshot.data!["nextExp"]}", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: SizedBox(
+                            height: 10,
+                            child: AnimatedBuilder(
+                              animation: _animationProcess,
+                              builder: (context, child) {
+                                return LinearProgressIndicator(
+                                  borderRadius: const BorderRadius.all(Radius.circular(360)),
+                                  value: _animationProcess.value,
+                                  backgroundColor: Colors.grey.withOpacity(0.2),
+                                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 10,),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text("Cấp ${snapshot.data!["level"]}", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                              Text("Cấp ${snapshot.data!["level"] + 1}", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.grey.withOpacity(0.5))),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 25,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            if(expRank > 0)
+                              Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text("+${expRank}", style: TextStyle(color: Colors.black, fontSize: 30, fontFamily: "Itim", height: 0.8),),
+                                      SizedBox(width: 5,),
+                                      Image.asset("assets/exp.png", width: 50, height: 50,),
+                                    ],
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 10),
+                                    child: Text("Điểm Rank", style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),),
+                                  )
+                                ],
+                              ),
+                            if(expRank > 0 && coin > 0)
+                              SizedBox(width: 50,),
+                            if(coin > 0)
+                              Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text("+${coin}", style: TextStyle(color: Colors.black, fontSize: 30, fontFamily: "Itim", height: 0.8),),
+                                      SizedBox(width: 5,),
+                                      SizedBox(
+                                        width: 40,
+                                        height: 50,
+                                        child: Transform.scale(
+                                          scale: 1,  // tỷ lệ thu nhỏ ảnh bên trong
+                                          child: Image.asset("assets/kujicoin.png"),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 10),
+                                    child: Text("kujicoin", style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),),
+                                  )
+                                ],
+                              )
+                          ],
+                        ),
+                        SizedBox(height: 50,),
+                        Text("Bài tiếp theo", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20),),
+                        SizedBox(height: 10,),
+                        GestureDetector(
+                          onTap: () async {
+
+                            final List<word> filteredWords = widget.listWordsTest.where((word wordCheck) {
+                              final int wrongCount = widget.listWordsWrong.where((wordWrongCheck) => wordWrongCheck == wordCheck).length;
+                              return wrongCount < 2; // Chỉ giữ lại những từ sai ít hơn 2 lần
+                            }).toList();
+
+                            // Chuẩn bị dữ liệu cập nhật
+                            final List<Map<String, dynamic>> dataUpdate = filteredWords.map((word wordUP) {
+                              return {
+                                "dataUpdate": {"level": wordUP.level < 28 ? wordUP.level + 1 : wordUP.level},
+                                "word": wordUP.vocabulary,
+                              };
+                            }).toList();
+
+                            // Cập nhật cơ sở dữ liệu
+                            final DatabaseHelper db = DatabaseHelper.instance;
+                            for (final data in dataUpdate) {
+                              await db.updateDatabase(
+                                "words",
+                                data["dataUpdate"],
+                                "word = '${data["word"]}' and topic = '${widget.topic}'",
+                              );
+                            }
+
+                            if (_isInterstitialAdReady && dashboardScreen.countAdMod >= 2) {
+                              _interstitialAd.show();
+
+
+                              _interstitialAd.fullScreenContentCallback = FullScreenContentCallback(
+                                onAdDismissedFullScreenContent: (ad) {
+                                  ad.dispose();
+                                  _loadInterstitialAd(); // tải lại cho lần sau
+
+                                  Navigator.pop(context);
+                                },
+                                onAdFailedToShowFullScreenContent: (ad, error) {
+                                  ad.dispose();
+                                  // Đóng các màn hình
+                                  Navigator.pop(context);
+                                  dashboardScreen.countAdMod = 0;
+                                },
+                              );
+                            } else {
+                              Navigator.pop(context);
+                            }
+
+                            widget.reload();
+
+                          },
+                          child: Container(
+                            width: MediaQuery.sizeOf(context).width / 1.1,
+                            height: 60,
+                            decoration: BoxDecoration(
+                              color: AppColors.primary,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                            child: const Center(
+                              child: Text("Bắt Đầu Lượt Học Tiếp", style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 )
               ],

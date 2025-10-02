@@ -2,9 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:japaneseapp/Config/databaseServer.dart';
+import 'package:japaneseapp/Service/RewardRankService.dart';
 import 'package:japaneseapp/Theme/colors.dart';
 import 'package:japaneseapp/Utilities/WeekUtils.dart';
+
+import '../Service/Server/ServiceLocator.dart';
 
 class rankScreen extends StatefulWidget{
   @override
@@ -103,11 +105,15 @@ class _rankScreen extends State<rankScreen>{
   Future<List<dynamic>> loadData(String userId, String period) async {
     List<Object> list = [];
 
-    DatabaseServer databaseServer = new DatabaseServer();
-    list.add(await databaseServer.getScore(period, userId));
-    list.add(await databaseServer.getLeaderboard(period, 10));
-    //write to print data list
-    print("data: $list");
+
+
+    list.add(await ServiceLocator.scoreService.getScore(period, userId));
+    list.add(await ServiceLocator.scoreService.getLeaderboard(period, 10));
+
+    rewardRankService().rewardGift(context);
+
+    //print(await ServiceLocator.scoreService.getLeaderboard(period, 10));
+
     return list;
   }
 
@@ -122,10 +128,10 @@ class _rankScreen extends State<rankScreen>{
             children: [
               Text(
                 "$rank",
-                style: const TextStyle(
+                style: TextStyle(
                   fontFamily: "Itim",
                   fontSize: 20,
-                  color: AppColors.textPrimary,
+                  color: rank == 1 ? Colors.amber : (rank == 2 ? Colors.grey : (rank == 3 ? Colors.brown : AppColors.textPrimary)),
                 ),
               ),
               Container(
@@ -187,6 +193,9 @@ class _rankScreen extends State<rankScreen>{
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
+      onWillPop: () {
+        return Future.value(false);
+      },
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
@@ -231,7 +240,7 @@ class _rankScreen extends State<rankScreen>{
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text("Tiến trình", style: TextStyle(fontFamily: "Itim", fontSize: 20, color: AppColors.textPrimary)),
-                              Text("${rankMap[getRank(snapshot.data![0]["score"])]["max"] == double.infinity ? 100 : (snapshot.data![0]["score"]/rankMap[getRank(snapshot.data![0]["score"])]["max"])*100}%", style: TextStyle(fontFamily: "Itim", fontSize: 20, color: AppColors.textPrimary)),
+                              Text("${double.parse(((snapshot.data![0]["score"] / rankMap[getRank(snapshot.data![0]["score"])]["max"]) * 100).toStringAsFixed(1))}%", style: TextStyle(fontFamily: "Itim", fontSize: 20, color: AppColors.textPrimary)),
                             ],
                           ),
                           LinearProgressIndicator(
@@ -315,7 +324,9 @@ class _rankScreen extends State<rankScreen>{
                               children: [
                                 Row(
                                   children: [
-                                    Text("${snapshot.data![0]["rank"]}", style: TextStyle(fontFamily: "Itim", fontSize: 20, color: AppColors.textPrimary)),
+                                    Text("${snapshot.data![0]["rank"]}", style: TextStyle(fontFamily: "Itim", fontSize: 20,
+                                        color: snapshot.data![0]["rank"] == 1 ? Colors.amber : (snapshot.data![0]["rank"] == 2 ? Colors.grey : (snapshot.data![0]["rank"] == 3 ? Colors.brown : AppColors.textPrimary))
+                                    )),
                                     Container(
                                         margin: EdgeInsets.only(left: 10),
                                         width: 50,
@@ -352,10 +363,6 @@ class _rankScreen extends State<rankScreen>{
           );
         })
       ),
-      onWillPop: () {
-        Navigator.pop(context);
-        return Future.value(false);
-      },
     );
   }
 }

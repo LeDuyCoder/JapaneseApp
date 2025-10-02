@@ -61,42 +61,12 @@ class _WriteTestScreenState extends State<WriteTestScreen> {
     });
   }
 
-// Kiểm tra xem Gboard có được cài chưa
-  Future<bool> isGboardInstalled() async {
-    try {
-      final bool? isInstalled = await _channel.invokeMethod('isGboardInstalled');
-      return isInstalled ?? false;
-    } on PlatformException {
-      return false;
-    }
-  }
-
 // Mở menu chuyển đổi bàn phím
   Future<void> showInputMethodPicker() async {
     try {
       await _channel.invokeMethod('showInputMethodPicker');
     } on PlatformException {
       print("Không thể mở menu chuyển đổi bàn phím");
-    }
-  }
-
-// Hàm chính: Nếu có Gboard thì mở menu bàn phím
-  Future<void> checkAndShowKeyboardPicker() async {
-    bool hasGboard = await isGboardInstalled();
-    if (hasGboard) {
-      showInputMethodPicker();
-    }else{
-      await launchUrl(Uri.parse("https://play.google.com/store/apps/details?id=com.google.android.inputmethod.latin"));
-    }
-  }
-
-  static Future<bool> isUsingGboard() async {
-    try {
-      final bool result = await platform.invokeMethod('isUsingGboard');
-      return result;
-    } on PlatformException catch (e) {
-      print("Lỗi khi kiểm tra bàn phím: ${e.message}");
-      return false;
     }
   }
 
@@ -201,6 +171,7 @@ class _WriteTestScreenState extends State<WriteTestScreen> {
                   width: MediaQuery.of(context).size.width,
                   child: Center(
                     child: AutoSizeText(
+                      textAlign: TextAlign.center,
                       widget.testData,
                       style: TextStyle(fontSize: getResponsiveSize(context, widget.testData)),
                     ),

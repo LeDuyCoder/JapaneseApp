@@ -69,7 +69,6 @@ class _choseWordWidgetState extends State<choseWordWidget> {
           child: AutoSizeText(
             widget.textShow,
             style: TextStyle(
-              fontFamily: "indieflower",
               fontSize: MediaQuery.sizeOf(context).height*0.03,
               color: widget.isChose ? AppColors.primaryDark : Colors.black,
             ),

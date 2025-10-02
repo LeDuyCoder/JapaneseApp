@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:japaneseapp/Theme/colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../Config/FunctionService.dart';
+import '../Service/FunctionService.dart';
 import '../Config/dataHelper.dart';
 import '../generated/app_localizations.dart';
 

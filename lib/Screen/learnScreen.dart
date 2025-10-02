@@ -8,11 +8,12 @@ import 'package:japaneseapp/Theme/colors.dart';
 import 'package:japaneseapp/Widget/learnWidget/choseTest.dart';
 import 'package:japaneseapp/Widget/learnWidget/combinationTest.dart';
 import 'package:japaneseapp/Widget/learnWidget/listenTest.dart';
+import 'package:japaneseapp/Widget/learnWidget/readTest.dart';
 import 'package:japaneseapp/Widget/learnWidget/sortText.dart';
 import 'package:japaneseapp/Widget/learnWidget/writeTestScreen.dart';
 import 'package:japaneseapp/Widget/quitTab.dart';
 
-import '../Config/timeService.dart';
+import '../Service/timeService.dart';
 
 class learnScreen extends StatefulWidget {
   final List<word> dataWords;
@@ -405,7 +406,7 @@ class _learnScreen extends State<learnScreen> {
               ],
             ),
             view != null
-                ? Expanded(child: view!)
+                ? Expanded(child: readTest())//view!)
                 : Center(
               child: Container(
                 height: 50,
