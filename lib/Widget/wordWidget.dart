@@ -1,11 +1,11 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-import 'package:japaneseapp/Config/dataHelper.dart';
 import 'package:japaneseapp/Module/word.dart';
 import 'package:japaneseapp/Widget/FlashCardWidget.dart';
 import 'package:volume_controller/volume_controller.dart';
+
+import '../Service/Local/local_db_service.dart';
 
 class wordWidget extends StatefulWidget{
 
@@ -184,7 +184,7 @@ class _wordWidget extends State<wordWidget>{
                         ),
                         GestureDetector(
                           onTap: () async {
-                            DatabaseHelper db = DatabaseHelper.instance;
+                            final db = LocalDbService.instance;
 
                             String newWord = vocabularyEdit.text;
                             String newWayRead = wayReadEdit.text;
@@ -196,7 +196,7 @@ class _wordWidget extends State<wordWidget>{
                               "wayread": newWayRead,
                             };
 
-                            await db.updateDatabase("words", newData, "word = '${widget.wordText.vocabulary}' and topic = '${widget.topicName}'",);
+                            await db.vocabularyDao.update("words", newData, "word = '${widget.wordText.vocabulary}' and topic = '${widget.topicName}'",);
                             widget.reloadScreenListWord();
                             Navigator.pop(context);
                           },

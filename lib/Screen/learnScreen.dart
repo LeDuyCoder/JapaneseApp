@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:japaneseapp/Module/word.dart';
 import 'package:japaneseapp/Screen/congraculationScreen.dart';
+import 'package:japaneseapp/Screen/learnCharactersScreen.dart';
 import 'package:japaneseapp/Screen/splashScreen.dart';
 import 'package:japaneseapp/Theme/colors.dart';
 import 'package:japaneseapp/Widget/learnWidget/choseTest.dart';
@@ -13,6 +14,7 @@ import 'package:japaneseapp/Widget/learnWidget/readTest.dart';
 import 'package:japaneseapp/Widget/learnWidget/sortText.dart';
 import 'package:japaneseapp/Widget/learnWidget/writeTestScreen.dart';
 import 'package:japaneseapp/Widget/quitTab.dart';
+import 'package:uuid/v4.dart';
 
 import '../Service/timeService.dart';
 
@@ -275,45 +277,27 @@ class _learnScreen extends State<learnScreen> {
               }
             }
 
-            List<Map<String, dynamic>> dataWordsTest = [];
-            List<String> listAwnser = [];
+            List<NodeColum> dataWordsTest = [];
             List<String> dataType = ["JapToVN", "JapToWayRead", "WayReadToJap"];
             String type = dataType[randomInRange(0, 3)];
             for (word wordCheck in wordsRandom) {
               dataWordsTest.add(
                 type == "JapToVN"
-                    ? {
-                  "word": wordCheck.vocabulary,
-                  "awnser": wordCheck.mean,
-                  "wayread": wordCheck.wayread
-                }
+                    ? new NodeColum(UuidV4().generate(), wordCheck.vocabulary, wordCheck.mean,  wordCheck.wayread)
                     : type == "JapToWayRead"
-                    ? {
-                  "word": wordCheck.vocabulary,
-                  "awnser": wordCheck.wayread,
-                  "wayread": wordCheck.wayread
-                }
-                    : {
-                  "word": wordCheck.wayread,
-                  "awnser": wordCheck.vocabulary,
-                  "wayread": wordCheck.wayread
-                },
+                    ? new NodeColum(UuidV4().generate(), wordCheck.vocabulary, wordCheck.wayread,  wordCheck.wayread)
+                    : new NodeColum(UuidV4().generate(), wordCheck.wayread, wordCheck.vocabulary,  wordCheck.wayread),
               );
               if (!listWordsTest.contains(wordCheck)) {
                 listWordsTest.add(wordCheck);
               }
-              type == "JapToVN"
-                  ? listAwnser.add(wordCheck.mean)
-                  : type == "JapToWayRead"
-                  ? listAwnser.add(wordCheck.wayread)
-                  : listAwnser.add(wordCheck.vocabulary);
             }
 
             dataMap.add(
               {
                 "feture": fetureChose,
                 "listColumA": dataWordsTest,
-                "listColumB": listAwnser,
+                "listColumB": dataWordsTest,
               },
             );
           }

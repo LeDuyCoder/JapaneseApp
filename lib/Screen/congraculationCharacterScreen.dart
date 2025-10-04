@@ -6,13 +6,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:icons_plus/icons_plus.dart';
-import 'package:japaneseapp/Config/dataHelper.dart';
 import 'package:japaneseapp/Module/character.dart' as charHiKa;
 import 'package:japaneseapp/Service/Server/ServiceLocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Service/FunctionService.dart';
 import '../Config/config.dart';
+import '../Service/Local/local_db_service.dart';
 import '../Theme/colors.dart';
 import 'dashboardScreen.dart';
 
@@ -162,20 +162,20 @@ class _congraculationChacterScreen extends State<congraculationChacterScreen>  w
   }
 
   Future<void> handleData() async {
-    DatabaseHelper db = DatabaseHelper.instance;
-    var batch = await db.getBatch(); // Chờ batch được khởi tạo
+    final db = LocalDbService.instance;
+    var batch = await db.wordDao.getDatabaseHelper().getBatch(); // Chờ batch được khởi tạo
 
 
     for (String char in widget.listWordsTest) {
       print(char);
-      if(await db.isCharacterExist(char)){
+      if(await db.wordDao.isCharacterExist(char)){
         batch.rawUpdate(
             'UPDATE characterjp SET level = level + 1 WHERE charName = ? AND typeword = ?',
             [char, widget.topic]
         );
       }else{
         charHiKa.character charJP = findCharacter(widget.dataJson, widget.topic, char)!;
-        await db.increaseCharacterLevel(char, 1, charJP.level!, widget.topic);
+        await db.wordDao.increaseCharacterLevel(char, 1, charJP.level!, widget.topic);
       }
     }
 

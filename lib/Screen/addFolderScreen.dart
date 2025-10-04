@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:japaneseapp/Screen/dashboardScreen.dart';
 import 'package:japaneseapp/Theme/colors.dart';
 
-import '../Config/dataHelper.dart';
+import '../Service/Local/local_db_service.dart';
 
 class addFolderScreen extends StatefulWidget{
   final Function reloadScreen;
@@ -37,12 +37,12 @@ class _addFolderScreen extends State<addFolderScreen>{
                 });
                 return;
               } else {
-                if (await DatabaseHelper.instance.hasFolderName(nameFolderInput.text)) {
+                if (await LocalDbService.instance.folderDao.hasFolderName(nameFolderInput.text)) {
                   setState(() {
                     textErrorName = "Tên Thư Mục Đã Tồn Tại";
                   });
                 } else {
-                  await DatabaseHelper.instance.insertNewFolder(nameFolderInput.text);
+                  await LocalDbService.instance.folderDao.insertFolder(nameFolderInput.text);
 
                   Navigator.of(context).pop();
                   dashboardScreen.globalKey.currentState?.reloadScreen();

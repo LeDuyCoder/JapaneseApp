@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:japaneseapp/Config/dataHelper.dart';
 import 'package:japaneseapp/Module/topic.dart';
 import 'package:japaneseapp/Screen/addTopicFolder.dart';
 import 'package:japaneseapp/Screen/dashboardScreen.dart';
 import 'package:japaneseapp/Theme/colors.dart';
 import 'package:japaneseapp/Widget/topicManagerWidget.dart';
 
+import '../Service/Local/local_db_service.dart';
 import '../generated/app_localizations.dart';
 
 class folderManagerScreen extends StatefulWidget{
@@ -28,15 +28,15 @@ class _folderMangerScreen extends State<folderManagerScreen>{
 
 
   Future<List<topic>> hanldeDataTopic() async {
-    final db = DatabaseHelper.instance;
+    final db = LocalDbService.instance;
     List<topic> result = [];
-    result = await db.getAllTopicInFolder(widget.idFolder);
+    result = await db.folderDao.getAllTopicInFolder(widget.idFolder);
     return result;
   }
 
   void removeTopic(String topicID) async {
-    DatabaseHelper db = DatabaseHelper.instance;
-    await db.deleteTopicFromFolder(widget.idFolder, topicID);
+    final db = LocalDbService.instance;
+    await db.folderDao.deleteTopicFromFolder(widget.idFolder, topicID);
     widget.reloadDashBoard();
     reload();
   }
@@ -85,8 +85,8 @@ class _folderMangerScreen extends State<folderManagerScreen>{
                 title: Text(AppLocalizations.of(context)!.folderManager_bottomSheet_removeFolder,
                     style: TextStyle(color: Colors.red, fontSize: 18)),
                 onTap: () async {
-                  DatabaseHelper db = DatabaseHelper.instance;
-                  await db.deleteFolder(widget.idFolder);
+                  final db = LocalDbService.instance;
+                  await db.folderDao.deleteFolder(widget.idFolder);
                   reload();
                   Navigator.pop(context);
                   Navigator.pop(context);

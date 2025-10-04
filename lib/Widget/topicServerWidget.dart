@@ -1,9 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:japaneseapp/Screen/qrScreen.dart';
 import 'package:japaneseapp/Theme/colors.dart';
 
-import '../Config/dataHelper.dart';
+import '../Service/Local/local_db_service.dart';
 
 class topicServerWidget extends StatefulWidget{
 
@@ -23,8 +22,8 @@ class topicServerWidget extends StatefulWidget{
 class _topicServerWidget extends State<topicServerWidget>{
 
   Future<bool> hastTopic(String id) async {
-    DatabaseHelper db = DatabaseHelper.instance;
-    return await db.hasTopicID(id);
+    final db = LocalDbService.instance;
+    return await db.topicDao.hasTopicID(id);
   }
 
 

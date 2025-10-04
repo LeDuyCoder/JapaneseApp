@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_update/in_app_update.dart';
-import 'package:japaneseapp/Config/dataHelper.dart';
 import 'package:japaneseapp/Screen/SetUpLanguage.dart';
 import 'package:japaneseapp/Screen/controllScreen.dart';
 import 'package:japaneseapp/State/FeatureState.dart';
@@ -16,6 +15,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:animated_text_kit/animated_text_kit.dart';
 
+import '../Service/Local/local_db_service.dart';
 import '../Service/Server/ServiceLocator.dart';
 
 class splashScreen extends StatefulWidget{
@@ -190,9 +190,9 @@ class _splashScreen extends State<splashScreen> with SingleTickerProviderStateMi
   Future<void> _initializeDatabase() async {
     // Khởi tạo cơ sở dữ liệu và gọi await để chờ cơ sở dữ liệu được tạo
 
-    DatabaseHelper db = DatabaseHelper.instance;
+    final db = LocalDbService.instance;
 
-    await db.createDataLevel();
+    await db.preferencesService.initDefaults();
     await Future.delayed(Duration(seconds: 2));
 
     await checkInternet();

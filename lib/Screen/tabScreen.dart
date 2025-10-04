@@ -60,71 +60,79 @@ class _TabScreenState extends State<TabScreen> {
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
-              Container(
-                width: MediaQuery.sizeOf(context).width,
-                height: 85,
-                decoration: const BoxDecoration(
-                  color: Color.fromRGBO(232, 232, 232, 0.4),
-                  borderRadius: BorderRadius.all(Radius.circular(15)),
-                ),
-                child: GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                      dashboardScreen.globalKey.currentState?.showPopupAddTopic();
-                    },
-                    child: Row(
-                      children: [
-                        SizedBox(width: 10,),
-                        Icon(Icons.menu_book, color: AppColors.primary),
-                        SizedBox(width: 10),
-                        Text(AppLocalizations.of(context)!.add_course,
-                            style: TextStyle(color: Colors.black, fontSize: 18)),
-                      ],
-                    ),
-                )
-              ),
-              const SizedBox(height: 10),
-              Container(
+              GestureDetector(
+                onTap: (){
+                  Navigator.pop(context);
+                  dashboardScreen.globalKey.currentState?.showPopupAddTopic();
+                },
+                child: Container(
                   width: MediaQuery.sizeOf(context).width,
                   height: 85,
                   decoration: const BoxDecoration(
                     color: Color.fromRGBO(232, 232, 232, 0.4),
                     borderRadius: BorderRadius.all(Radius.circular(15)),
                   ),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                      Navigator.of(context).push(
-                        PageRouteBuilder(
-                          pageBuilder: (context, animation, secondaryAnimation) =>
-                              addFolderScreen(
-                                reloadScreen: () {},
-                              ),
-                          transitionsBuilder: (context, animation,
-                              secondaryAnimation, child) {
-                            const begin = Offset(0.0, 1.0);
-                            const end = Offset.zero;
-                            const curve = Curves.ease;
-                            var tween = Tween(begin: begin, end: end)
-                                .chain(CurveTween(curve: curve));
-                            return SlideTransition(
-                              position: animation.drive(tween),
-                              child: child,
-                            );
-                          },
+                  child: Row(
+                    children: [
+                      SizedBox(width: 10,),
+                      Icon(Icons.menu_book, color: AppColors.primary),
+                      SizedBox(width: 10),
+                      Text(AppLocalizations.of(context)!.add_course,
+                          style: TextStyle(color: Colors.black, fontSize: 18)),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              GestureDetector(
+                onTap: (){
+                  Navigator.pop(context);
+                  Navigator.of(context).push(
+                      PageRouteBuilder(
+                        pageBuilder: (context, animation, secondaryAnimation) => addFolderScreen(
+                          reloadScreen: () {},
                         ),
-                      );
-                    },
-                    child: Row(
-                      children: [
-                        SizedBox(width: 10,),
-                        const Icon(Icons.folder_open, color: AppColors.primary),
-                        SizedBox(width: 10),
-                        Text(AppLocalizations.of(context)!.add_folder,
-                            style: TextStyle(color: Colors.black, fontSize: 18)),
-                      ],
-                    ),
-                  )
+                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                          const beginOffset = Offset(0.0, 1.0);
+                          const endOffset = Offset.zero;
+                          const curve = Curves.ease;
+
+                          final tweenOffset = Tween(begin: beginOffset, end: endOffset)
+                              .chain(CurveTween(curve: curve));
+                          final offsetAnimation = animation.drive(tweenOffset);
+
+                          final fadeAnimation = animation.drive(
+                            CurveTween(curve: Curves.easeIn),
+                          );
+
+                          return SlideTransition(
+                            position: offsetAnimation,
+                            child: FadeTransition(
+                              opacity: fadeAnimation,
+                              child: child,
+                            ),
+                          );
+                        },
+                      )
+                  );
+                },
+                child: Container(
+                  width: MediaQuery.sizeOf(context).width,
+                  height: 85,
+                  decoration: const BoxDecoration(
+                    color: Color.fromRGBO(232, 232, 232, 0.4),
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                  ),
+                  child: Row(
+                    children: [
+                      SizedBox(width: 10,),
+                      const Icon(Icons.folder_open, color: AppColors.primary),
+                      SizedBox(width: 10),
+                      Text(AppLocalizations.of(context)!.add_folder,
+                          style: TextStyle(color: Colors.black, fontSize: 18)),
+                    ],
+                  ),
+                ),
               ),
             ],
           ),

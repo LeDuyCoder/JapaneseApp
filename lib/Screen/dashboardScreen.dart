@@ -12,16 +12,16 @@ import 'package:japaneseapp/Module/topic.dart';
 import 'package:japaneseapp/Screen/addWordScreen.dart';
 import 'package:japaneseapp/Screen/allFolderScreen.dart';
 import 'package:japaneseapp/Screen/downloadScreen.dart';
-import 'package:japaneseapp/Screen/qrScreen.dart';
+import 'package:japaneseapp/Screen/featureScreen.dart';
 import 'package:japaneseapp/Screen/seeMoreTopic.dart';
 import 'package:japaneseapp/Screen/splashScreen.dart';
 import 'package:japaneseapp/Theme/colors.dart';
 import 'package:japaneseapp/Widget/folerWidget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../Config/dataHelper.dart';
 import '../Module/WordModule.dart';
 import '../Module/word.dart';
+import '../Service/Local/local_db_service.dart';
 import '../Service/Server/ServiceLocator.dart';
 import '../Widget/JapaneseClockText.dart';
 import '../Widget/topicServerWidget.dart';
@@ -116,7 +116,7 @@ class _DashboardScreenState extends State<dashboardScreen> {
   }
 
   Future<Map<String, dynamic>> hanldeGetData() async {
-    final db = await DatabaseHelper.instance;
+    final db = LocalDbService.instance;
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
     Map<String, dynamic> data;
@@ -129,37 +129,29 @@ class _DashboardScreenState extends State<dashboardScreen> {
 
       print(dataServer);
 
-      if (dataServer == null) {
-        data = {
-          "topic": await db.getAllTopic(),
-          "folder": await db.getAllFolder(),
-        };
-      }
-      else {
-        // nếu server có dữ liệu → gộp local + server
-        data = {
-          "topic": await db.getAllTopic(),
-          "folder": await db.getAllFolder(),
-          "topicServer": dataServer,
-        };
-      }
-    } on TimeoutException catch (_) {
+      // nếu server có dữ liệu → gộp local + server
+      data = {
+        "topic": await db.topicDao.getAllTopics(),
+        "folder": await db.folderDao.getAllFolders(),
+        "topicServer": dataServer,
+      };
+        } on TimeoutException catch (_) {
       print(_.message);
       data = {
-        "topic": await db.getAllTopic(),
-        "folder": await db.getAllFolder(),
+        "topic": await db.topicDao.getAllTopics(),
+        "folder": await db.folderDao.getAllFolders(),
       };
     } on SocketException catch (_) {
       print(_.message);
       data = {
-        "topic": await db.getAllTopic(),
-        "folder": await db.getAllFolder(),
+        "topic": await db.topicDao.getAllTopics(),
+        "folder": await db.folderDao.getAllFolders(),
       };
     } catch (e) {
       print(e.toString());
       data = {
-        "topic": await db.getAllTopic(),
-        "folder": await db.getAllFolder(),
+        "topic": await db.topicDao.getAllTopics(),
+        "folder": await db.folderDao.getAllFolders(),
       };
     }
 
@@ -385,163 +377,6 @@ class _DashboardScreenState extends State<dashboardScreen> {
     );
   }
 
-  void showDialogDataFromQR(Map<String, dynamic> data){
-    showDialog(
-      barrierDismissible: true,
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          backgroundColor: Colors.white,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(10),
-              bottomRight: Radius.circular(10),
-            ), // Bo góc popup
-          ),
-          child: StatefulBuilder(
-            builder: (BuildContext context, void Function(void Function()) setState) {
-              return Container(
-                decoration: const BoxDecoration(
-                  border: Border(
-                    top: BorderSide(
-                      color: Color.fromRGBO(20, 195, 142, 1.0), // Màu xanh cạnh trên ngoài cùng
-                      width: 10.0, // Độ dày của cạnh trên
-                    ),
-                  ),
-                ),
-                child: Stack(
-                  children: [
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const Center(
-                          child: Text("Danh Sách Từ Chia Sẽ", style: TextStyle(fontSize: 25)),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 10),
-                          child: Row(
-                            children: [
-                              const Text("Tạo Bởi: ", style: TextStyle(fontFamily: "", fontSize: 20),),
-                              Text(data["user"], style: TextStyle(fontFamily: "IslandMoments",),)
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 10),
-                          child: Row(
-                            children: [
-                              const Text("Số Lượng Từ: ", style: TextStyle(fontFamily: "", fontSize: 20),),
-                              Text("${(data["listWords"] as List<dynamic>).length} Words", style: TextStyle(fontFamily: "IslandMoments"),)
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 10,),
-                        const Text("Bạn Có Muốn Thêm Vao Danh Sách Từ Không ?", style: TextStyle(fontFamily: ""),),
-                        const SizedBox(height: 20,),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            GestureDetector(
-                              onTap: (){
-                                Navigator.pop(context);
-                              },
-                              child: Container(
-                                width: MediaQuery.sizeOf(context).width*0.3,
-                                height: MediaQuery.sizeOf(context).height*0.05,
-                                decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                                    boxShadow: [
-                                    ]
-                                ),
-                                child: const Center(
-                                  child: Text("Hủy", style: TextStyle(color: Colors.red, fontSize: 15, fontWeight: FontWeight.bold),),
-                                ),
-                              ),
-                            ),
-                            SizedBox(width:10,),
-                            GestureDetector(
-                              onTap: () async {
-                                DatabaseHelper db = DatabaseHelper.instance;
-                                String nameTopic = "${data["name"]}";
-
-                                if(!(await db.hasTopicName(nameTopic))) {
-                                  await db.insertTopic(nameTopic, data["user"]);
-
-                                  List<dynamic> listWords = data["listWords"];
-                                  List<Map<String, dynamic>> dataInsert = [];
-                                  for (dynamic data in listWords) {
-                                    dataInsert.add(
-                                        word(data["word"], data["wayread"],
-                                            data["mean"], nameTopic, 0).toMap()
-                                    );
-                                  }
-                                  await db.insertDataTopic(dataInsert);
-                                  showDialogSuccessSaveData();
-                                }else{
-                                  showDialogErrorSaveData();
-                                }
-                              },
-                              child: Container(
-                                width: MediaQuery.sizeOf(context).width*0.3,
-                                height: MediaQuery.sizeOf(context).height*0.05,
-                                decoration: const BoxDecoration(
-                                    color: Color.fromRGBO(97, 213, 88, 1.0),
-                                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                                    boxShadow: [
-                                      BoxShadow(
-                                          color: Colors.green,
-                                          offset: Offset(6, 6)
-                                      )
-                                    ]
-                                ),
-                                child: const Center(
-                                  child: Text("Xác Nhận", style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),),
-                                ),
-                              ),
-                            ),
-                            SizedBox(width:10,),
-                          ],
-                        ),
-                        SizedBox(height: 20,),
-                      ],
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-        );
-      },
-    );
-  }
-
-  Future<void> _pickFile() async {
-    try {
-      // Hiển thị trình chọn file
-      FilePickerResult? result = await FilePicker.platform.pickFiles();
-
-      if (result != null) {
-        // Lấy file được chọn
-        File file = File(result.files.single.path!);
-
-        // Đọc nội dung file
-        String content = await file.readAsString();
-
-        // Cập nhật giao diện
-        setState(() {
-          _fileContent = content;
-        });
-
-        showDialogDataFromQR(jsonDecode(_fileContent!));
-      }
-    } catch (e) {
-    }
-  }
-
   void showPopupAddFolder() {
     AnimationController controller = AnimationController(
       duration: const Duration(milliseconds: 500),
@@ -660,13 +495,13 @@ class _DashboardScreenState extends State<dashboardScreen> {
                                       isLoadingCreateNewFolder = true;
                                     });
 
-                                    if (await DatabaseHelper.instance.hasFolderName(nameFolderInput.text)) {
+                                    if (await LocalDbService.instance.folderDao.hasFolderName(nameFolderInput.text)) {
                                       setState(() {
                                         textErrorName = "Tên Thư Mục Đã Tồn Tại";
                                         isLoadingCreateNewFolder = false;
                                       });
                                     } else {
-                                      await DatabaseHelper.instance.insertNewFolder(nameFolderInput.text);
+                                      await LocalDbService.instance.folderDao.insertNewFolder(nameFolderInput.text);
                                       await reload();
                                       controller.dispose();
                                       Navigator.of(context).pop();
@@ -839,7 +674,7 @@ class _DashboardScreenState extends State<dashboardScreen> {
                                     isLoadingCreateNewFolder = true;
                                   });
 
-                                  if (await DatabaseHelper.instance.hasTopicName(nameTopicInput.text)) {
+                                  if (await LocalDbService.instance.topicDao.hasTopicName(nameTopicInput.text)) {
                                     setState(() {
                                       textErrorName = AppLocalizations.of(context)!.popup_add_topic_exit;
                                       isLoadingCreateNewFolder = false;
@@ -908,151 +743,19 @@ class _DashboardScreenState extends State<dashboardScreen> {
     );
   }
 
-  void showPopupInput() {
-    showGeneralDialog(
-      barrierDismissible: true,
-      context: context,
-      barrierLabel: "",
-      pageBuilder: (context, animation, secondaryAnimation) {
-        return StatefulBuilder(
-          builder: (BuildContext context, void Function(void Function()) setState) {
-            return Align(
-              alignment: Alignment.topCenter,
-              child: SlideTransition(
-                position: Tween<Offset>(
-                  begin: const Offset(0, -1),
-                  end: Offset.zero,
-                ).animate(CurvedAnimation(
-                  parent: animation,
-                  curve: Curves.easeInOut,
-                )),
-                child: Dialog(
-                  backgroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Container(
-                    width: MediaQuery.sizeOf(context).width * 0.8,
-                    padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Text(
-                          'Chọn phương thức nhập',
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF388E3C),
-                            fontFamily: "",
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 24),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              child: GestureDetector(
-                                onTap: () async {
-                                  await _pickFile();
-                                },
-                                child: Container(
-                                  height: 70,
-                                  margin: const EdgeInsets.symmetric(horizontal: 8),
-                                  decoration: BoxDecoration(
-                                    color: Colors.blue.shade400,
-                                    borderRadius: BorderRadius.circular(14),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.blue.withOpacity(0.08),
-                                        blurRadius: 8,
-                                        offset: const Offset(0, 4),
-                                      ),
-                                    ],
-                                  ),
-                                  child: Center(
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: const [
-                                        Icon(Icons.file_upload_outlined, color: Colors.white, size: 28),
-                                        SizedBox(height: 6),
-                                        Text(
-                                          "Từ File",
-                                          style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: GestureDetector(
-                                onTap: () async {
-                                  Navigator.push(context, MaterialPageRoute(builder: (ctx) => qrScreen()));
-                                },
-                                child: Container(
-                                  height: 70,
-                                  margin: const EdgeInsets.symmetric(horizontal: 8),
-                                  decoration: BoxDecoration(
-                                    color: Color.fromRGBO(184, 241, 176, 1),
-                                    borderRadius: BorderRadius.circular(14),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.green.withOpacity(0.08),
-                                        blurRadius: 8,
-                                        offset: const Offset(0, 4),
-                                      ),
-                                    ],
-                                  ),
-                                  child: Center(
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: const [
-                                        Icon(Icons.qr_code, color: Colors.black, size: 28),
-                                        SizedBox(height: 6),
-                                        Text(
-                                          "Từ QR",
-                                          style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w600),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 16),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-
   Future<bool> dowloadTopic(String id) async{
 
-    DatabaseHelper db = DatabaseHelper.instance;
+    final db = LocalDbService.instance;
 
     topic? Topic = await ServiceLocator.topicService.getDataTopicByID(id);
     nameTopic = Topic!.name;
     List<Map<String, dynamic>> dataWords = [];
 
-     if(await db.hasTopicName(nameTopic)){
+     if(await db.topicDao.hasTopicName(nameTopic)){
        await showDialogRenameTopic();
      }
 
-    if(!await db.hasTopicName(nameTopic)){
+    if(!await db.topicDao.hasTopicName(nameTopic)){
       List<Word> listWord = await ServiceLocator.wordService.fetchWordsByTopicID(id);
       for(Word wordDB in listWord){
         dataWords.add(
@@ -1060,8 +763,8 @@ class _DashboardScreenState extends State<dashboardScreen> {
         );
       }
 
-      await db.insertTopicID(Topic.id, nameTopic==""?Topic.name:nameTopic, Topic.owner!);
-      await db.insertDataTopic(dataWords);
+      await db.topicDao.insertTopicID(Topic.id, nameTopic==""?Topic.name:nameTopic, Topic.owner!);
+      await db.topicDao.insertDataTopic(dataWords);
       reload();
     }
 
@@ -1155,8 +858,8 @@ class _DashboardScreenState extends State<dashboardScreen> {
                                 children: [
                                   GestureDetector(
                                     onTap: () async {
-                                      DatabaseHelper db = DatabaseHelper.instance;
-                                      if(await db.hasTopicName(renameTopicInput.text)){
+                                      final db = LocalDbService.instance;
+                                      if(await db.topicDao.hasTopicName(renameTopicInput.text)){
                                         setState((){
                                           textErrorTopicName = "Tên mới đã tồn tại";
                                         });
@@ -1314,20 +1017,25 @@ class _DashboardScreenState extends State<dashboardScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Container(
-                  height: 45,
-                  width: 45,
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: AppColors.primary,
-                  ),
-                  child: Center(
-                    child: Text(
-                      getUserName(),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                GestureDetector(
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>featureScreen()));
+                  },
+                  child: Container(
+                    height: 45,
+                    width: 45,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppColors.primary,
+                    ),
+                    child: Center(
+                      child: Text(
+                        getUserName(),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),

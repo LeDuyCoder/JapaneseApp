@@ -11,10 +11,12 @@ class ScoreService extends BaseService {
           'userId': userId,
         });
 
+    print(data);
+
     if (data is Map<String, dynamic>) {
       if(data.containsKey("error")){
         await addScore(userId, 0);
-        print("data: ${await getScore(period, userId)}");
+
         return await getScore(period, userId);
       }else {
         return data["score"];

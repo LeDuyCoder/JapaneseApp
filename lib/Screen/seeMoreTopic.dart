@@ -7,9 +7,9 @@ import 'package:japaneseapp/Module/topic.dart';
 import 'package:japaneseapp/Theme/colors.dart';
 import 'package:japaneseapp/Widget/topicServerWidget.dart';
 
-import '../Config/dataHelper.dart';
 import '../Module/WordModule.dart';
 import '../Module/word.dart';
+import '../Service/Local/local_db_service.dart';
 import '../Service/Server/ServiceLocator.dart';
 import '../generated/app_localizations.dart';
 import 'downloadScreen.dart';
@@ -65,22 +65,22 @@ class _seeMoreTopic extends State<seeMoreTopic>{
   }
 
   Future<bool> hastTopic(String id) async {
-    DatabaseHelper db = DatabaseHelper.instance;
-    return await db.hasTopicID(id);
+    final db = LocalDbService.instance;
+    return await db.topicDao.hasTopicID(id);
   }
 
   Future<bool> dowloadTopic(String id) async{
-    DatabaseHelper db = DatabaseHelper.instance;
+    final db = LocalDbService.instance;
 
     topic? Topic = await ServiceLocator.topicService.getDataTopicByID(id);
     nameTopic = Topic!.name;
     List<Map<String, dynamic>> dataWords = [];
 
-    if(await db.hasTopicName(nameTopic)){
+    if(await db.topicDao.hasTopicName(nameTopic)){
       await showDialogRenameTopic();
     }
 
-    if(!await db.hasTopicName(nameTopic)){
+    if(!await db.topicDao.hasTopicName(nameTopic)){
       List<Word> listWord = await ServiceLocator.wordService.fetchWordsByTopicID(id);
       for(Word wordDB in listWord){
         dataWords.add(
@@ -88,8 +88,8 @@ class _seeMoreTopic extends State<seeMoreTopic>{
         );
       }
 
-      await db.insertTopicID(Topic.id, nameTopic==""?Topic.name:nameTopic, Topic.owner!);
-      await db.insertDataTopic(dataWords);
+      await db.topicDao.insertTopicID(Topic.id, nameTopic==""?Topic.name:nameTopic, Topic.owner!);
+      await db.topicDao.insertDataTopic(dataWords);
     }
 
     setState(() {
@@ -185,8 +185,8 @@ class _seeMoreTopic extends State<seeMoreTopic>{
                                 children: [
                                   GestureDetector(
                                     onTap: () async {
-                                      DatabaseHelper db = DatabaseHelper.instance;
-                                      if(await db.hasTopicName(renameTopicInput.text)){
+                                      final db = LocalDbService.instance;
+                                      if(await db.topicDao.hasTopicName(renameTopicInput.text)){
                                         setState((){
                                           textErrorTopicName = "Tên mới đã tồn tại";
                                         });

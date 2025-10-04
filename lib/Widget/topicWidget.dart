@@ -1,10 +1,10 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:japaneseapp/Config/dataHelper.dart';
 import 'package:japaneseapp/Screen/listWordScreen.dart';
 import 'package:japaneseapp/Theme/colors.dart';
 
+import '../Service/Local/local_db_service.dart';
 import '../generated/app_localizations.dart';
 
 class topicWidget extends StatefulWidget{
@@ -28,9 +28,9 @@ class _topicWidget extends State<topicWidget>{
     double sumComplitted = 0.0;
     double progressComplited = 0.0;
 
-    DatabaseHelper db = DatabaseHelper.instance;
-    List<Map<String, dynamic>> dataWords = await db.getAllWordbyTopic(widget.nameTopic);
-    List<Map<String, dynamic>> dataTopic = await db.getAllTopicByName(widget.nameTopic);
+    final db = LocalDbService.instance;
+    List<Map<String, dynamic>> dataWords = await db.topicDao.getAllWordbyTopic(widget.nameTopic);
+    List<Map<String, dynamic>> dataTopic = await db.topicDao.getAllTopicByName(widget.nameTopic);
     if(dataWords.isNotEmpty) {
       for (Map<String, dynamic> word in dataWords) {
         sumComplitted += (word['level'] * 1.0) >= 27 ? 1 : 0;

@@ -16,7 +16,7 @@ import 'package:japaneseapp/State/FeatureState.dart';
 import 'package:japaneseapp/Theme/colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../Config/dataHelper.dart';
+import '../Service/Local/local_db_service.dart';
 import '../generated/app_localizations.dart';
 
 class settingScreen extends StatefulWidget{
@@ -414,7 +414,7 @@ class _settingScreen extends State<settingScreen>{
     setState(() => isLoading = true);
 
     try {
-      final db = DatabaseHelper.instance;
+      final db = LocalDbService.instance;
       final prefs = await SharedPreferences.getInstance();
 
       final userDoc = FirebaseFirestore.instance
@@ -439,7 +439,7 @@ class _settingScreen extends State<settingScreen>{
       // Restore SQLite
       final String sqliteData = dataMap["sqlite"] ?? "";
       if (sqliteData.isNotEmpty) {
-        await db.importSynchronyData(sqliteData);
+        await db.syncDao.importSynchronyData(sqliteData);
       }
 
       // Restore SharedPreferences (tự động duyệt qua tất cả key)
@@ -649,10 +649,10 @@ class _settingScreen extends State<settingScreen>{
                             onTap: () async {
                               if(await hasInternet()){
                                 final SharedPreferences prefs = await SharedPreferences.getInstance();
-                                final DatabaseHelper db = DatabaseHelper.instance;
+                                final db = LocalDbService.instance;
                                 await synchronyData(true);
                                 prefs.clear();
-                                db.clearAllData();
+                                db.miscDao.clearAllData();
                                 await FirebaseAuth.instance.signOut();
                                 Navigator.pop(context);
                               }else{

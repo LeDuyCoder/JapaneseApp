@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../Config/dataHelper.dart';
 import '../Module/topic.dart';
+import '../Service/Local/local_db_service.dart';
 import '../generated/app_localizations.dart';
 
 class addTopicFolder extends StatefulWidget{
@@ -18,17 +18,17 @@ class addTopicFolder extends StatefulWidget{
 class _addTopicFolder extends State<addTopicFolder>{
 
   Future<bool> checkTopicExistInFolder(String idTopic) async {
-    DatabaseHelper db = DatabaseHelper.instance;
-    return db.hasTopicInFolder(widget.idFolder, idTopic);
+    final db = LocalDbService.instance;
+    return db.folderDao.hasTopicInFolder(widget.idFolder, idTopic);
   }
 
   Future<List<topic>> getInfoTopic() async {
     List<topic> topics = [];
-    DatabaseHelper db = DatabaseHelper.instance;
-    List<Map<String, dynamic>> allTopic = await db.getAllTopic();
+    final db = LocalDbService.instance;
+    List<Map<String, dynamic>> allTopic = await db.topicDao.getAllTopics();
     if(allTopic.isNotEmpty) {
       for (Map<String, dynamic> topicMap in allTopic) {
-        topics.add(topic(id: topicMap["id"], name: topicMap["name"], owner: topicMap["user"], count: (await db.getAllWordbyTopic(topicMap["name"])).length));
+        topics.add(topic(id: topicMap["id"], name: topicMap["name"], owner: topicMap["user"], count: (await db.topicDao.getAllWordsByTopic(topicMap["name"])).length));
       }
     }
     return topics;
@@ -115,13 +115,13 @@ class _addTopicFolder extends State<addTopicFolder>{
 
                     bool isChose = isExistTopic.data as bool;
                     return topicView(topics[index], isChose, () async {
-                      DatabaseHelper db = DatabaseHelper.instance;
+                      final db = LocalDbService.instance;
                       if(isChose == false) {
-                        await db.addTopicToFolder(widget.idFolder, topics[index].id);
+                        await db.folderDao.addTopicToFolder(widget.idFolder, topics[index].id);
                         setState(() {
                         });
                       }else{
-                        await db.deleteTopicFromFolder(widget.idFolder, topics[index].id);
+                        await db.folderDao.removeTopicFromFolder(widget.idFolder, topics[index].id);
                         setState(() {});
                       }
                     });

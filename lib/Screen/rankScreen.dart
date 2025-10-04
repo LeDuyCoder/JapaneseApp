@@ -105,14 +105,14 @@ class _rankScreen extends State<rankScreen>{
   Future<List<dynamic>> loadData(String userId, String period) async {
     List<Object> list = [];
 
-
+    print(await ServiceLocator.scoreService.getScore(period, userId));
 
     list.add(await ServiceLocator.scoreService.getScore(period, userId));
     list.add(await ServiceLocator.scoreService.getLeaderboard(period, 10));
 
     rewardRankService().rewardGift(context);
 
-    //print(await ServiceLocator.scoreService.getLeaderboard(period, 10));
+    print(await ServiceLocator.scoreService.getLeaderboard(period, 10));
 
     return list;
   }
@@ -207,12 +207,17 @@ class _rankScreen extends State<rankScreen>{
         ),
         body: FutureBuilder(future:loadData(FirebaseAuth.instance.currentUser!.uid, WeekUtils.getCurrentWeekString()), builder: (context, snapshot){
           if(snapshot.connectionState == ConnectionState.waiting){
-            return Center(
-              child: Container(
-                height: 100,
-                width: 100,
-                child: const CircularProgressIndicator(
-                  color: Colors.green,
+            return Container(
+              width: MediaQuery.sizeOf(context).width,
+              height: MediaQuery.sizeOf(context).height,
+              color: AppColors.backgroundPrimary,
+              child: Center(
+                child: Container(
+                  height: 100,
+                  width: 100,
+                  child: const CircularProgressIndicator(
+                    color: Colors.green,
+                  ),
                 ),
               ),
             );
@@ -229,7 +234,7 @@ class _rankScreen extends State<rankScreen>{
                     Container(
                       width: 200,
                       height: 200,
-                      child: Image.asset(snapshot.data![0]["score"] != null ? rankMap[getRank(snapshot.data![0]["score"])]["image"] : rankMap["Bronze"]["image"]),
+                      child: Image.asset(snapshot.data?[0]["score"] != null ? rankMap[getRank(snapshot.data![0]["score"])]["image"] : rankMap["Bronze"]["image"]),
                     ),
                     Text(snapshot.data![0]["score"] != null ? rankMap[getRank(snapshot.data![0]["score"])]["name"] : "NaN" ,style: TextStyle(fontFamily: "Itim", fontSize: 35, fontWeight: FontWeight.bold, color: rankMap[getRank(snapshot.data![0]["score"])]["color"])),
                     Container(

@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:japaneseapp/Module/word.dart';
 
-import '../Config/dataHelper.dart';
+import '../Service/Local/local_db_service.dart';
 import '../Theme/colors.dart';
 import '../Widget/addWordWidget.dart';
 import '../generated/app_localizations.dart';
@@ -374,15 +374,15 @@ class _addWordScreen extends State<addWordScreen>{
   }
 
   Future<void> saveData() async {
-    DatabaseHelper db = DatabaseHelper.instance;
+    final db = LocalDbService.instance;
     List<Map<String, dynamic>> dataWords = [];
 
     for(word vocabulary in listVocabulary){
       dataWords.add(vocabulary.toMap());
     }
 
-    await db.insertTopic(widget.topicName, FirebaseAuth.instance.currentUser!.displayName!);
-    await db.insertDataTopic(dataWords);
+    await db.topicDao.insertTopic(widget.topicName, FirebaseAuth.instance.currentUser!.displayName!);
+    await db.topicDao.insertDataTopic(dataWords);
   }
 
   @override

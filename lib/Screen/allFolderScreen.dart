@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../Config/dataHelper.dart';
+import '../Service/Local/local_db_service.dart';
 import '../Theme/colors.dart';
 import '../generated/app_localizations.dart';
 import 'folderManagerScreen.dart';
@@ -15,10 +15,10 @@ class _allFolderScreen extends State<allFolderScreen>{
   String display = "grid";
 
   Future<Map<String, dynamic>> hanldeGetData() async {
-    final db = DatabaseHelper.instance;
+    final db = LocalDbService.instance;
 
     Map<String, dynamic> data = {
-      "folder": await db.getAllFolder(),
+      "folder": await db.folderDao.getAllFolders(),
     };
 
     return data;

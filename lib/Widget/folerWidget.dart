@@ -1,9 +1,10 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:japaneseapp/Config/dataHelper.dart';
 import 'package:japaneseapp/Screen/folderManagerScreen.dart';
 import 'package:japaneseapp/Theme/colors.dart';
+
+import '../Service/Local/local_db_service.dart';
 
 class folderWidget extends StatelessWidget{
 
@@ -16,8 +17,8 @@ class folderWidget extends StatelessWidget{
   const folderWidget({super.key, required this.nameFolder, required this.reloadDashboard, required this.dateCreated, required this.idFolder, required this.amountTopic});
 
   void removeFolder(BuildContext context) async {
-    DatabaseHelper db = DatabaseHelper.instance;
-    await db.deleteData("folders", "namefolder = '${nameFolder}'");
+    final db = LocalDbService.instance;
+    await db.databseDao.deleteData("folders", "namefolder = '${nameFolder}'");
     Navigator.pop(context);
     reloadDashboard();
   }

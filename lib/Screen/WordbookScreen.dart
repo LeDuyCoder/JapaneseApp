@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:japaneseapp/Config/dataHelper.dart';
 import 'package:japaneseapp/Theme/colors.dart';
+
+import '../Service/Local/local_db_service.dart';
 
 class WordbookScreen extends StatefulWidget{
   @override
@@ -48,8 +49,8 @@ class _WordbookScreen extends State<WordbookScreen>{
                 ),
               ),
               IconButton(onPressed: () async {
-                DatabaseHelper db = DatabaseHelper.instance;
-                db.removeVocabulary(await db.database, wordJp: word, wordKana: reading);
+                final db = LocalDbService.instance;
+                db.vocabularyDao.removeVocabulary(wordJp: word, wordKana: reading);
                 setState(() {
 
                 });
@@ -106,8 +107,8 @@ class _WordbookScreen extends State<WordbookScreen>{
   }
 
   Future<List<Map<String, dynamic>>> loadData() async {
-    DatabaseHelper db = DatabaseHelper.instance;
-    return db.getAllVocabulary(await db.database);
+    final db = LocalDbService.instance;
+    return db.vocabularyDao.getAllVocabulary();
   }
 
 

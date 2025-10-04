@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:japaneseapp/Theme/colors.dart';
 
-import '../Config/dataHelper.dart';
+import '../Service/Local/local_db_service.dart';
 import '../Widget/topicWidget.dart';
 import '../generated/app_localizations.dart';
 
@@ -14,10 +14,10 @@ class allTopicScreen extends StatefulWidget{
 class _allTopicScreen extends State<allTopicScreen>{
 
   Future<Map<String, dynamic>> hanldeGetData() async {
-    final db = await DatabaseHelper.instance;
+    final db = LocalDbService.instance;
 
     Map<String, dynamic> data = {
-      "topic": await db.getAllTopic(),
+      "topic": await db.topicDao.getAllTopics(),
     };
 
     return data;
@@ -37,6 +37,7 @@ class _allTopicScreen extends State<allTopicScreen>{
       ),
       body: FutureBuilder(future: hanldeGetData(), builder: (data, snapshot){
         if(snapshot.hasData){
+          print(snapshot.data!);
           return Container(
               width: MediaQuery.sizeOf(context).height,
               height: MediaQuery.sizeOf(context).height,
@@ -52,7 +53,7 @@ class _allTopicScreen extends State<allTopicScreen>{
                             for (Map<String, dynamic> topicLocal in snapshot.data?["topic"])
                               ...[
                                 topicWidget(
-                                  id: topicLocal["id"],
+                                  id: "${topicLocal["id"]}",
                                   nameTopic: topicLocal["name"],
                                   reloadDashBoard: () {
                                     setState(() {

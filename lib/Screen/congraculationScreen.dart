@@ -6,7 +6,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:icons_plus/icons_plus.dart';
-import 'package:japaneseapp/Config/dataHelper.dart';
 import 'package:japaneseapp/Module/word.dart';
 import 'package:japaneseapp/Screen/dashboardScreen.dart';
 import 'package:japaneseapp/Theme/colors.dart';
@@ -15,6 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Service/FunctionService.dart';
 import '../Config/config.dart';
+import '../Service/Local/local_db_service.dart';
 import '../Service/Server/ServiceLocator.dart';
 
 class congraculationScreen extends StatefulWidget{
@@ -409,9 +409,9 @@ class _congraculationScreen extends State<congraculationScreen> with TickerProvi
                             }).toList();
 
                             // Cập nhật cơ sở dữ liệu
-                            final DatabaseHelper db = DatabaseHelper.instance;
+                            final db = LocalDbService.instance;
                             for (final data in dataUpdate) {
-                              await db.updateDatabase(
+                              await db.vocabularyDao.update(
                                 "words",
                                 data["dataUpdate"],
                                 "word = '${data["word"]}' and topic = '${widget.topic}'",

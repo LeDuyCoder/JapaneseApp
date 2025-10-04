@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 abstract class BaseService {
-  static String get baseUrl => dotenv.env['BASE_URL'] ?? 'http://localhost/backend';
+  static String get baseUrl =>  dotenv.env['BASE_URL'] ?? 'http://localhost/backend';
 
   static final Map<String, String> jsonHeaders = {
     'Content-Type': 'application/json; charset=UTF-8',
@@ -17,12 +17,16 @@ abstract class BaseService {
   Future<dynamic> get(String endpoint, {Map<String, String>? queryParams}) async {
     String url = '$baseUrl$endpoint';
 
+
+
     if (queryParams != null && queryParams.isNotEmpty) {
       final query = queryParams.entries
           .map((e) => '${e.key}=${Uri.encodeComponent(e.value)}')
           .join('&');
       url += '?$query';
     }
+
+    print(url);
 
     try {
       final response = await http.get(Uri.parse(url));

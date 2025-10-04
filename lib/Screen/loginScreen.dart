@@ -8,7 +8,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:japaneseapp/Screen/registerScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../Config/dataHelper.dart';
+import '../Service/Local/local_db_service.dart';
 import '../Service/Server/ServiceLocator.dart';
 import '../Theme/colors.dart';
 import '../generated/app_localizations.dart';
@@ -94,7 +94,7 @@ class _loginScreen extends State<loginScreen>{
   }
 
   Future<void> updateAsynchronyData() async {
-    final db = DatabaseHelper.instance;
+    final db = LocalDbService.instance;
     final prefs = await SharedPreferences.getInstance();
 
     try {
@@ -107,13 +107,13 @@ class _loginScreen extends State<loginScreen>{
 
       if (!docSnapshot.exists) {
         // Nếu chưa có data trên server thì tạo mặc định trong DB local
-        await db.createDataLevel();
+        await db.preferencesService.initDefaults();
         return;
       }
 
       final data = docSnapshot.data();
       if (data == null || data["data"] == null) {
-        await db.createDataLevel();
+        await db.preferencesService.initDefaults();
         return;
       }
 
@@ -122,7 +122,7 @@ class _loginScreen extends State<loginScreen>{
       // --- 1. Khôi phục SQLite ---
       final String sqliteData = dataMap["sqlite"] ?? "";
       if (sqliteData.isNotEmpty) {
-        await db.importSynchronyData(sqliteData);
+        await db.syncDao.importSynchronyData(sqliteData);
       }
 
       // --- 2. Khôi phục SharedPreferences ---

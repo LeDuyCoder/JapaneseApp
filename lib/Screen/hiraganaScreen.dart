@@ -1,10 +1,10 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-import 'package:japaneseapp/Config/dataHelper.dart';
 import 'package:japaneseapp/Screen/learnCharactersScreen.dart';
 import 'package:japaneseapp/Theme/colors.dart';
 
+import '../Service/Local/local_db_service.dart';
 import '../generated/app_localizations.dart';
 
 class hiraganaScreen extends StatefulWidget{
@@ -31,8 +31,8 @@ class _hiraganaScreen extends State<hiraganaScreen>{
   }
 
   Future<Map<String, dynamic>> loadDataCharacters() async {
-    DatabaseHelper db = DatabaseHelper.instance;
-    return db.getDataCharacter(widget.type);
+    final db = LocalDbService.instance;
+    return db.wordDao.getDataCharacter(widget.type);
   }
 
   void reloadScreen(){

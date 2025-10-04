@@ -6,7 +6,6 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:japaneseapp/Config/dataHelper.dart';
 import 'package:japaneseapp/Module/WordModule.dart';
 import 'package:japaneseapp/Module/topic.dart';
 import 'package:japaneseapp/Module/word.dart';
@@ -16,6 +15,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../Service/Local/local_db_service.dart';
 import '../Service/Server/ServiceLocator.dart';
 import '../Widget/FlashCardWidget.dart';
 import '../generated/app_localizations.dart';
@@ -41,8 +41,8 @@ class _listWordScreen extends State<listWordScreen>{
   Future<double> handledComplited (String topic) async {
     int sumComplitted = 0;
 
-    DatabaseHelper db = DatabaseHelper.instance;
-    List<Map<String, dynamic>> dataWords = await db.getAllWordbyTopic(topic);
+    final db = LocalDbService.instance;
+    List<Map<String, dynamic>> dataWords = await db.topicDao.getAllWordbyTopic(topic);
 
     if(dataWords.isNotEmpty) {
       for (Map<String, dynamic> word in dataWords) {
@@ -54,8 +54,8 @@ class _listWordScreen extends State<listWordScreen>{
   }
 
   Future<List<dynamic>> hanldeDataWords(String topic) async {
-    DatabaseHelper db = DatabaseHelper.instance;
-    List<Map<String, dynamic>> dataWords = await db.getAllWordbyTopic(topic);
+    final db = LocalDbService.instance;
+    List<Map<String, dynamic>> dataWords = await db.topicDao.getAllWordbyTopic(topic);
     double wordComplited = await handledComplited(topic);
     return [dataWords, wordComplited, dataWords.length];
   }
@@ -91,9 +91,9 @@ class _listWordScreen extends State<listWordScreen>{
     String nameTopic = "";
     String user = "";
 
-    DatabaseHelper db = DatabaseHelper.instance;
-    List<Map<String, dynamic>> dataWords = await db.getAllWordbyTopic(topic);
-    List<Map<String, dynamic>> dataTopics = await db.getAllTopic();
+    final db = LocalDbService.instance;
+    List<Map<String, dynamic>> dataWords = await db.topicDao.getAllWordbyTopic(topic);
+    List<Map<String, dynamic>> dataTopics = await db.topicDao.getAllTopics();
     for(Map<String, dynamic> dataTopic in dataTopics){
       if(dataTopic["name"] == topic){
         idTopic = dataTopic["id"];
@@ -192,9 +192,9 @@ class _listWordScreen extends State<listWordScreen>{
                             SizedBox(width:10,),
                             GestureDetector(
                               onTap: () async {
-                                DatabaseHelper db = DatabaseHelper.instance;
-                                db.deleteData("topic", "name = '${widget.topicName}'");
-                                db.deleteData("words", "topic = '${widget.topicName}'");
+                                final db = LocalDbService.instance;
+                                db.databseDao.deleteData("topic", "name = '${widget.topicName}'");
+                                db.databseDao.deleteData("words", "topic = '${widget.topicName}'");
                                 Navigator.pop(context);
                                 Navigator.pop(context);
                                 Navigator.pop(context);
@@ -957,8 +957,8 @@ class _listWordScreen extends State<listWordScreen>{
 
 
   Future<void> isOwner() async{
-    DatabaseHelper db = DatabaseHelper.instance;
-    owner = (await db.getTopicByID(widget.id))["user"];
+    final db = LocalDbService.instance;
+    owner = (await db.topicDao.getTopicByID(widget.id))?["user"]??"Nah";
   }
 
   Future<topic?> isExistTopic() async{
@@ -968,8 +968,8 @@ class _listWordScreen extends State<listWordScreen>{
   }
 
   Future<void> pulicTopic() async{
-    DatabaseHelper db = DatabaseHelper.instance;
-    List<Map<String, dynamic>> data = await db.getAllWordbyTopic(widget.topicName);
+    final db = LocalDbService.instance;
+    List<Map<String, dynamic>> data = await db.topicDao.getAllWordbyTopic(widget.topicName);
     User user = FirebaseAuth.instance.currentUser!;
 
     topic TopicPulic = new topic(id: widget.id, name: widget.topicName, owner: user.providerData[0].displayName, count: 0);

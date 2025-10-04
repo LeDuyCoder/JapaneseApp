@@ -2,11 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:japaneseapp/Config/dataHelper.dart';
-import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Config/config.dart';
+import 'Local/local_db_service.dart';
 
 class FunctionService{
 
@@ -228,15 +227,15 @@ class FunctionService{
   }
 
   static Future<int> getTopicComplite() async {
-    DatabaseHelper db = DatabaseHelper.instance;
-    return (await db.countCompletedTopics());
+    final db = LocalDbService.instance;
+    return (await db.topicDao.countCompletedTopics());
   }
 
   static Future<bool> synchronyData() async {
     try {
       // Chạy song song DB + SharedPreferences
       final results = await Future.wait([
-        DatabaseHelper.instance.getAllSynchronyData(),
+        LocalDbService.instance.syncDao.getAllSynchronyData(),
         SharedPreferences.getInstance(),
       ]);
 

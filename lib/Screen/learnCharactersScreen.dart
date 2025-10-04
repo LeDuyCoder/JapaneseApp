@@ -9,9 +9,12 @@ import 'package:japaneseapp/Theme/colors.dart';
 import 'package:japaneseapp/Widget/learnWidget/combinationTest.dart';
 import 'package:japaneseapp/Widget/learnWidget/writeTestCharacterScreen.dart';
 import 'package:japaneseapp/Widget/learnWidget/writeTestScreen.dart';
+import 'package:kana_kit/kana_kit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:japaneseapp/Module/character.dart' as charHiKa;
 import 'package:japaneseapp/Widget/learnWidget/choseTest.dart';
+import 'package:uuid/uuid.dart';
+import 'package:uuid/v4.dart';
 import '../Service/timeService.dart';
 import '../Widget/quitTab.dart';
 
@@ -33,6 +36,8 @@ class _learnCharactersScreen extends State<learnCharactersScreen> {
   Widget? view;
   late TimerService _timerService;
   int _currentSeconds = 0;
+
+  final kanaKit = KanaKit();
 
   List<String> listCharacterInTestToCheck = [];
   List<String> listCharacterAwnserWrongInTest = [];
@@ -99,46 +104,8 @@ class _learnCharactersScreen extends State<learnCharactersScreen> {
     return wrongAnswers.toList();
   }
 
-  String CoverWayRead(dynamic jsonData, String wordJapanese) {
-    int indexType = (widget.typeCharacter == "hiragana") ? 0 : 1;
-    List<Map<dynamic, dynamic>> sectionList =
-    List<Map<dynamic, dynamic>>.from(jsonData[indexType]);
-    StringBuffer newWordJapanese = StringBuffer();
-
-    int i = 0;
-    while (i < wordJapanese.length) {
-      String matchedRomaji = "";
-
-      // Ưu tiên thử lấy 2 ký tự
-      if (i + 1 < wordJapanese.length) {
-        String twoChars = wordJapanese.substring(i, i + 2);
-        var match2 = sectionList.firstWhere(
-              (section) => section.containsKey(twoChars),
-          orElse: () => {},
-        );
-        if (match2.isNotEmpty) {
-          matchedRomaji = match2[twoChars]["romaji"];
-          i += 2; // bỏ qua 2 ký tự
-        }
-      }
-
-      // Nếu không khớp 2 ký tự, thử 1 ký tự
-      if (matchedRomaji.isEmpty) {
-        String oneChar = wordJapanese.substring(i, i + 1);
-        var match1 = sectionList.firstWhere(
-              (section) => section.containsKey(oneChar),
-          orElse: () => {},
-        );
-        if (match1.isNotEmpty) {
-          matchedRomaji = match1[oneChar]["romaji"];
-        }
-        i += 1;
-      }
-
-      newWordJapanese.write(matchedRomaji);
-    }
-
-    return newWordJapanese.toString();
+  String toRomaji(String text) {
+    return kanaKit.toRomaji(text).trim().toLowerCase();
   }
 
 
@@ -153,12 +120,12 @@ class _learnCharactersScreen extends State<learnCharactersScreen> {
       if (character != null) {
         String answer = (character.example[Random().nextInt(3)] as Map<String, dynamic>).keys.first;
         if (answer != example && !wrongAnswers.contains(answer)) {
-          wrongAnswers.add(CoverWayRead(dataCharacter, answer));
+          wrongAnswers.add(toRomaji(answer));
         }
       }
     }
 
-    wrongAnswers.add(CoverWayRead(dataCharacter, example));
+    wrongAnswers.add(toRomaji(example));
 
 
     return wrongAnswers.toList();
@@ -237,7 +204,7 @@ class _learnCharactersScreen extends State<learnCharactersScreen> {
         dataAwnser.remove(exampleAwnser);
 
         data = {
-          "word": CoverWayRead(jsonData, example),
+          "word": toRomaji(example),
           "anwser": exampleAwnser,
           "listAnwserWrong": dataAwnser,
           "numberRight": correctIndex,
@@ -322,8 +289,8 @@ class _learnCharactersScreen extends State<learnCharactersScreen> {
       else if (randTest == "combination") {
         Set<String> listCharacterExist = {};
         Set<String> listExampleExist = {}; // Kiểm tra trùng lặp nhanh hơn
-        List<Map<String, dynamic>> dataColumeA = [];
-        List<String> dataColumeB = [];
+        List<NodeColum> dataColumeA = [];
+        List<NodeColum> dataColumeB = [];
 
         List<String> typeCombinations = ["character", "example"];
         String typeCombination = level >= 0 && level < 2 ? "character" : typeCombinations[Random().nextInt(typeCombinations.length)];
@@ -333,25 +300,20 @@ class _learnCharactersScreen extends State<learnCharactersScreen> {
 
           if (typeCombination == "character") {
             if (listCharacterExist.add(characterJapanese)) {
-              String wayRead = CoverWayRead(jsonData, characterJapanese);
-              dataColumeA.add({
-                "word": characterJapanese,
-                "awnser": wayRead,
-                "wayread": characterJapanese
-              });
-              dataColumeB.add(wayRead);
+              String wayRead = toRomaji(characterJapanese);
+              NodeColum nodeColum = new NodeColum(UuidV4().generate(), characterJapanese, wayRead, characterJapanese);
+              dataColumeA.add(nodeColum);
+              dataColumeB.add(nodeColum);
             }
           } else {
             charHiKa.character characterJPObject = findCharacter(jsonData, widget.typeCharacter, characterJapanese)!;
             String exampleCharacter = (characterJPObject.example[Random().nextInt(3)] as Map<String, dynamic>).keys.first;
             if (listExampleExist.add(exampleCharacter)) {
-              String coverWayReadExample = CoverWayRead(jsonData, exampleCharacter);
-              dataColumeA.add({
-                "word": exampleCharacter,
-                "awnser": coverWayReadExample,
-                "wayread": exampleCharacter
-              });
-              dataColumeB.add(coverWayReadExample);
+              String coverWayReadExample = toRomaji(exampleCharacter);
+              NodeColum nodeColum = new NodeColum(UuidV4().generate(), exampleCharacter, coverWayReadExample, exampleCharacter);
+              print(nodeColum);
+              dataColumeA.add(nodeColum);
+              dataColumeB.add(nodeColum);//coverWayReadExample
             }
           }
         }
@@ -480,5 +442,20 @@ class _learnCharactersScreen extends State<learnCharactersScreen> {
         ),
       ),
     );
+  }
+}
+
+class NodeColum{
+  final String uuid;
+  final String word;
+  final String awnser;
+  final String wayread;
+
+  NodeColum(this.uuid, this.word, this.awnser, this.wayread);
+
+  @override
+  String toString() {
+    // TODO: implement toString
+    return '${uuid.toString()} - $word - $awnser - $wayread';
   }
 }

@@ -6,7 +6,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:icons_plus/icons_plus.dart';
-import 'package:japaneseapp/Config/dataHelper.dart';
 import 'package:japaneseapp/Screen/WordbookScreen.dart';
 import 'package:japaneseapp/Theme/colors.dart';
 import 'package:language_detector/language_detector.dart';
@@ -14,6 +13,7 @@ import 'package:translator/translator.dart';
 import 'package:http/http.dart' as http;
 
 import '../Config/config.dart';
+import '../Service/Local/local_db_service.dart';
 import '../generated/app_localizations.dart';
 
 class dictionaryScreen extends StatefulWidget{
@@ -126,8 +126,8 @@ class _dictionaryScreen extends State<dictionaryScreen>{
           : data!["data"][0]["slug"];
 
       example = await generateExample(word, "vie");
-      DatabaseHelper databaseHelper = DatabaseHelper.instance;
-      bool isExist = await databaseHelper.isVocabularyExist(await databaseHelper.database, wordJp: word, wordKana: data!["data"][0]["japanese"][0]["reading"]??"");
+      final db = LocalDbService.instance;
+      bool isExist = await db.vocabularyDao.isVocabularyExist(wordJp: word, wordKana: data!["data"][0]["japanese"][0]["reading"]??"");
       data!["stored"] = isExist;
       setState(() {
         status = data == null ? "fail" : "done";
@@ -440,7 +440,7 @@ class _dictionaryScreen extends State<dictionaryScreen>{
                                   ),
                                   IconButton(
                                     onPressed: () async {
-                                      DatabaseHelper databaseHelper = DatabaseHelper.instance;
+                                      final db = LocalDbService.instance;
                                       String word = (data!["data"][0]["japanese"][0] as Map<dynamic, dynamic>)
                                           .containsKey("word")
                                           ? data!["data"][0]["japanese"][0]["word"]
@@ -460,9 +460,9 @@ class _dictionaryScreen extends State<dictionaryScreen>{
                                           exampleVi = example.split("-").isNotEmpty ? example.split("-")[1] : "";
                                         }
                                         if(example == "" || example.isEmpty){
-                                          databaseHelper.addVocabularyInDistionary(await databaseHelper.database, wordJp: word, wordKana: wordKana, wordMean: mean);
+                                          db.vocabularyDao.addVocabularyInDistionary(wordJp: word, wordKana: wordKana, wordMean: mean);
                                         }else{
-                                          databaseHelper.addVocabularyInDistionary(await databaseHelper.database, wordJp: word, wordKana: wordKana, wordMean: mean, exampleJp: exampleJp, exampleVi: exampleVi);
+                                          db.vocabularyDao.addVocabularyInDistionary(wordJp: word, wordKana: wordKana, wordMean: mean, exampleJp: exampleJp, exampleVi: exampleVi);
                                         }
                                         setState(() {
                                           status = "loading";
@@ -470,7 +470,7 @@ class _dictionaryScreen extends State<dictionaryScreen>{
                                         _callApi(word);
                                       }
                                       else{
-                                        databaseHelper.removeVocabulary(await databaseHelper.database, wordJp: word, wordKana: wordKana);
+                                        db.vocabularyDao.removeVocabulary(wordJp: word, wordKana: wordKana);
                                         setState(() {
                                           status = "loading";
                                         });

@@ -5,7 +5,7 @@ import 'package:japaneseapp/Theme/colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Service/FunctionService.dart';
-import '../Config/dataHelper.dart';
+import '../Service/Local/local_db_service.dart';
 import '../generated/app_localizations.dart';
 
 class achivementScreen extends StatefulWidget{
@@ -97,7 +97,7 @@ class _achivementScreen extends State<achivementScreen>{
 
   Future<Map<String, dynamic>> getData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final DatabaseHelper db = await DatabaseHelper.instance;
+    final db = await LocalDbService.instance;
     amountTopicComplite = await FunctionService.getTopicComplite();
     print(amountTopicComplite);
 
@@ -115,7 +115,7 @@ class _achivementScreen extends State<achivementScreen>{
       "providerID": user.providerData[0].providerId,
       "displayName": user.providerData[0].displayName,
       "mail": user.email,
-      "countTopic": (await db.getAllTopic()).length
+      "countTopic": (await db.topicDao.getAllTopics()).length
     };
   }
 
