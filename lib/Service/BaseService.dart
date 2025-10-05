@@ -26,8 +26,6 @@ abstract class BaseService {
       url += '?$query';
     }
 
-    print(url);
-
     try {
       final response = await http.get(Uri.parse(url));
 
@@ -89,7 +87,6 @@ abstract class BaseService {
   dynamic _handleResponse(http.Response response) {
     if (response.statusCode >= 200 && response.statusCode < 500) {
       if (response.body.isEmpty) return null;
-      print(json.decode(response.body));
       return json.decode(response.body);
     } else {
       throw Exception('Server error: ${response.statusCode} - ${response.body}');

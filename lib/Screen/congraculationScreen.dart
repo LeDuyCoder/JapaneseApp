@@ -6,8 +6,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:japaneseapp/Config/rank_manager.dart';
 import 'package:japaneseapp/Module/word.dart';
 import 'package:japaneseapp/Screen/dashboardScreen.dart';
+import 'package:japaneseapp/Screen/upRankScreen.dart';
 import 'package:japaneseapp/Theme/colors.dart';
 import 'package:japaneseapp/Utilities/WeekUtils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -44,6 +46,9 @@ class _congraculationScreen extends State<congraculationScreen> with TickerProvi
   late AnimationController _controllerProcess;
   late Animation<double> _animationProcess;
 
+  Map<String, dynamic> rankMap = RankManager.rankMap;
+
+
   void startProgressAnimation(double endValue) {
     _animationProcess = Tween<double>(begin: 0.0, end: endValue).animate(
       CurvedAnimation(parent: _controllerProcess, curve: Curves.easeInOut),
@@ -52,29 +57,84 @@ class _congraculationScreen extends State<congraculationScreen> with TickerProvi
     _controllerProcess.forward(from: 0); // bắt đầu lại từ 0 mỗi lần gọi
   }
 
-  Future<void> randomizeValues() async {
-    Random rand = Random();
 
-    int score = (await ServiceLocator.scoreService.getScore(WeekUtils.getCurrentWeekString(), FirebaseAuth.instance.currentUser!.uid))["score"];
+
+  String getRankFromScore(int score) {
+    for (var rank in rankMap.entries) {
+      if (score >= rank.value['min'] && score <= rank.value['max']) {
+        return rank.key;
+      }
+    }
+    return "Bronze"; // fallback
+  }
+
+  Future<void> randomizeValues() async {
+    final rand = Random();
+
+    final userId = FirebaseAuth.instance.currentUser!.uid;
+
+    final currentScoreData = await ServiceLocator.scoreService
+        .getScore(WeekUtils.getCurrentWeekString(), userId);
+    final currentScore = currentScoreData["score"] ?? 0;
+
+    // Xác định rank hiện tại
+    final oldRankKey = getRankFromScore(currentScore);
+    final oldRankData = rankMap[oldRankKey]!;
+
+    final totalQuestions = 10;
+    final wrongAnswers = widget.listWordsTest.length;
+    final correctAnswers = totalQuestions - wrongAnswers;
+
+    int expRank = 0;
+    for (int i = 0; i < correctAnswers; i++) {
+      expRank += 10 + rand.nextInt(6);
+    }
+
+    if (wrongAnswers > totalQuestions / 2) {
+      expRank = (expRank * 0.8).round();
+    }
+
+    double accuracy = correctAnswers / totalQuestions;
+    int coin = (accuracy * 10).clamp(1, 10).round();
+
+    // Cập nhật dữ liệu
+    await ServiceLocator.userService.addCoin(userId, coin);
+    await ServiceLocator.scoreService.addScore(userId, expRank);
+
+    // Lấy lại tổng điểm sau khi cộng
+    final newTotalScoreData = await ServiceLocator.scoreService
+        .getScore(WeekUtils.getCurrentWeekString(), userId);
+    final newScore = newTotalScoreData["score"] ?? 0;
+
+    // Xác định rank mới
+    final newRankKey = getRankFromScore(newScore);
+    final newRankData = rankMap[newRankKey]!;
+
+    // Nếu rank mới khác rank cũ thì hiển thị màn hình UpRankScreen
+    if (newRankKey != oldRankKey) {
+      Future.delayed(Duration(milliseconds: 300), () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => UpRankScreen(
+              imgRankOld: oldRankData['image'],
+              imgRankNow: newRankData['image'],
+              nameRank: newRankData['name'],
+              oldRankColor: oldRankData['color'],
+              newRankColor: newRankData['color'],
+            ),
+          ),
+        );
+      });
+    }
 
     setState(() {
-      if(score > 1501) {
-        if(widget.listWordsTest.isEmpty) {
-          expRank = rand.nextInt(31);
-        } else {
-          score -= rand.nextInt(15);  // trừ 10 điểm nếu trả lời sai
-          if(score < 0) score = 0; // tránh điểm âm
-        }
-      }else{
-        expRank = rand.nextInt(31);
-      }
-      // random từ 0 đến 100 (bạn có thể chỉnh phạm vi này)
-      coin = rand.nextInt(10); // random từ 1 đến 10
+      this.expRank = expRank;
+      this.coin = coin;
     });
-
-    ServiceLocator.userService.addCoin(FirebaseAuth.instance.currentUser!.uid, coin);
-    ServiceLocator.scoreService.addScore(FirebaseAuth.instance.currentUser!.uid, expRank);
   }
+
+
 
   @override
   void initState() {

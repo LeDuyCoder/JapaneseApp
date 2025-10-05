@@ -15,6 +15,7 @@ import 'package:japaneseapp/Module/character.dart' as charHiKa;
 import 'package:japaneseapp/Widget/learnWidget/choseTest.dart';
 import 'package:uuid/uuid.dart';
 import 'package:uuid/v4.dart';
+import '../Module/word.dart' as Word;
 import '../Service/timeService.dart';
 import '../Widget/quitTab.dart';
 
@@ -29,7 +30,7 @@ class learnCharactersScreen extends StatefulWidget {
 }
 
 class _learnCharactersScreen extends State<learnCharactersScreen> {
-  int maxQuestion = 15;
+  int maxQuestion = 20;
   int question = 0;
   List<Widget> mapQuesstion = [];
   late Future<bool> _loadQuestionsFuture;
@@ -450,8 +451,9 @@ class NodeColum{
   final String word;
   final String awnser;
   final String wayread;
+  final Word.word? wordObject;
 
-  NodeColum(this.uuid, this.word, this.awnser, this.wayread);
+  NodeColum(this.uuid, this.word, this.awnser, this.wayread, {this.wordObject});
 
   @override
   String toString() {

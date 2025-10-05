@@ -127,7 +127,7 @@ class _DashboardScreenState extends State<dashboardScreen> {
           .getAllDataTopic(5)
           .timeout(const Duration(seconds: 10));
 
-      print(dataServer);
+      print("data: ${dataServer}");
 
       // nếu server có dữ liệu → gộp local + server
       data = {
@@ -748,6 +748,9 @@ class _DashboardScreenState extends State<dashboardScreen> {
     final db = LocalDbService.instance;
 
     topic? Topic = await ServiceLocator.topicService.getDataTopicByID(id);
+
+    print(Topic);
+
     nameTopic = Topic!.name;
     List<Map<String, dynamic>> dataWords = [];
 

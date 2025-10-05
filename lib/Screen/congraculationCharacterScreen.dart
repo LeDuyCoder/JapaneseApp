@@ -7,13 +7,16 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:japaneseapp/Module/character.dart' as charHiKa;
+import 'package:japaneseapp/Screen/upRankScreen.dart';
 import 'package:japaneseapp/Service/Server/ServiceLocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../Config/rank_manager.dart';
 import '../Service/FunctionService.dart';
 import '../Config/config.dart';
 import '../Service/Local/local_db_service.dart';
 import '../Theme/colors.dart';
+import '../Utilities/WeekUtils.dart';
 import 'dashboardScreen.dart';
 
 class congraculationChacterScreen extends StatefulWidget{
@@ -44,6 +47,8 @@ class _congraculationChacterScreen extends State<congraculationChacterScreen>  w
   late AnimationController _controllerProcess;
   late Animation<double> _animationProcess;
 
+  Map<String, dynamic> rankMap = RankManager.rankMap;
+
   void startProgressAnimation(double endValue) {
     _animationProcess = Tween<double>(begin: 0.0, end: endValue).animate(
       CurvedAnimation(parent: _controllerProcess, curve: Curves.easeInOut),
@@ -52,20 +57,77 @@ class _congraculationChacterScreen extends State<congraculationChacterScreen>  w
     _controllerProcess.forward(from: 0); // bắt đầu lại từ 0 mỗi lần gọi
   }
 
-  void randomizeValues() async {
-    Random rand = Random();
-
-    setState(() {
-      coin = rand.nextInt(8); // random từ 1 đến 10
-      expRank = rand.nextInt(20);
-
-    });
-
-    ServiceLocator.userService.addCoin(FirebaseAuth.instance.currentUser!.uid, coin);
-    ServiceLocator.scoreService.addScore(FirebaseAuth.instance.currentUser!.uid, expRank);
-
-
+  String getRankFromScore(int score) {
+    for (var rank in rankMap.entries) {
+      if (score >= rank.value['min'] && score <= rank.value['max']) {
+        return rank.key;
+      }
+    }
+    return "Bronze"; // fallback
   }
+
+  Future<void> randomizeValues() async {
+    final userId = FirebaseAuth.instance.currentUser!.uid;
+
+    final currentScoreData = await ServiceLocator.scoreService
+        .getScore(WeekUtils.getCurrentWeekString(), userId);
+    final currentScore = currentScoreData["score"] ?? 0;
+
+    // Rank hiện tại
+    final oldRankKey = getRankFromScore(currentScore);
+    final oldRankData = rankMap[oldRankKey]!;
+
+    final totalQuestions = 10;
+    final correctAnswers = widget.listWordsTest.length;
+
+    // Tính điểm rank theo số câu đúng (tuyến tính) và giới hạn từ 10–50
+    int expRank = 10 + Random().nextInt(21); // 10 + [0..40] → [10..50]
+
+    // Tính coin theo độ chính xác
+    double accuracy = correctAnswers / totalQuestions;
+    int coin = (accuracy * 10).clamp(1, 10).round();
+
+    // Cập nhật user
+    await ServiceLocator.userService.addCoin(userId, coin);
+    await ServiceLocator.scoreService.addScore(userId, expRank);
+
+    // Lấy tổng điểm mới
+    final newTotalScoreData = await ServiceLocator.scoreService
+        .getScore(WeekUtils.getCurrentWeekString(), userId);
+    final newScore = newTotalScoreData["score"] ?? 0;
+
+    // Rank mới
+    final newRankKey = getRankFromScore(newScore);
+    final newRankData = rankMap[newRankKey]!;
+
+    // Nếu lên rank thì hiển thị màn hình
+    if (newRankKey != oldRankKey) {
+      Future.delayed(Duration(milliseconds: 300), () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => UpRankScreen(
+              imgRankOld: oldRankData['image'],
+              imgRankNow: newRankData['image'],
+              nameRank: newRankData['name'],
+              oldRankColor: oldRankData['color'],
+              newRankColor: newRankData['color'],
+            ),
+          ),
+        );
+      });
+    }
+
+    // Cập nhật UI
+    setState(() {
+      this.expRank = expRank;
+      this.coin = coin;
+    });
+  }
+
+
+
+
 
   @override
   void initState() {
@@ -76,7 +138,12 @@ class _congraculationChacterScreen extends State<congraculationChacterScreen>  w
       vsync: this,
       duration: const Duration(seconds: 2),
     );
+
+    // Chạy một lần duy nhất khi vào màn hình
+    playSound("sound/completed.mp3");
+    randomizeValues();
   }
+
 
   void _loadInterstitialAd() {
     InterstitialAd.load(
@@ -237,8 +304,6 @@ class _congraculationChacterScreen extends State<congraculationChacterScreen>  w
 
       return formattedTime;
     }
-    playSound("sound/completed.mp3");
-    randomizeValues();
     return Scaffold(
       body: FutureBuilder(future: getProfile(), builder: (ctx, snapshot){
         if(snapshot.hasData){

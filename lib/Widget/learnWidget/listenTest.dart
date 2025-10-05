@@ -10,6 +10,7 @@ import 'package:japaneseapp/Widget/learnWidget/sortText.dart';
 import 'package:japaneseapp/Widget/learnWidget/wrongTab.dart';
 import '../../Module/word.dart';
 import '../../generated/app_localizations.dart';
+import '../ResultPopup.dart';
 
 
 class listenTest extends StatefulWidget {
@@ -264,12 +265,15 @@ class _ListenTextState extends State<listenTest> {
                     if (isAwnserRight) {
                       await playSound("sound/correct.mp3");
 
-                      showModalBottomSheet(
-                          context: context,
-                          barrierColor: Color.fromRGBO(0, 0, 0, 0.1),
-                          isDismissible: false,
-                          enableDrag: false,
-                          builder: (ctx) => rightTab(nextQuestion: (){
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (_) => ResultPopup(
+                          isCorrect: true,
+                          correctWord: widget.WordTest.vocabulary,
+                          furigana: widget.WordTest.wayread,
+                          meaning: widget.WordTest.mean,
+                          onPressButton: () {
                             widget.nextLearned(isAwnserRight);
                             dataInput = [];
                             dataBoxText = [];
@@ -277,16 +281,21 @@ class _ListenTextState extends State<listenTest> {
                               dataBoxText!.add(boxText(text));
                             }
                             loadBoxText = true;
-                          }, isMean: false, context: context,));
+                          }, tryAgain: false,
+                        ),
+                      );
                     }else{
                       await playSound("sound/wrong.mp3");
 
-                      showModalBottomSheet(
-                          context: context,
-                          barrierColor: Color.fromRGBO(0, 0, 0, 0.1),
-                          isDismissible: false,
-                          enableDrag: false,
-                          builder: (ctx) => wrongTab(nextQuestion: (){
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (_) => ResultPopup(
+                          isCorrect: false,
+                          correctWord: widget.WordTest.vocabulary,
+                          furigana: widget.WordTest.wayread,
+                          meaning: widget.WordTest.mean,
+                          onPressButton: () {
                             widget.nextLearned(isAwnserRight);
                             dataInput = [];
                             dataBoxText = [];
@@ -294,10 +303,8 @@ class _ListenTextState extends State<listenTest> {
                               dataBoxText!.add(boxText(text));
                             }
                             loadBoxText = true;
-                          }, rightAwnser: (widget.typeTest == typeSort.JapanToVietNam
-                              ? widget.WordTest.mean
-                              : widget.WordTest.vocabulary)
-                          )
+                          }, tryAgain: false,
+                        ),
                       );
                     }
                   }

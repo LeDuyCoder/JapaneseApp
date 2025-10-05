@@ -26,7 +26,7 @@ android {
         release {
             storeFile file("japneseappkeystore.jks")  // Đường dẫn tới file keystore
             storePassword "Duy2822005@"       // Password của keystore
-            keyAlias "keybuildAPP"                 // Alias (thường là 'my-alias' nếu bạn dùng hướng dẫn trước)
+            keyAlias "upload"                 // Alias (thường là 'my-alias' nếu bạn dùng hướng dẫn trước)
             keyPassword "Duy2822005@"           // Password của key
         }
     }
@@ -35,7 +35,7 @@ android {
         applicationId = "kiradev.studio.japaneseapp"
         minSdk = 23
         targetSdk = 35
-        versionCode = 8
+        versionCode = 14
         versionName = flutter.versionName
     }
 

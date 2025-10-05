@@ -3,17 +3,21 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:japaneseapp/Module/word.dart';
 import 'package:japaneseapp/Widget/choseWordWidget.dart';
 import 'package:japaneseapp/Widget/learnWidget/rightTab.dart';
 import 'package:japaneseapp/Widget/learnWidget/wrongTab.dart';
 
+import '../ResultPopup.dart';
+
 class choseTest extends StatefulWidget {
+  final word? WordTest;
   final Map<String, dynamic> data;
   final void Function() nextQuestion;
   final bool readText;
   //final bool speak;
 
-  const choseTest({super.key, required this.data, required this.nextQuestion, required this.readText});
+  const choseTest({super.key, required this.data, required this.nextQuestion, required this.readText, this.WordTest});
 
   @override
   State<StatefulWidget> createState() => _choseTestState();
@@ -169,22 +173,58 @@ class _choseTestState extends State<choseTest> {
                     if (positionChose != 0) {
                       if (positionChose == widget.data["numberRight"]) {
                         playSound("sound/correct.mp3");
-                        showModalBottomSheet(enableDrag: false,
-                            isDismissible: false,
+
+                        if(widget.WordTest != null) {
+                          showDialog(
                             context: context,
-                            builder: (ctx) =>
-                                rightTab(nextQuestion: () {
-                                  widget.nextQuestion();
-                                }, isMean: false, context: ctx,));
+                            barrierDismissible: false,
+                            builder: (_) =>
+                                ResultPopup(
+                                  isCorrect: true,
+                                  correctWord: widget.WordTest?.vocabulary ?? "",
+                                  furigana: widget.WordTest?.wayread ?? "",
+                                  meaning: widget.WordTest?.mean ?? "",
+                                  onPressButton: () {
+                                    widget.nextQuestion();
+                                  }, tryAgain: false,
+                                ),
+                          );
+                        }else{
+                          showModalBottomSheet(enableDrag: false,
+                              isDismissible: false,
+                              context: context,
+                              builder: (ctx) =>
+                                  rightTab(nextQuestion: () {
+                                    widget.nextQuestion();
+                                  }, isMean: false, context: ctx,));
+                        }
                       } else {
                         playSound("sound/wrong.mp3");
-                        showModalBottomSheet(enableDrag: false,
-                            isDismissible: false,
+
+                        if(widget.WordTest != null) {
+                          showDialog(
                             context: context,
-                            builder: (ctx) =>
-                                wrongTab(nextQuestion: () {
-                                  widget.nextQuestion();
-                                }, rightAwnser: widget.data["anwser"]));
+                            barrierDismissible: false,
+                            builder: (_) =>
+                                ResultPopup(
+                                  isCorrect: false,
+                                  correctWord: widget.WordTest?.vocabulary ?? "",
+                                  furigana: widget.WordTest?.wayread ?? "",
+                                  meaning: widget.WordTest?.mean ?? "",
+                                  onPressButton: () {
+                                    widget.nextQuestion();
+                                  }, tryAgain: false,
+                                ),
+                          );
+                        }else{
+                          showModalBottomSheet(enableDrag: false,
+                              isDismissible: false,
+                              context: context,
+                              builder: (ctx) =>
+                                  wrongTab(nextQuestion: () {
+                                    widget.nextQuestion();
+                                  }, rightAwnser: widget.data["anwser"]));
+                        }
                       }
                     }
                   },

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ResultPopup extends StatelessWidget {
-  final bool isCorrect;        // true = đúng, false = sai
+  final bool isCorrect;// true = đúng, false = sai
+  final bool tryAgain;
   final String correctWord;    // Kanji: "旅行"
   final String furigana;       // Furigana: "りょこう"
   final String meaning;
@@ -14,6 +15,7 @@ class ResultPopup extends StatelessWidget {
     required this.furigana,
     required this.meaning,
     required this.onPressButton,
+    required this.tryAgain,
   });
 
   @override
@@ -113,12 +115,8 @@ class ResultPopup extends StatelessWidget {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: (){
-                        if(isCorrect){
-                          onPressButton();
-                          Navigator.of(context).pop();
-                        }else{
-                          Navigator.of(context).pop();
-                        }
+                        onPressButton();
+                        Navigator.of(context).pop();
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: mainColor,
@@ -128,7 +126,7 @@ class ResultPopup extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(vertical: 14),
                       ),
                       child: Text(
-                        isCorrect ? "Tiếp tục" : "Thử lại",
+                        isCorrect ? "Tiếp tục" : tryAgain ? "Thử lại" : "Tiếp Theo",
                         style: TextStyle(fontSize: 18, color: Colors.white),
                       ),
                     ),

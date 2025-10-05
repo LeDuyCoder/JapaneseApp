@@ -281,6 +281,90 @@ class _addWordScreen extends State<addWordScreen>{
     );
   }
 
+  void showBottomSheetMinWordsRequired(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isDismissible: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (BuildContext context) {
+        return Container(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Thanh kéo nhỏ
+              Container(
+                width: 40,
+                height: 4,
+                margin: const EdgeInsets.only(bottom: 15),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade300,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+
+              // Icon + Title
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Icon(Icons.info_outline, color: Colors.orange, size: 50),
+                  SizedBox(height: 10),
+                  Text(
+                    "Chưa đủ từ vựng!",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.orange,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+
+              // Content
+              const Text(
+                "Bạn cần thêm ít nhất 5 từ vựng vào bộ này để có thể lưu.",
+                style: TextStyle(fontSize: 15, color: Colors.black87),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 20),
+
+              // Close button
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.orange,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 2,
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Đóng bottom sheet
+                  },
+                  child: const Text(
+                    "Đã hiểu",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+
   void showBottomSheetSuccessSaveData(BuildContext contextOrigin) {
     showModalBottomSheet(
       context: contextOrigin,
@@ -401,7 +485,12 @@ class _addWordScreen extends State<addWordScreen>{
           ),
           actions: [
             IconButton(onPressed: (){
-              showBottomSheetSaveData(context);
+              if(listVocabulary.length <= 4){
+                showBottomSheetMinWordsRequired(context);
+              }else{
+                showBottomSheetSaveData(context);
+              }
+
             }, icon: const Icon(Icons.done), color: AppColors.primary,)
           ],
         ),
@@ -418,6 +507,13 @@ class _addWordScreen extends State<addWordScreen>{
                 child: Column(
                   children: [
                     const SizedBox(height: 20,),
+                    Text(
+                      listVocabulary.length < 5 ?
+                      '* Thêm tối thiếu là ${listVocabulary.length}/5 từ vựng'
+                      : 'Đủ điều kiện tối thiểu 5 từ',
+                      style: TextStyle(fontSize: 12, color: listVocabulary.length < 5 ? Colors.grey : Colors.green),
+                    ),
+                    SizedBox(height: 20,),
                     for(word vocabulary in listVocabulary)
                       Padding(
                         padding: const EdgeInsets.only(bottom: 10),
@@ -604,21 +700,21 @@ class _addWordScreen extends State<addWordScreen>{
 
                                     if(japanVocabulary.isEmpty ||  japanVocabulary == ""){
                                       setState(() {
-                                        errorMessageJapan = "Not empty";
+                                        errorMessageJapan = "Không được phép rỗng";
                                       });
                                     }else if(readWayVocabulary.isEmpty ||  readWayVocabulary == ""){
                                       setState(() {
-                                        errorMessageReadWay = "Not empty";
+                                        errorMessageReadWay = "Không được phép rỗng";
                                       });
                                     }else if(meanVocabulary.isEmpty ||  meanVocabulary == ""){
                                       setState(() {
-                                        errorMessageMean = "Not empty";
+                                        errorMessageMean = "Không được phép rỗng";
                                       });
                                     }else{
                                       for(word vocabulary in listVocabulary){
                                         if(vocabulary.vocabulary == japanVocabulary && vocabulary.mean == meanVocabulary){
                                           setState(() {
-                                            errorMessageJapan = "word has exist";
+                                            errorMessageJapan = "Từ này đã tồn tại";
                                             canAdd = false;
                                           });
                                         }
@@ -668,21 +764,6 @@ class _addWordScreen extends State<addWordScreen>{
         )
 
     );
-    //   Stack(
-    //   children: [
-    //
-    //     if(isLoading)
-    //
-    //       Container(
-    //         width: MediaQuery.sizeOf(context).width,
-    //         height: double.infinity,
-    //         color: const Color.fromRGBO(0, 0, 0, 0.1),
-    //         child: const Center(
-    //           child: CircularProgressIndicator(color: Colors.green,),
-    //         ),
-    //       )
-    //   ],
-    // );
   }
 
 }

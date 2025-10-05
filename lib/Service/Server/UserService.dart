@@ -5,7 +5,6 @@ class UserService extends BaseService {
 
   /// Add new user
   Future<void> addUser(String idUser, String name) async {
-    print("Adding user...");
 
     try {
       await postForm('/controller/user/addUser.php', {

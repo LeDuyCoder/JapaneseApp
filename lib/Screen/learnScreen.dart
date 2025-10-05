@@ -120,9 +120,10 @@ class _learnScreen extends State<learnScreen> {
             nextLearned: (bool isRight) {
               handleNext(true);
             },
-            mean: dataMap[numberCount]["mean"],
+            WordTest: dataMap[numberCount]["wordObject"],
           )
           : feature == "chose" ? choseTest(
+              WordTest: dataMap[numberCount]["wordObject"],
               data: {
                 "word": dataMap[numberCount]["word"],
                 "anwser": dataMap[numberCount]["anwser"],
@@ -283,10 +284,10 @@ class _learnScreen extends State<learnScreen> {
             for (word wordCheck in wordsRandom) {
               dataWordsTest.add(
                 type == "JapToVN"
-                    ? new NodeColum(UuidV4().generate(), wordCheck.vocabulary, wordCheck.mean,  wordCheck.wayread)
+                    ? new NodeColum(UuidV4().generate(), wordCheck.vocabulary, wordCheck.mean,  wordCheck.wayread, wordObject: wordCheck)
                     : type == "JapToWayRead"
-                    ? new NodeColum(UuidV4().generate(), wordCheck.vocabulary, wordCheck.wayread,  wordCheck.wayread)
-                    : new NodeColum(UuidV4().generate(), wordCheck.wayread, wordCheck.vocabulary,  wordCheck.wayread),
+                    ? new NodeColum(UuidV4().generate(), wordCheck.vocabulary, wordCheck.wayread,  wordCheck.wayread, wordObject: wordCheck)
+                    : new NodeColum(UuidV4().generate(), wordCheck.wayread, wordCheck.vocabulary,  wordCheck.wayread, wordObject: wordCheck),
               );
               if (!listWordsTest.contains(wordCheck)) {
                 listWordsTest.add(wordCheck);
@@ -336,6 +337,7 @@ class _learnScreen extends State<learnScreen> {
                 "anwser": wordCheckRandom.mean,
                 "listAnwserWrong": wordsWrong,
                 "numberRight": randomInRange(1, 5),
+                "wordObject": wordCheckRandom
               }
                   : type == "JapToWayRead"
                   ? {
@@ -344,6 +346,7 @@ class _learnScreen extends State<learnScreen> {
                 "anwser": wordCheckRandom.wayread,
                 "listAnwserWrong": wordsWrong,
                 "numberRight": randomInRange(1, 5),
+                "wordObject": wordCheckRandom
               }
                   : {
                 "feture": fetureChose,
@@ -351,6 +354,7 @@ class _learnScreen extends State<learnScreen> {
                 "anwser": wordCheckRandom.vocabulary,
                 "listAnwserWrong": wordsWrong,
                 "numberRight": randomInRange(1, 5),
+                "wordObject": wordCheckRandom
               },
             );
           }
@@ -359,6 +363,7 @@ class _learnScreen extends State<learnScreen> {
             widget.dataWords[randomInRange(0, widget.dataWords.length)];
 
             dataMap.add({
+              "wordObject": wordCheckRandom,
               "feture": fetureChose,
               "word": wordCheckRandom.vocabulary,
               "mean": wordCheckRandom.mean

@@ -10,6 +10,8 @@ import 'package:japaneseapp/Widget/learnWidget/rightTab.dart';
 import 'package:japaneseapp/Widget/learnWidget/wrongTab.dart';
 import 'package:uuid/uuid.dart';
 
+import '../ResultPopup.dart';
+
 class combinationTest extends StatefulWidget {
   final List<NodeColum> listColumA;
   final List<NodeColum> listColumB;
@@ -145,20 +147,39 @@ class _combinationTest extends State<combinationTest> {
                                 choseWrongB = columeB_Chose;
 
                                 playSound("sound/wrong.mp3");
-                                showModalBottomSheet(
-                                    enableDrag: false,
-                                    isDismissible: false,
-                                    context: context,
-                                    builder: (context) => wrongTab(
-                                        nextQuestion: () {
-                                          setState(() {
-                                            columeB_Chose = null;
-                                            columeA_Chose = null;
-                                            choseWrongA = null;
-                                            choseWrongB = null;
-                                          });
-                                        },
-                                        rightAwnser: columeA_Chose!.awnser));
+                                showDialog(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (_) => ResultPopup(
+                                    isCorrect: false,
+                                    correctWord: columeA_Chose?.wordObject?.vocabulary??"",
+                                    furigana: columeA_Chose?.wordObject?.wayread??"",
+                                    meaning: columeA_Chose?.wordObject?.mean??"",
+                                    onPressButton: () {
+                                      print("demo");
+                                      setState(() {
+                                        columeB_Chose = null;
+                                        columeA_Chose = null;
+                                        choseWrongA = null;
+                                        choseWrongB = null;
+                                      });
+                                    }, tryAgain: true,
+                                  ),
+                                );
+                                // showModalBottomSheet(
+                                //     enableDrag: false,
+                                //     isDismissible: false,
+                                //     context: context,
+                                //     builder: (context) => wrongTab(
+                                //         nextQuestion: () {
+                                //           setState(() {
+                                //             columeB_Chose = null;
+                                //             columeA_Chose = null;
+                                //             choseWrongA = null;
+                                //             choseWrongB = null;
+                                //           });
+                                //         },
+                                //         rightAwnser: columeA_Chose!.awnser));
                               }
                             }
                           },

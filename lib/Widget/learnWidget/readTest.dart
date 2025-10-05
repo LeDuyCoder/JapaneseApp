@@ -143,11 +143,6 @@ class _readTest extends State<readTest> with SingleTickerProviderStateMixin{
     String correctKana = toRomaji(widget.kana);
     String correctWord = toRomaji(widget.word);
 
-    print("==Test==");
-    print(userAnswer);
-    print(correctKana);
-    print(correctWord);
-
     bool isCorrect = userAnswer == correctKana || userAnswer == correctWord;
 
     if (isCorrect) {
@@ -162,7 +157,7 @@ class _readTest extends State<readTest> with SingleTickerProviderStateMixin{
           meaning: widget.mean,
           onPressButton: () {
             widget.nextQuestion();
-          },
+          }, tryAgain: false,
         ),
       );
     } else {
@@ -176,8 +171,8 @@ class _readTest extends State<readTest> with SingleTickerProviderStateMixin{
           furigana: widget.kana,
           meaning: widget.mean,
           onPressButton: () {
-            widget.nextQuestion();
-          },
+            
+          }, tryAgain: false,
         ),
       );
     }

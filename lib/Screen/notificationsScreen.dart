@@ -63,7 +63,17 @@ class _notificationsScreen extends State<notificationsScreen>{
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(notification.title, style: TextStyle(fontSize: 18),),
+                    Container(
+                      width: MediaQuery.sizeOf(context).width-100,
+                      child: Text(
+                        notification.title,
+                        style: TextStyle(fontSize: 18),
+                        maxLines: 1, // hoặc nhiều hơn nếu bạn muốn
+                        overflow: TextOverflow.ellipsis, // để cho xuống dòng
+                        softWrap: true,
+
+                      ),
+                    ),
                     Icon(Icons.notifications, color: isRead ? Colors.grey : AppColors.primary,)
                   ],
                 ),

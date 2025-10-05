@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:japaneseapp/Config/rank_manager.dart';
 import 'package:japaneseapp/Service/RewardRankService.dart';
 import 'package:japaneseapp/Theme/colors.dart';
 import 'package:japaneseapp/Utilities/WeekUtils.dart';
@@ -35,56 +36,7 @@ class _rankScreen extends State<rankScreen>{
   }
 
 
-  Map<String, dynamic> rankMap = {
-    "Bronze": {
-      "min": 0,
-      "max": 500,
-      "color": Colors.brown,
-      "image": "assets/rank/copper.png",
-      "name": "Bậc Đồng",
-      "next": "Bạc"
-    },
-    "Silver": {
-      "min": 501,
-      "max": 1500,
-      "color": Colors.grey,
-      "image": "assets/rank/silver.png",
-      "name": "Bậc Bạc",
-      "next": "Vàng"
-    },
-    "Gold": {
-      "min": 1501,
-      "max": 3000,
-      "color": Colors.orange,
-      "image": "assets/rank/gold.png",
-      "name": "Bậc Vàng",
-      "next": "Kim Cương"
-    },
-    "Diamond": {
-      "min": 3001,
-      "max": 5000,
-      "color": Colors.blueAccent,
-      "image": "assets/rank/diamond.png",
-      "name": "Bậc Kim Cương",
-      "next": "Ruby"
-    },
-    "Ruby": {
-      "min": 5001,
-      "max": 8000,
-      "color": Colors.red,
-      "image": "assets/rank/ruby.png",
-      "name": "Bậc Ruby",
-      "next": "Obsidian"
-    },
-    "Obsidian": {
-      "min": 8001,
-      "max": double.infinity,
-      "color": Colors.purple,
-      "image": "assets/rank/Obsidian.png",
-      "name": "Bậc Obsidian",
-      "next": "Top 1"
-    },
-  };
+  Map<String, dynamic> rankMap = RankManager.rankMap;
 
   String getRank(int score){
     if(score <= 500){

@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:in_app_update/in_app_update.dart';
 import 'package:japaneseapp/Screen/SetUpLanguage.dart';
 import 'package:japaneseapp/Screen/controllScreen.dart';
+import 'package:japaneseapp/Screen/upRankScreen.dart';
 import 'package:japaneseapp/State/FeatureState.dart';
 import 'package:japaneseapp/Utilities/NetworkUtils.dart';
 
