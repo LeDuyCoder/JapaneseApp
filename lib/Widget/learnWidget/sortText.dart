@@ -116,65 +116,61 @@ class _SortTextState extends State<sortText> {
                   ],
                 ),
               ),
+              SizedBox(
+                height: 10,
+              ),
               Container(
                 width: MediaQuery.sizeOf(context).width,
                 child: Stack(
                   children: [
-                    Center(
-                      child: Container(
-                        margin: EdgeInsets.only(top: 40, right: 50),
-                        width: MediaQuery.sizeOf(context).width/3,
-                        child: Image.asset("assets/character/character1.png", width: 180),
-                      ),
+                    Container(
+                      margin: EdgeInsets.only(top: 40, right: 50),
+                      child: Image.asset("assets/character/hinh3.png", width: 150),
                     ),
                     Positioned(
-                      right: 20,
-                      child:  Center(
+                      top: 20,
+                      left: 130,
+                      right: 50,
+                      child:  Container(
+                        width: MediaQuery.sizeOf(context).width,
                         child: Container(
-                          width: MediaQuery.sizeOf(context).width/2.4,
-                          child: Container(
-                            padding: EdgeInsets.only(left: 10,),
-                            height: 120,
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(15),
-                                topRight: Radius.circular(15),
-                                bottomRight: Radius.circular(15),
+                          padding: EdgeInsets.only(left: 10,),
+                          height: 120,
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(15),
+                              topRight: Radius.circular(15),
+                              bottomRight: Radius.circular(15),
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey,
+                                offset: Offset(4, -4),
+                                blurRadius: 10,
                               ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey,
-                                  offset: Offset(4, -4),
-                                  blurRadius: 10,
+                            ],
+                          ),
+                          child: Row(
+                            children: [
+                              GestureDetector(
+                                onTap: () async {
+                                  await readText(widget.WordTest.wayread);
+                                },
+                                child: const Icon(Icons.volume_down_sharp, color: Colors.blue),
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  widget.typeTest == typeSort.JapanToVietNam
+                                      ? widget.WordTest.vocabulary
+                                      : widget.WordTest.mean,
+                                  style: const TextStyle(fontSize: 18, color: Colors.black),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
                                 ),
-                              ],
-                            ),
-                            child: Row(
-                              children: [
-                                GestureDetector(
-                                  onTap: () async {
-                                    await readText(widget.WordTest.wayread);
-                                  },
-                                  child: const Icon(Icons.volume_down_sharp,
-                                      color: Colors.blue),
-                                ),
-                                SizedBox(
-                                  width: 150,
-                                  child: Text(
-                                    widget.typeTest == typeSort.JapanToVietNam
-                                        ? widget.WordTest.vocabulary
-                                        : widget.WordTest.mean,
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      color: Colors.black,
-                                    ),
-                                    overflow: TextOverflow.ellipsis, // tránh tràn
-                                    maxLines: 2
-                                  ),
-                                ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
                       ),

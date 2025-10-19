@@ -15,7 +15,6 @@ class Notificationservice extends BaseService {
 
     if (data is Map<String, dynamic> && data["data"] is List) {
       final List<dynamic> jsonList = data["data"];
-      print(jsonList);
       return jsonList.map((e) => NotificationModel.fromJson(e)).toList();
     } else {
       throw Exception('Dữ liệu trả về không hợp lệ');

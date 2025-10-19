@@ -8,6 +8,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:japaneseapp/DTO/UserDTO.dart';
 import 'package:japaneseapp/Module/topic.dart';
 import 'package:japaneseapp/Screen/addWordScreen.dart';
 import 'package:japaneseapp/Screen/allFolderScreen.dart';
@@ -53,14 +54,16 @@ class _DashboardScreenState extends State<dashboardScreen> {
   final TextEditingController nameTopicInput = TextEditingController();
   final TextEditingController searchWord = TextEditingController();
   final TextEditingController renameTopicInput = TextEditingController();
+
+  UserDTO? user;
   String? textErrorName;
   String? textErrorTopicName;
   bool isLoadingCreateNewFolder = false;
   String amountTopic = "0 Topic";
   String? _fileContent;
   String nameTopic = "";
-
   bool _isOffline = false;
+
 
   StreamSubscription<List<ConnectivityResult>>? _subscription;
 
@@ -117,45 +120,37 @@ class _DashboardScreenState extends State<dashboardScreen> {
 
   Future<Map<String, dynamic>> hanldeGetData() async {
     final db = LocalDbService.instance;
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    final dbServer = ServiceLocator.userService;
+    final prefs = await SharedPreferences.getInstance();
 
-    Map<String, dynamic> data;
+    Future<Map<String, dynamic>> localData() async => {
+      "topic": await db.topicDao.getAllTopics(),
+      "folder": await db.folderDao.getAllFolders(),
+    };
 
     try {
-      // thử gọi server với timeout
-      var dataServer = await ServiceLocator.topicService
+      // Thử gọi server (timeout 10s)
+      final dataServer = await ServiceLocator.topicService
           .getAllDataTopic(5)
           .timeout(const Duration(seconds: 10));
 
-      print("data: ${dataServer}");
+      user = await dbServer.getUser(FirebaseAuth.instance.currentUser!.uid)
+                    .timeout(const Duration(seconds: 10));
 
-      // nếu server có dữ liệu → gộp local + server
-      data = {
-        "topic": await db.topicDao.getAllTopics(),
-        "folder": await db.folderDao.getAllFolders(),
+      return {
+        ...await localData(),
         "topicServer": dataServer,
       };
-        } on TimeoutException catch (_) {
-      print(_.message);
-      data = {
-        "topic": await db.topicDao.getAllTopics(),
-        "folder": await db.folderDao.getAllFolders(),
-      };
-    } on SocketException catch (_) {
-      print(_.message);
-      data = {
-        "topic": await db.topicDao.getAllTopics(),
-        "folder": await db.folderDao.getAllFolders(),
-      };
+    } on TimeoutException catch (e) {
+      print("Timeout: ${e.message}");
+    } on SocketException catch (e) {
+      print("Socket error: ${e.message}");
     } catch (e) {
-      print(e.toString());
-      data = {
-        "topic": await db.topicDao.getAllTopics(),
-        "folder": await db.folderDao.getAllFolders(),
-      };
+      print("Error: $e");
     }
 
-    return data;
+    // Nếu lỗi → chỉ trả về dữ liệu local
+    return await localData();
   }
 
   void reloadScreen(){
@@ -1003,49 +998,6 @@ class _DashboardScreenState extends State<dashboardScreen> {
         return Future.value(false);
       },
       child: Scaffold(
-          appBar: AppBar(
-            automaticallyImplyLeading: false,
-            backgroundColor: AppColors.backgroundPrimary,
-            scrolledUnderElevation: 0,
-            elevation: 0,
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  "KujiLingo",
-                  style: TextStyle(
-                    color: AppColors.primary,
-                    fontSize: 40,
-                    fontFamily: "",
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                GestureDetector(
-                  onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>featureScreen()));
-                  },
-                  child: Container(
-                    height: 45,
-                    width: 45,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: AppColors.primary,
-                    ),
-                    child: Center(
-                      child: Text(
-                        getUserName(),
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ),
           body: RefreshIndicator(
               onRefresh: reload,
               child:Container(
@@ -1432,8 +1384,79 @@ class _DashboardScreenState extends State<dashboardScreen> {
                   if(snapshot.hasData){
                     return ListView(
                       children: [
-                        SizedBox(
-                          height: 10,
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                "KujiLingo",
+                                style: TextStyle(
+                                  color: AppColors.primary,
+                                  fontSize: 40,
+                                  fontFamily: "",
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  if (user != null) {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => featureScreen(userDTO: user!, reload: () {
+                                              reloadScreen();
+                                              },
+                                            )));
+                                  }
+                                },
+                                child: SizedBox(
+                                  width: 80,
+                                  height: 80,
+                                  child: Stack(
+                                    alignment: Alignment.center, // căn tất cả vào tâm
+                                    children: [
+                                      // Frame nếu có
+                                      (user!.urlAvatar == '')
+                                          ? Container(
+                                        width: 50,
+                                        height: 50,
+                                        decoration: const BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: AppColors.primary,
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            getUserName(),
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                          : ClipOval(
+                                              child: Image.network(
+                                                user!.urlAvatar,
+                                                width: 65,
+                                                height: 65,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                      if (user!.urlFrame != '')
+                                        Image.network(
+                                          user!.urlFrame,
+                                          width: 80,
+                                          height: 80,
+                                          fit: BoxFit.cover,
+                                        ),
+                                    ],
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                         if (_isOffline)
                           Container(

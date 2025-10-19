@@ -1,13 +1,14 @@
-import 'package:japaneseapp/Service/Local/dao/readNotification_dao.dart';
+import 'package:japaneseapp/Service/Local/dao/ReadNotificationDao.dart';
+import 'package:japaneseapp/Service/Local/dao/UserItemsDAO.dart';
 
-import 'dao/databse_dao.dart';
-import 'dao/topic_dao.dart';
-import 'dao/word_dao.dart';
-import 'dao/folder_dao.dart';
-import 'dao/character_dao.dart';
-import 'dao/vocabulary_dao.dart';
-import 'dao/sync_dao.dart';
-import 'dao/misc_dao.dart';
+import 'dao/DatabseDao.dart';
+import 'dao/TopicDao.dart';
+import 'dao/WordDao.dart';
+import 'dao/FolderDao.dart';
+import 'dao/CharacterDao.dart';
+import 'dao/VocabularyDao.dart';
+import 'dao/SyncDao.dart';
+import 'dao/MiscDao.dart';
 import 'preferences_service.dart';
 
 /// Service tổng quản lý tất cả DAO + SharedPreferences.
@@ -24,6 +25,7 @@ class LocalDbService {
   final MiscDao miscDao;
   final DatabseDao databseDao;
   final ReadnotificationDao readnotificationDao;
+  final UserItemsDao userItemsDao;
   final PreferencesService preferencesService;
 
   LocalDbService._init()
@@ -36,5 +38,6 @@ class LocalDbService {
         miscDao = MiscDao(),
         databseDao = DatabseDao(),
         readnotificationDao = ReadnotificationDao(),
+        userItemsDao = UserItemsDao(),
         preferencesService = PreferencesService();
 }

@@ -20,7 +20,7 @@ class quitTab extends StatelessWidget{
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Image.asset("assets/character/character5.png", width: MediaQuery.sizeOf(context).height*0.2),
+              Image.asset("assets/character/hinh1.png", width: MediaQuery.sizeOf(context).height*0.2),
               Text("Do you want to quit ?", style: TextStyle(color: Colors.black, fontSize: 30, fontWeight: FontWeight.bold),),
 
               SizedBox(height: 20,),

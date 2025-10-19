@@ -110,7 +110,7 @@ class _ListenTextState extends State<listenTest> {
                 children: [
                   Container(
                     width: MediaQuery.sizeOf(context).width*0.5,
-                    child: Image.asset("assets/character/character3.png", width: MediaQuery.sizeOf(context).height*0.2),
+                    child: Image.asset("assets/character/hinh2.png", width: MediaQuery.sizeOf(context).height*0.2),
                   ),
                   Container(
                     width: MediaQuery.sizeOf(context).width*0.5,

@@ -19,7 +19,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 3,
+      version: 4,
       onCreate: _createDB,
       onUpgrade: _updateDB,
     );
@@ -84,15 +84,24 @@ class DatabaseHelper {
     ''');
 
     await db.execute('''
-            CREATE TABLE read_notifications (
+        CREATE TABLE read_notifications (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             notification_id TEXT NOT NULL,
             read_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        
-            -- tránh đọc trùng
+  
             UNIQUE(notification_id)
         );
       ''');
+
+    await db.execute('''
+      CREATE TABLE user_items (
+          id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
+          item_type TEXT NOT NULL,
+          item_id VARCHAR(50) NOT NULL,
+          acquired_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      );
+
+    ''');
   }
 
   Future<void> _updateDB(Database db, int oldVersion, int newVersion) async {
@@ -102,11 +111,20 @@ class DatabaseHelper {
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             notification_id TEXT NOT NULL,
             read_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        
-            -- tránh đọc trùng
             UNIQUE(notification_id)
         );
       ''');
+    }
+
+    if(oldVersion < 4){
+      await db.execute('''
+        CREATE TABLE user_items (
+            id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
+            item_type TEXT NOT NULL,
+            item_id VARCHAR(50) NOT NULL,
+            acquired_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
+        ''');
     }
   }
 

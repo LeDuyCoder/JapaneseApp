@@ -1,3 +1,4 @@
+import 'package:japaneseapp/Service/Server/FrameAvatarService.dart';
 import 'package:japaneseapp/Service/Server/TopicService.dart';
 import 'package:japaneseapp/Service/Server/WordService.dart';
 
@@ -10,6 +11,7 @@ class ServiceLocator {
   static final WordService wordService = WordService();
   static final ScoreService scoreService = ScoreService();
   static final UserService userService = UserService();
+  static final FrameAvatarService frameAvatarService = FrameAvatarService();
   static final Notificationservice notificationservice = Notificationservice();
 
   // Singleton pattern (optional)
