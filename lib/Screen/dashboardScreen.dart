@@ -8,6 +8,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:japaneseapp/DTO/UserDTO.dart';
 import 'package:japaneseapp/Module/topic.dart';
 import 'package:japaneseapp/Screen/addWordScreen.dart';
 import 'package:japaneseapp/Screen/allFolderScreen.dart';
@@ -53,14 +54,16 @@ class _DashboardScreenState extends State<dashboardScreen> {
   final TextEditingController nameTopicInput = TextEditingController();
   final TextEditingController searchWord = TextEditingController();
   final TextEditingController renameTopicInput = TextEditingController();
+
+  UserDTO? user;
   String? textErrorName;
   String? textErrorTopicName;
   bool isLoadingCreateNewFolder = false;
   String amountTopic = "0 Topic";
   String? _fileContent;
   String nameTopic = "";
-
   bool _isOffline = false;
+
 
   StreamSubscription<List<ConnectivityResult>>? _subscription;
 
@@ -117,45 +120,37 @@ class _DashboardScreenState extends State<dashboardScreen> {
 
   Future<Map<String, dynamic>> hanldeGetData() async {
     final db = LocalDbService.instance;
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    final dbServer = ServiceLocator.userService;
+    final prefs = await SharedPreferences.getInstance();
 
-    Map<String, dynamic> data;
+    Future<Map<String, dynamic>> localData() async => {
+      "topic": await db.topicDao.getAllTopics(),
+      "folder": await db.folderDao.getAllFolders(),
+    };
 
     try {
-      // thử gọi server với timeout
-      var dataServer = await ServiceLocator.topicService
+      // Thử gọi server (timeout 10s)
+      final dataServer = await ServiceLocator.topicService
           .getAllDataTopic(5)
           .timeout(const Duration(seconds: 10));
 
-      print("data: ${dataServer}");
+      user = await dbServer.getUser(FirebaseAuth.instance.currentUser!.uid)
+                    .timeout(const Duration(seconds: 10));
 
-      // nếu server có dữ liệu → gộp local + server
-      data = {
-        "topic": await db.topicDao.getAllTopics(),
-        "folder": await db.folderDao.getAllFolders(),
+      return {
+        ...await localData(),
         "topicServer": dataServer,
       };
-        } on TimeoutException catch (_) {
-      print(_.message);
-      data = {
-        "topic": await db.topicDao.getAllTopics(),
-        "folder": await db.folderDao.getAllFolders(),
-      };
-    } on SocketException catch (_) {
-      print(_.message);
-      data = {
-        "topic": await db.topicDao.getAllTopics(),
-        "folder": await db.folderDao.getAllFolders(),
-      };
+    } on TimeoutException catch (e) {
+      print("Timeout: ${e.message}");
+    } on SocketException catch (e) {
+      print("Socket error: ${e.message}");
     } catch (e) {
-      print(e.toString());
-      data = {
-        "topic": await db.topicDao.getAllTopics(),
-        "folder": await db.folderDao.getAllFolders(),
-      };
+      print("Error: $e");
     }
 
-    return data;
+    // Nếu lỗi → chỉ trả về dữ liệu local
+    return await localData();
   }
 
   void reloadScreen(){
@@ -1022,7 +1017,9 @@ class _DashboardScreenState extends State<dashboardScreen> {
                 ),
                 GestureDetector(
                   onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>featureScreen()));
+                    if(user != null){
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>featureScreen(userDTO: user!,)));
+                    }
                   },
                   child: Container(
                     height: 45,

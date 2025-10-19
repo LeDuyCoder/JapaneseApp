@@ -2,14 +2,20 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:japaneseapp/DTO/UserDTO.dart';
 import 'package:japaneseapp/Module/notification.dart';
 import 'package:japaneseapp/Screen/notificationsScreen.dart';
 import 'package:japaneseapp/Screen/rankScreen.dart';
+import 'package:japaneseapp/Screen/storeScreen.dart';
 import 'package:japaneseapp/Service/Local/local_db_service.dart';
 import 'package:japaneseapp/Service/Server/ServiceLocator.dart';
 import 'package:japaneseapp/Theme/colors.dart';
 
 class featureScreen extends StatefulWidget{
+  final UserDTO userDTO;
+
+  const featureScreen({super.key, required this.userDTO});
+
   @override
   State<StatefulWidget> createState() => _featureScreen();
 }
@@ -102,6 +108,30 @@ class _featureScreen extends State<featureScreen>{
                         context,
                         PageRouteBuilder(
                           pageBuilder: (context, animation, secondaryAnimation) => rankScreen(),
+                          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                            const begin = Offset(-1.0, 0.0);
+                            const end = Offset.zero;
+                            const curve = Curves.ease;
+                            final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                            return SlideTransition(
+                              position: animation.drive(tween),
+                              child: child,
+                            );
+                          },
+                        ),
+                      );
+                    }
+                ),
+                ListTile(
+                    leading: Icon(Icons.store, color: Colors.black,),
+                    title: const Text("Cửa Hàng", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                    subtitle: const Text("Nơi bán sản phẩm"),
+                    trailing: Icon(Icons.arrow_forward_ios, color: Colors.black,),
+                    onTap: (){
+                      Navigator.push(
+                        context,
+                        PageRouteBuilder(
+                          pageBuilder: (context, animation, secondaryAnimation) => storeScreen(userDTO: widget.userDTO,),
                           transitionsBuilder: (context, animation, secondaryAnimation, child) {
                             const begin = Offset(-1.0, 0.0);
                             const end = Offset.zero;

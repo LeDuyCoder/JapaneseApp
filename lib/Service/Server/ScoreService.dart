@@ -16,7 +16,9 @@ class ScoreService extends BaseService {
         await addScore(userId, 0);
 
         return await getScore(period, userId);
+
       }else {
+        print(data);
         return data["score"];
       }
     } else {

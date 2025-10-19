@@ -1,3 +1,5 @@
+import 'package:japaneseapp/DTO/UserDTO.dart';
+
 import '../BaseService.dart';
 import 'ScoreService.dart';
 
@@ -20,6 +22,19 @@ class UserService extends BaseService {
     }
   }
 
+  Future<UserDTO> getUser(String userId) async {
+    final data = await postForm("/controller/user/getUser.php", {
+      'idUser': userId,
+    });
+
+    if (data is Map<String, dynamic>) {
+
+      return UserDTO.fromJson(data["data"]);
+    } else {
+      throw Exception('Invalid coin data format');
+    }
+  }
+  
   /// Get user coins
   Future<int> getCoin(String idUser) async {
     final data = await postForm('/controller/user/getCoin.php', {
@@ -36,6 +51,14 @@ class UserService extends BaseService {
   /// Add coins to user
   Future<void> addCoin(String idUser, int coin) async {
     await postForm('/controller/user/addCoin.php', {
+      'idUser': idUser,
+      'coint': coin.toString(), // Note: typo in original API
+    });
+    print("✅ Add coin success");
+  }
+
+  Future<void> reduceCoin(String idUser, int coin) async {
+    await postForm('/controller/user/removeCoin.php', {
       'idUser': idUser,
       'coint': coin.toString(), // Note: typo in original API
     });

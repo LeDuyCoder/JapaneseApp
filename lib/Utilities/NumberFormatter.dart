@@ -18,11 +18,13 @@ class NumberFormatter {
       }
     }
 
-    return number.toString(); // Dưới 1000 thì không rút gọn
+    return number.toString();
   }
 
   static String _format(double value, String suffix) {
-    String formatted = value.toStringAsFixed(value.truncateToDouble() == value ? 0 : 1);
+    String formatted = value.toStringAsFixed(
+      value < 10 ? 2 : (value < 100 ? 1 : 0),
+    );
     return '$formatted$suffix';
   }
 }

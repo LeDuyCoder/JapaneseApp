@@ -16,7 +16,6 @@ class TopicService extends BaseService {
           .map((jsonItem) => topic.fromJson(jsonItem as Map<String, dynamic>))
           .toList();
 
-      print(topics);
       return topics; // ✅ Trả về List<topic>
     } else {
       throw Exception('Dữ liệu trả về không hợp lệ');
@@ -29,15 +28,12 @@ class TopicService extends BaseService {
     final data = await get('/controller/topic/searchTopic.php',
         queryParams: {'nameTopic': keyword});
 
-    print(data);
-
     if (data["data"] is List) {
       final List<topic> topics = (data["data"] as List)
           .map((jsonItem) => topic.fromJson(jsonItem as Map<String, dynamic>))
           .toList()
           .cast<topic>(); // ép kiểu rõ ràng sang List<topic>
 
-      print(topics);
       return topics;
     } else {
       throw Exception('Dữ liệu trả về không hợp lệ');
@@ -50,7 +46,6 @@ class TopicService extends BaseService {
     try {
       final data = await get('/controller/topic/getDataTopicByTopicID.php',
           queryParams: {'topic_id': id});
-      print(data);
       if (data != null) {
         return topic.fromJson(data["data"]);
       }
@@ -106,7 +101,6 @@ class TopicService extends BaseService {
     final data = await postJson('/controller/topic/deleteTopic.php', {
       'topicID': topicID,
     });
-    print(data);
     print("✅ Delete success: ${data['message']}");
   }
 }
