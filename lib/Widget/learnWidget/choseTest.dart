@@ -126,10 +126,6 @@ class _choseTestState extends State<choseTest> {
                   ],
                 ),
               ),
-              // Image.asset(
-              //   "assets/character/character4.png",
-              //   width: MediaQuery.sizeOf(context).width * 0.4,
-              // ),
               SizedBox(height: 20,),
               Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20),

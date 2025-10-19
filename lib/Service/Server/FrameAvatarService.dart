@@ -30,4 +30,26 @@ class FrameAvatarService extends BaseService {
       throw Exception('Dữ liệu trả về không hợp lệ');
     }
   }
+
+  Future<List<FrameDTO>> getAllAvatar() async {
+    final data = await get('/controller/Items/avatar/getAllAvatar.php');
+
+    if (data is Map<String, dynamic>) {
+      if (data.containsKey("error")) {
+        return [];
+      } else {
+        List<FrameDTO> listFrames = [];
+        LocalDbService localDbService = LocalDbService.instance;
+        for(dynamic frame in data["data"]){
+          FrameDTO frameDTO = FrameDTO.fromJson(frame);
+          frameDTO.isHaving = await localDbService.userItemsDao.isItemExists(frameDTO.idAvatarFrame);
+          listFrames.add(frameDTO);
+        }
+
+        return listFrames;
+      }
+    } else {
+      throw Exception('Dữ liệu trả về không hợp lệ');
+    }
+  }
 }

@@ -124,7 +124,6 @@ flutter:
     - assets/character/
     - assets/sound/
     - assets/storyset/
-    - assets/StateLevel/
     - assets/achivement/
     - assets/achivement/dayStreak/
     - assets/achivement/finish/

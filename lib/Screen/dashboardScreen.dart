@@ -998,51 +998,6 @@ class _DashboardScreenState extends State<dashboardScreen> {
         return Future.value(false);
       },
       child: Scaffold(
-          appBar: AppBar(
-            automaticallyImplyLeading: false,
-            backgroundColor: AppColors.backgroundPrimary,
-            scrolledUnderElevation: 0,
-            elevation: 0,
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  "KujiLingo",
-                  style: TextStyle(
-                    color: AppColors.primary,
-                    fontSize: 40,
-                    fontFamily: "",
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                GestureDetector(
-                  onTap: (){
-                    if(user != null){
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=>featureScreen(userDTO: user!,)));
-                    }
-                  },
-                  child: Container(
-                    height: 45,
-                    width: 45,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: AppColors.primary,
-                    ),
-                    child: Center(
-                      child: Text(
-                        getUserName(),
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ),
           body: RefreshIndicator(
               onRefresh: reload,
               child:Container(
@@ -1429,8 +1384,79 @@ class _DashboardScreenState extends State<dashboardScreen> {
                   if(snapshot.hasData){
                     return ListView(
                       children: [
-                        SizedBox(
-                          height: 10,
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                "KujiLingo",
+                                style: TextStyle(
+                                  color: AppColors.primary,
+                                  fontSize: 40,
+                                  fontFamily: "",
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  if (user != null) {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => featureScreen(userDTO: user!, reload: () {
+                                              reloadScreen();
+                                              },
+                                            )));
+                                  }
+                                },
+                                child: SizedBox(
+                                  width: 80,
+                                  height: 80,
+                                  child: Stack(
+                                    alignment: Alignment.center, // căn tất cả vào tâm
+                                    children: [
+                                      // Frame nếu có
+                                      (user!.urlAvatar == '')
+                                          ? Container(
+                                        width: 50,
+                                        height: 50,
+                                        decoration: const BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: AppColors.primary,
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            getUserName(),
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                          : ClipOval(
+                                              child: Image.network(
+                                                user!.urlAvatar,
+                                                width: 65,
+                                                height: 65,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                      if (user!.urlFrame != '')
+                                        Image.network(
+                                          user!.urlFrame,
+                                          width: 80,
+                                          height: 80,
+                                          fit: BoxFit.cover,
+                                        ),
+                                    ],
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                         if (_isOffline)
                           Container(

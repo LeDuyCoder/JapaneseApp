@@ -510,13 +510,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get setting_language_content => 'Select display language';
 
   @override
-  String get setting_async_title => 'Sync Data';
+  String get setting_async_title => 'Sync data';
 
   @override
   String get setting_async_content => 'Sync data to the cloud';
 
   @override
-  String get setting_downloadAsync_title => 'Download Data';
+  String get setting_downloadAsync_title => 'Download data';
 
   @override
   String get setting_downloadAsync_content => 'Download synced data from your old device';
@@ -575,7 +575,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get bottomSheetAsync_Success_Description => 'Data has been successfully synced';
+  String get bottomSheetAsync_Success_Description => 'data has been successfully synced';
 
   @override
   String get bottomSheetAsync_Success_Btn => 'OK';
@@ -590,7 +590,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get bottomSheet_Nointernet_Btn => 'OK';
 
   @override
-  String get bottomSheet_Error_title => 'Data Load Error';
+  String get bottomSheet_Error_title => 'data Load Error';
 
   @override
   String get bottomSheet_Error_description => 'No synced data available';

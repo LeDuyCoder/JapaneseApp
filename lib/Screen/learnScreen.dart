@@ -179,7 +179,8 @@ class _learnScreen extends State<learnScreen> {
   }
 
   String generateWrongAwnser(
-      String typeAwnser, String rightAwnser, List<word> dataWords) {
+      String typeAwnser, String rightAwnser, List<word> dataWords)
+  {
     if (dataWords.isEmpty) return "";
 
     // nếu chỉ có 1 từ thì không có đáp án sai -> trả luôn chính nó
@@ -211,200 +212,191 @@ class _learnScreen extends State<learnScreen> {
   }
 
   Future<void> generateQuestion(List<word> dataWords) async {
-    if (dataMap.isEmpty) {
-      int i = 0;
-      String fetureChose = "";
-      while (i < maxQuestion) {
-        List<String> feture = [
-          "sort",
-          "listen",
-          "combination",
-          "chose",
-          "write",
-        ];
-        if(splashScreen.featureState.readTesting){
-          feture.add("read");
-        }
-        String newQuestion = feture[randomInRange(0, feture.length)];
-        print(feture);
-        print(newQuestion);
-        if (fetureChose != newQuestion) {
-          fetureChose = newQuestion;
-          if (fetureChose == "sort" || fetureChose == "listen") {
-            typeSort ranType = randomInRange(0, 2) == 0
-                ? typeSort.VietNamToJapan
-                : typeSort.JapanToVietNam;
-            word wordRandom =
-            dataWords[randomInRange(0, widget.dataWords.length)];
-            if (dataMap.isEmpty || dataMap.last["feture"] != fetureChose) {
-              if (dataMap.isEmpty || (dataMap.last["word"] != wordRandom)) {
-                dataMap.add(
-                  {
-                    "feture": fetureChose,
-                    "type": "translate",
-                    "typeTranslate": ranType,
-                    "word": wordRandom,
-                    "listChose": ranType == typeSort.JapanToVietNam
-                        ? hanldStringChoseVN(
-                        "${wordRandom.mean} ${generateWrongAwnser("JapToVN", wordRandom.mean, dataWords)}")
-                        : handleJapaneseString(
-                        "${wordRandom.vocabulary} ${generateWrongAwnser("VNToJap", wordRandom.mean, dataWords)}"),
-                  },
-                );
+    if (dataMap.isNotEmpty) return;
 
-                if (!listWordsTest
-                    .any((wordCheck) => wordCheck == wordRandom)) {
-                  listWordsTest.add(wordRandom);
-                }
+    int i = 0;
+    int safetyCounter = 0;
+    String lastFeature = "";
+    List<String> features = [
+      "sort",
+      "listen",
+      "combination",
+      "chose",
+      "write",
+    ];
 
-                i++;
-              }
-            }
-          }
-          else if (fetureChose == "combination") {
-            List<word> wordsRandom = [];
-            int numberWord = 0;
+    if (splashScreen.featureState.readTesting) {
+      features.add("read");
+    }
 
-            if (widget.dataWords.length == 4) {
-              wordsRandom = List.from(widget.dataWords);
-            } else {
-              while (numberWord < 4) {
-                word wordRandom = widget
-                    .dataWords[randomInRange(0, widget.dataWords.length - 1)];
-                if (!wordsRandom.contains(wordRandom)) {
-                  wordsRandom.add(wordRandom);
-                  numberWord++;
-                }
-              }
-            }
+    while (i < maxQuestion && safetyCounter < 1000) {
+      safetyCounter++;
 
-            List<NodeColum> dataWordsTest = [];
-            List<String> dataType = ["JapToVN", "JapToWayRead", "WayReadToJap"];
-            String type = dataType[randomInRange(0, 3)];
-            for (word wordCheck in wordsRandom) {
-              dataWordsTest.add(
-                type == "JapToVN"
-                    ? new NodeColum(UuidV4().generate(), wordCheck.vocabulary, wordCheck.mean,  wordCheck.wayread, wordObject: wordCheck)
-                    : type == "JapToWayRead"
-                    ? new NodeColum(UuidV4().generate(), wordCheck.vocabulary, wordCheck.wayread,  wordCheck.wayread, wordObject: wordCheck)
-                    : new NodeColum(UuidV4().generate(), wordCheck.wayread, wordCheck.vocabulary,  wordCheck.wayread, wordObject: wordCheck),
-              );
-              if (!listWordsTest.contains(wordCheck)) {
-                listWordsTest.add(wordCheck);
-              }
-            }
+      String newFeature = features[randomInRange(0, features.length)];
 
-            dataMap.add(
-              {
-                "feture": fetureChose,
-                "listColumA": dataWordsTest,
-                "listColumB": dataWordsTest,
-              },
-            );
-          }
-          else if (fetureChose == "chose") {
-            word wordCheckRandom =
-            widget.dataWords[randomInRange(0, widget.dataWords.length)];
+      // tránh lặp lại liên tục 1 loại
+      if (newFeature == lastFeature && features.length > 1) {
+        continue;
+      }
+      lastFeature = newFeature;
 
-            List<String> wordsWrong = [];
-            List<String> dataType = ["JapToVN", "JapToWayRead", "WayReadToJap"];
-            String type = dataType[randomInRange(0, 3)];
+      if (newFeature == "sort" || newFeature == "listen") {
+        typeSort ranType = randomInRange(0, 2) == 0
+            ? typeSort.VietNamToJapan
+            : typeSort.JapanToVietNam;
+        word wordRandom = dataWords[randomInRange(0, dataWords.length)];
 
-            Set<String> usedWords = {wordCheckRandom.vocabulary};
+        dataMap.add({
+          "feture": newFeature,
+          "type": "translate",
+          "typeTranslate": ranType,
+          "word": wordRandom,
+          "listChose": ranType == typeSort.JapanToVietNam
+              ? hanldStringChoseVN(
+            "${wordRandom.mean} ${generateWrongAwnser("JapToVN", wordRandom.mean, dataWords)}",
+          )
+              : handleJapaneseString(
+            "${wordRandom.vocabulary} ${generateWrongAwnser("VNToJap", wordRandom.mean, dataWords)}",
+          ),
+        });
 
-            while (wordsWrong.length < 3) {
-              word wordRandom =
-              widget.dataWords[randomInRange(0, widget.dataWords.length)];
-
-              if (!usedWords.contains(wordRandom.vocabulary)) {
-                usedWords.add(wordRandom.vocabulary);
-
-                if (type == "JapToVN") {
-                  wordsWrong.add(wordRandom.mean);
-                } else if (type == "JapToWayRead") {
-                  wordsWrong.add(wordRandom.wayread);
-                } else {
-                  wordsWrong.add(wordRandom.vocabulary);
-                }
-              }
-            }
-
-            dataMap.add(
-              type == "JapToVN"
-                  ? {
-                "feture": fetureChose,
-                "word": wordCheckRandom.vocabulary,
-                "anwser": wordCheckRandom.mean,
-                "listAnwserWrong": wordsWrong,
-                "numberRight": randomInRange(1, 5),
-                "wordObject": wordCheckRandom
-              }
-                  : type == "JapToWayRead"
-                  ? {
-                "feture": fetureChose,
-                "word": wordCheckRandom.vocabulary,
-                "anwser": wordCheckRandom.wayread,
-                "listAnwserWrong": wordsWrong,
-                "numberRight": randomInRange(1, 5),
-                "wordObject": wordCheckRandom
-              }
-                  : {
-                "feture": fetureChose,
-                "word": wordCheckRandom.wayread,
-                "anwser": wordCheckRandom.vocabulary,
-                "listAnwserWrong": wordsWrong,
-                "numberRight": randomInRange(1, 5),
-                "wordObject": wordCheckRandom
-              },
-            );
-          }
-          else if (fetureChose == "write") {
-            word wordCheckRandom =
-            widget.dataWords[randomInRange(0, widget.dataWords.length)];
-
-            dataMap.add({
-              "wordObject": wordCheckRandom,
-              "feture": fetureChose,
-              "word": wordCheckRandom.vocabulary,
-              "mean": wordCheckRandom.mean
-            });
-          }
-          else if ((fetureChose == "read")){
-            word wordCheckRandom =
-            widget.dataWords[randomInRange(0, widget.dataWords.length)];
-
-            dataMap.add({
-              "feture": fetureChose,
-              "word": wordCheckRandom.vocabulary,
-              "kana": wordCheckRandom.wayread,
-              "mean": wordCheckRandom.mean
-            });
-          }
-          i++;
+        if (!listWordsTest.contains(wordRandom)) {
+          listWordsTest.add(wordRandom);
         }
       }
 
-      if (dataMap.isNotEmpty && numberCount < dataMap.length) {
-        updateView(dataMap[numberCount]["feture"]);
-      } else {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          _timerService.stopTimer();
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (ctx) => congraculationScreen(
-                listWordsTest: listWordsTest,
-                listWordsWrong: wrongWords,
-                timeTest: _currentSeconds,
-                topic: widget.topic,
-                reload: () {
-                  widget.reload();
-                },
-              ),
-            ),
+      else if (newFeature == "combination") {
+        List<word> wordsRandom = [];
+        int numberWord = 0;
+
+        if (dataWords.length <= 4) {
+          wordsRandom = List.from(dataWords);
+        } else {
+          while (numberWord < 4 && safetyCounter < 1000) {
+            word wordRandom = dataWords[randomInRange(0, dataWords.length)];
+            if (!wordsRandom.contains(wordRandom)) {
+              wordsRandom.add(wordRandom);
+              numberWord++;
+            }
+          }
+        }
+
+        List<NodeColum> dataWordsTest = [];
+        List<String> dataType = ["JapToVN", "JapToWayRead", "WayReadToJap"];
+        String type = dataType[randomInRange(0, 3)];
+
+        for (word w in wordsRandom) {
+          dataWordsTest.add(
+            type == "JapToVN"
+                ? NodeColum(UuidV4().generate(), w.vocabulary, w.mean, w.wayread,
+                wordObject: w)
+                : type == "JapToWayRead"
+                ? NodeColum(UuidV4().generate(), w.vocabulary, w.wayread,
+                w.wayread, wordObject: w)
+                : NodeColum(UuidV4().generate(), w.wayread, w.vocabulary,
+                w.wayread, wordObject: w),
           );
+
+          if (!listWordsTest.contains(w)) {
+            listWordsTest.add(w);
+          }
+        }
+
+        dataMap.add({
+          "feture": newFeature,
+          "listColumA": dataWordsTest,
+          "listColumB": dataWordsTest,
         });
       }
+
+      else if (newFeature == "chose") {
+        word wordRandom = dataWords[randomInRange(0, dataWords.length)];
+        List<String> dataType = ["JapToVN", "JapToWayRead", "WayReadToJap"];
+        String type = dataType[randomInRange(0, 3)];
+        List<String> wrongWords = [];
+        Set<String> used = {wordRandom.vocabulary};
+
+        while (wrongWords.length < 3 && safetyCounter < 1000) {
+          safetyCounter++;
+          word w = dataWords[randomInRange(0, dataWords.length)];
+          if (used.add(w.vocabulary)) {
+            wrongWords.add(type == "JapToVN"
+                ? w.mean
+                : type == "JapToWayRead"
+                ? w.wayread
+                : w.vocabulary);
+          }
+        }
+
+        dataMap.add({
+          "feture": newFeature,
+          "word": type == "WayReadToJap"
+              ? wordRandom.wayread
+              : wordRandom.vocabulary,
+          "anwser": type == "JapToVN"
+              ? wordRandom.mean
+              : type == "JapToWayRead"
+              ? wordRandom.wayread
+              : wordRandom.vocabulary,
+          "listAnwserWrong": wrongWords,
+          "numberRight": randomInRange(1, 5),
+          "wordObject": wordRandom,
+        });
+      }
+
+      else if (newFeature == "write") {
+        word w = dataWords[randomInRange(0, dataWords.length)];
+        dataMap.add({
+          "feture": newFeature,
+          "wordObject": w,
+          "word": w.vocabulary,
+          "mean": w.mean,
+        });
+      }
+
+      else if (newFeature == "read") {
+        word w = dataWords[randomInRange(0, dataWords.length)];
+        dataMap.add({
+          "feture": newFeature,
+          "word": w.vocabulary,
+          "kana": w.wayread,
+          "mean": w.mean,
+        });
+      }
+
+      i++;
+    }
+
+    // Nếu vẫn trống => fallback
+    if (dataMap.isEmpty) {
+      debugPrint("⚠️ Không sinh được câu hỏi, tạo tạm 1 câu test mặc định.");
+      word w = dataWords.first;
+      dataMap.add({
+        "feture": "read",
+        "word": w.vocabulary,
+        "kana": w.wayread,
+        "mean": w.mean,
+      });
+    }
+
+    if (numberCount < dataMap.length) {
+      updateView(dataMap[numberCount]["feture"]);
+    } else {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _timerService.stopTimer();
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (ctx) => congraculationScreen(
+              listWordsTest: listWordsTest,
+              listWordsWrong: wrongWords,
+              timeTest: _currentSeconds,
+              topic: widget.topic,
+              reload: widget.reload,
+            ),
+          ),
+        );
+      });
     }
   }
 

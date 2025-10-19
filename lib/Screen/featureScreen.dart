@@ -11,10 +11,13 @@ import 'package:japaneseapp/Service/Local/local_db_service.dart';
 import 'package:japaneseapp/Service/Server/ServiceLocator.dart';
 import 'package:japaneseapp/Theme/colors.dart';
 
+import '../features/shop/presentation/pages/shop_page.dart';
+
 class featureScreen extends StatefulWidget{
   final UserDTO userDTO;
+  final Function() reload;
 
-  const featureScreen({super.key, required this.userDTO});
+  const featureScreen({super.key, required this.userDTO, required this.reload});
 
   @override
   State<StatefulWidget> createState() => _featureScreen();
@@ -43,6 +46,10 @@ class _featureScreen extends State<featureScreen>{
         automaticallyImplyLeading: true,
         scrolledUnderElevation: 0,
         backgroundColor: AppColors.backgroundPrimary,
+        leading: IconButton(onPressed: (){
+          Navigator.pop(context);
+          widget.reload();
+        }, icon: const Icon(Icons.arrow_back)),
       ),
       body: Container(
         width: MediaQuery.sizeOf(context).width,
@@ -131,7 +138,7 @@ class _featureScreen extends State<featureScreen>{
                       Navigator.push(
                         context,
                         PageRouteBuilder(
-                          pageBuilder: (context, animation, secondaryAnimation) => storeScreen(userDTO: widget.userDTO,),
+                          pageBuilder: (context, animation, secondaryAnimation) => ShopPage(userDTO: widget.userDTO,),
                           transitionsBuilder: (context, animation, secondaryAnimation, child) {
                             const begin = Offset(-1.0, 0.0);
                             const end = Offset.zero;

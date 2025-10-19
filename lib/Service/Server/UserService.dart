@@ -62,6 +62,22 @@ class UserService extends BaseService {
       'idUser': idUser,
       'coint': coin.toString(), // Note: typo in original API
     });
-    print("✅ Add coin success");
+  }
+
+  Future<void> updateFrameUser(String idUser, String idFrame) async{
+    print(idFrame);
+    await postForm('/controller/user/updateAvatarFrame.php', {
+      'idUser': idUser,
+      if(idFrame != '')
+        'frameId': idFrame
+    });
+  }
+  
+  Future<void> updateAvatarUser(String idUser, String idAvatar) async {
+    await postForm('/controller/user/updateAvatar.php', {
+      'idUser': idUser,
+      if(idAvatar != '')
+        'avatarId': idAvatar
+    });
   }
 }

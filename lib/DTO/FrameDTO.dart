@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 
 enum TypeProductEnum{
   frame,
@@ -24,7 +25,7 @@ class FrameDTO {
 
   factory FrameDTO.fromJson(Map<String, dynamic> json) {
     return FrameDTO(
-      idAvatarFrame: json['IdAvatarFrame'] ?? '',
+      idAvatarFrame: json['IdAvatarFrame'] ?? json['IdAvatar'] ?? '',
       name: json['name'] ?? '',
       urlImg: json['urlImg'] ?? '',
       price: json['price'] is int

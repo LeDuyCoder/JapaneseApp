@@ -150,11 +150,11 @@ class _listWordScreen extends State<listWordScreen>{
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Image.asset("assets/character/character6.png", width: MediaQuery.sizeOf(context).width*0.3,),
+                        Image.asset("assets/character/hinh1.png", width: MediaQuery.sizeOf(context).width*0.3,),
                         Column(
                           children: [
-                            SizedBox(height: 20),
-                            AutoSizeText(
+                            const SizedBox(height: 20),
+                            const AutoSizeText(
                               "Xóa chủ đề",
                               style: TextStyle(fontFamily: "Itim", fontSize: 25),
                             ),
@@ -163,7 +163,7 @@ class _listWordScreen extends State<listWordScreen>{
                               "Bạn có muốn xóa không",
                               style: TextStyle(fontFamily: "Itim", color: AppColors.textSecond.withOpacity(0.8)),
                             ),
-                            SizedBox(height: 20),
+                            const SizedBox(height: 20),
                           ],
                         ),
                         Row(

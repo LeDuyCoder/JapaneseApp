@@ -27,7 +27,6 @@ class _storeScreen extends State<storeScreen>{
     return await frameAvatarService.getAllFrame();
   }
 
-
   void showBuySuccessDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -320,7 +319,18 @@ class _storeScreen extends State<storeScreen>{
     }
   }
 
-  Widget FrameItemShop({required String imgUrl, required String title, required String price, required Function() action, required Color color, required bool isHaving}){
+  Widget FrameItemShop(
+      {
+        required String idItem,
+        required String imgUrl,
+        required String title,
+        required String price,
+        required Function() action,
+        required Color color,
+        required TypeProductEnum typeProduct,
+        required bool isHaving,
+        required bool isEquiped
+      }){
     return Container(
       width: MediaQuery.sizeOf(context).width/2.2,
       height: MediaQuery.sizeOf(context).width/1.8,
@@ -377,24 +387,67 @@ class _storeScreen extends State<storeScreen>{
                     ),
                     SizedBox(height: 5,),
                     GestureDetector(
-                      onTap: (){
-                        action();
+                      onTap: () async {
+                        if(isHaving){
+                          if(isEquiped){
+                            print("debug 2");
+                            if(typeProduct.name.toLowerCase() == "frame"){
+                              widget.userDTO.urlFrame = '';
+                              await ServiceLocator.userService.updateFrameUser(
+                                  FirebaseAuth.instance.currentUser!.uid,
+                                  ''
+                              );
+                              print(widget.userDTO.urlFrame);
+
+
+                            }
+                          } else{
+                            print("debug 2");
+                            print(typeProduct.name.toLowerCase());
+                            if(typeProduct.name.toLowerCase() == "frame"){
+                              print("dcmm");
+                              widget.userDTO.urlFrame = imgUrl;
+                              await ServiceLocator.userService.updateFrameUser(
+                                  FirebaseAuth.instance.currentUser!.uid,
+                                  idItem
+                              );
+
+                              print(widget.userDTO.urlFrame);
+                            }
+                          }
+                        }
+                        else{
+                          action();
+                        }
+
+                        setState(() {});
                       },
                       child: Center(
                         child: Container(
                           width: MediaQuery.sizeOf(context).width * 0.35,
-                          height: 30,
+                          height: 35,
                           decoration: BoxDecoration(
-                            color: isHaving ? Colors.grey : Colors.green,
-                            borderRadius: const BorderRadius.all(Radius.circular(20)),
+                            color: !isHaving
+                                ? Colors.green
+                                : !isEquiped
+                                ? Colors.blue
+                                : Colors.grey,
+                            borderRadius: BorderRadius.circular(20),
                           ),
                           child: Center(
                             child: Text(
-                              isHaving ? "Đã mua" : "Mua",
-                              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                              !isHaving
+                                  ? "Mua"
+                                  : !isEquiped
+                                  ? "Trang Bị"
+                                  : "Tháo",
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
-                        )
+                        ),
                       ),
                     )
                   ],
@@ -406,7 +459,6 @@ class _storeScreen extends State<storeScreen>{
       ),
     );
   }
-
 
   Widget tabFrameShop(){
     return FutureBuilder(future: loadFrameShop(), builder: (context, dataFrameReturn){
@@ -430,6 +482,7 @@ class _storeScreen extends State<storeScreen>{
                       for(FrameDTO frame in dataFrameReturn.data!)
                         ...[
                           FrameItemShop(
+                            idItem: frame.idAvatarFrame,
                             imgUrl: frame.urlImg,
                             title: frame.name,
                             price: "${frame.price}",
@@ -444,7 +497,9 @@ class _storeScreen extends State<storeScreen>{
                               }
                             },
                             color: frame.getRarityColor(),
-                            isHaving: frame.isHaving
+                            isHaving: frame.isHaving,
+                            isEquiped: widget.userDTO.urlFrame == frame.urlImg,
+                            typeProduct: TypeProductEnum.frame
                           ),
                         ]
 

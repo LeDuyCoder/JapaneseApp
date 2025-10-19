@@ -1070,7 +1070,7 @@ abstract class AppLocalizations {
   /// No description provided for @setting_async_title.
   ///
   /// In en, this message translates to:
-  /// **'Sync Data'**
+  /// **'Sync data'**
   String get setting_async_title;
 
   /// No description provided for @setting_async_content.
@@ -1082,7 +1082,7 @@ abstract class AppLocalizations {
   /// No description provided for @setting_downloadAsync_title.
   ///
   /// In en, this message translates to:
-  /// **'Download Data'**
+  /// **'Download data'**
   String get setting_downloadAsync_title;
 
   /// No description provided for @setting_downloadAsync_content.
@@ -1184,7 +1184,7 @@ abstract class AppLocalizations {
   /// No description provided for @bottomSheetAsync_Success_Description.
   ///
   /// In en, this message translates to:
-  /// **'Data has been successfully synced'**
+  /// **'data has been successfully synced'**
   String get bottomSheetAsync_Success_Description;
 
   /// No description provided for @bottomSheetAsync_Success_Btn.
@@ -1214,7 +1214,7 @@ abstract class AppLocalizations {
   /// No description provided for @bottomSheet_Error_title.
   ///
   /// In en, this message translates to:
-  /// **'Data Load Error'**
+  /// **'data Load Error'**
   String get bottomSheet_Error_title;
 
   /// No description provided for @bottomSheet_Error_description.
