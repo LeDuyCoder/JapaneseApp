@@ -54,7 +54,6 @@ class _DashboardScreenState extends State<dashboardScreen> {
   final TextEditingController nameTopicInput = TextEditingController();
   final TextEditingController searchWord = TextEditingController();
   final TextEditingController renameTopicInput = TextEditingController();
-
   UserDTO? user;
   String? textErrorName;
   String? textErrorTopicName;
@@ -63,17 +62,13 @@ class _DashboardScreenState extends State<dashboardScreen> {
   String? _fileContent;
   String nameTopic = "";
   bool _isOffline = false;
-
-
   StreamSubscription<List<ConnectivityResult>>? _subscription;
-
   String formatJapaneseTime(DateTime dateTime) {
     String hour = dateTime.hour.toString().padLeft(2, '0');
     String minute = dateTime.minute.toString().padLeft(2, '0');
     String second = dateTime.second.toString().padLeft(2, '0');
     return "$hour時$minute分$second秒";
   }
-
   @override
   void initState() {
     super.initState();
@@ -87,14 +82,12 @@ class _DashboardScreenState extends State<dashboardScreen> {
       }
     });
   }
-
   Future<void> _checkInternet([ConnectivityResult? status]) async {
     bool hasInternet = await _hasInternetConnection(status);
     setState(() {
       _isOffline = !hasInternet;
     });
   }
-
   Future<bool> _hasInternetConnection([ConnectivityResult? status]) async {
     final result = status ?? await Connectivity().checkConnectivity();
     if (result == ConnectivityResult.none) return false;
@@ -110,14 +103,11 @@ class _DashboardScreenState extends State<dashboardScreen> {
       return false;
     }
   }
-
-
   @override
   void dispose() {
     _subscription?.cancel();
     super.dispose();
   }
-
   Future<Map<String, dynamic>> hanldeGetData() async {
     final db = LocalDbService.instance;
     final dbServer = ServiceLocator.userService;
@@ -152,11 +142,9 @@ class _DashboardScreenState extends State<dashboardScreen> {
     // Nếu lỗi → chỉ trả về dữ liệu local
     return await localData();
   }
-
   void reloadScreen(){
     setState(() {});
   }
-
   String getUserName() {
     User? user = FirebaseAuth.instance.currentUser;
     String fullname = user?.displayName ?? "";
@@ -170,12 +158,10 @@ class _DashboardScreenState extends State<dashboardScreen> {
       return first + second;
     }
   }
-
   Future<void> reload() async {
     await Future.delayed(Duration(seconds: 2));
     setState(() {});
   }
-
   void showDialogSuccessSaveData() {
     showGeneralDialog(
       barrierDismissible: true,
@@ -281,7 +267,6 @@ class _DashboardScreenState extends State<dashboardScreen> {
       },
     );
   }
-
   void showDialogErrorSaveData(){
     showDialog(
       barrierDismissible: true,
@@ -371,7 +356,6 @@ class _DashboardScreenState extends State<dashboardScreen> {
       },
     );
   }
-
   void showPopupAddFolder() {
     AnimationController controller = AnimationController(
       duration: const Duration(milliseconds: 500),
@@ -543,7 +527,6 @@ class _DashboardScreenState extends State<dashboardScreen> {
       },
     );
   }
-
   void showPopupAddTopic() {
     AnimationController controller = AnimationController(
       duration: const Duration(milliseconds: 500),
@@ -737,7 +720,6 @@ class _DashboardScreenState extends State<dashboardScreen> {
       },
     );
   }
-
   Future<bool> dowloadTopic(String id) async{
 
     final db = LocalDbService.instance;
@@ -768,7 +750,6 @@ class _DashboardScreenState extends State<dashboardScreen> {
 
     return true;
   }
-
   Future<bool> showDialogRenameTopic() async {
     await showGeneralDialog(
       context: context,
@@ -906,7 +887,6 @@ class _DashboardScreenState extends State<dashboardScreen> {
 
     return true;
   }
-
   void showBottomSheetDowloadPulic(String id, String nameTopic) {
     showModalBottomSheet(
       context: context,
@@ -990,7 +970,6 @@ class _DashboardScreenState extends State<dashboardScreen> {
       },
     );
   }
-
   @override
   Widget build(BuildContext context) {
     return WillPopScope(

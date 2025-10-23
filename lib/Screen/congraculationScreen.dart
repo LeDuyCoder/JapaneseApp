@@ -479,9 +479,8 @@ class _congraculationScreen extends State<congraculationScreen> with TickerProvi
                             }
 
                             if (_isInterstitialAdReady && dashboardScreen.countAdMod >= 2) {
+                              dashboardScreen.countAdMod = 0;
                               _interstitialAd.show();
-
-
                               _interstitialAd.fullScreenContentCallback = FullScreenContentCallback(
                                 onAdDismissedFullScreenContent: (ad) {
                                   ad.dispose();
@@ -498,6 +497,7 @@ class _congraculationScreen extends State<congraculationScreen> with TickerProvi
                               );
                             } else {
                               Navigator.pop(context);
+                              dashboardScreen.countAdMod++;
                             }
 
                             widget.reload();

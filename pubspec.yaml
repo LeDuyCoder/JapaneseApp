@@ -84,6 +84,7 @@ dependencies:
   flutter_dotenv: ^6.0.0
   speech_to_text: ^6.0.0
   kana_kit: ^2.1.1
+  flutter_bloc: ^9.1.1
 
 flutter_launcher_icons:
   ios: true

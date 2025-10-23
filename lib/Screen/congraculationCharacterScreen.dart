@@ -508,6 +508,7 @@ class _congraculationChacterScreen extends State<congraculationChacterScreen>  w
                             await handleData();
                             widget.reload();
                             if (_isInterstitialAdReady && dashboardScreen.countAdMod >= 2) {
+                              dashboardScreen.countAdMod = 0;
                               _interstitialAd.show();
                               _interstitialAd.fullScreenContentCallback = FullScreenContentCallback(
                                 onAdDismissedFullScreenContent: (ad) {
@@ -522,6 +523,7 @@ class _congraculationChacterScreen extends State<congraculationChacterScreen>  w
                                 },
                               );
                             } else {
+                              dashboardScreen.countAdMod++;
                               Navigator.pop(context);
                             }
                           },
