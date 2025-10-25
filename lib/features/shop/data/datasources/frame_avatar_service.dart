@@ -1,11 +1,11 @@
-import 'package:japaneseapp/Service/Server/FrameAvatarService.dart';
+import 'package:japaneseapp/core/Service/Server/FrameAvatarService.dart';
 
 import '../../domain/entities/shop_item.dart';
 import '../../domain/repositories/shop_repository.dart';
-import 'package:japaneseapp/Service/Server/ServiceLocator.dart';
-import 'package:japaneseapp/Service/Local/local_db_service.dart';
+import 'package:japaneseapp/core/Service/Server/ServiceLocator.dart';
+import 'package:japaneseapp/core/Service/Local/local_db_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:japaneseapp/DTO/FrameDTO.dart';
+import 'package:japaneseapp/core/DTO/FrameDTO.dart';
 
 class ShopRepositoryImpl implements ShopRepository {
   final frameAvatarService = ServiceLocator.frameAvatarService;
