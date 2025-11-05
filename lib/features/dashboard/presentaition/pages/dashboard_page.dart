@@ -8,6 +8,7 @@ import 'package:japaneseapp/core/Theme/colors.dart';
 import 'package:japaneseapp/core/generated/app_localizations.dart';
 import 'package:japaneseapp/features/dashboard/bloc/tab_bloc.dart';
 import 'package:japaneseapp/features/dashboard/presentaition/pages/tabhome_page.dart';
+import 'package:japaneseapp/features/dashboard/presentaition/widgets/add_topic_dialog.dart';
 
 class DashboardPage extends StatefulWidget {
   final Function(Locale _locale) changeLanguage;
@@ -127,7 +128,11 @@ class _DashboardPageState extends State<DashboardPage> {
               GestureDetector(
                 onTap: () {
                   Navigator.pop(context);
-                  // Gọi hàm từ dashboard nếu có
+                  showDialog(
+                    barrierDismissible: false,
+                    context: context,
+                    builder: (context) => AddTopicDialog(),
+                  );
                 },
                 child: _bottomItem(context, Icons.menu_book, AppLocalizations.of(context)!.add_course),
               ),
