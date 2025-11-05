@@ -1,10 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
-import 'package:japaneseapp/DTO/FrameDTO.dart';
-import 'package:japaneseapp/Service/Server/ServiceLocator.dart';
-import 'package:japaneseapp/Theme/colors.dart';
-import 'package:japaneseapp/Utilities/NumberFormatter.dart';
-import 'package:japaneseapp/DTO/UserDTO.dart';
+import 'package:japaneseapp/core/Theme/colors.dart';
+import 'package:japaneseapp/core/Utilities/NumberFormatter.dart';
+import 'package:japaneseapp/features/dashboard/domain/models/user_model.dart';
 import 'package:japaneseapp/features/shop/data/datasources/frame_avatar_service.dart';
 import 'package:japaneseapp/features/shop/domain/entities/shop_item.dart';
 import 'package:japaneseapp/features/shop/domain/usecases/buy_item_usecase.dart';
@@ -12,14 +10,13 @@ import 'package:japaneseapp/features/shop/presentation/widgets/avatar_shop_tab.d
 import 'package:japaneseapp/features/shop/presentation/widgets/buy_fail_dialog.dart';
 import 'package:japaneseapp/features/shop/presentation/widgets/buy_success_dialog.dart';
 import 'package:japaneseapp/features/shop/presentation/widgets/confirm_buy_dialog.dart';
-import 'package:japaneseapp/features/shop/presentation/widgets/frame_item_shop.dart';
 
 import '../widgets/frame_shop_tab.dart';
 
 class ShopPage extends StatefulWidget {
-  final UserDTO userDTO;
+  final UserModel userModel;
 
-  const ShopPage({super.key, required this.userDTO});
+  const ShopPage({super.key, required this.userModel});
 
   @override
   State<ShopPage> createState() => _ShopPageState();
@@ -50,10 +47,10 @@ class _ShopPageState extends State<ShopPage> {
         id: item.id,
         price: item.price,
         type: item.type,
-        userCoin: widget.userDTO.coin,
+        userCoin: widget.userModel.coin,
       );
 
-      widget.userDTO.coin -= item.price;
+      widget.userModel.coin -= item.price;
       setState(() {});
 
       BuySuccessDialog.show(context);
@@ -83,7 +80,7 @@ class _ShopPageState extends State<ShopPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(NumberFormatter.formatHumanReadable(widget.userDTO.coin), style: TextStyle(color: AppColors.black, fontSize: 15, fontWeight: FontWeight.bold),),
+                  Text(NumberFormatter.formatHumanReadable(widget.userModel.coin), style: TextStyle(color: AppColors.black, fontSize: 15, fontWeight: FontWeight.bold),),
                   SizedBox(width: 5),
                   Image.asset("assets/kujicoin.png", width: 20, height: 20,),
                 ],
@@ -103,10 +100,10 @@ class _ShopPageState extends State<ShopPage> {
         ),
         body: TabBarView(
           children: [
-            FrameShopTab(userDTO: widget.userDTO, loadItems: loadFrameItems, onBuy: (ShopItem item) {
+            FrameShopTab(userModel: widget.userModel, loadItems: loadFrameItems, onBuy: (ShopItem item) {
               onBuy(item);
             },),
-            AvatarShopTab(userDTO: widget.userDTO, loadItems: loadAvatarItems, onBuy: (ShopItem item) {
+            AvatarShopTab(userModel: widget.userModel, loadItems: loadAvatarItems, onBuy: (ShopItem item) {
               onBuy(item);
             },),
           ],

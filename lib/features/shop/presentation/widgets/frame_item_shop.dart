@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:japaneseapp/Utilities/NumberFormatter.dart';
-
-import '../../../../Theme/colors.dart';
+import 'package:japaneseapp/core/Theme/colors.dart';
 import '../../domain/entities/shop_item.dart';
 
 class FrameItemShop extends StatelessWidget {

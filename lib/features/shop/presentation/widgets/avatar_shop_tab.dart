@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../../../../DTO/UserDTO.dart';
-import '../../../../Service/Server/ServiceLocator.dart';
-import '../../../../Theme/colors.dart';
+import 'package:japaneseapp/core/DTO/UserDTO.dart';
+import 'package:japaneseapp/core/Service/Server/ServiceLocator.dart';
+import 'package:japaneseapp/core/Theme/colors.dart';
+import 'package:japaneseapp/features/dashboard/domain/models/user_model.dart';
 import '../../domain/entities/shop_item.dart';
 import '../widgets/frame_item_shop.dart';
 import 'fast_click_warning_dialog.dart';
 
 class AvatarShopTab extends StatefulWidget {
-  final UserDTO userDTO;
+  final UserModel userModel;
   final Future<List<ShopItem>> Function() loadItems;
   final Function(ShopItem item) onBuy;
 
   const AvatarShopTab({
     super.key,
-    required this.userDTO,
+    required this.userModel,
     required this.loadItems,
     required this.onBuy,
   });
@@ -42,8 +43,8 @@ class _AvatarShopTabState extends State<AvatarShopTab> {
           final items = snapshot.data!;
 
           for (var item in items) {
-            if (item.imageUrl == widget.userDTO.urlFrame ||
-                item.imageUrl == widget.userDTO.urlAvatar) {
+            if (item.imageUrl == widget.userModel.urlFrame ||
+                item.imageUrl == widget.userModel.urlAvatar) {
               item.isEquipped = true;
             }
           }
@@ -64,13 +65,13 @@ class _AvatarShopTabState extends State<AvatarShopTab> {
                         now.difference(_lastClickTime!).inSeconds >= 1) {
                       if (item.isOwned) {
                         if (item.isEquipped) {
-                          widget.userDTO.urlAvatar = '';
+                          widget.userModel.urlAvatar = '';
                           await ServiceLocator.userService.updateAvatarUser(
                             FirebaseAuth.instance.currentUser!.uid,
                             '',
                           );
                         } else {
-                          widget.userDTO.urlAvatar = item.imageUrl;
+                          widget.userModel.urlAvatar = item.imageUrl;
                           await ServiceLocator.userService.updateAvatarUser(
                             FirebaseAuth.instance.currentUser!.uid,
                             item.id,
