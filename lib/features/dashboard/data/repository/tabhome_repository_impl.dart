@@ -1,19 +1,20 @@
+
 import 'package:japaneseapp/features/dashboard/data/datasource/user_remote_data_source.dart';
 import 'package:japaneseapp/features/dashboard/domain/models/user_model.dart';
 
-import '../../domain/repository/dashboard_repository.dart';
-import '../datasource/dashboard_local_data_source.dart';
-import '../datasource/dashboard_remote_data_source.dart';
+import '../../domain/repository/tabhome_repository.dart';
+import '../datasource/tabhome_local_data_source.dart';
+import '../datasource/tabhome_remote_data_source.dart';
 
-class DashboardRepositoryImpl implements DashboardRepository {
-  final DashboardLocalDataSource local;
-  final DashboardRemoteDataSource remote;
+class TabHomeRepositoryImpl implements TabHomeRepository {
+  final TabHomeLocalDataSource local;
+  final TabHomeRemoteDataSource remote;
   final UserRemoteDataSource userRemoteDataSource;
 
-  DashboardRepositoryImpl({required this.userRemoteDataSource, required this.local, required this.remote});
+  TabHomeRepositoryImpl({required this.userRemoteDataSource, required this.local, required this.remote});
 
   @override
-  Future<Map<String, dynamic>> getDashboardData() async {
+  Future<Map<String, dynamic>> getTabHomeData() async {
     final topicLocal = await local.getTopics(); // return List<Map>
     final folders = await local.getFolders();
     Map<String, dynamic> res = {

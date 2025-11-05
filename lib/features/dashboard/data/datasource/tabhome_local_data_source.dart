@@ -1,7 +1,7 @@
 import 'package:japaneseapp/core/Service/Local/local_db_service.dart';
 import 'package:japaneseapp/features/dashboard/domain/models/folder_model.dart';
 
-class DashboardLocalDataSource {
+class TabHomeLocalDataSource {
   final LocalDbService db = LocalDbService.instance;
 
   Future<List<FolderModel>> getFolders() async {

@@ -6,7 +6,7 @@ import 'package:japaneseapp/core/Screen/dashboardScreen.dart';
 import 'package:japaneseapp/core/Screen/dictionaryScreen.dart';
 import 'package:japaneseapp/core/Screen/profileScreen.dart';
 import 'package:japaneseapp/core/Theme/colors.dart';
-import 'package:japaneseapp/features/dashboard/presentaition/pages/dashboard_page.dart';
+import 'package:japaneseapp/features/dashboard/presentaition/pages/tabhome_page.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 import '../generated/app_localizations.dart';
@@ -24,7 +24,7 @@ class TabScreen extends StatefulWidget {
 class _TabScreenState extends State<TabScreen> {
   late PageController _pageController;
   late final List<Widget> _screens = [
-    DashboardPage(),
+    TabHomePage(),
     dictionaryScreen(),
     charactersScreen(),
     profileScreen(changeLanguage: widget.changeLanguage,)
