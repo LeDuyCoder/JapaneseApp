@@ -2,12 +2,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:japaneseapp/core/Service/FunctionService.dart';
-import 'package:japaneseapp/core/Screen/splashScreen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:japaneseapp/features/splash/presentation/splash_screen.dart';
 import 'core/Listener/NetworkListener.dart';
 import 'core/Theme/colors.dart';
 import 'firebase_options.dart';
@@ -92,7 +89,7 @@ class _MyApp extends State<MyApp>{
           onWillPop: (){
             return Future.value(false);
           },
-          child: splashScreen(changeLanguage: _changeLanguage,),
+          child: SplashScreen(changeLanguage: _changeLanguage,),
         )
 
     );
