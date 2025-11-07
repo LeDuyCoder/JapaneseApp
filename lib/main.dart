@@ -1,9 +1,13 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:get_it/get_it.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:japaneseapp/core/Service/FunctionService.dart';
+import 'package:japaneseapp/core/DI/auth_injection.dart';
+import 'package:japaneseapp/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:japaneseapp/features/splash/presentation/splash_screen.dart';
 import 'core/Listener/NetworkListener.dart';
 import 'core/Theme/colors.dart';
@@ -13,6 +17,7 @@ import 'core/generated/app_localizations.dart';
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
+
 
   await dotenv.load(fileName: '.env');
 
@@ -40,7 +45,19 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
 
-  runApp(MyApp());
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  initAuthFeature();
+  runApp(
+    MultiBlocProvider(
+      providers: [
+        BlocProvider<AuthBloc>(
+          create: (_) => GetIt.I<AuthBloc>(),
+        ),
+        // thêm các bloc khác nếu cần
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {

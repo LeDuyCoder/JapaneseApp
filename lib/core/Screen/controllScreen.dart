@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:japaneseapp/core/Screen/loginScreen.dart';
 import 'package:japaneseapp/core/Screen/tabScreen.dart';
+import 'package:japaneseapp/features/auth/presentation/pages/login_page.dart';
 import 'package:japaneseapp/features/dashboard/presentaition/pages/dashboard_page.dart';
 
 class controllScreen extends StatelessWidget {
@@ -19,7 +20,7 @@ class controllScreen extends StatelessWidget {
         if(snapshot.hasData){
           return DashboardPage(changeLanguage: changeLanguage,);
         }
-        return loginScreen();
+        return LoginPage();
       },
     );
   }
