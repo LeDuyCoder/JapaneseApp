@@ -1,13 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:icons_plus/icons_plus.dart';
 import 'package:japaneseapp/core/Module/topic.dart';
 import 'package:japaneseapp/core/Theme/colors.dart';
 import 'package:japaneseapp/core/Widget/topicServerWidget.dart';
+import 'package:japaneseapp/features/dashboard/presentaition/widgets/tabhome/bottom_sheet_dowload_pulic.dart';
 
 class CommunitySection extends StatelessWidget{
   final List<dynamic> data;
-
   const CommunitySection({super.key, required this.data});
 
   @override
@@ -67,7 +66,14 @@ class CommunitySection extends StatelessWidget{
                   amount: topicServer.count??0,
                   id: topicServer.id,
                   showBottomShetDownload: (String id) {
-                    //showBottomSheetDowloadPulic(id, topicServer.name);
+                    showModalBottomSheet(
+                      context: context,
+                      backgroundColor: Colors.transparent,
+                      builder: (_) => BottomSheetDownloadPublic(
+                        id: id,
+                        nameTopic: topicServer.name,
+                      ),
+                    );
                   },
                 ),
 

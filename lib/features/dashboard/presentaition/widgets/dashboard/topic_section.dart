@@ -1,10 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:japaneseapp/core/Screen/seeMoreTopic.dart';
 import 'package:japaneseapp/core/Theme/colors.dart';
+import 'package:japaneseapp/core/Widget/topicWidget.dart';
 import 'package:japaneseapp/core/generated/app_localizations.dart';
-
-import '../../../../core/Widget/topicWidget.dart';
 
 class TopicSection extends StatelessWidget{
   final List<Map<String, dynamic>> data;

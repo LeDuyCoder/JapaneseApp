@@ -1,3 +1,4 @@
+import 'package:cloud_text_to_speech/cloud_text_to_speech.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,14 +12,15 @@ import 'package:japaneseapp/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:japaneseapp/features/splash/presentation/splash_screen.dart';
 import 'core/Listener/NetworkListener.dart';
 import 'core/Theme/colors.dart';
+import 'features/dictionary/data/datasources/dictionary_remote_datasource.dart';
+import 'features/dictionary/data/repositories/dictionary_repository_impl.dart';
+import 'features/dictionary/domain/usecases/search_word.dart';
 import 'firebase_options.dart';
 import 'core/generated/app_localizations.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
-
-
   await dotenv.load(fileName: '.env');
 
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,6 +31,7 @@ void main() async {
   );
 
   await MobileAds.instance.initialize();
+  TtsGoogle.init(apiKey: 'AIzaSyADNb-S5AYUgS1mer7KyFscD-oTo3c5rh8',);
 
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
@@ -47,6 +50,7 @@ void main() async {
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   initAuthFeature();
+
   runApp(
     MultiBlocProvider(
       providers: [

@@ -454,13 +454,112 @@ class _congraculationScreen extends State<congraculationScreen> with TickerProvi
                         SizedBox(height: 10,),
                         GestureDetector(
                           onTap: () async {
+                            // 1️⃣ Hiển thị popup hỏi người dùng
+                            bool watchAd = await showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  backgroundColor: Colors.white, // nền sáng
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20), // bo tròn
+                                  ),
+                                  title: Row(
+                                    children: const [
+                                      Text("🎉 X2 Kujicoin?"),
+                                    ],
+                                  ),
+                                  content: const Text(
+                                    "Bạn có muốn xem quảng cáo để x2 số Kujicoin nhận được không? 💰",
+                                    style: TextStyle(fontSize: 16, height: 1.4),
+                                  ),
+                                  actionsPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                  actions: [
+                                    ElevatedButton.icon(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.grey.shade300,
+                                        foregroundColor: Colors.black,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(12),
+                                        ),
+                                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                                      ),
+                                      onPressed: () {
+                                        if (_isInterstitialAdReady && dashboardScreen.countAdMod >= 2) {
+                                          dashboardScreen.countAdMod = 0;
+                                          _interstitialAd.show();
+                                          _interstitialAd.fullScreenContentCallback = FullScreenContentCallback(
+                                            onAdDismissedFullScreenContent: (ad) {
+                                              ad.dispose();
+                                              Navigator.pop(context);
+                                              dashboardScreen.countAdMod = 0;
+                                            },
+                                            onAdFailedToShowFullScreenContent: (ad, error) {
+                                              ad.dispose();
+                                              Navigator.pop(context);
+                                              dashboardScreen.countAdMod = 0;
+                                            },
+                                          );
+                                        } else {
+                                          dashboardScreen.countAdMod++;
+                                          Navigator.pop(context);
+                                        }// không xem quảng cáo
+                                      },
+                                      icon: const Icon(Icons.close),
+                                      label: const Text("Hủy"),
+                                    ),
+                                    ElevatedButton.icon(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.amber.shade700,
+                                        foregroundColor: Colors.white,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(12),
+                                        ),
+                                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.pop(context, true); // đồng ý xem quảng cáo
+                                      },
+                                      icon: const Icon(Icons.play_circle_fill),
+                                      label: const Text("Xem Quảng Cáo"),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ) ?? false;
 
+                            // 2️⃣ Nếu đồng ý xem quảng cáo
+                            if (watchAd) {
+                              if (_isInterstitialAdReady) {
+                                _interstitialAd.show();
+                                _interstitialAd.fullScreenContentCallback = FullScreenContentCallback(
+                                  onAdDismissedFullScreenContent: (ad) {
+                                    ad.dispose();
+                                    _loadInterstitialAd(); // tải lại cho lần sau
+
+                                    // Nhân đôi tiền hoặc exp sau khi xem xong quảng cáo
+                                    setState(() {
+                                      coin *= 2;
+                                      expRank *= 2;
+                                    });
+                                  },
+                                  onAdFailedToShowFullScreenContent: (ad, error) {
+                                    ad.dispose();
+                                  },
+                                );
+                              } else {
+                                // Quảng cáo chưa sẵn sàng → thông báo
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text("Quảng cáo chưa sẵn sàng!")),
+                                );
+                              }
+                            }
+
+                            // 3️⃣ Tiếp tục logic bình thường
                             final List<word> filteredWords = widget.listWordsTest.where((word wordCheck) {
                               final int wrongCount = widget.listWordsWrong.where((wordWrongCheck) => wordWrongCheck == wordCheck).length;
-                              return wrongCount < 2; // Chỉ giữ lại những từ sai ít hơn 2 lần
+                              return wrongCount < 2;
                             }).toList();
 
-                            // Chuẩn bị dữ liệu cập nhật
                             final List<Map<String, dynamic>> dataUpdate = filteredWords.map((word wordUP) {
                               return {
                                 "dataUpdate": {"level": wordUP.level < 28 ? wordUP.level + 1 : wordUP.level},
@@ -468,7 +567,6 @@ class _congraculationScreen extends State<congraculationScreen> with TickerProvi
                               };
                             }).toList();
 
-                            // Cập nhật cơ sở dữ liệu
                             final db = LocalDbService.instance;
                             for (final data in dataUpdate) {
                               await db.vocabularyDao.update(
@@ -478,30 +576,9 @@ class _congraculationScreen extends State<congraculationScreen> with TickerProvi
                               );
                             }
 
-                            if (_isInterstitialAdReady && dashboardScreen.countAdMod >= 2) {
-                              dashboardScreen.countAdMod = 0;
-                              _interstitialAd.show();
-                              _interstitialAd.fullScreenContentCallback = FullScreenContentCallback(
-                                onAdDismissedFullScreenContent: (ad) {
-                                  ad.dispose();
-                                  _loadInterstitialAd(); // tải lại cho lần sau
-
-                                  Navigator.pop(context);
-                                },
-                                onAdFailedToShowFullScreenContent: (ad, error) {
-                                  ad.dispose();
-                                  // Đóng các màn hình
-                                  Navigator.pop(context);
-                                  dashboardScreen.countAdMod = 0;
-                                },
-                              );
-                            } else {
-                              Navigator.pop(context);
-                              dashboardScreen.countAdMod++;
-                            }
-
+                            // Điều hướng tiếp theo
+                            Navigator.pop(context);
                             widget.reload();
-
                           },
                           child: Container(
                             width: MediaQuery.sizeOf(context).width / 1.1,
@@ -515,7 +592,8 @@ class _congraculationScreen extends State<congraculationScreen> with TickerProvi
                               child: Text("Bắt Đầu Lượt Học Tiếp", style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),),
                             ),
                           ),
-                        ),
+                        )
+
                       ],
                     ),
                   ),

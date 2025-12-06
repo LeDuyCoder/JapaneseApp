@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:japaneseapp/core/Screen/addFolderScreen.dart';
 import 'package:japaneseapp/core/Screen/charactersScreen.dart';
-import 'package:japaneseapp/core/Screen/dictionaryScreen.dart';
 import 'package:japaneseapp/core/Screen/profileScreen.dart';
 import 'package:japaneseapp/core/Theme/colors.dart';
 import 'package:japaneseapp/core/generated/app_localizations.dart';
 import 'package:japaneseapp/features/dashboard/bloc/tab_bloc.dart';
+import 'package:japaneseapp/features/dashboard/presentaition/pages/dictionary_page_provider.dart';
 import 'package:japaneseapp/features/dashboard/presentaition/pages/tabhome_page.dart';
-import 'package:japaneseapp/features/dashboard/presentaition/widgets/add_topic_dialog.dart';
+import 'package:japaneseapp/features/dashboard/presentaition/widgets/dashboard/add_topic_dialog.dart';
+import 'package:japaneseapp/features/dictionary/presentation/pages/dictionary_page.dart';
 
 class DashboardPage extends StatefulWidget {
   final Function(Locale _locale) changeLanguage;
@@ -38,7 +39,7 @@ class _DashboardPageState extends State<DashboardPage> {
   Widget build(BuildContext context) {
     final List<Widget> screens = [
       TabHomePage(),
-      dictionaryScreen(),
+      DictionaryPageProvider(),
       charactersScreen(),
       profileScreen(changeLanguage: widget.changeLanguage),
     ];

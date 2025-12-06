@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:japaneseapp/core/Module/boxText.dart';
+import 'package:japaneseapp/core/Service/GoogleTTSService.dart';
 import 'package:japaneseapp/core/Theme/colors.dart';
 import 'package:japaneseapp/core/Widget/learnWidget/rightTab.dart';
 import 'package:japaneseapp/core/Widget/learnWidget/sortText.dart';
@@ -41,6 +42,8 @@ class _ListenTextState extends State<listenTest> {
   bool loadBoxText = true;
   bool isPress = false;
 
+  GoogleTTSService googleTTSService = GoogleTTSService();
+
   final AudioPlayer _audioPlayer = AudioPlayer();
 
   // Hàm chạy file MP3 từ đường dẫn
@@ -69,6 +72,18 @@ class _ListenTextState extends State<listenTest> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (loadBoxText) {
+        setState(() {
+          dataBoxText = widget.wordChose.map((text) => boxText(text)).toList();
+          loadBoxText = false;
+        });
+
+        if(await googleTTSService.speak(widget.WordTest.wayread) == false){
+          await readText(widget.WordTest.wayread, 0.5);
+        }
+      }
+    });
   }
 
   @override
@@ -78,14 +93,10 @@ class _ListenTextState extends State<listenTest> {
     dataInput = [];
   }
 
+
   @override
   Widget build(BuildContext context) {
-    if(loadBoxText) {
-      dataBoxText = widget.wordChose.map((text) => boxText(text)).toList();
-      loadBoxText = !loadBoxText;
 
-      readText(widget.WordTest.wayread, 0.5);
-    }
 
     return Stack(
       children: [
@@ -117,7 +128,9 @@ class _ListenTextState extends State<listenTest> {
                     child: Center(
                       child: GestureDetector(
                         onTapUp: (_) async {
-                          await readText(widget.WordTest.wayread, 0.1);
+                          if(await googleTTSService.speak(widget.WordTest.wayread) == false){
+                            await readText(widget.WordTest.wayread, 0.5);
+                          }
                         },
                         child: AnimatedContainer(
                           duration: Duration(milliseconds: 100),
@@ -202,11 +215,12 @@ class _ListenTextState extends State<listenTest> {
                   child: Wrap(
                     spacing: 20,
                     runSpacing: 10,
-                    children: dataBoxText!
+                    children: (dataBoxText != null && dataBoxText!.isNotEmpty)
+                        ? dataBoxText!
                         .map(
                           (item) => GestureDetector(
                         onTap: () {
-                          if(widget.typeTest == typeSort.VietNamToJapan)
+                          if (widget.typeTest == typeSort.VietNamToJapan)
                             readText(item.text, 0.5);
                           setState(() {
                             dataBoxText!.remove(item);
@@ -216,19 +230,22 @@ class _ListenTextState extends State<listenTest> {
                         child: Draggable<boxText>(
                           key: ValueKey(item.text),
                           data: item,
-                          feedback: Center(child: Material(
-                            type: MaterialType.transparency,
-                            child: item.buildWidget(),
-                          )),
+                          feedback: Center(
+                            child: Material(
+                              type: MaterialType.transparency,
+                              child: item.buildWidget(),
+                            ),
+                          ),
                           childWhenDragging: item.buildWidget(),
                           child: item.buildWidget(),
                         ),
                       ),
                     )
-                        .toList(),
+                        .toList()
+                        : [const CircularProgressIndicator()], // Hiển thị loading tạm thời
                   ),
                 ),
-              ),
+              )
             ],
           ),
         ),

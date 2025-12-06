@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:japaneseapp/core/Service/Server/ServiceLocator.dart';
 import 'package:japaneseapp/core/Theme/colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -96,27 +97,41 @@ class _achivementScreen extends State<achivementScreen>{
   }
 
   Future<Map<String, dynamic>> getData() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final db = await LocalDbService.instance;
-    amountTopicComplite = await FunctionService.getTopicComplite();
-    print(amountTopicComplite);
+    try {
+      print("START getData");
 
-    User user = FirebaseAuth.instance.currentUser!;
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final db = LocalDbService.instance;
 
-    return {
-      "level": prefs.getInt("level"),
-      "exp": prefs.getInt("exp"),
-      "nextExp": prefs.getInt("nextExp"),
-      "Streak": prefs.getStringList("checkInHistoryTreak")!.length,
-      "lastCheckIn": prefs.getString("lastCheckIn"),
-      "checkInHistory": prefs.getStringList("checkInHistory"),
-      "checkInHistoryTreak": prefs.getStringList("checkInHistoryTreak"),
-      "achivement": prefs.getStringList("achivement"),
-      "providerID": user.providerData[0].providerId,
-      "displayName": user.providerData[0].displayName,
-      "mail": user.email,
-      "countTopic": (await db.topicDao.getAllTopics()).length
-    };
+      User user = FirebaseAuth.instance.currentUser!;
+      print("User loaded");
+
+      Map<String, dynamic> userData = {
+        "level": prefs.getInt("level"),
+        "exp": prefs.getInt("exp"),
+        "nextExp": prefs.getInt("nextExp"),
+        "Streak": prefs.getStringList("checkInHistoryTreak")?.length ?? 0,
+        "lastCheckIn": prefs.getString("lastCheckIn"),
+        "checkInHistory": prefs.getStringList("checkInHistory"),
+        "checkInHistoryTreak": prefs.getStringList("checkInHistoryTreak"),
+        "achivement": prefs.getStringList("achivement"),
+        "providerID": user.providerData.isNotEmpty ? user.providerData[0].providerId : null,
+        "displayName": user.displayName,
+        "mail": user.email,
+        "countTopic": (await db.topicDao.getAllTopics()).length,
+        "coin": await ServiceLocator.userService.getCoin(user.uid)
+      };
+
+      print("DONE getData:");
+      print(userData);
+
+      return userData;
+    } catch (e, stack) {
+      print("❌ ERROR in getData:");
+      print(e);
+      print(stack);
+      rethrow;
+    }
   }
 
 
@@ -191,9 +206,9 @@ class _achivementScreen extends State<achivementScreen>{
                 child: Column(
                   children: [
                     Container(
-                      width: MediaQuery.sizeOf(context).width / 1.1,
-                      height: 680,
-                      decoration: const BoxDecoration(
+                        width: MediaQuery.sizeOf(context).width / 1.1,
+                        height: 550,
+                        decoration: const BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.all(Radius.circular(20)),
                           boxShadow: [
@@ -207,18 +222,28 @@ class _achivementScreen extends State<achivementScreen>{
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Center(child: Text(AppLocalizations.of(context)!.achivement_title_one, style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: AppColors.primary),)),
-                          SizedBox(height: 20,),
+                          const SizedBox(height: 20),
+                          Center(
+                            child: Text(
+                              AppLocalizations.of(context)!.achivement_title_one,
+                              style: const TextStyle(
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.primary
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 20),
                           Padding(
                             padding: const EdgeInsets.only(left: 10, right: 5),
                             child: GridView.builder(
                               shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
+                              physics: const NeverScrollableScrollPhysics(),
                               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 2,
                                 mainAxisSpacing: 5,
                                 crossAxisSpacing: 5,
-                                childAspectRatio: 4/4,
+                                childAspectRatio: 1,
                               ),
                               itemCount: achievements.length,
                               itemBuilder: (context, index) {
@@ -228,26 +253,37 @@ class _achivementScreen extends State<achivementScreen>{
                                 return GestureDetector(
                                   onTap: () {
                                     if (achievement.containsKey("description")) {
-                                      showBottomSheetAchivementInfor(context, achievement["title"], achievement["description"], imagePath, achievement["check"](snapshot.data!));
+                                      showBottomSheetAchivementInfor(
+                                          context,
+                                          achievement["title"],
+                                          achievement["description"],
+                                          imagePath,
+                                          achievement["check"](snapshot.data!)
+                                      );
                                     }
                                   },
                                   child: Container(
-                                    width: MediaQuery.sizeOf(context).width,
-                                    height: MediaQuery.sizeOf(context).height,
+                                    width: 400,
+                                    height: 400,
                                     child: Column(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
-                                        ColorFiltered(
-                                          colorFilter: ColorFilter.mode(
-                                              Colors.white,
-                                              achievement["check"](snapshot.data!) ? BlendMode.dst : BlendMode.saturation
-                                          ),
-                                          child: Image.asset(
-                                            imagePath,
-                                            scale: 3,
+                                        SizedBox(
+                                          height: MediaQuery.sizeOf(context).width*0.35,
+                                          width: MediaQuery.sizeOf(context).width*0.35,
+                                          child: ColorFiltered(
+                                            colorFilter: ColorFilter.mode(
+                                                Colors.white,
+                                                achievement["check"](snapshot.data!)
+                                                    ? BlendMode.dst
+                                                    : BlendMode.saturation),
+                                            child: Image.asset(
+                                              imagePath,
+                                              scale: 3,
+                                            ),
                                           ),
                                         ),
-                                        SizedBox(height: 8),
+                                        const SizedBox(height: 8),
                                         Text(
                                           achievement["title"],
                                           style: const TextStyle(
@@ -263,14 +299,15 @@ class _achivementScreen extends State<achivementScreen>{
                                 );
                               },
                             ),
-                          )
+                          ),
+                          const SizedBox(height: 20),
                         ],
                       ),
                     ),
                     SizedBox(height: 50,),
                     Container(
                         width: MediaQuery.sizeOf(context).width / 1.1,
-                        height: 800,
+                        height: 700,
                         decoration: const BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -309,30 +346,38 @@ class _achivementScreen extends State<achivementScreen>{
                                         checkStreak(snapshot.data!["Streak"], streak),
                                       );
                                     },
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        ColorFiltered(
-                                          colorFilter: ColorFilter.mode(
-                                            Colors.white,
-                                            checkStreak(snapshot.data!["Streak"], streak)
-                                                ? BlendMode.dst
-                                                : BlendMode.saturation,
+                                    child: Container(
+                                      width: 400,
+                                      height: 400,
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          SizedBox(
+                                            width: MediaQuery.sizeOf(context).width*0.3,
+                                            height: MediaQuery.sizeOf(context).width*0.3,
+                                            child: ColorFiltered(
+                                              colorFilter: ColorFilter.mode(
+                                                Colors.white,
+                                                checkStreak(snapshot.data!["Streak"], streak)
+                                                    ? BlendMode.dst
+                                                    : BlendMode.saturation,
+                                              ),
+                                              child: Image.asset(imagePath, scale: 14),
+                                            ),
                                           ),
-                                          child: Image.asset(imagePath, scale: 14),
-                                        ),
-                                        const SizedBox(height: 8),
-                                        Text(
-                                          AppLocalizations.of(context)!
-                                              .achivement_streak_title("$streak"),
-                                          textAlign: TextAlign.center,
-                                          style: const TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 16,
-                                            fontFamily: "Itim",
+                                          const SizedBox(height: 8),
+                                          Text(
+                                            AppLocalizations.of(context)!
+                                                .achivement_streak_title("$streak"),
+                                            textAlign: TextAlign.center,
+                                            style: const TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 16,
+                                              fontFamily: "Itim",
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   );
                                 }).toList(),
@@ -419,7 +464,6 @@ class _achivementScreen extends State<achivementScreen>{
                           ],
                         )
                     ),
-
                   ],
                 ),
               ),
