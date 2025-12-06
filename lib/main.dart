@@ -31,7 +31,7 @@ void main() async {
   );
 
   await MobileAds.instance.initialize();
-  TtsGoogle.init(apiKey: 'AIzaSyADNb-S5AYUgS1mer7KyFscD-oTo3c5rh8',);
+  TtsGoogle.init(apiKey: dotenv.env["API_KEY_GOOGLE_TTS"]!,);
 
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
