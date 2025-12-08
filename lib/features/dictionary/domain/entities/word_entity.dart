@@ -4,7 +4,9 @@ class WordEntity {
   final String reading;
   final List<String> anotherWord;
   final String tag;
-  final bool isBookmarked;
+  bool isBookmarked;
+  final String example;
+  final String jlpt;
 
   WordEntity({
     required this.word,
@@ -12,6 +14,8 @@ class WordEntity {
     required this.reading,
     required this.anotherWord,
     required this.tag,
+    required this.example,
+    required this.jlpt,
     this.isBookmarked = false,
   });
 

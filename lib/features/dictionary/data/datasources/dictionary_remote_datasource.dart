@@ -1,13 +1,15 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:japaneseapp/core/Service/Local/local_db_service.dart';
+import 'package:japaneseapp/features/dictionary/data/models/word_model.dart';
+import 'package:japaneseapp/features/dictionary/domain/entities/word_entity.dart';
 import 'package:language_detector/language_detector.dart';
 import 'package:translator/translator.dart';
 
 abstract class DictionaryRemoteDataSource {
   Future<String> generateExample(String word);
   Future<Map<dynamic, dynamic>?> searchWord(String word);
-
+  Future<WordEntity> toggleBookmark(WordModel word);
 }
 
 class DictionaryRemoteDataSourceImpl implements DictionaryRemoteDataSource {
@@ -75,12 +77,10 @@ class DictionaryRemoteDataSourceImpl implements DictionaryRemoteDataSource {
   Future<Map<String, dynamic>?> searchWord(String query) async {
     String example = "";
     Map<String, dynamic> data = await fetchData(query);
-    //addHistorySearch(query);
 
     if(data.isEmpty){
       return null;
     }
-
 
     String word = (data["data"][0]["japanese"][0] as Map<String, dynamic>)
         .containsKey("word")
@@ -90,6 +90,13 @@ class DictionaryRemoteDataSourceImpl implements DictionaryRemoteDataSource {
     example = await generateExample(word);
     final db = LocalDbService.instance;
     bool isExist = await db.vocabularyDao.isVocabularyExist(wordJp: word, wordKana: data["data"][0]["japanese"][0]["reading"]??"");
+    List<String> anotherWords = [];
+
+    for(dynamic item in data["data"]){
+      anotherWords.add(item["slug"]);
+    }
+
+    anotherWords.removeAt(0);
 
     Map<String, dynamic> dataResult = {
       "word": word,
@@ -101,19 +108,20 @@ class DictionaryRemoteDataSourceImpl implements DictionaryRemoteDataSource {
       "meaning": data["data"][0]["senses"][0]["english_definitions"],
       "reading": data["data"][0]["japanese"][0]["reading"],
       "tags": data["data"][0]["tags"],
-      "anotherWord": (data["data"][0]["japanese"] as List<dynamic>).length > 1
-          ? (data["data"][0]["japanese"] as List<dynamic>)
-              .sublist(1)
-              .map((e) => (e as Map<String, dynamic>).containsKey("word")
-                  ? e["word"]
-                  : e["reading"])
-              .toList()
-          : [],
+      "anotherWord": anotherWords
     };
     return dataResult;
 
     // if (_isInterstitialAdReady && amountSearch >= 15) {
     //   _showInterstitialAd();
     // }
+  }
+
+  @override
+  Future<WordEntity> toggleBookmark(WordEntity word) async {
+    final db = LocalDbService.instance;
+    await db.vocabularyDao.addVocabularyInDistionary(wordJp: word.word, wordKana: word.reading, wordMean: word.meaning, exampleJp: word.example.split("-")[0], exampleVi: word.example.split("-")[1]);
+    word.isBookmarked = true;
+    return word;
   }
 }

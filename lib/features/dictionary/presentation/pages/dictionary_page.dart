@@ -1,18 +1,31 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:icons_plus/icons_plus.dart';
 import 'package:japaneseapp/core/Screen/WordbookScreen.dart';
 import 'package:japaneseapp/core/Theme/colors.dart';
 import 'package:japaneseapp/core/generated/app_localizations.dart';
+import 'package:japaneseapp/features/bookmark/presentation/pages/bookmark_page.dart';
 import 'package:japaneseapp/features/dictionary/bloc/dictionary_bloc.dart';
+import 'package:japaneseapp/features/dictionary/bloc/dictionary_event.dart';
 import 'package:japaneseapp/features/dictionary/bloc/dictionary_state.dart';
+import 'package:japaneseapp/features/dictionary/domain/entities/word_entity.dart';
 import 'package:japaneseapp/features/dictionary/presentation/widgets/box_loading_widget.dart';
+import 'package:japaneseapp/features/dictionary/presentation/widgets/word_same_widget.dart';
 
 class DictionaryPage extends StatelessWidget {
+  final TextEditingController _searchController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+    WordEntity currentWordEntity;
+
     return BlocConsumer<DictionaryBloc, DictionaryState>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if(state is DictionaryLoaded){
+          currentWordEntity = state.word;
+        }
+      },
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
@@ -49,6 +62,7 @@ class DictionaryPage extends StatelessWidget {
                             ],
                           ),
                           child: TextField(
+                            controller: _searchController,
                             decoration: InputDecoration(
                               border: InputBorder.none, // bỏ border mặc định
                               prefixIcon: Icon(Icons.translate, color: Colors.black, size: 30,),
@@ -61,7 +75,17 @@ class DictionaryPage extends StatelessWidget {
                     ),
                     GestureDetector(
                       onTap: (){
-
+                        String word = _searchController.text.trim();
+                        if(word.isNotEmpty){
+                          context.read<DictionaryBloc>().add(SearchChanged(word));
+                        }else{
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Vui lòng nhập từ cần tìm", style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        }
                       },
                       child: Container(
                         width: 58,
@@ -126,218 +150,158 @@ class DictionaryPage extends StatelessWidget {
                                 )
                               ],
                             ),
-                            child: SingleChildScrollView( // 👈 thêm scroll
-                              // child: Column(
-                              //   crossAxisAlignment: CrossAxisAlignment.start,
-                              //   children: [
-                              //     Row(
-                              //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              //       children: [
-                              //         Text(
-                              //           (data!["data"][0]["japanese"][0] as Map<dynamic, dynamic>)
-                              //               .containsKey("word")
-                              //               ? data!["data"][0]["japanese"][0]["word"]
-                              //               : data!["data"][0]["slug"],
-                              //           style: TextStyle(fontSize: 25),
-                              //         ),
-                              //         IconButton(
-                              //           onPressed: () async {
-                              //             final db = LocalDbService.instance;
-                              //             String word = (data!["data"][0]["japanese"][0] as Map<dynamic, dynamic>)
-                              //                 .containsKey("word")
-                              //                 ? data!["data"][0]["japanese"][0]["word"]
-                              //                 : data!["data"][0]["slug"];
-                              //             String wordKana = data!["data"][0]["japanese"][0]["reading"]??"";
-                              //             if(data != null && data!["stored"] == false){
-                              //               String mean = await translateToLocalLanguage(
-                              //                 "${hanldMean(data!["data"][0]["senses"][0]["english_definitions"])}",
-                              //                 "vi",
-                              //               );
-                              //
-                              //               String exampleJp = "";
-                              //               String exampleVi = "";
-                              //
-                              //               if(example.isNotEmpty){
-                              //                 exampleJp = example.split("-").isNotEmpty ? example.split("-")[0] : "";
-                              //                 exampleVi = example.split("-").isNotEmpty ? example.split("-")[1] : "";
-                              //               }
-                              //               if(example == "" || example.isEmpty){
-                              //                 db.vocabularyDao.addVocabularyInDistionary(wordJp: word, wordKana: wordKana, wordMean: mean);
-                              //               }else{
-                              //                 db.vocabularyDao.addVocabularyInDistionary(wordJp: word, wordKana: wordKana, wordMean: mean, exampleJp: exampleJp, exampleVi: exampleVi);
-                              //               }
-                              //               setState(() {
-                              //                 status = "loading";
-                              //               });
-                              //               _callApi(word);
-                              //             }
-                              //             else{
-                              //               db.vocabularyDao.removeVocabulary(wordJp: word, wordKana: wordKana);
-                              //               setState(() {
-                              //                 status = "loading";
-                              //               });
-                              //               _callApi(word);
-                              //             }
-                              //           }, icon: Icon(
-                              //           (data != null && data!["stored"] == true) ? CupertinoIcons.heart_fill : AntDesign.heart_outline,
-                              //           size: 30,
-                              //           color: (data != null && data!["stored"] == true)
-                              //               ? Colors.red
-                              //               : Colors.black,
-                              //         ),
-                              //         )
-                              //       ],
-                              //     ),
-                              //     Text(
-                              //       data!["data"][0]["japanese"][0]["reading"]??"",
-                              //       style: TextStyle(
-                              //         fontSize: 20,
-                              //         color: AppColors.textSecond.withOpacity(0.5),
-                              //       ),
-                              //     ),
-                              //     SizedBox(height: 20),
-                              //     Text(
-                              //       AppLocalizations.of(context)!.distionary_Screen_mean,
-                              //       style: TextStyle(
-                              //         fontSize: 20,
-                              //         color: AppColors.textPrimary,
-                              //         fontFamily: "Itim",
-                              //       ),
-                              //     ),
-                              //     Divider(
-                              //       height: 2,
-                              //       color: AppColors.grey.withOpacity(0.3),
-                              //     ),
-                              //     SizedBox(height: 10),
-                              //     Container(
-                              //       constraints: BoxConstraints(minHeight: 50),
-                              //       decoration: const BoxDecoration(
-                              //         border: Border(
-                              //           left: BorderSide(color: AppColors.primary, width: 2),
-                              //         ),
-                              //       ),
-                              //       child: Column(
-                              //         mainAxisAlignment: MainAxisAlignment.center,
-                              //         children: [
-                              //           Padding(
-                              //             padding: EdgeInsets.only(left: 10),
-                              //             child: FutureBuilder(
-                              //               future: translateToLocalLanguage(
-                              //                 "${hanldMean(data!["data"][0]["senses"][0]["english_definitions"])}",
-                              //                 "vi",
-                              //               ),
-                              //               builder: (ctx, dataText) {
-                              //                 if (dataText.hasData) {
-                              //                   return Text(
-                              //                     dataText.data!,
-                              //                     style: TextStyle(fontSize: 15, fontFamily: "Itim"),
-                              //                   );
-                              //                 }
-                              //                 return Center();
-                              //               },
-                              //             ),
-                              //           )
-                              //         ],
-                              //       ),
-                              //     ),
-                              //     SizedBox(height: 10),
-                              //     if (example != "" && example.isNotEmpty)
-                              //       Container(
-                              //           constraints: BoxConstraints(minHeight: 50),
-                              //           decoration: const BoxDecoration(
-                              //             border: Border(
-                              //               left: BorderSide(color: AppColors.primary, width: 2),
-                              //             ),
-                              //           ),
-                              //           child: Column(
-                              //             mainAxisAlignment: MainAxisAlignment.center,
-                              //             children: [
-                              //               Padding(
-                              //                 padding: EdgeInsets.only(left: 10),
-                              //                 child: Text(
-                              //                   example,
-                              //                   style: TextStyle(fontSize: 15, fontFamily: "Itim"),
-                              //                 ),
-                              //               )
-                              //             ],
-                              //           )
-                              //       ),
-                              //     SizedBox(height: 10),
-                              //     Text(
-                              //       AppLocalizations.of(context)!.distionary_Screen_info,
-                              //       style: TextStyle(
-                              //         fontSize: 20,
-                              //         color: AppColors.textPrimary,
-                              //         fontFamily: "Itim",
-                              //       ),
-                              //     ),
-                              //     Divider(
-                              //       height: 2,
-                              //       color: AppColors.grey.withOpacity(0.3),
-                              //     ),
-                              //     SizedBox(height: 10),
-                              //     Row(
-                              //       children: [
-                              //         Text(
-                              //           "${AppLocalizations.of(context)!.distionary_Screen_type} ${
-                              //               (
-                              //                   data != null &&
-                              //                       data?["data"] != null &&
-                              //                       data?["data"].isNotEmpty &&
-                              //                       data?["data"][0]["senses"] != null &&
-                              //                       data?["data"][0]["senses"].isNotEmpty &&
-                              //                       data?["data"][0]["senses"][0]["parts_of_speech"] != null &&
-                              //                       data?["data"][0]["senses"][0]["parts_of_speech"].isNotEmpty
-                              //               )
-                              //                   ? data!["data"][0]["senses"][0]["parts_of_speech"][0]
-                              //                   : ""
-                              //
-                              //           }",
-                              //           style: TextStyle(
-                              //             fontSize: 15,
-                              //             color: AppColors.textPrimary.withOpacity(0.6),
-                              //             fontFamily: "Itim",
-                              //           ),
-                              //         ),
-                              //         SizedBox(width: 10),
-                              //         Text(
-                              //           "${AppLocalizations.of(context)!.distionary_Screen_level} ${
-                              //               (data != null &&
-                              //                   data!["data"] != null &&
-                              //                   data!["data"].isNotEmpty &&
-                              //                   data!["data"][0]["jlpt"] != null &&
-                              //                   data!["data"][0]["jlpt"].isNotEmpty &&
-                              //                   data!["data"][0]["jlpt"][0].contains("-") &&
-                              //                   data!["data"][0]["jlpt"][0].split("-").length > 1
-                              //               )
-                              //                   ? data!["data"][0]["jlpt"][0].split("-")[1].toUpperCase()
-                              //                   : "null"
-                              //           }",
-                              //           style: TextStyle(
-                              //             fontSize: 15,
-                              //             color: AppColors.textPrimary.withOpacity(0.6),
-                              //             fontFamily: "Itim",
-                              //           ),
-                              //         ),
-                              //       ],
-                              //     ),
-                              //     const SizedBox(height: 10),
-                              //     Wrap(
-                              //       spacing: 8.0,
-                              //       runSpacing: 8.0,
-                              //       children: [
-                              //         for (int i = 1; i < sizeArgs; i++)
-                              //           wordSameWidget(
-                              //             (data!["data"][i]["japanese"][0] as Map<dynamic, dynamic>)
-                              //                 .containsKey("word")
-                              //                 ? data!["data"][i]["japanese"][0]["word"]
-                              //                 : data!["data"][i]["slug"],
-                              //           ),
-                              //       ],
-                              //     ),
-                              //     SizedBox(height: 20),
-                              //   ],
-                              // ),
+                            child: SingleChildScrollView(// 👈 thêm scroll
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        state.word.word,
+                                        style: TextStyle(fontSize: 25),
+                                      ),
+                                      IconButton(
+                                        onPressed: (){
+                                          context.read<DictionaryBloc>().add(ToggleBookmarkEvent(state.word));
+                                        },
+                                        icon: Icon(
+                                        (state.word.isBookmarked) ? CupertinoIcons.heart_fill : AntDesign.heart_outline,
+                                        size: 30,
+                                        color: (state.word.isBookmarked)
+                                            ? Colors.red
+                                            : Colors.black,
+                                      ),
+                                      )
+                                    ],
+                                  ),
+                                  Text(
+                                    state.word.reading,
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      color: AppColors.textSecond.withOpacity(0.5),
+                                    ),
+                                  ),
+                                  SizedBox(height: 20),
+                                  Text(
+                                    AppLocalizations.of(context)!.distionary_Screen_mean,
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      color: AppColors.textPrimary,
+                                      fontFamily: "Itim",
+                                    ),
+                                  ),
+                                  Divider(
+                                    height: 2,
+                                    color: AppColors.grey.withOpacity(0.3),
+                                  ),
+                                  SizedBox(height: 10),
+                                  Container(
+                                    constraints: BoxConstraints(minHeight: 50),
+                                    decoration: const BoxDecoration(
+                                      border: Border(
+                                        left: BorderSide(color: AppColors.primary, width: 2),
+                                      ),
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 10),
+                                          child: Text(
+                                            state.word.meaning,
+                                            style: TextStyle(fontSize: 15, fontFamily: "Itim"),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(height: 10),
+                                  if(state.word.example.isNotEmpty)
+                                    Container(
+                                        constraints: BoxConstraints(minHeight: 50),
+                                        decoration: const BoxDecoration(
+                                          border: Border(
+                                            left: BorderSide(color: AppColors.primary, width: 2),
+                                          ),
+                                        ),
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Padding(
+                                              padding: EdgeInsets.only(left: 10),
+                                              child: Text(
+                                                state.word.example.split("-")[0],
+                                                style: TextStyle(fontSize: 15, fontFamily: "Itim"),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.only(left: 10),
+                                              child: Text(
+                                                state.word.example.split("-")[1].trim(),
+                                                style: TextStyle(fontSize: 15, fontFamily: "Itim"),
+                                              ),
+                                            )
+                                          ],
+                                        )
+                                    ),
+                                  SizedBox(height: 10),
+                                  Text(
+                                    AppLocalizations.of(context)!.distionary_Screen_info,
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      color: AppColors.textPrimary,
+                                      fontFamily: "Itim",
+                                    ),
+                                  ),
+                                  Divider(
+                                    height: 2,
+                                    color: AppColors.grey.withOpacity(0.3),
+                                  ),
+                                  SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "${AppLocalizations.of(context)!.distionary_Screen_type} ${
+                                            state.word.tag
+                                        }",
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          color: AppColors.textPrimary.withOpacity(0.6),
+                                          fontFamily: "Itim",
+                                        ),
+                                      ),
+                                      SizedBox(width: 10),
+                                      Text(
+                                        "${AppLocalizations.of(context)!.distionary_Screen_level} ${
+                                            state.word.jlpt
+                                        }",
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          color: AppColors.textPrimary.withOpacity(0.6),
+                                          fontFamily: "Itim",
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Wrap(
+                                    spacing: 8.0,
+                                    runSpacing: 8.0,
+                                    children: [
+                                      for (int i = 0; i < state.word.anotherWord.length; i++)
+                                        WordSameWidget(
+                                          word: state.word.anotherWord[i],
+                                          onTap: (){
+                                            context.read<DictionaryBloc>().add(SearchChanged(state.word.anotherWord[i]));
+                                          },
+                                        ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 20),
+                                ],
+                              ),
                             ),
                           ),
                         if(state is DictionaryLoading)
@@ -358,12 +322,12 @@ class DictionaryPage extends StatelessWidget {
                             ],
                           ),
                           child: InkWell(
-                            onTap: () {
-                              Navigator.push(
+                            onTap: () async {
+                              await Navigator.push(
                                 context,
                                 PageRouteBuilder(
                                   transitionDuration: const Duration(milliseconds: 400),
-                                  pageBuilder: (context, animation, secondaryAnimation) => WordbookScreen(),
+                                  pageBuilder: (context, animation, secondaryAnimation) => BookmarkPage(),
                                   transitionsBuilder: (context, animation, secondaryAnimation, child) {
                                     // Slide từ dưới lên
                                     var slideTween = Tween<Offset>(
@@ -385,6 +349,7 @@ class DictionaryPage extends StatelessWidget {
                                   },
                                 ),
                               );
+                              context.read<DictionaryBloc>().add(LoadDictionary());
                             },
                             borderRadius: BorderRadius.circular(16),
                             child: const Row(
@@ -406,7 +371,6 @@ class DictionaryPage extends StatelessWidget {
                             ),
                           ),
                         )
-
                       ],
                     ),
                   ),

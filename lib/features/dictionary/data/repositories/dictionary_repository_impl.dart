@@ -21,7 +21,7 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
   }
 
   @override
-  Future<void> toggleBookmark(String id) {
-    throw UnimplementedError();
+  Future<WordEntity> toggleBookmark(WordEntity word) async {
+    return remoteDataSource.toggleBookmark(word);
   }
 }

@@ -10,6 +10,7 @@ class DictionaryBloc extends Bloc<DictionaryEvent, DictionaryState> {
     on<LoadDictionary>(_onLoad);
     on<SearchChanged>(_onSearch);
     on<ToggleBookmarkEvent>(_onToggleBookmark);
+    on<RefreshScreenEvent>(_onRefresh);
   }
 
   Future<void> _onLoad(LoadDictionary event, Emitter emit) async {
@@ -24,6 +25,16 @@ class DictionaryBloc extends Bloc<DictionaryEvent, DictionaryState> {
     emit(DictionaryLoaded(words));
   }
 
-  Future<void> _onToggleBookmark(ToggleBookmarkEvent event, Emitter emit) async {
+  Future<void> _onToggleBookmark(ToggleBookmarkEvent event, Emitter<DictionaryState> emit) async {
+    emit(DictionaryLoading());
+    emit(DictionaryLoaded(await repo.toggleBookmark(event.wordEntity)));
+  }
+
+  Future<void> _onRefresh(RefreshScreenEvent event, Emitter<DictionaryState> emit) async {
+    emit(DictionaryLoading());
+    if(event.wordEntity != null) {
+      event.wordEntity!.isBookmarked = !event.wordEntity!.isBookmarked;
+      emit(DictionaryLoaded(event.wordEntity!));
+    }
   }
 }

@@ -7,24 +7,28 @@ class WordModel extends WordEntity {
     required super.reading,
     required super.isBookmarked,
     required super.anotherWord,
+    required super.example,
+    required super.jlpt,
     required super.tag,
   });
 
   factory WordModel.fromJson(Map<String, dynamic> json) {
+    print(json);
+
     List<String> anotherWords = [];
     if (json.containsKey("anotherWord")) {
       anotherWords = (json["anotherWord"] as List).map((e) => e.toString()).toList();
     }
-
-    print(anotherWords.toSet());
 
     return WordModel(
       word: json["word"],
       meaning: (json["meaning"] as List).join(",").replaceAll("[", "").replaceAll("]", ""),
       anotherWord: anotherWords,
       tag: (json["tags"] as List).join(",").replaceAll("[", "").replaceAll("]", "") ?? "",
-      isBookmarked: true,
+      isBookmarked: json["stored"] ?? false,
       reading: json["reading"],
+      example: json["example"] ?? '',
+      jlpt: json["jlpt"] ?? '',
     );
   }
 
