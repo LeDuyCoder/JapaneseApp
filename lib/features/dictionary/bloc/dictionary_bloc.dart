@@ -21,8 +21,13 @@ class DictionaryBloc extends Bloc<DictionaryEvent, DictionaryState> {
 
   Future<void> _onSearch(SearchChanged event, Emitter emit) async {
     emit(DictionaryLoading());
-    final words = await repo.searchWord(event.query);
-    emit(DictionaryLoaded(words));
+    try {
+      final word = await repo.searchWord(event.query);
+      emit(DictionaryLoaded(word));
+    } catch (e) {
+      emit(DictionaryError("Không Tìm Thấy Từ Này"));
+    }
+    
   }
 
   Future<void> _onToggleBookmark(ToggleBookmarkEvent event, Emitter<DictionaryState> emit) async {

@@ -66,10 +66,10 @@ class DictionaryRemoteDataSourceImpl implements DictionaryRemoteDataSource {
         int sizeArgs = (data["data"] as List<dynamic>).length;
         return sizeArgs > 0 ? data : null;
       } else {
-        return {};
+        throw new Exception("No Data");
       }
     } catch (e) {
-      return {};
+      throw new Exception("No Data");
     }
   }
 
