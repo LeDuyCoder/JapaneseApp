@@ -10,6 +10,7 @@ import 'package:japaneseapp/features/dictionary/bloc/dictionary_bloc.dart';
 import 'package:japaneseapp/features/dictionary/bloc/dictionary_event.dart';
 import 'package:japaneseapp/features/dictionary/bloc/dictionary_state.dart';
 import 'package:japaneseapp/features/dictionary/domain/entities/word_entity.dart';
+import 'package:japaneseapp/features/dictionary/presentation/widgets/box_fail_widget.dart';
 import 'package:japaneseapp/features/dictionary/presentation/widgets/box_loading_widget.dart';
 import 'package:japaneseapp/features/dictionary/presentation/widgets/word_same_widget.dart';
 
@@ -107,30 +108,7 @@ class DictionaryPage extends StatelessWidget {
                     child: Column(
                       children: [
                         if(state is DictionaryError)
-                          Container(
-                            margin: EdgeInsets.only(left: 10, right: 20),
-                            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 40),
-                            width: MediaQuery.sizeOf(context).width,
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(20),
-                                boxShadow: const [
-                                  BoxShadow(
-                                      color: AppColors.grey,
-                                      offset: Offset(0, 2),
-                                      blurRadius: 10
-                                  )
-                                ]
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Icon(Icons.error_outlined, color: AppColors.primary, size: 50,),
-                                Text("Không Tìm Thấy", style: TextStyle(fontSize: 20, fontFamily: "Itim"),),
-                                Text("Từ bạn vừa nhập không tìm thấy trong từ điển", style: TextStyle(fontFamily: "itim", color: AppColors.textSecond.withOpacity(0.5)),)
-                              ],
-                            ),
-                          ),
+                          const BoxFailWidget(),
                         if(state is DictionaryLoaded)
                           Container(
                             margin: EdgeInsets.only(left: 10, right: 10),
