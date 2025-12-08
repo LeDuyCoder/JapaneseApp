@@ -5,19 +5,19 @@ import 'package:japaneseapp/core/Screen/allTopicScreen.dart';
 import 'package:japaneseapp/core/Screen/seeMoreTopic.dart';
 import 'package:japaneseapp/core/Theme/colors.dart';
 import 'package:japaneseapp/core/generated/app_localizations.dart';
+import 'package:japaneseapp/features/dashboard/bloc/tabhome_bloc.dart';
 import 'package:japaneseapp/features/dashboard/bloc/tabhome_event.dart';
 import 'package:japaneseapp/features/dashboard/bloc/tabhome_state.dart';
+import 'package:japaneseapp/features/dashboard/data/datasource/tabhome_local_data_source.dart';
+import 'package:japaneseapp/features/dashboard/data/datasource/tabhome_remote_data_source.dart';
 import 'package:japaneseapp/features/dashboard/data/datasource/user_remote_data_source.dart';
-import 'package:japaneseapp/features/dashboard/presentaition/widgets/appbar_section.dart';
-import 'package:japaneseapp/features/dashboard/presentaition/widgets/community_section.dart';
-import 'package:japaneseapp/features/dashboard/presentaition/widgets/folder_section.dart';
-import 'package:japaneseapp/features/dashboard/presentaition/widgets/loading_indicator.dart';
-import 'package:japaneseapp/features/dashboard/presentaition/widgets/no_folder_section.dart';
-import 'package:japaneseapp/features/dashboard/presentaition/widgets/topic_section.dart';
-import '../../bloc/tabhome_bloc.dart';
-import '../../data/repository/tabhome_repository_impl.dart';
-import '../../data/datasource/tabhome_local_data_source.dart';
-import '../../data/datasource/tabhome_remote_data_source.dart';
+import 'package:japaneseapp/features/dashboard/data/repository/tabhome_repository_impl.dart';
+import 'package:japaneseapp/features/dashboard/presentaition/widgets/dashboard/appbar_section.dart';
+import 'package:japaneseapp/features/dashboard/presentaition/widgets/dashboard/community_section.dart';
+import 'package:japaneseapp/features/dashboard/presentaition/widgets/dashboard/folder_section.dart';
+import 'package:japaneseapp/features/dashboard/presentaition/widgets/dashboard/loading_indicator.dart';
+import 'package:japaneseapp/features/dashboard/presentaition/widgets/dashboard/no_folder_section.dart';
+import 'package:japaneseapp/features/dashboard/presentaition/widgets/dashboard/topic_section.dart';
 
 class TabHomePage extends StatelessWidget {
   @override

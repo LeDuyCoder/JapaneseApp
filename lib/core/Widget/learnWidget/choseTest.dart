@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:japaneseapp/core/Module/word.dart';
+import 'package:japaneseapp/core/Service/GoogleTTSService.dart';
 import 'package:japaneseapp/core/Widget/choseWordWidget.dart';
 import 'package:japaneseapp/core/Widget/learnWidget/rightTab.dart';
 import 'package:japaneseapp/core/Widget/learnWidget/wrongTab.dart';
@@ -30,10 +31,20 @@ class _choseTestState extends State<choseTest> {
   final FlutterTts _flutterTts = FlutterTts();
   bool isPress = false;
 
+  GoogleTTSService ttsService = GoogleTTSService();
+
   @override
   void initState() {
     super.initState();
     positionAnswer = _generateQuestion();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if(widget.data.containsKey('read')){
+        if(await ttsService.speak(widget.data["word"]) == false){
+          await readText(widget.data["word"], 1.0);
+        }
+      }
+    });
   }
 
   Future<void> readText(String text, double speed) async {
@@ -80,9 +91,12 @@ class _choseTestState extends State<choseTest> {
     return positionAnswer;
   }
 
-  void choseItem(int position, String text){
+  Future<void> choseItem(int position, String text) async {
     if(widget.readText == true){
-      readText(text, 1.0);
+      if(await ttsService.speak(widget.data["word"]) == false){
+        readText(text, 1.0);
+      }
+
     }
 
     setState(() {
@@ -97,9 +111,6 @@ class _choseTestState extends State<choseTest> {
 
   @override
   Widget build(BuildContext context) {
-    if(widget.data.containsKey('read')){
-      readText(widget.data["word"], 1.0);
-    }
     return Scaffold(
       body: Container(
         color: Colors.white,

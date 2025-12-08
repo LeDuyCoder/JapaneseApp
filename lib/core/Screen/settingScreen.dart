@@ -16,6 +16,7 @@ import 'package:japaneseapp/core/State/FeatureState.dart';
 import 'package:japaneseapp/core/Theme/colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../features/splash/presentation/splash_screen.dart';
 import '../Service/Local/local_db_service.dart';
 import '../generated/app_localizations.dart';
 
@@ -619,11 +620,11 @@ class _settingScreen extends State<settingScreen>{
                           title: Text("Đồng Hồ", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
                           subtitle: Text("mở giao điện xem thời gian trên dashboard"),
                           trailing: Switch(
-                            value: splashScreen.featureState.timerView,
+                            value: SplashScreen.featureState.timerView,
                             activeColor: AppColors.primary,       // màu của nút (thumb) khi bật
                             onChanged: (bool value) async {
                               setState(() {
-                                splashScreen.featureState.setStateFeture(KeyFeature.timerView, value);
+                                SplashScreen.featureState.setStateFeture(KeyFeature.timerView, value);
                               });
                             },
                           ),

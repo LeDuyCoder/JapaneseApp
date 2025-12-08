@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:audioplayers/audioplayers.dart';
@@ -22,8 +23,7 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen>
-    with SingleTickerProviderStateMixin {
+class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
   late AudioPlayer _audioPlayer;
@@ -43,7 +43,14 @@ class _SplashScreenState extends State<SplashScreen>
       CurvedAnimation(parent: _controller, curve: Curves.easeOutBack),
     );
 
+    FirebaseAnalytics.instance.logEvent(
+      name: 'app_open_custom',
+      parameters: {'screen': 'SplashScreen'},
+    );
+
     _initializeApp();
+
+
   }
 
   Future<void> _initializeApp() async {
@@ -56,6 +63,7 @@ class _SplashScreenState extends State<SplashScreen>
     await SplashService.addUser();
     await _checkInternetAndNavigate();
   }
+
 
   Future<void> _loadFeatureState() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

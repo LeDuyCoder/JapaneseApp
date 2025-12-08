@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:japaneseapp/core/Service/GoogleTTSService.dart';
 
 class FlashCardWidget extends StatefulWidget {
 
@@ -20,6 +21,7 @@ class _FlashCardWidgetState extends State<FlashCardWidget> with SingleTickerProv
   bool _isFront = true;
 
   final FlutterTts _flutterTts = FlutterTts();
+  final GoogleTTSService googleTTSService = GoogleTTSService();
 
   Future<void> readText(String text, double speed) async {
     await _flutterTts.setLanguage("ja-JP");
@@ -143,8 +145,10 @@ class _FlashCardWidgetState extends State<FlashCardWidget> with SingleTickerProv
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               GestureDetector(
-                onTap: () {
-                  readText(widget.wayread, 0.5);
+                onTap: () async {
+                  if(await googleTTSService.speak(widget.wayread) != true){
+                    readText(widget.wayread, 0.5);
+                  }
                 },
                 child: Container(
                   height: 50,

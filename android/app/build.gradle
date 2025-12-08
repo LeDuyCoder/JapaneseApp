@@ -21,7 +21,6 @@ android {
         jvmTarget = JavaVersion.VERSION_1_8
     }
 
-
     signingConfigs {
         release {
             storeFile file("japneseappkeystore.jks")  // Đường dẫn tới file keystore
@@ -35,8 +34,36 @@ android {
         applicationId = "kiradev.studio.japaneseapp"
         minSdk = 23
         targetSdk = 35
-        versionCode = 14
+        versionCode = 17
         versionName = flutter.versionName
+    }
+
+    packagingOptions {
+        resources {
+            excludes += [
+                    '**/libx86.so',
+                    '**/libx86_64.so',
+                    '**/libarmeabi-v7a.so'
+            ]
+            pickFirsts += [
+                    'lib/arm64-v8a/libapp.so',
+                    'lib/arm64-v8a/libflutter.so'
+            ]
+        }
+        jniLibs {
+            useLegacyPackaging = true  // QUAN TRỌNG: Đổi thành true
+        }
+        doNotStrip '**/libtranslate_ini.so'
+        doNotStrip '**/libvemo_haitve.so'
+        doNotStrip '**/libributer.so'
+        doNotStrip '**/libmiktoammonpipeline.so'
+        doNotStrip '**/libmikt_gocgle_ocr_pipeline.so'
+        doNotStrip '**/libface_detector_v2_ini.so'
+        doNotStrip '**/libdigitalink.so'
+        doNotStrip '**/libbanhopper_v3.so'
+        doNotStrip '**/libpredictor_ini.so'
+        doNotStrip '**/librotextclassifier3_ini_iclib.so'
+        doNotStrip '**/liblanguage_id_IZc_ini.so'
     }
 
     buildTypes {
@@ -44,19 +71,40 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.release
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            signingConfig = signingConfigs.release
         }
     }
 
-    apply plugin: 'com.google.gms.google-services'
-
-    dependencies {
-        implementation 'com.google.guava:guava:31.1-android'
-        implementation("androidx.work:work-runtime:2.8.1")
-        implementation("androidx.work:work-runtime-ktx:2.8.1") // Đảm bảo cùng phiên bản
-        implementation platform('com.google.firebase:firebase-bom:33.12.0')
-        implementation 'com.google.firebase:firebase-analytics'
-        implementation 'com.google.firebase:firebase-core:21.1.0'
+    bundle {
+        language {
+            enableSplit = true
+        }
+        density {
+            enableSplit = true
+        }
+        abi {
+            enableSplit = true
+        }
     }
+
+
+}
+
+apply plugin: 'com.google.gms.google-services'
+
+dependencies {
+    implementation 'com.google.guava:guava:31.1-android'
+    implementation("androidx.work:work-runtime:2.8.1")
+    implementation("androidx.work:work-runtime-ktx:2.8.1") // Đảm bảo cùng phiên bản
+    implementation platform('com.google.firebase:firebase-bom:33.12.0')
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-core:21.1.0'
 }
 
 flutter {

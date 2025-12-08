@@ -5,7 +5,7 @@ import 'package:japaneseapp/core/Service/Server/ServiceLocator.dart';
 import 'package:japaneseapp/core/Theme/colors.dart';
 import 'package:japaneseapp/features/dashboard/domain/models/user_model.dart';
 import '../../domain/entities/shop_item.dart';
-import '../widgets/frame_item_shop.dart';
+import 'frame_item_shop.dart';
 import 'fast_click_warning_dialog.dart';
 
 class AvatarShopTab extends StatefulWidget {

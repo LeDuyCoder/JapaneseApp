@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:japaneseapp/core/Widget/folerWidget.dart';
-import '../../domain/models/folder_model.dart';
+import '../../../domain/models/folder_model.dart';
 
 class FolderSection extends StatelessWidget {
   final List<Map<String,dynamic>> folders;

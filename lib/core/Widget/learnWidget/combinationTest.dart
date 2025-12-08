@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:japaneseapp/core/Screen/learnCharactersScreen.dart';
+import 'package:japaneseapp/core/Service/GoogleTTSService.dart';
 import 'package:japaneseapp/core/Widget/choseColumeWidget.dart';
 import 'package:japaneseapp/core/Widget/learnWidget/listenTest.dart';
 import 'package:japaneseapp/core/Widget/learnWidget/rightTab.dart';
@@ -27,6 +28,9 @@ class combinationTest extends StatefulWidget {
 }
 
 class _combinationTest extends State<combinationTest> {
+
+  GoogleTTSService googleTTSService = GoogleTTSService();
+
   List<NodeColum> listColumA_State = [];
   List<NodeColum> listColumB_State = [];
   NodeColum? columeA_Chose;
@@ -105,8 +109,11 @@ class _combinationTest extends State<combinationTest> {
                             text: listColumA_State[i].word,
                             isChoose: columeA_Chose == listColumA_State[i],
                             isCancle: listComplete.contains(listColumA_State[i].uuid),
-                            functionButton: () {
-                              readText(listColumA_State[i].wayread, 0.5);
+                            functionButton: () async {
+                              if(await googleTTSService.speak(listColumA_State[i].wayread) != true){
+                                readText(listColumA_State[i].wayread, 0.5);
+                              }
+
                               setState(() {
                                 if (columeB_Chose != null) {
                                   columeB_Chose = null;

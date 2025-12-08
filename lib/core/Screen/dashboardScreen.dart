@@ -20,6 +20,7 @@ import 'package:japaneseapp/core/Widget/folerWidget.dart';
 import 'package:japaneseapp/features/dashboard/domain/models/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../features/splash/presentation/splash_screen.dart';
 import '../Module/WordModule.dart';
 import '../Module/word.dart';
 import '../Service/Local/local_db_service.dart';
@@ -1477,7 +1478,7 @@ class _DashboardScreenState extends State<dashboardScreen> {
                             ),
                           ),
                         SizedBox(height: 20,),
-                        if(splashScreen.featureState.timerView)
+                        if(SplashScreen.featureState.timerView)
                           const Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [

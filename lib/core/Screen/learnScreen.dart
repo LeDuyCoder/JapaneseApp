@@ -16,6 +16,7 @@ import 'package:japaneseapp/core/Widget/learnWidget/writeTestScreen.dart';
 import 'package:japaneseapp/core/Widget/quitTab.dart';
 import 'package:uuid/v4.dart';
 
+import '../../features/splash/presentation/splash_screen.dart';
 import '../Service/timeService.dart';
 
 class learnScreen extends StatefulWidget {
@@ -42,7 +43,7 @@ class _learnScreen extends State<learnScreen> {
   late TimerService _timerService;
   int _currentSeconds = 0;
 
-  int maxQuestion = 5; //5
+  int maxQuestion = 6; //5
   int amountRightAwnser = 0;
 
   @override
@@ -225,7 +226,7 @@ class _learnScreen extends State<learnScreen> {
       "write",
     ];
 
-    if (splashScreen.featureState.readTesting) {
+    if (SplashScreen.featureState.readTesting) {
       features.add("read");
     }
 
