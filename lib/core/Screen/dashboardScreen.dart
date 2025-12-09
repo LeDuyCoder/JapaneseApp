@@ -20,6 +20,7 @@ import 'package:japaneseapp/core/Widget/folerWidget.dart';
 import 'package:japaneseapp/features/dashboard/domain/models/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../features/dashboard/presentaition/widgets/dashboard/topic_widget.dart';
 import '../../features/splash/presentation/splash_screen.dart';
 import '../Module/WordModule.dart';
 import '../Module/word.dart';
@@ -27,7 +28,6 @@ import '../Service/Local/local_db_service.dart';
 import '../Service/Server/ServiceLocator.dart';
 import '../Widget/JapaneseClockText.dart';
 import '../Widget/topicServerWidget.dart';
-import '../Widget/topicWidget.dart';
 import 'package:http/http.dart' as http;
 
 import '../generated/app_localizations.dart';
@@ -1775,7 +1775,7 @@ class _DashboardScreenState extends State<dashboardScreen> {
                                   ? Column(
                                   children: [
                                     for (Map<String, dynamic> topicLocal in snapshot.data?["topic"])
-                                      topicWidget(
+                                      TopicWidget(
                                         id: topicLocal["id"],
                                         nameTopic: topicLocal["name"],
                                         reloadDashBoard: () {
@@ -1827,7 +1827,5 @@ class _DashboardScreenState extends State<dashboardScreen> {
           )
       ),
     );
-
-
   }
 }

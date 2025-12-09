@@ -1,26 +1,25 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-import 'package:japaneseapp/core/Module/word.dart';
-import 'package:japaneseapp/core/Widget/FlashCardWidget.dart';
+import 'package:japaneseapp/core/Service/Local/local_db_service.dart';
+import 'package:japaneseapp/features/topicdetail/domain/entities/word_entity.dart';
+import 'package:japaneseapp/features/topicdetail/presentation/widgets/flash_card_widget.dart';
 import 'package:volume_controller/volume_controller.dart';
 
-import '../Service/Local/local_db_service.dart';
 
-class wordWidget extends StatefulWidget{
-
-  final word wordText;
+class WordWidget extends StatefulWidget{
+  final WordEntity wordEntity;
   final String topicName;
   final void Function() reloadScreenListWord;
 
-  const wordWidget({super.key, required this.wordText, required this.topicName, required this.reloadScreenListWord});
+  const WordWidget({super.key, required this.wordEntity, required this.topicName, required this.reloadScreenListWord});
 
   @override
   State<StatefulWidget> createState() => _wordWidget();
 
 }
 
-class _wordWidget extends State<wordWidget>{
+class _wordWidget extends State<WordWidget>{
 
   final FlutterTts _flutterTts = FlutterTts();
   bool isButtonDisabled = false;
@@ -35,6 +34,7 @@ class _wordWidget extends State<wordWidget>{
     super.initState();
   }
 
+
   Future<void> readText(String text, double speed) async {
     await _flutterTts.setLanguage("ja-JP");
     await _flutterTts.setSpeechRate(speed);
@@ -43,9 +43,9 @@ class _wordWidget extends State<wordWidget>{
 
   void showPopupEditWord() {
 
-    vocabularyEdit.text = widget.wordText.vocabulary;
-    wayReadEdit.text = widget.wordText.wayread;
-    meanEdit.text = widget.wordText.mean;
+    vocabularyEdit.text = widget.wordEntity.word;
+    wayReadEdit.text = widget.wordEntity.wayread;
+    meanEdit.text = widget.wordEntity.mean;
 
     showDialog(
       barrierDismissible: false,
@@ -196,7 +196,7 @@ class _wordWidget extends State<wordWidget>{
                               "wayread": newWayRead,
                             };
 
-                            await db.vocabularyDao.update("words", newData, "word = '${widget.wordText.vocabulary}' and topic = '${widget.topicName}'",);
+                            await db.vocabularyDao.update("words", newData, "word = '${widget.wordEntity.word}' and topic = '${widget.topicName}'",);
                             widget.reloadScreenListWord();
                             Navigator.pop(context);
                           },
@@ -271,19 +271,6 @@ class _wordWidget extends State<wordWidget>{
     });
   }
 
-  void showFlashCardDialog(BuildContext context, String word, String mean, String wayread) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          backgroundColor: Colors.transparent,
-          insetPadding: EdgeInsets.all(20),
-          child: FlashCardWidget(word: word, mean: mean, wayread: wayread,),
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -304,9 +291,8 @@ class _wordWidget extends State<wordWidget>{
             double volume = await VolumeController.instance.getVolume();
 
             if(volume != 0){
-              readText(widget.wordText.wayread, 0.5);
+              readText(widget.wordEntity.wayread, 0.5);
 
-              showFlashCardDialog(context, widget.wordText.vocabulary, widget.wordText.mean, widget.wordText.wayread);
 
             }else{
               isButtonDisabled = !isButtonDisabled;
@@ -358,7 +344,7 @@ class _wordWidget extends State<wordWidget>{
                   children: [
                     Center(
                       child: Text(
-                        widget.wordText.vocabulary,
+                        widget.wordEntity.word,
                         style: TextStyle(
                           fontFamily: "aoboshione",
                           fontSize: MediaQuery.sizeOf(context).height * 0.02,
@@ -383,9 +369,9 @@ class _wordWidget extends State<wordWidget>{
                       border: Border.all(color: Colors.grey),
                     ),
                     child: LinearProgressIndicator(
-                      value: widget.wordText.level / 28,
+                      value: widget.wordEntity.level / 28,
                       backgroundColor: Colors.white,
-                      color: _getProgressColor(widget.wordText.level),
+                      color: _getProgressColor(widget.wordEntity.level),
                       minHeight: 10.0,
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                     ),

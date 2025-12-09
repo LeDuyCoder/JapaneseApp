@@ -13,7 +13,6 @@ class WordModel extends WordEntity {
   });
 
   factory WordModel.fromJson(Map<String, dynamic> json) {
-    print(json);
 
     List<String> anotherWords = [];
     if (json.containsKey("anotherWord")) {

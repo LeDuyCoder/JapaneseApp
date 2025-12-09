@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:japaneseapp/core/Theme/colors.dart';
 
+import '../../features/dashboard/presentaition/widgets/dashboard/topic_widget.dart';
 import '../Service/Local/local_db_service.dart';
-import '../Widget/topicWidget.dart';
 import '../generated/app_localizations.dart';
 
 class allTopicScreen extends StatefulWidget{
@@ -52,7 +52,7 @@ class _allTopicScreen extends State<allTopicScreen>{
                           children: [
                             for (Map<String, dynamic> topicLocal in snapshot.data?["topic"])
                               ...[
-                                topicWidget(
+                                TopicWidget(
                                   id: "${topicLocal["id"]}",
                                   nameTopic: topicLocal["name"],
                                   reloadDashBoard: () {

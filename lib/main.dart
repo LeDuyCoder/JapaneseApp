@@ -10,6 +10,10 @@ import 'package:japaneseapp/core/Service/FunctionService.dart';
 import 'package:japaneseapp/core/DI/auth_injection.dart';
 import 'package:japaneseapp/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:japaneseapp/features/splash/presentation/splash_screen.dart';
+import 'package:japaneseapp/features/topicdetail/data/datasources/topicdetail_local_datasource.dart';
+import 'package:japaneseapp/features/topicdetail/data/repositories/Topicdetails_repository_impl.dart';
+import 'package:japaneseapp/features/topicdetail/domain/repositories/topicdetails_repository.dart';
+import 'package:japaneseapp/features/topicdetail/domain/usecase/load_topicdetails_usecase.dart';
 import 'core/Listener/NetworkListener.dart';
 import 'core/Theme/colors.dart';
 import 'features/dictionary/data/datasources/dictionary_remote_datasource.dart';
@@ -51,6 +55,12 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   initAuthFeature();
 
+
+  // final TopicdetailsLocalDatasourceImpl topicdetailsLocalDatasource = TopicdetailsLocalDatasourceImpl();
+  // final TopicDetailsRepository topicDetailsRepository = TopicdetailsRepositoryImpl(dataSource: topicdetailsLocalDatasource);
+  // final loadTopicDetailsUseCase = LoadTopicDetailsUseCase(topicDetailsRepository);
+  // var data = await loadTopicDetailsUseCase.call("Vocabulary JPD123 3 P1");
+  // print(data);
   runApp(
     MultiBlocProvider(
       providers: [

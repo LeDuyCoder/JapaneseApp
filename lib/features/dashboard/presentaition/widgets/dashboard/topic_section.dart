@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:japaneseapp/core/Theme/colors.dart';
-import 'package:japaneseapp/core/Widget/topicWidget.dart';
 import 'package:japaneseapp/core/generated/app_localizations.dart';
+import 'package:japaneseapp/features/dashboard/presentaition/widgets/dashboard/topic_widget.dart';
 
 class TopicSection extends StatelessWidget{
   final List<Map<String, dynamic>> data;
@@ -18,7 +18,7 @@ class TopicSection extends StatelessWidget{
               ? Column(
               children: [
                 for (Map<String, dynamic> topicLocal in data)
-                  topicWidget(
+                  TopicWidget(
                     id: topicLocal["id"],
                     nameTopic: topicLocal["name"],
                     reloadDashBoard: () {
