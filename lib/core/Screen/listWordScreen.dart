@@ -1176,7 +1176,7 @@ class _listWordScreen extends State<listWordScreen>{
             
 
             if(owner == FirebaseAuth.instance.currentUser!.displayName){
-              if(topic.hasData){;
+              if(topic.hasData){
                 return IconButton(onPressed: (){
                   showBottomSheetPrivate(context);
                 }, icon: Icon(Icons.public_sharp, color: AppColors.primary,));
@@ -1310,35 +1310,35 @@ class _listWordScreen extends State<listWordScreen>{
                 SizedBox(height: 20,),
                 GestureDetector(
                     onTapUp: (event) {
-                      setState(() {
-                        isPressButton = false;
-                      });
+                setState(() {
+                isPressButton = false;
+                });
 
-                      List<word> dataWords = [];
-                      for (Map<String, dynamic> wordData in snapshot.data![0]) {
-                        dataWords.add(
-                          word(
-                            wordData["word"],
-                            wordData["wayread"],
-                            wordData["mean"],
-                            wordData["topic"],
-                            wordData["level"],
-                          ),
-                        );
-                      }
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (ctx) => learnScreen(
-                            dataWords: dataWords,
-                            topic: widget.topicName,
-                            reload: () {
-                              setState(() {});
-                            },
-                          ),
-                        ),
-                      );
-                    },
+                List<word> dataWords = [];
+                for (Map<String, dynamic> wordData in snapshot.data![0]) {
+                dataWords.add(
+                word(
+                wordData["word"],
+                wordData["wayread"],
+                wordData["mean"],
+                wordData["topic"],
+                wordData["level"],
+                ),
+                );
+                }
+                Navigator.push(
+                context,
+                MaterialPageRoute(
+                builder: (ctx) => learnScreen(
+                dataWords: dataWords,
+                topic: widget.topicName,
+                reload: () {
+                setState(() {});
+                },
+                ),
+                ),
+                );
+                },
                   child: Container(
                     width: MediaQuery.sizeOf(context).width,
                     margin: const EdgeInsets.only(left: 40, right: 40),

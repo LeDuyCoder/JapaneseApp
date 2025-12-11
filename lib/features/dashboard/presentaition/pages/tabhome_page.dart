@@ -155,13 +155,7 @@ class TabHomePage extends StatelessWidget {
                             ],
                           ),
                           SizedBox(height: 20,),
-                          TopicSection(data: state.topicsLocal,),
-
-                          // move appbar UI here
-                          // HeaderTimer(), // move header UI here
-                          // FolderSection(folders: state.folders),
-                          // CommunitySection(topicServer: state.topicServer),
-                          // TopicSection(topicsLocal: state.topicsLocal),
+                          TopicSection(data: state.topicsLocal, contextDashboard: context,),
                         ],
                       ),
                     ),
@@ -172,7 +166,7 @@ class TabHomePage extends StatelessWidget {
               );
             }
             if (state is TabHomeError) {
-              return Container(); //EmptyState(message: state.message);
+              return Container();
             }
             return Container();
           },

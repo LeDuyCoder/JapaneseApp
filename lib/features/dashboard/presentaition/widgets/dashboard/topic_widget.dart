@@ -10,9 +10,10 @@ import 'package:japaneseapp/features/topicdetail/presentation/pages/topicdetail_
 class TopicWidget extends StatefulWidget{
   final String nameTopic;
   final String id;
+  final String owner;
   final void Function() reloadDashBoard;
 
-  const TopicWidget({super.key, required this.nameTopic, required this.reloadDashBoard, required this.id});
+  const TopicWidget({super.key, required this.nameTopic, required this.reloadDashBoard, required this.id, required this.owner});
 
   @override
   State<StatefulWidget> createState() => _topicWidget();
@@ -54,13 +55,13 @@ class _topicWidget extends State<TopicWidget>{
         return Padding(
           padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
           child: GestureDetector(
-            onTap: (){
-              Navigator.push(
+            onTap: () async {
+              await Navigator.push(
                 context,
                 PageRouteBuilder(
                   transitionDuration: const Duration(milliseconds: 500),
                   pageBuilder: (context, animation, secondaryAnimation) => TopicDetailPage(
-                    nameTopic: widget.nameTopic,
+                    nameTopic: widget.nameTopic, idTopic: widget.id, owner: widget.owner,
                   ),
                   transitionsBuilder: (context, animation, secondaryAnimation, child) {
                     final offsetAnimation = Tween<Offset>(
@@ -74,6 +75,7 @@ class _topicWidget extends State<TopicWidget>{
                   },
                 ),
               );
+              widget.reloadDashBoard();
             },
             child: Container(
               child: Stack(

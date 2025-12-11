@@ -59,7 +59,7 @@ class _allTopicScreen extends State<allTopicScreen>{
                                     setState(() {
 
                                     });
-                                  },
+                                  }, owner: topicLocal["user"],
                                 ),
                               ]
                           ],

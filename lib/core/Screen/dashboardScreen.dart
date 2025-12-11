@@ -1780,7 +1780,7 @@ class _DashboardScreenState extends State<dashboardScreen> {
                                         nameTopic: topicLocal["name"],
                                         reloadDashBoard: () {
                                           reloadScreen();
-                                        },
+                                        }, owner: topicLocal["user"],
                                       ),
                                   ]
                               )

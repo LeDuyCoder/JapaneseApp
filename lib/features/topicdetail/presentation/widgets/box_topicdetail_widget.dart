@@ -54,34 +54,7 @@ class BoxTopicDetailWidget extends StatelessWidget{
           SizedBox(height: 20,),
           GestureDetector(
             onTapUp: (event) {
-              // setState(() {
-              //   isPressButton = false;
-              // });
-              //
-              // List<word> dataWords = [];
-              // for (Map<String, dynamic> wordData in snapshot.data![0]) {
-              //   dataWords.add(
-              //     word(
-              //       wordData["word"],
-              //       wordData["wayread"],
-              //       wordData["mean"],
-              //       wordData["topic"],
-              //       wordData["level"],
-              //     ),
-              //   );
-              // }
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (ctx) => learnScreen(
-              //       dataWords: dataWords,
-              //       topic: widget.topicName,
-              //       reload: () {
-              //         setState(() {});
-              //       },
-              //     ),
-              //   ),
-              // );
+              // Navigate to learning screen
             },
             child: Container(
               width: MediaQuery.sizeOf(context).width,
