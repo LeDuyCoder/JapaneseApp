@@ -9,16 +9,13 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:japaneseapp/core/Service/FunctionService.dart';
 import 'package:japaneseapp/core/DI/auth_injection.dart';
 import 'package:japaneseapp/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:japaneseapp/features/learn/data/datasources/learn_local_datasource.dart';
+import 'package:japaneseapp/features/learn/data/repositories/learn_repository_impl.dart';
+import 'package:japaneseapp/features/learn/domain/repositories/learn_repository.dart';
+import 'package:japaneseapp/features/learn/domain/usecase/load_words_from_topic_usecase.dart';
 import 'package:japaneseapp/features/splash/presentation/splash_screen.dart';
-import 'package:japaneseapp/features/topicdetail/data/datasources/topicdetail_local_datasource.dart';
-import 'package:japaneseapp/features/topicdetail/data/repositories/Topicdetails_repository_impl.dart';
-import 'package:japaneseapp/features/topicdetail/domain/repositories/topicdetails_repository.dart';
-import 'package:japaneseapp/features/topicdetail/domain/usecase/load_topicdetails_usecase.dart';
 import 'core/Listener/NetworkListener.dart';
 import 'core/Theme/colors.dart';
-import 'features/dictionary/data/datasources/dictionary_remote_datasource.dart';
-import 'features/dictionary/data/repositories/dictionary_repository_impl.dart';
-import 'features/dictionary/domain/usecases/search_word.dart';
 import 'firebase_options.dart';
 import 'core/generated/app_localizations.dart';
 
@@ -56,11 +53,11 @@ void main() async {
   initAuthFeature();
 
 
-  // final TopicdetailsLocalDatasourceImpl topicdetailsLocalDatasource = TopicdetailsLocalDatasourceImpl();
-  // final TopicDetailsRepository topicDetailsRepository = TopicdetailsRepositoryImpl(dataSource: topicdetailsLocalDatasource);
-  // final loadTopicDetailsUseCase = LoadTopicDetailsUseCase(topicDetailsRepository);
-  // var data = await loadTopicDetailsUseCase.call("Vocabulary JPD123 3 P1");
-  // print(data);
+  final LearnLocalDataSourceImpl learnLocalDataSourceImpl = LearnLocalDataSourceImpl();
+  final LearnRepository learnRepository = LearnRepositoryImpl(dataSource: learnLocalDataSourceImpl);
+  final loadLearnWordsTopic = LoadWordsFromTopicUsecase(learnRepository);
+  var data = await loadLearnWordsTopic.call("Vocabulary JPD123 3 P1");
+  print(data);
   runApp(
     MultiBlocProvider(
       providers: [
