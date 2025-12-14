@@ -3,11 +3,11 @@ import 'package:japaneseapp/core/Module/word.dart';
 import 'package:japaneseapp/features/learn/domain/entities/word_entity.dart';
 
 class ResultPopupWidget extends StatelessWidget {
-  final bool isCorrect;// true = đúng, false = sai
+  final bool isCorrect;
   final bool tryAgain;
   final WordEntity? wordEntityWrong;
   final WordEntity wordEntity;
-  final Function() onPressButton;// Nghĩa: "Du lịch"
+  final Function() onPressButton;
 
   const ResultPopupWidget({
     super.key,
@@ -36,12 +36,12 @@ class ResultPopupWidget extends StatelessWidget {
               children: [
                 Container(
                   padding: const EdgeInsets.all(16),
-                  child: Image.asset("assets/character/hinh6.png", width: 150, height: 150,)
+                  child: !isCorrect ?
+                    Image.asset("assets/character/hinh6.png", width: 150, height: 150,) :
+                    Image.asset("assets/character/hinh10.png", width: 200, height: 200)
                 ),
 
                 const SizedBox(height: 10),
-
-                // Text "Chính Xác!" hoặc "Không Chính Xác!"
                 Text(
                   isCorrect ? "Chính Xác!" : "Không Chính Xác!",
                   style: TextStyle(

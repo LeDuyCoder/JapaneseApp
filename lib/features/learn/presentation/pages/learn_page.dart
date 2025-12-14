@@ -11,6 +11,7 @@ import 'package:japaneseapp/features/learn/domain/usecase/generate_test_usecase.
 import 'package:japaneseapp/features/learn/presentation/cubit/progress_cubit.dart';
 import 'package:japaneseapp/features/learn/presentation/cubit/progress_state.dart';
 import 'package:japaneseapp/features/learn/presentation/test_views/combination/view/combination_test_view.dart';
+import 'package:japaneseapp/features/learn/presentation/test_views/listen/view/listen_test_view.dart';
 import 'package:japaneseapp/features/learn/presentation/widget/notification_popup_widget.dart';
 
 class LearnPage extends StatelessWidget{
@@ -67,7 +68,11 @@ class LearnPage extends StatelessWidget{
                                     ],
                                   ),
                                 ),
+
                                 if(state is LearnGenerated)...[
+
+
+
                                   if(state.testEntities[stateProgress.amount].testView == TestView.CombinationTestView)
                                     CombinationTestView(contextPage: context, listWords: state.listEntites, onComplete: (){
                                       showModalBottomSheet(
@@ -90,9 +95,18 @@ class LearnPage extends StatelessWidget{
                                       );
                                     },),
                                   if(state.testEntities[stateProgress.amount].testView == TestView.ListenTestView)
-                                    Center(child: Text("ListenTestView"),),
-                                  if(state.testEntities[stateProgress.amount].testView == TestView.ReadTestView)
-                                    Center(child: Text("ReadTestView"),),
+                                    ListenTestView(
+                                        onComplete: (){
+                                          context
+                                              .read<ProgressCubit>()
+                                              .increase();
+                                        },
+                                        contextPage: context,
+                                        wordEntity: state.testEntities[stateProgress.amount].wordEntity,
+                                        wordEntities: state.listEntites
+                                    ),
+                                  if(state.testEntities[stateProgress.amount].testView == TestView.ChoseTestView)
+                                    Center(child: Text("ChoseTestView"),),
                                   if(state.testEntities[stateProgress.amount].testView == TestView.SortTestView)
                                     Center(child: Text("SortTestView"),),
                                   if(state.testEntities[stateProgress.amount].testView == TestView.SpeakTestView)
@@ -100,29 +114,6 @@ class LearnPage extends StatelessWidget{
                                   if(state.testEntities[stateProgress.amount].testView == TestView.WriteTestView)
                                     Center(child: Text("WriteTestView"),),
                                 ],
-
-                                // if(state is LearnGenerated)...[
-                                //   CombinationTestView(contextPage: context, listWords: state.listEntites, onComplete: (){
-                                //     showModalBottomSheet(
-                                //       context: context,
-                                //       isScrollControlled: true,
-                                //       backgroundColor: Colors.transparent, // để custom full UI
-                                //       builder: (sheetContext) {
-                                //         return NotificationPopupWidget(
-                                //           title: 'Chúc Mừng',
-                                //           message: 'Bạn vừa hoàn thành xuất sắc bài nối từ',
-                                //           onPressButton: () {
-                                //             context
-                                //                 .read<ProgressCubit>()
-                                //                 .increase();
-                                //           },
-                                //           imagePath: 'assets/character/hinh10.png',
-                                //
-                                //         );
-                                //       },
-                                //     );
-                                //   },),
-                                // ]
                               ],
                             ),
                           ),

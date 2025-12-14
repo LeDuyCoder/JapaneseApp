@@ -5,7 +5,7 @@ import 'package:japaneseapp/features/learn/domain/entities/word_entity.dart';
 
 enum TestView{
   ListenTestView,
-  ReadTestView,
+  ChoseTestView,
   SortTestView,
   SpeakTestView,
   WriteTestView,
