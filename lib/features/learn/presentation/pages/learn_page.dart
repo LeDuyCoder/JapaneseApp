@@ -10,6 +10,7 @@ import 'package:japaneseapp/features/learn/data/repositories/learn_repository_im
 import 'package:japaneseapp/features/learn/domain/usecase/generate_test_usecase.dart';
 import 'package:japaneseapp/features/learn/presentation/cubit/progress_cubit.dart';
 import 'package:japaneseapp/features/learn/presentation/cubit/progress_state.dart';
+import 'package:japaneseapp/features/learn/presentation/test_views/chose/view/chose_test_view.dart';
 import 'package:japaneseapp/features/learn/presentation/test_views/combination/view/combination_test_view.dart';
 import 'package:japaneseapp/features/learn/presentation/test_views/listen/view/listen_test_view.dart';
 import 'package:japaneseapp/features/learn/presentation/widget/notification_popup_widget.dart';
@@ -70,9 +71,6 @@ class LearnPage extends StatelessWidget{
                                 ),
 
                                 if(state is LearnGenerated)...[
-
-
-
                                   if(state.testEntities[stateProgress.amount].testView == TestView.CombinationTestView)
                                     CombinationTestView(contextPage: context, listWords: state.listEntites, onComplete: (){
                                       showModalBottomSheet(
@@ -106,7 +104,11 @@ class LearnPage extends StatelessWidget{
                                         wordEntities: state.listEntites
                                     ),
                                   if(state.testEntities[stateProgress.amount].testView == TestView.ChoseTestView)
-                                    Center(child: Text("ChoseTestView"),),
+                                    ChoseTestView(contextPage: context, listWords: state.listEntites, word: state.testEntities[stateProgress.amount].wordEntity, onComplete: () {
+                                      context
+                                          .read<ProgressCubit>()
+                                          .increase();
+                                    },),
                                   if(state.testEntities[stateProgress.amount].testView == TestView.SortTestView)
                                     Center(child: Text("SortTestView"),),
                                   if(state.testEntities[stateProgress.amount].testView == TestView.SpeakTestView)
