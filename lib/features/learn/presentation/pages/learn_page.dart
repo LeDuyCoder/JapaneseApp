@@ -54,6 +54,7 @@ class LearnPage extends StatelessWidget{
                                 SizedBox(height: 20,),
                                 Container(
                                   width: MediaQuery.sizeOf(context).width,
+                                  height: 70,
                                   child: Row(
                                     children: [
                                       IconButton(
@@ -121,10 +122,10 @@ class LearnPage extends StatelessWidget{
                                           .read<ProgressCubit>()
                                           .increase();
                                     }, contextPage: context, wordEntity: state.testEntities[stateProgress.amount].wordEntity, wordEntities: state.listEntites, typeTest: Sorts.values[Random().nextInt(Sorts.values.length)]),
-                                  if(state.testEntities[stateProgress.amount].testView == TestView.SpeakTestView)
-                                    Center(child: Text("SpeakTestView"),),
-                                  if(state.testEntities[stateProgress.amount].testView == TestView.WriteTestView)
-                                    Center(child: Text("WriteTestView"),),
+                                  // if(state.testEntities[stateProgress.amount].testView == TestView.SpeakTestView)
+                                  //   Center(child: Text("SpeakTestView"),),
+                                  // if(state.testEntities[stateProgress.amount].testView == TestView.WriteTestView)
+                                  //   Center(child: Text("WriteTestView"),),
                                 ],
                               ],
                             ),
