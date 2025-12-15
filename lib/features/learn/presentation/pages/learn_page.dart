@@ -17,6 +17,7 @@ import 'package:japaneseapp/features/learn/presentation/test_views/combination/v
 import 'package:japaneseapp/features/learn/presentation/test_views/listen/view/listen_test_view.dart';
 import 'package:japaneseapp/features/learn/presentation/test_views/sort/cubit/sort_test_state.dart';
 import 'package:japaneseapp/features/learn/presentation/test_views/sort/view/sort_test_view.dart';
+import 'package:japaneseapp/features/learn/presentation/test_views/write/view/write_test_view.dart';
 import 'package:japaneseapp/features/learn/presentation/widget/notification_popup_widget.dart';
 
 class LearnPage extends StatelessWidget{
@@ -73,8 +74,9 @@ class LearnPage extends StatelessWidget{
                                     ],
                                   ),
                                 ),
-
                                 if(state is LearnGenerated)...[
+                                  WriteTestView(contextPage: context, wordEntity: state.testEntities[stateProgress.amount].wordEntity),
+
                                   if(state.testEntities[stateProgress.amount].testView == TestView.CombinationTestView)
                                     CombinationTestView(contextPage: context, listWords: state.listEntites, onComplete: (){
                                       showModalBottomSheet(
