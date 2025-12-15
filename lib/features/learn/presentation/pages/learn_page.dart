@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,6 +15,8 @@ import 'package:japaneseapp/features/learn/presentation/cubit/progress_state.dar
 import 'package:japaneseapp/features/learn/presentation/test_views/chose/view/chose_test_view.dart';
 import 'package:japaneseapp/features/learn/presentation/test_views/combination/view/combination_test_view.dart';
 import 'package:japaneseapp/features/learn/presentation/test_views/listen/view/listen_test_view.dart';
+import 'package:japaneseapp/features/learn/presentation/test_views/sort/cubit/sort_test_state.dart';
+import 'package:japaneseapp/features/learn/presentation/test_views/sort/view/sort_test_view.dart';
 import 'package:japaneseapp/features/learn/presentation/widget/notification_popup_widget.dart';
 
 class LearnPage extends StatelessWidget{
@@ -110,7 +114,11 @@ class LearnPage extends StatelessWidget{
                                           .increase();
                                     },),
                                   if(state.testEntities[stateProgress.amount].testView == TestView.SortTestView)
-                                    Center(child: Text("SortTestView"),),
+                                    SortTestView(onComplete: (){
+                                      context
+                                          .read<ProgressCubit>()
+                                          .increase();
+                                    }, contextPage: context, wordEntity: state.testEntities[stateProgress.amount].wordEntity, wordEntities: state.listEntites, typeTest: Sorts.values[Random().nextInt(Sorts.values.length)]),
                                   if(state.testEntities[stateProgress.amount].testView == TestView.SpeakTestView)
                                     Center(child: Text("SpeakTestView"),),
                                   if(state.testEntities[stateProgress.amount].testView == TestView.WriteTestView)
