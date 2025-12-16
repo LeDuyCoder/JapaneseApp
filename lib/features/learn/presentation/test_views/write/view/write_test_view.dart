@@ -14,16 +14,17 @@ import 'package:japaneseapp/features/learn/domain/entities/word_entity.dart';
 import 'package:japaneseapp/features/learn/presentation/test_views/base_test_view.dart';
 import 'package:japaneseapp/features/learn/presentation/test_views/write/cubit/write_test_cubit.dart';
 import 'package:japaneseapp/features/learn/presentation/test_views/write/cubit/write_test_state.dart';
+import 'package:japaneseapp/features/learn/presentation/widget/check_button.dart';
 
 class WriteTestView extends StatelessWidget implements BaseTestView{
 
-  final VoidCallback? onComplete;
+  final VoidCallback onComplete;
   final BuildContext contextPage;
 
   final WordEntity wordEntity;
   final GlobalKey<CustomKeyboardState> _keyboardKey = GlobalKey();
 
-  WriteTestView({super.key, this.onComplete, required this.contextPage, required this.wordEntity});
+  WriteTestView({super.key, required this.onComplete, required this.contextPage, required this.wordEntity});
 
   double getResponsiveSize(BuildContext context, String text) {
     double baseSize = MediaQuery.of(context).size.width * 0.2;
@@ -93,9 +94,18 @@ class WriteTestView extends StatelessWidget implements BaseTestView{
                                           ),
                                         ),
                                       ),
-                                      SizedBox(height: 50),
-
-                                      SizedBox(height: 20,),
+                                      const SizedBox(height: 50),
+                                      ValueListenableBuilder<TextEditingValue>(
+                                        valueListenable: textEditingController,
+                                        builder: (context, value, _) {
+                                          return CheckButton(
+                                            enabled: value.text.isNotEmpty,
+                                            onTap: () {
+                                              context.read<WriteTestCubit>().checkAnwser(context, textEditingController.text, wordEntity, onComplete);
+                                            },
+                                          );
+                                        },
+                                      )
                                     ],
                                   ),
                                 ),
