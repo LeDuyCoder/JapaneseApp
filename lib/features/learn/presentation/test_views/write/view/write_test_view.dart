@@ -5,8 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:japaneseapp/core/generated/app_localizations.dart';
 import 'package:japaneseapp/features/handwriting_input/data/datasource/handwriting_remote_datasource.dart';
 import 'package:japaneseapp/features/handwriting_input/data/repository/handwriting_repository_impl.dart';
-import 'package:japaneseapp/features/handwriting_input/domain/usecases/delete_text.dart';
-import 'package:japaneseapp/features/handwriting_input/domain/usecases/insert_text.dart';
 import 'package:japaneseapp/features/handwriting_input/domain/usecases/send_handwriting.dart';
 import 'package:japaneseapp/features/handwriting_input/presentation/cubit/handwriting_cubit.dart';
 import 'package:japaneseapp/features/handwriting_input/presentation/widget/custom_keyboard.dart';
@@ -131,8 +129,6 @@ class WriteTestView extends StatelessWidget implements BaseTestView{
 
                             return HandwritingCubit(
                               sendHandwritingUsecase: SendHandwriting(repository),
-                              insertTextUsecase: InsertText(),
-                              deleteTextUsecase: DeleteText(),
                               repository: repository,
                             );
                           },

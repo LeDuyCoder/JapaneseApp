@@ -1,6 +1,7 @@
-import '../../domain/entities/handwriting_result.dart';
-import '../../domain/repository/handwriting_repository.dart';
-import '../datasource/handwriting_remote_datasource.dart';
+import 'package:japaneseapp/features/handwriting_input/data/datasource/handwriting_remote_datasource.dart';
+import 'package:japaneseapp/features/handwriting_input/domain/entities/handwriting_result.dart';
+import 'package:japaneseapp/features/handwriting_input/domain/repository/handwriting_repository.dart';
+
 import 'package:flutter/material.dart';
 
 class HandwritingRepositoryImpl implements HandwritingRepository {

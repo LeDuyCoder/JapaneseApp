@@ -38,9 +38,6 @@ class _CombinationTestView extends State<CombinationTestView>{
           return Container(
               color: Colors.white,
               width: MediaQuery.sizeOf(context).width,
-              height: MediaQuery.sizeOf(context).height -
-                  AppBar().preferredSize.height -
-                  30,
               child: SingleChildScrollView(
                 scrollDirection: Axis.vertical,
                 child: Column(

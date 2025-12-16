@@ -152,7 +152,6 @@ class SortTestCubit extends Cubit<SortTestState>{
         await readText(textSpeak, 0.5);
       }
     }
-
   }
 
 }

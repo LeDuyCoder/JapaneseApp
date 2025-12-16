@@ -1,12 +1,10 @@
 import 'package:flutter/services.dart';
 
 class HandwritingState {
-  final TextEditingValue input;
   final List<String> candidates;
   final bool loading;
 
   const HandwritingState({
-    this.input = const TextEditingValue(),
     this.candidates = const [],
     this.loading = false,
   });
@@ -17,9 +15,8 @@ class HandwritingState {
     bool? loading,
   }) {
     return HandwritingState(
-      input: input ?? this.input,
       candidates: candidates ?? this.candidates,
-      loading: loading ?? this.loading,
+      loading: loading ?? this.loading
     );
   }
 }

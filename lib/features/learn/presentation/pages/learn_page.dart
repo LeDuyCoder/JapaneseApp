@@ -17,8 +17,10 @@ import 'package:japaneseapp/features/learn/presentation/test_views/combination/v
 import 'package:japaneseapp/features/learn/presentation/test_views/listen/view/listen_test_view.dart';
 import 'package:japaneseapp/features/learn/presentation/test_views/sort/cubit/sort_test_state.dart';
 import 'package:japaneseapp/features/learn/presentation/test_views/sort/view/sort_test_view.dart';
+import 'package:japaneseapp/features/learn/presentation/test_views/speak/view/speak_test_view.dart';
 import 'package:japaneseapp/features/learn/presentation/test_views/write/view/write_test_view.dart';
 import 'package:japaneseapp/features/learn/presentation/widget/notification_popup_widget.dart';
+import 'package:japaneseapp/features/learn/presentation/widget/quit_tab.dart';
 
 class LearnPage extends StatelessWidget{
   final String nameTopic;
@@ -38,7 +40,7 @@ class LearnPage extends StatelessWidget{
             builder: (context, state){
               return Scaffold(
                 body: BlocProvider(
-                  create: (_) => ProgressCubit(),
+                  create: (_) => ProgressCubit(amountQuestion),
                   child: BlocBuilder<ProgressCubit, ProgressState>(
                     builder: (context, stateProgress) {
 
@@ -58,7 +60,10 @@ class LearnPage extends StatelessWidget{
                                   child: Row(
                                     children: [
                                       IconButton(
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          showModalBottomSheet(
+                                              context: context, builder: (ctx) => const QuitTab());
+                                        },
                                         icon: const Icon(Icons.close, size: 50),
                                       ),
                                       Expanded(
@@ -121,7 +126,11 @@ class LearnPage extends StatelessWidget{
                                           .increase();
                                     }, contextPage: context, wordEntity: state.testEntities[stateProgress.amount].wordEntity, wordEntities: state.listEntites, typeTest: Sorts.values[Random().nextInt(Sorts.values.length)]),
                                   if(state.testEntities[stateProgress.amount].testView == TestView.SpeakTestView)
-                                    Center(child: Text("SpeakTestView"),),
+                                    SpeakTestView(contextPage: context, wordEntity: state.testEntities[stateProgress.amount].wordEntity, onComplete: (){
+                                      context
+                                          .read<ProgressCubit>()
+                                          .increase();
+                                    },),
                                   if(state.testEntities[stateProgress.amount].testView == TestView.WriteTestView)
                                     WriteTestView(contextPage: context, wordEntity: state.testEntities[stateProgress.amount].wordEntity, onComplete: () {
                                       context
@@ -138,9 +147,6 @@ class LearnPage extends StatelessWidget{
                     },
                   ),
                 ),
-
-
-
               );
             },
             listener: (context, state){}
