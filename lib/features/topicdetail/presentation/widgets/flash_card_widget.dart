@@ -3,12 +3,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:japaneseapp/core/Service/GoogleTTSService.dart';
+import 'package:japaneseapp/features/topicdetail/domain/entities/word_entity.dart';
 
 class FlashCardWidget extends StatefulWidget {
 
-  final String word, mean, wayread;
+  final WordEntity wordEntity;
 
-  const FlashCardWidget({super.key, required this.word, required this.mean, required this.wayread});
+  const FlashCardWidget({super.key, required this.wordEntity});
 
 
   @override
@@ -108,7 +109,7 @@ class _FlashCardWidgetState extends State<FlashCardWidget> with SingleTickerProv
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: AutoSizeText(
-              widget.word,
+              widget.wordEntity.word,
               style: const TextStyle(
                 fontSize: 50,
                 color: Colors.black,
@@ -126,7 +127,7 @@ class _FlashCardWidgetState extends State<FlashCardWidget> with SingleTickerProv
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: AutoSizeText(
-              widget.wayread,
+              widget.wordEntity.wayread,
               style: const TextStyle(
                 fontSize: 25,
                 color: Colors.black,
@@ -146,8 +147,8 @@ class _FlashCardWidgetState extends State<FlashCardWidget> with SingleTickerProv
             children: [
               GestureDetector(
                 onTap: () async {
-                  if(await googleTTSService.speak(widget.wayread) != true){
-                    readText(widget.wayread, 0.5);
+                  if(await googleTTSService.speak(widget.wordEntity.word) != true){
+                    readText(widget.wordEntity.wayread, 0.5);
                   }
                 },
                 child: Container(
@@ -203,7 +204,7 @@ class _FlashCardWidgetState extends State<FlashCardWidget> with SingleTickerProv
           Container(
             width: 400,
             child: AutoSizeText(
-              widget.mean,
+              widget.wordEntity.mean,
               style: TextStyle(
                   fontSize: 35,
                   color: Colors.black,

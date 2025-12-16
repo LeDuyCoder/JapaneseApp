@@ -1,16 +1,23 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:japaneseapp/core/Theme/colors.dart';
-import 'package:japaneseapp/core/Widget/topicWidget.dart';
 import 'package:japaneseapp/core/generated/app_localizations.dart';
+import 'package:japaneseapp/features/dashboard/bloc/tabhome_bloc.dart';
+import 'package:japaneseapp/features/dashboard/bloc/tabhome_event.dart';
+import 'package:japaneseapp/features/dashboard/bloc/tabhome_state.dart';
+import 'package:japaneseapp/features/dashboard/presentaition/widgets/dashboard/topic_widget.dart';
 
 class TopicSection extends StatelessWidget{
+  final BuildContext contextDashboard;
   final List<Map<String, dynamic>> data;
 
-  const TopicSection({super.key, required this.data});
+  const TopicSection({super.key, required this.data, required this.contextDashboard});
 
   @override
   Widget build(BuildContext context) {
+    print(data);
+
     return Container(
       child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
@@ -18,11 +25,12 @@ class TopicSection extends StatelessWidget{
               ? Column(
               children: [
                 for (Map<String, dynamic> topicLocal in data)
-                  topicWidget(
+                  TopicWidget(
                     id: topicLocal["id"],
                     nameTopic: topicLocal["name"],
+                    owner: topicLocal["user"],
                     reloadDashBoard: () {
-
+                      contextDashboard.read<TabHomeBloc>().add(FetchTabHomeData());
                     },
                   ),
               ]

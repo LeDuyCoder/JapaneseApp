@@ -83,7 +83,7 @@ class _readTest extends State<readTest> with SingleTickerProviderStateMixin{
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
       final elapsed = _stopwatch.elapsed.inSeconds;
       if (elapsed >= 5) {
-        stopListening(handled: true); // auto stop sau 5 giây
+        stopListening(handled: true);
       } else {
         setState(() {
           _timeDisplay = _formatTime(_stopwatch.elapsed);
@@ -177,7 +177,6 @@ class _readTest extends State<readTest> with SingleTickerProviderStateMixin{
       );
     }
   }
-
 
   String _formatTime(Duration d) {
     String twoDigits(int n) => n.toString().padLeft(2, '0');
@@ -282,5 +281,4 @@ class _readTest extends State<readTest> with SingleTickerProviderStateMixin{
       ),
     );
   }
-
 }

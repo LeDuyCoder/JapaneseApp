@@ -17,7 +17,6 @@ import 'package:share_plus/share_plus.dart';
 
 import '../Service/Local/local_db_service.dart';
 import '../Service/Server/ServiceLocator.dart';
-import '../Widget/FlashCardWidget.dart';
 import '../generated/app_localizations.dart';
 
 class listWordScreen extends StatefulWidget{
@@ -925,165 +924,152 @@ class _listWordScreen extends State<listWordScreen>{
     showBottomSheetPrivateSuccess(context);
   }
 
-  void showFlashCardDialog(BuildContext context, String word, String mean, String wayread) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          backgroundColor: Colors.transparent,
-          insetPadding: EdgeInsets.all(20),
-          child: FlashCardWidget(word: word, mean: mean, wayread: wayread,),
-        );
-      },
-    );
-  }
-
-  Widget wordWidget(List<dynamic> listWord) {
-    return Column(
-      children: [
-        Table(
-          border: const TableBorder(
-            horizontalInside: BorderSide(width: 1, color: Colors.grey), // gạch ngang giữa các hàng
-          ),
-          columnWidths: const {
-            0: FlexColumnWidth(1.8), // cột 1 rộng hơn
-            1: FlexColumnWidth(1.5),
-            2: FlexColumnWidth(1.1),
-          },
-          defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-          children: [
-            // Header
-            TableRow(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  child: Text(
-                    AppLocalizations.of(context)!.listword_Screen_head_col1,
-                    style: TextStyle(
-                      color: AppColors.textSecond.withOpacity(0.5),
-                      fontSize: 18,
-                      fontFamily: "Itim",
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  child: Text(
-                    AppLocalizations.of(context)!.listword_Screen_head_col2,
-                    style: TextStyle(
-                      color: AppColors.textSecond.withOpacity(0.5),
-                      fontSize: 18,
-                      fontFamily: "Itim",
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  child: Center(
-                    child: Text(
-                      AppLocalizations.of(context)!.listword_Screen_head_col3,
-                      style: TextStyle(
-                        color: AppColors.textSecond.withOpacity(0.5),
-                        fontSize: 18,
-                        fontFamily: "Itim",
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-
-            // Body
-            for (dynamic wordItem in listWord[0])
-              TableRow(
-                children: [
-                  InkWell(
-                    onTap: () {
-                      showFlashCardDialog(context, wordItem["word"], wordItem["mean"], wordItem["wayread"]);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 12.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "${wordItem["word"]}",
-                            style: const TextStyle(
-                              color: AppColors.textSecond,
-                              fontSize: 18,
-                              fontFamily: "Itim",
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                          ),
-                          Text(
-                            "${wordItem["wayread"]}",
-                            style: const TextStyle(
-                              color: AppColors.textSecond,
-                              fontSize: 18,
-                              fontFamily: "Itim",
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  InkWell(
-                    onTap: () {
-                      showFlashCardDialog(context, wordItem["word"], wordItem["mean"], wordItem["wayread"]);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 12.0),
-                      child: Text(
-                        wordItem["mean"],
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                        style: const TextStyle(
-                          color: AppColors.textSecond,
-                          fontSize: 18,
-                          fontFamily: "Itim",
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  InkWell(
-                    onTap: () {
-                      showFlashCardDialog(context, wordItem["word"], wordItem["mean"], wordItem["wayread"]);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 12.0),
-                      child: (wordItem["level"] / 2) >= 100.0
-                          ? Text(
-                        AppLocalizations.of(context)!.listword_Screen_Learned,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: AppColors.textSucessState),
-                      )
-                          : Text(
-                        "${(wordItem["level"] / 2)}%",
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          color: AppColors.textSecond,
-                          fontSize: 18,
-                          fontFamily: "Itim",
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-          ],
-        )
-
-      ],
-    );
-  }
+  // Widget wordWidget(List<dynamic> listWord) {
+  //   return Column(
+  //     children: [
+  //       Table(
+  //         border: const TableBorder(
+  //           horizontalInside: BorderSide(width: 1, color: Colors.grey), // gạch ngang giữa các hàng
+  //         ),
+  //         columnWidths: const {
+  //           0: FlexColumnWidth(1.8), // cột 1 rộng hơn
+  //           1: FlexColumnWidth(1.5),
+  //           2: FlexColumnWidth(1.1),
+  //         },
+  //         defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+  //         children: [
+  //           // Header
+  //           TableRow(
+  //             children: [
+  //               Padding(
+  //                 padding: const EdgeInsets.symmetric(vertical: 12),
+  //                 child: Text(
+  //                   AppLocalizations.of(context)!.listword_Screen_head_col1,
+  //                   style: TextStyle(
+  //                     color: AppColors.textSecond.withOpacity(0.5),
+  //                     fontSize: 18,
+  //                     fontFamily: "Itim",
+  //                     fontWeight: FontWeight.bold,
+  //                   ),
+  //                 ),
+  //               ),
+  //               Padding(
+  //                 padding: const EdgeInsets.symmetric(vertical: 12),
+  //                 child: Text(
+  //                   AppLocalizations.of(context)!.listword_Screen_head_col2,
+  //                   style: TextStyle(
+  //                     color: AppColors.textSecond.withOpacity(0.5),
+  //                     fontSize: 18,
+  //                     fontFamily: "Itim",
+  //                     fontWeight: FontWeight.bold,
+  //                   ),
+  //                 ),
+  //               ),
+  //               Padding(
+  //                 padding: const EdgeInsets.symmetric(vertical: 12),
+  //                 child: Center(
+  //                   child: Text(
+  //                     AppLocalizations.of(context)!.listword_Screen_head_col3,
+  //                     style: TextStyle(
+  //                       color: AppColors.textSecond.withOpacity(0.5),
+  //                       fontSize: 18,
+  //                       fontFamily: "Itim",
+  //                       fontWeight: FontWeight.bold,
+  //                     ),
+  //                   ),
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //
+  //           // Body
+  //           for (dynamic wordItem in listWord[0])
+  //             TableRow(
+  //               children: [
+  //                 InkWell(
+  //                   onTap: () {
+  //                     showFlashCardDialog(context, wordItem["word"], wordItem["mean"], wordItem["wayread"]);
+  //                   },
+  //                   child: Padding(
+  //                     padding: const EdgeInsets.symmetric(vertical: 12.0),
+  //                     child: Column(
+  //                       crossAxisAlignment: CrossAxisAlignment.start,
+  //                       children: [
+  //                         Text(
+  //                           "${wordItem["word"]}",
+  //                           style: const TextStyle(
+  //                             color: AppColors.textSecond,
+  //                             fontSize: 18,
+  //                             fontFamily: "Itim",
+  //                           ),
+  //                           overflow: TextOverflow.ellipsis,
+  //                           maxLines: 1,
+  //                         ),
+  //                         Text(
+  //                           "${wordItem["wayread"]}",
+  //                           style: const TextStyle(
+  //                             color: AppColors.textSecond,
+  //                             fontSize: 18,
+  //                             fontFamily: "Itim",
+  //                           ),
+  //                           overflow: TextOverflow.ellipsis,
+  //                           maxLines: 1,
+  //                         ),
+  //                       ],
+  //                     ),
+  //                   ),
+  //                 ),
+  //
+  //                 InkWell(
+  //                   onTap: () {
+  //                     showFlashCardDialog(context, wordItem["word"], wordItem["mean"], wordItem["wayread"]);
+  //                   },
+  //                   child: Padding(
+  //                     padding: const EdgeInsets.symmetric(vertical: 12.0),
+  //                     child: Text(
+  //                       wordItem["mean"],
+  //                       overflow: TextOverflow.ellipsis,
+  //                       maxLines: 1,
+  //                       style: const TextStyle(
+  //                         color: AppColors.textSecond,
+  //                         fontSize: 18,
+  //                         fontFamily: "Itim",
+  //                       ),
+  //                     ),
+  //                   ),
+  //                 ),
+  //
+  //                 InkWell(
+  //                   onTap: () {
+  //                     showFlashCardDialog(context, wordItem["word"], wordItem["mean"], wordItem["wayread"]);
+  //                   },
+  //                   child: Padding(
+  //                     padding: const EdgeInsets.symmetric(vertical: 12.0),
+  //                     child: (wordItem["level"] / 2) >= 100.0
+  //                         ? Text(
+  //                       AppLocalizations.of(context)!.listword_Screen_Learned,
+  //                       textAlign: TextAlign.center,
+  //                       style: TextStyle(color: AppColors.textSucessState),
+  //                     )
+  //                         : Text(
+  //                       "${(wordItem["level"] / 2)}%",
+  //                       textAlign: TextAlign.center,
+  //                       style: const TextStyle(
+  //                         color: AppColors.textSecond,
+  //                         fontSize: 18,
+  //                         fontFamily: "Itim",
+  //                       ),
+  //                     ),
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //         ],
+  //       )
+  //
+  //     ],
+  //   );
+  // }
 
   Widget wordWidgetLoading() {
     return Column(
@@ -1190,7 +1176,7 @@ class _listWordScreen extends State<listWordScreen>{
             
 
             if(owner == FirebaseAuth.instance.currentUser!.displayName){
-              if(topic.hasData){;
+              if(topic.hasData){
                 return IconButton(onPressed: (){
                   showBottomSheetPrivate(context);
                 }, icon: Icon(Icons.public_sharp, color: AppColors.primary,));
@@ -1318,42 +1304,41 @@ class _listWordScreen extends State<listWordScreen>{
                       maxHeight: MediaQuery.sizeOf(context).height / 1.8,
                     ),
                     child: SingleChildScrollView(
-                      child: wordWidget(snapshot.data!), // table hoặc column của bạn
                     ),
                   ),
                 ),
                 SizedBox(height: 20,),
                 GestureDetector(
                     onTapUp: (event) {
-                      setState(() {
-                        isPressButton = false;
-                      });
+                setState(() {
+                isPressButton = false;
+                });
 
-                      List<word> dataWords = [];
-                      for (Map<String, dynamic> wordData in snapshot.data![0]) {
-                        dataWords.add(
-                          word(
-                            wordData["word"],
-                            wordData["wayread"],
-                            wordData["mean"],
-                            wordData["topic"],
-                            wordData["level"],
-                          ),
-                        );
-                      }
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (ctx) => learnScreen(
-                            dataWords: dataWords,
-                            topic: widget.topicName,
-                            reload: () {
-                              setState(() {});
-                            },
-                          ),
-                        ),
-                      );
-                    },
+                List<word> dataWords = [];
+                for (Map<String, dynamic> wordData in snapshot.data![0]) {
+                dataWords.add(
+                word(
+                wordData["word"],
+                wordData["wayread"],
+                wordData["mean"],
+                wordData["topic"],
+                wordData["level"],
+                ),
+                );
+                }
+                Navigator.push(
+                context,
+                MaterialPageRoute(
+                builder: (ctx) => learnScreen(
+                dataWords: dataWords,
+                topic: widget.topicName,
+                reload: () {
+                setState(() {});
+                },
+                ),
+                ),
+                );
+                },
                   child: Container(
                     width: MediaQuery.sizeOf(context).width,
                     margin: const EdgeInsets.only(left: 40, right: 40),

@@ -2,28 +2,27 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:japaneseapp/core/Screen/listWordScreen.dart';
+import 'package:japaneseapp/core/Service/Local/local_db_service.dart';
 import 'package:japaneseapp/core/Theme/colors.dart';
+import 'package:japaneseapp/core/generated/app_localizations.dart';
+import 'package:japaneseapp/features/topicdetail/presentation/pages/topicdetail_page.dart';
 
-import '../Service/Local/local_db_service.dart';
-import '../generated/app_localizations.dart';
-
-class topicWidget extends StatefulWidget{
+class TopicWidget extends StatefulWidget{
   final String nameTopic;
   final String id;
+  final String owner;
   final void Function() reloadDashBoard;
 
-  const topicWidget({super.key, required this.nameTopic, required this.reloadDashBoard, required this.id});
+  const TopicWidget({super.key, required this.nameTopic, required this.reloadDashBoard, required this.id, required this.owner});
 
   @override
   State<StatefulWidget> createState() => _topicWidget();
 }
 
-class _topicWidget extends State<topicWidget>{
+class _topicWidget extends State<TopicWidget>{
 
   AutoSizeGroup textGroup = AutoSizeGroup();
 
-
-  //function to handle data of topic which have amount word, processal finished
   Future<List<dynamic>> handledComplited () async {
     double sumComplitted = 0.0;
     double progressComplited = 0.0;
@@ -49,7 +48,6 @@ class _topicWidget extends State<topicWidget>{
   }
 
 
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(future: handledComplited(), builder: (context, snapshot){
@@ -57,17 +55,13 @@ class _topicWidget extends State<topicWidget>{
         return Padding(
           padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
           child: GestureDetector(
-            onTap: (){
-              Navigator.push(
+            onTap: () async {
+              await Navigator.push(
                 context,
                 PageRouteBuilder(
                   transitionDuration: const Duration(milliseconds: 500),
-                  pageBuilder: (context, animation, secondaryAnimation) => listWordScreen(
-                    id: widget.id,
-                    topicName: widget.nameTopic,
-                    reloadDashboard: () {
-                      widget.reloadDashBoard();
-                    },
+                  pageBuilder: (context, animation, secondaryAnimation) => TopicDetailPage(
+                    nameTopic: widget.nameTopic, idTopic: widget.id, owner: widget.owner,
                   ),
                   transitionsBuilder: (context, animation, secondaryAnimation, child) {
                     final offsetAnimation = Tween<Offset>(
@@ -81,6 +75,7 @@ class _topicWidget extends State<topicWidget>{
                   },
                 ),
               );
+              widget.reloadDashBoard();
             },
             child: Container(
               child: Stack(
