@@ -12,9 +12,7 @@ class RewardedAdServiceImpl implements RewardedAdService {
 
   @override
   Future<AdResult> show() async {
-    if (_rewardedAd == null && !_isLoading) {
-      await _loadAd();
-    }
+    _rewardedAd ??= await _loadAd();
 
     if (_rewardedAd == null) {
       return AdResult.failed;
@@ -22,23 +20,22 @@ class RewardedAdServiceImpl implements RewardedAdService {
 
     final completer = Completer<AdResult>();
 
-    _rewardedAd!.fullScreenContentCallback =
-        FullScreenContentCallback(
-          onAdDismissedFullScreenContent: (ad) {
-            ad.dispose();
-            _rewardedAd = null;
-            if (!completer.isCompleted) {
-              completer.complete(AdResult.skipped);
-            }
-          },
-          onAdFailedToShowFullScreenContent: (ad, error) {
-            ad.dispose();
-            _rewardedAd = null;
-            if (!completer.isCompleted) {
-              completer.complete(AdResult.failed);
-            }
-          },
-        );
+    _rewardedAd!.fullScreenContentCallback = FullScreenContentCallback(
+      onAdDismissedFullScreenContent: (ad) {
+        ad.dispose();
+        _rewardedAd = null;
+        if (!completer.isCompleted) {
+          completer.complete(AdResult.skipped);
+        }
+      },
+      onAdFailedToShowFullScreenContent: (ad, error) {
+        ad.dispose();
+        _rewardedAd = null;
+        if (!completer.isCompleted) {
+          completer.complete(AdResult.failed);
+        }
+      },
+    );
 
     _rewardedAd!.show(
       onUserEarnedReward: (_, __) {
@@ -51,23 +48,32 @@ class RewardedAdServiceImpl implements RewardedAdService {
     return completer.future;
   }
 
-  Future<void> _loadAd() async {
-    _isLoading = true;
 
-    await RewardedAd.load(
+  Future<RewardedAd?> _loadAd() async {
+    if (_isLoading) return null;
+
+    _isLoading = true;
+    final completer = Completer<RewardedAd?>();
+
+    RewardedAd.load(
       adUnitId: Config.admodRewardId,
       request: const AdRequest(),
       rewardedAdLoadCallback: RewardedAdLoadCallback(
         onAdLoaded: (ad) {
           _rewardedAd = ad;
           _isLoading = false;
+          completer.complete(ad);
         },
         onAdFailedToLoad: (error) {
           _rewardedAd = null;
           _isLoading = false;
+          completer.complete(null);
         },
       ),
     );
+
+    return completer.future;
   }
+
 }
 

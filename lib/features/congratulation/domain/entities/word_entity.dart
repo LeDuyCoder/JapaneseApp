@@ -1,6 +1,4 @@
-import 'package:equatable/equatable.dart';
-
-class WordEntity extends Equatable{
+class WordEntity {
   final String word;
   final String mean;
   final String wayread;
@@ -14,9 +12,6 @@ class WordEntity extends Equatable{
     required this.topic,
     required this.level,
   });
-
-  @override
-  List<Object> get props => [word, mean, wayread, topic, level];
 
   Map<String, dynamic> toJson() {
     return {

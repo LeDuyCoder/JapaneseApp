@@ -6,6 +6,8 @@ class CongratulationInitial extends CongratulationState{}
 
 class CongratulationLoading extends CongratulationState{}
 
+class CongratulationLoadingAds extends CongratulationState{}
+
 class CongratulationLoaded extends CongratulationState{
   final int level;
   final int exp;

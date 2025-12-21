@@ -8,6 +8,8 @@ import 'package:japaneseapp/features/topicdetail/data/models/word_model.dart';
 import 'package:japaneseapp/features/topicdetail/domain/entities/word_entity.dart';
 import 'package:japaneseapp/features/topicdetail/presentation/widgets/word_widget.dart';
 
+import 'package:japaneseapp/features/congratulation/domain/entities/word_entity.dart' as WordEntityCongratulation;
+
 class BoxTopicDetailWidget extends StatelessWidget{
   final String topicName;
   final List<WordModel> words;
@@ -56,8 +58,7 @@ class BoxTopicDetailWidget extends StatelessWidget{
           SizedBox(height: 20,),
           GestureDetector(
             onTapUp: (event) {
-              //Navigator.push(context, MaterialPageRoute(builder: (context)=>LearnPage(nameTopic: topicName)));
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>CongratulationPage(correctAnswer: 3, inCorrectAnswer: 2, totalQuestion: 5)));
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>LearnPage(nameTopic: topicName)));
             },
             child: Container(
               width: MediaQuery.sizeOf(context).width,

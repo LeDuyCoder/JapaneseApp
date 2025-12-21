@@ -9,17 +9,20 @@ import 'package:japaneseapp/features/congratulation/bloc/congratulation_state.da
 import 'package:japaneseapp/features/congratulation/data/datasource/user_progress_local_datasource.dart';
 import 'package:japaneseapp/features/congratulation/data/datasource/user_remote_datasource.dart';
 import 'package:japaneseapp/features/congratulation/data/repositories/user_progress_repository_impl.dart';
+import 'package:japaneseapp/features/congratulation/domain/entities/word_entity.dart';
 
 class CongratulationPage extends StatefulWidget {
   final int correctAnswer;
   final int inCorrectAnswer;
   final int totalQuestion;
+  final List<WordEntity> words;
 
   CongratulationPage(
       {super.key,
       required this.correctAnswer,
       required this.inCorrectAnswer,
-      required this.totalQuestion});
+      required this.totalQuestion,
+      required this.words});
 
   @override
   State<StatefulWidget> createState() => _CongratulationPage();
@@ -29,6 +32,8 @@ class _CongratulationPage extends State<CongratulationPage>
     with TickerProviderStateMixin {
   late AnimationController _controllerProcess;
   late Animation<double> _animationProcess;
+  bool loadingAds = false;
+  bool watchedAds = false;
 
   @override
   void initState() {
@@ -62,9 +67,11 @@ class _CongratulationPage extends State<CongratulationPage>
           widget.inCorrectAnswer,
           widget.totalQuestion)
         ..add(CongratulationStarted(
-            widget.correctAnswer, widget.inCorrectAnswer)),
+            widget.correctAnswer, widget.inCorrectAnswer, widget.words)),
       child: BlocConsumer<CongratulationBloc, CongratulationState>(
           builder: (context, state) {
+            final bloc = context.read<CongratulationBloc>();
+
             if (state is CongratulationLoaded) {
               startProgressAnimation((state.exp + state.expPlus) / state.nextExp);
               return Scaffold(
@@ -101,17 +108,14 @@ class _CongratulationPage extends State<CongratulationPage>
                                           color: Colors.red,
                                           boxShadow: [
                                             BoxShadow(
-                                              color:
-                                                  Colors.red.withOpacity(0.6),
-                                              // màu glow
+                                              color: Colors.red.withOpacity(0.6),
                                               spreadRadius: 1,
-                                              // độ lan của ánh sáng
                                               blurRadius: 15, // độ mờ
                                             ),
                                           ],
                                         ),
                                         child: const Icon(
-                                          HeroIcons.trophy, // icon bên trong
+                                          HeroIcons.trophy,
                                           color: Colors.white,
                                           size: 40,
                                         ),
@@ -176,7 +180,6 @@ class _CongratulationPage extends State<CongratulationPage>
                                                 ),
                                                 Text(
                                                   "00:25",
-                                                  //formatTime(widget.timeTest * 1.0),
                                                   style: TextStyle(
                                                     color: AppColors.primary,
                                                     fontFamily: "itim",
@@ -422,81 +425,97 @@ class _CongratulationPage extends State<CongratulationPage>
                                       GestureDetector(
                                         onTap: () async
                                         {
-                                          bool watched = await showDialog<bool>(
-                                            context: context,
-                                            builder: (context) {
-                                              return AlertDialog(
-                                                backgroundColor: Colors.white,
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius
-                                                      .circular(20),
-                                                ),
-                                                title: const Text(
-                                                    "🎉 X2 Kujicoin?"),
-                                                content: Column(
-                                                  mainAxisSize: MainAxisSize
-                                                      .min,
-                                                  crossAxisAlignment: CrossAxisAlignment
-                                                      .start,
-                                                  children: [
-                                                    Center(
-                                                      child: Image.asset("assets/character/hinh13.png", width: 200, height: 200),
-                                                    ),
-                                                    const Text(
-                                                      "Bạn có muốn xem quảng cáo để x2 số Kujicoin nhận được không? 💰",
-                                                      style: TextStyle(
-                                                          fontSize: 16,
-                                                          height: 1.4),
-                                                    ),
-                                                    const SizedBox(height: 20),
+                                          if(!watchedAds){
+                                            showDialog<bool>(
+                                              context: context,
+                                              builder: (context) {
+                                                return AlertDialog(
+                                                  backgroundColor: Colors.white,
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius
+                                                        .circular(20),
+                                                  ),
+                                                  title: const Text(
+                                                      "🎉 X2 Kujicoin?"),
+                                                  content: Column(
+                                                    mainAxisSize: MainAxisSize
+                                                        .min,
+                                                    crossAxisAlignment: CrossAxisAlignment
+                                                        .start,
+                                                    children: [
+                                                      Center(
+                                                        child: Image.asset("assets/character/hinh13.png", width: 200, height: 200),
+                                                      ),
+                                                      const Text(
+                                                        "Bạn có muốn xem quảng cáo để x2 số Kujicoin nhận được không? 💰",
+                                                        style: TextStyle(
+                                                            fontSize: 16,
+                                                            height: 1.4),
+                                                      ),
+                                                      const SizedBox(height: 20),
 
-                                                    /// 👇 ACTIONS – luôn nằm ngang
-                                                    Row(
-                                                      mainAxisAlignment: MainAxisAlignment.end,
-                                                      children: [
-                                                        ElevatedButton.icon(
-                                                          style: ElevatedButton.styleFrom(
-                                                            backgroundColor: Colors.grey.shade300,
-                                                            foregroundColor: Colors.black,
-                                                            shape: RoundedRectangleBorder(
-                                                              borderRadius: BorderRadius.circular(12),
+                                                      /// 👇 ACTIONS – luôn nằm ngang
+                                                      Row(
+                                                        mainAxisAlignment: MainAxisAlignment.end,
+                                                        children: [
+                                                          ElevatedButton.icon(
+                                                            style: ElevatedButton.styleFrom(
+                                                                backgroundColor: Colors.grey.shade300,
+                                                                foregroundColor: Colors.black,
+                                                                shape: RoundedRectangleBorder(
+                                                                  borderRadius: BorderRadius.circular(12),
+                                                                ),
+                                                                padding: const EdgeInsets.symmetric(
+                                                                  horizontal: 20,
+                                                                  vertical: 12,
+                                                                )
                                                             ),
-                                                            padding: const EdgeInsets.symmetric(
-                                                              horizontal: 20,
-                                                              vertical: 12,
-                                                            )
+                                                            onPressed: (){
+                                                              Navigator.pop(context);
+                                                              Navigator.pop(context);
+                                                              Navigator.pop(context);
+                                                            },
+                                                            icon: const Icon(Icons.close),
+                                                            label: const Text("Hủy"),
                                                           ),
-                                                          onPressed: () => Navigator.pop(context, false),
-                                                          icon: const Icon(Icons.close),
-                                                          label: const Text("Hủy"),
-                                                        ),
-                                                        const SizedBox(width: 12),
-                                                        ElevatedButton.icon(
-                                                          style: ElevatedButton.styleFrom(
-                                                            backgroundColor: Colors.amber.shade700,
-                                                            foregroundColor: Colors.white,
-                                                            shape: RoundedRectangleBorder(
-                                                              borderRadius: BorderRadius.circular(12),
+                                                          const SizedBox(width: 12),
+                                                          ElevatedButton.icon(
+                                                            style: ElevatedButton.styleFrom(
+                                                              backgroundColor: Colors.amber.shade700,
+                                                              foregroundColor: Colors.white,
+                                                              shape: RoundedRectangleBorder(
+                                                                borderRadius: BorderRadius.circular(12),
+                                                              ),
+                                                              padding: const EdgeInsets.symmetric(
+                                                                horizontal: 20,
+                                                                vertical: 12,
+                                                              ),
                                                             ),
-                                                            padding: const EdgeInsets.symmetric(
-                                                              horizontal: 20,
-                                                              vertical: 12,
-                                                            ),
-                                                          ),
-                                                          onPressed: () => Navigator.pop(context, true),
-                                                          icon: const Icon(Icons.play_circle_fill),
-                                                          label: const Text("Xem Quảng Cáo"),
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ],
-                                                ),
-                                              );
-                                            },
-                                          ) ?? false;
+                                                            onPressed: (){
+                                                              bloc.add(ShowAdsRewardEvent(
+                                                                  state.coinPlus,
+                                                                  state.expRankPlus,
+                                                                  state.expPlus
+                                                              ));
+
+                                                              loadingAds = true;
+                                                            },
+                                                            icon: const Icon(Icons.play_circle_fill),
+                                                            label: const Text("Xem Quảng Cáo"),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                );
+                                              },
+                                            );
+                                          }else{
+                                            Navigator.pop(context);
+                                          }
                                         },
 
-                                          // onTap: () async {
+                                        // onTap: () async {
                                         //   // 1️⃣ Hiển thị popup hỏi người dùng
                                         //   bool watchAd =
                                         //
@@ -589,9 +608,46 @@ class _CongratulationPage extends State<CongratulationPage>
                 ),
               );
             }
-            return Container();
+            return Container(
+              color: Colors.white,
+            );
           },
-          listener: (context, state) {}),
+          listener: (context, state) {
+            if(state is CongratulationLoadingAds){
+              showDialog(
+                context: context,
+                barrierDismissible: true,
+                builder: (context) {
+                  return AlertDialog(
+                    backgroundColor: Colors.white,
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Center(
+                          child: Image.asset("assets/character/hinh12.png", width: 200, height: 200),
+                        ),
+                        const Center(
+                          child: CircularProgressIndicator(
+                            color: AppColors.primary,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                      ],
+                    ),
+                  );
+                },
+              );
+            }
+            else{
+              if(loadingAds){
+                Navigator.pop(context);
+                Navigator.pop(context);
+                loadingAds = false;
+                watchedAds = true;
+              }
+            }
+          }),
     );
   }
 }

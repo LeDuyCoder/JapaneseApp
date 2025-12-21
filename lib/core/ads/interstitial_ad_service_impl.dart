@@ -10,13 +10,7 @@ class InterstitialAdServiceImpl implements InterstitialAdService {
 
   @override
   Future<bool> show() async {
-    if (_interstitialAd == null && !_isLoading) {
-      await _loadAd();
-    }
-
-    if (_interstitialAd == null) {
-      return false;
-    }
+    _interstitialAd ??= await _loadAd();
 
     final completer = Completer<bool>();
 
@@ -43,23 +37,30 @@ class InterstitialAdServiceImpl implements InterstitialAdService {
     return completer.future;
   }
 
-  Future<void> _loadAd() async {
-    _isLoading = true;
+  Future<InterstitialAd?> _loadAd() async {
+    if (_isLoading) return null;
 
-    await InterstitialAd.load(
-      adUnitId: Config.admodId, // test / production id
+    _isLoading = true;
+    final completer = Completer<InterstitialAd?>();
+
+    InterstitialAd.load(
+      adUnitId: Config.admodId,
       request: const AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (ad) {
           _interstitialAd = ad;
           _isLoading = false;
           ad.setImmersiveMode(true);
+          completer.complete(ad);
         },
         onAdFailedToLoad: (error) {
           _interstitialAd = null;
           _isLoading = false;
+          completer.complete(null);
         },
       ),
     );
+
+    return completer.future;
   }
 }
