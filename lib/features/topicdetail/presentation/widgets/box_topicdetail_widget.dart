@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:japaneseapp/core/Theme/colors.dart';
 import 'package:japaneseapp/core/generated/app_localizations.dart';
+import 'package:japaneseapp/features/congratulation/presentation/pages/congratulation_page.dart';
 import 'package:japaneseapp/features/learn/presentation/pages/learn_page.dart';
 import 'package:japaneseapp/features/topicdetail/data/models/word_model.dart';
 import 'package:japaneseapp/features/topicdetail/domain/entities/word_entity.dart';
@@ -55,7 +56,8 @@ class BoxTopicDetailWidget extends StatelessWidget{
           SizedBox(height: 20,),
           GestureDetector(
             onTapUp: (event) {
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>LearnPage(nameTopic: topicName)));
+              //Navigator.push(context, MaterialPageRoute(builder: (context)=>LearnPage(nameTopic: topicName)));
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>CongratulationPage(correctAnswer: 3, inCorrectAnswer: 2, totalQuestion: 5)));
             },
             child: Container(
               width: MediaQuery.sizeOf(context).width,
