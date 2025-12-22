@@ -43,12 +43,12 @@ class AppSection extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => featureScreen(userModel: user!, reload: () {},
-                      )));
-                        },
+              // Navigator.push(
+              //     context,
+              //     MaterialPageRoute(
+              //         builder: (context) => featureScreen(userModel: user!, reload: () {},
+              //         )));
+            },
             child: SizedBox(
               width: 80,
               height: 80,

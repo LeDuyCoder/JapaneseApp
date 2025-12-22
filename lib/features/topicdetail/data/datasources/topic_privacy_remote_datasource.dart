@@ -1,9 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:japaneseapp/core/Module/WordModule.dart';
-import 'package:japaneseapp/core/Module/topic.dart';
-import 'package:japaneseapp/core/Service/Local/local_db_service.dart';
-import 'package:japaneseapp/core/Service/Server/ServiceLocator.dart';
+import 'package:japaneseapp/core/module/topic_module.dart';
+import 'package:japaneseapp/core/module/word_module.dart';
+
+import 'package:japaneseapp/core/service/Local/local_db_service.dart';
+import 'package:japaneseapp/core/service/Server/ServiceLocator.dart';
+import 'package:japaneseapp/features/topicdetail/domain/entities/word_entity.dart';
+import 'package:japaneseapp/features/topicdetail/domain/entities/topic_entity.dart';
 
 abstract class TopicPrivacyRemoteDataSource{
   Future<bool> isTopicPrivate(String idTopic);
@@ -17,17 +19,19 @@ class TopicPrivacyRemoteDataSourceImpl implements TopicPrivacyRemoteDataSource{
     List<Map<String, dynamic>> data = await db.topicDao.getAllWordbyTopic(nameTopic);
     User user = FirebaseAuth.instance.currentUser!;
 
-    topic TopicPulic = new topic(id: idTopic, name: nameTopic, owner: user.providerData[0].displayName, count: 0);
-    await ServiceLocator.topicService.insertTopic(TopicPulic);
+    TopicEntity TopicPulic = new TopicEntity(id: idTopic, name: nameTopic, owner: user.providerData[0].displayName, count: 0);
+
+    await ServiceLocator.topicService.insertTopic(TopicModule.fromJson(TopicPulic.toJson()));
 
     List<Word> listWordPulics = [];
     for(Map<String, dynamic> word in data){
+
       listWordPulics.add(new Word(
           word: word["word"],
           mean: word["mean"],
           wayread: word["wayread"],
           level: 0,
-          topicID: idTopic
+          topicID: idTopic,
       ));
     }
 
@@ -41,8 +45,7 @@ class TopicPrivacyRemoteDataSourceImpl implements TopicPrivacyRemoteDataSource{
 
   @override
   Future<bool> isTopicPrivate(String idTopic) async {
-    topic? isTopic = await ServiceLocator.topicService.getDataTopicByID(idTopic).timeout(Duration(seconds: 10));
-    print(isTopic);
+    TopicModule? isTopic = await ServiceLocator.topicService.getDataTopicByID(idTopic).timeout(Duration(seconds: 10));
     return isTopic == null;
   }
 

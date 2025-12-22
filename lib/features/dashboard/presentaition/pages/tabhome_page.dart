@@ -58,7 +58,7 @@ class TabHomePage extends StatelessWidget {
                                   Navigator.push(
                                     context,
                                     PageRouteBuilder(
-                                      pageBuilder: (context, animation, secondaryAnimation) => allFolderScreen(),
+                                      pageBuilder: (context, animation, secondaryAnimation) => Container(),//allFolderScreen(),
                                       transitionsBuilder: (context, animation, secondaryAnimation, child) {
                                         const begin = Offset(1.0, 0.0);
                                         const end = Offset.zero;
@@ -95,7 +95,7 @@ class TabHomePage extends StatelessWidget {
                                   Navigator.push(
                                     context,
                                     PageRouteBuilder(
-                                      pageBuilder: (context, animation, secondaryAnimation) => seeMoreTopic(reloadScreen: (){}),
+                                      pageBuilder: (context, animation, secondaryAnimation) => Container(),//seeMoreTopic(reloadScreen: (){}),
                                       transitionsBuilder: (context, animation, secondaryAnimation, child) {
                                         const begin = Offset(1.0, 0.0);
                                         const end = Offset.zero;
@@ -166,7 +166,9 @@ class TabHomePage extends StatelessWidget {
               );
             }
             if (state is TabHomeError) {
-              return Container();
+              return Container(
+                child: Text(state.message),
+              );
             }
             return Container();
           },

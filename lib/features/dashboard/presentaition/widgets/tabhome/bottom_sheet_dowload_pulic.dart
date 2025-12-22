@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:japaneseapp/core/Module/WordModule.dart';
-import 'package:japaneseapp/core/Module/topic.dart';
-import 'package:japaneseapp/core/Module/word.dart';
 import 'package:japaneseapp/core/Screen/downloadScreen.dart';
-import 'package:japaneseapp/core/Service/Local/local_db_service.dart';
+import 'package:japaneseapp/core/module/topic_module.dart';
+import 'package:japaneseapp/core/module/word_module.dart';
+import 'package:japaneseapp/core/service/Local/local_db_service.dart';
 import 'package:japaneseapp/core/generated/app_localizations.dart';
+import 'package:japaneseapp/features/dashboard/domain/models/word_entity.dart';
 import 'package:japaneseapp/features/dashboard/presentaition/widgets/tabhome/rename_topic_dialog.dart';
 
-import '../../../../../core/Service/Server/ServiceLocator.dart' show ServiceLocator;
+import '../../../../../core/service/Server/ServiceLocator.dart' show ServiceLocator;
 
 class BottomSheetDownloadPublic extends StatelessWidget {
   final String id;
@@ -24,9 +24,7 @@ class BottomSheetDownloadPublic extends StatelessWidget {
     final db = LocalDbService.instance;
     String? nameTopicTemp = "";
 
-    topic? Topic = await ServiceLocator.topicService.getDataTopicByID(id);
-
-    print(Topic);
+    TopicModule? Topic = await ServiceLocator.topicService.getDataTopicByID(id);
 
     nameTopicTemp = Topic!.name;
     List<Map<String, dynamic>> dataWords = [];
@@ -39,7 +37,7 @@ class BottomSheetDownloadPublic extends StatelessWidget {
       List<Word> listWord = await ServiceLocator.wordService.fetchWordsByTopicID(id);
       for(Word wordDB in listWord){
         dataWords.add(
-            new word(wordDB.word, wordDB.wayread, wordDB.mean, nameTopic==""?Topic.name:nameTopic, 0).toMap()
+            WordEntity(word: wordDB.word, wayread: wordDB.wayread, mean: wordDB.mean, topic: nameTopic==""?Topic.name:nameTopic, level: 0).toJson()
         );
       }
 

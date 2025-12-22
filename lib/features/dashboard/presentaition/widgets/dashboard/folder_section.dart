@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:japaneseapp/core/Widget/folerWidget.dart';
-import '../../../domain/models/folder_model.dart';
+import 'package:japaneseapp/features/dashboard/presentaition/widgets/dashboard/foler_widget.dart';
 
 class FolderSection extends StatelessWidget {
   final List<Map<String,dynamic>> folders;
@@ -17,7 +16,7 @@ class FolderSection extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         children: [
           for (var f in folders)
-            folderWidget(idFolder: f["id"], nameFolder: f["namefolder"]!, reloadDashboard: (){}, dateCreated: f["datefolder"], amountTopic: f["amountTopic"],),
+            FolderWidget(idFolder: f["id"], nameFolder: f["namefolder"]!, reloadDashboard: (){}, dateCreated: f["datefolder"], amountTopic: f["amountTopic"],),
         ],
       ),
     );

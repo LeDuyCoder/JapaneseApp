@@ -5,9 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:japaneseapp/core/Service/GoogleTTSService.dart';
-import 'package:japaneseapp/core/Widget/learnWidget/sortText.dart';
 import 'package:japaneseapp/features/learn/presentation/test_views/sort/cubit/sort_test_state.dart';
-
 import 'package:japaneseapp/features/learn/domain/entities/word_entity.dart';
 import 'package:japaneseapp/features/learn/presentation/widget/result_popup_widget.dart';
 

@@ -6,10 +6,12 @@ class FolderModel {
 
   FolderModel({required this.id, required this.name, required this.dateCreated, required this.amountTopic});
 
-  factory FolderModel.fromMap(Map<String, dynamic> m) => FolderModel(
-    id: m['id'],
-    name: m['namefolder'],
-    dateCreated: m['datefolder'],
-    amountTopic: m['amountTopic'] ?? 0,
-  );
+  factory FolderModel.fromMap(Map<String, dynamic> m){
+    return FolderModel(
+      id: m['id'],
+      name: m['namefolder'],
+      dateCreated: m['datefolder'],
+      amountTopic: m['amountTopic'] ?? 0,
+    );
+  }
 }

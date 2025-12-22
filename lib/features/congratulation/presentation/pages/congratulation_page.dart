@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:japaneseapp/core/Theme/colors.dart';
+import 'package:japaneseapp/features/ads/presentation/cubit/AdsCubit.dart';
 import 'package:japaneseapp/features/congratulation/bloc/congratulation_bloc.dart';
 import 'package:japaneseapp/features/congratulation/bloc/congratulation_event.dart';
 import 'package:japaneseapp/features/congratulation/bloc/congratulation_state.dart';
@@ -71,6 +72,7 @@ class _CongratulationPage extends State<CongratulationPage>
       child: BlocConsumer<CongratulationBloc, CongratulationState>(
           builder: (context, state) {
             final bloc = context.read<CongratulationBloc>();
+            final blocCubit = context.read<AdsCubit>();
 
             if (state is CongratulationLoaded) {
               startProgressAnimation((state.exp + state.expPlus) / state.nextExp);
@@ -470,7 +472,10 @@ class _CongratulationPage extends State<CongratulationPage>
                                                                   vertical: 12,
                                                                 )
                                                             ),
-                                                            onPressed: (){
+                                                            onPressed: () async {
+
+                                                              await blocCubit.tryShowRewarded();
+
                                                               Navigator.pop(context);
                                                               Navigator.pop(context);
                                                               Navigator.pop(context);
