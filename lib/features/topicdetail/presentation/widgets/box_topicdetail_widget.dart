@@ -2,10 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:japaneseapp/core/Theme/colors.dart';
 import 'package:japaneseapp/core/generated/app_localizations.dart';
+import 'package:japaneseapp/features/congratulation/presentation/pages/congratulation_page.dart';
 import 'package:japaneseapp/features/learn/presentation/pages/learn_page.dart';
 import 'package:japaneseapp/features/topicdetail/data/models/word_model.dart';
 import 'package:japaneseapp/features/topicdetail/domain/entities/word_entity.dart';
 import 'package:japaneseapp/features/topicdetail/presentation/widgets/word_widget.dart';
+
+import 'package:japaneseapp/features/congratulation/domain/entities/word_entity.dart' as WordEntityCongratulation;
 
 class BoxTopicDetailWidget extends StatelessWidget{
   final String topicName;

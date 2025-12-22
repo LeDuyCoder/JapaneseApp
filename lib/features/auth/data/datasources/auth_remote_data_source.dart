@@ -121,8 +121,8 @@ class AuthRemoteDataSource {
       return new UserModel(id: user!.uid, email: user.email??'', name: user.displayName);
 
 
-    } on FirebaseAuthException catch (e) {
-      throw new Exception("Email hoặc Mật Khẩu Không Đúng");
+    } on FirebaseAuthException catch (exception) {
+      throw Exception("Email hoặc Mật Khẩu Không Đúng");
     }
   }
 

@@ -5,7 +5,6 @@ import 'package:japaneseapp/core/Service/Server/ServiceLocator.dart';
 import 'package:japaneseapp/core/Theme/colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../Service/FunctionService.dart';
 import '../Service/Local/local_db_service.dart';
 import '../generated/app_localizations.dart';
 

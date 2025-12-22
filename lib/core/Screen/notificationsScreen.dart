@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:japaneseapp/core/Module/notification.dart';
+import 'package:japaneseapp/core/module/notification.dart';
 import 'package:japaneseapp/core/Screen/detailsNotificationScreen.dart';
 import 'package:japaneseapp/core/Service/Local/local_db_service.dart';
 import 'package:japaneseapp/core/Theme/colors.dart';

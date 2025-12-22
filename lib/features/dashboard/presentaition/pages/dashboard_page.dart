@@ -40,7 +40,7 @@ class _DashboardPageState extends State<DashboardPage> {
     final List<Widget> screens = [
       TabHomePage(),
       DictionaryPageProvider(),
-      charactersScreen(),
+      Container(),
       profileScreen(changeLanguage: widget.changeLanguage),
     ];
 
@@ -144,7 +144,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => addFolderScreen(reloadScreen: () {}),
+                      builder: (_) => Container(),//addFolderScreen(reloadScreen: () {}),
                     ),
                   );
                 },

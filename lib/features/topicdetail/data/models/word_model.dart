@@ -19,4 +19,14 @@ class WordModel extends WordEntity{
       level: json['level'],
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "word": word,
+      "mean": mean,
+      "wayread": wayread,
+      "topic": topic,
+      "level": level
+    };
+  }
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:japaneseapp/core/Screen/addWordScreen.dart';
 import 'package:japaneseapp/core/Service/Local/local_db_service.dart';
 import 'package:japaneseapp/core/Theme/colors.dart';
 import 'package:japaneseapp/core/generated/app_localizations.dart';
@@ -70,16 +69,16 @@ class _AddTopicDialogState extends State<AddTopicDialog>
     widget.nameFolderInput.clear();
 
     Navigator.pop(context);
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => addWordScreen(
-          topicName: nameTopic,
-          setIsLoad: () => setState(() => isLoading = false),
-          reload: () => setState(() {}),
-        ),
-      ),
-    );
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(
+    //     builder: (context) => addWordScreen(
+    //       topicName: nameTopic,
+    //       setIsLoad: () => setState(() => isLoading = false),
+    //       reload: () => setState(() {}),
+    //     ),
+    //   ),
+    // );
   }
 
   @override

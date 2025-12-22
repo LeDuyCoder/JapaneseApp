@@ -8,12 +8,13 @@ import 'package:get_it/get_it.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:japaneseapp/core/Service/FunctionService.dart';
 import 'package:japaneseapp/core/DI/auth_injection.dart';
+import 'package:japaneseapp/features/ads/data/datasources/ads_counter_local_ds.dart';
+import 'package:japaneseapp/features/ads/data/repositories/ads_policy_repository_impl.dart';
+import 'package:japaneseapp/features/ads/domain/usecases/should_show_rewarded_ad.dart';
+import 'package:japaneseapp/features/ads/presentation/cubit/AdsCubit.dart';
 import 'package:japaneseapp/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:japaneseapp/features/learn/data/datasources/learn_local_datasource.dart';
-import 'package:japaneseapp/features/learn/data/repositories/learn_repository_impl.dart';
-import 'package:japaneseapp/features/learn/domain/repositories/learn_repository.dart';
-import 'package:japaneseapp/features/learn/domain/usecase/load_words_from_topic_usecase.dart';
 import 'package:japaneseapp/features/splash/presentation/splash_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'core/Listener/NetworkListener.dart';
 import 'core/Theme/colors.dart';
 import 'firebase_options.dart';
@@ -52,19 +53,24 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   initAuthFeature();
 
+  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
-  final LearnLocalDataSourceImpl learnLocalDataSourceImpl = LearnLocalDataSourceImpl();
-  final LearnRepository learnRepository = LearnRepositoryImpl(dataSource: learnLocalDataSourceImpl);
-  final loadLearnWordsTopic = LoadWordsFromTopicUsecase(learnRepository);
-  var data = await loadLearnWordsTopic.call("Vocabulary JPD123 3 P1");
-  print(data);
   runApp(
     MultiBlocProvider(
       providers: [
         BlocProvider<AuthBloc>(
           create: (_) => GetIt.I<AuthBloc>(),
         ),
-        // thêm các bloc khác nếu cần
+
+        BlocProvider<AdsCubit>(
+          create: (_) => AdsCubit(
+            CheckAndShowRewardedAd(
+              AdsPolicyRepositoryImpl(
+                AdsCounterLocalDataSource(sharedPreferences),
+              )
+            ),
+          ),
+        ),
       ],
       child: const MyApp(),
     ),

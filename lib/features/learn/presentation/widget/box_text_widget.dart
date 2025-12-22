@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'dart:math';
-import 'package:flutter/material.dart';
 
 class BoxTextWidget {
   final int index;

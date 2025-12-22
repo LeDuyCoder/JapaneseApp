@@ -13,9 +13,6 @@ class TabHomeBloc extends Bloc<TabHomeEvent, TabHomeState> {
         final data = await repository.getTabHomeData();
         final userModel = await repository.getUserInfo();
 
-        print(data);
-        print(userModel);
-
         emit(TabHomeLoaded(
           topicsLocal: List<Map<String,dynamic>>.from(data['topic'] ?? []),
           folders: List<Map<String,dynamic>>.from(data['folder'] ?? []),

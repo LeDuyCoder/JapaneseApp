@@ -94,7 +94,7 @@ class LearnPage extends StatelessWidget{
                                             onPressButton: () {
                                               context
                                                   .read<ProgressCubit>()
-                                                  .increase();
+                                                  .increase(context, state.listEntites);
                                             },
                                             imagePath: 'assets/character/hinh10.png',
 
@@ -107,7 +107,7 @@ class LearnPage extends StatelessWidget{
                                         onComplete: (){
                                           context
                                               .read<ProgressCubit>()
-                                              .increase();
+                                              .increase(context, state.listEntites);
                                         },
                                         contextPage: context,
                                         wordEntity: state.testEntities[stateProgress.amount].wordEntity,
@@ -117,25 +117,25 @@ class LearnPage extends StatelessWidget{
                                     ChoseTestView(contextPage: context, listWords: state.listEntites, word: state.testEntities[stateProgress.amount].wordEntity, onComplete: () {
                                       context
                                           .read<ProgressCubit>()
-                                          .increase();
+                                          .increase(context, state.listEntites);
                                     },),
                                   if(state.testEntities[stateProgress.amount].testView == TestView.SortTestView)
                                     SortTestView(onComplete: (){
                                       context
                                           .read<ProgressCubit>()
-                                          .increase();
+                                          .increase(context, state.listEntites);
                                     }, contextPage: context, wordEntity: state.testEntities[stateProgress.amount].wordEntity, wordEntities: state.listEntites, typeTest: Sorts.values[Random().nextInt(Sorts.values.length)]),
                                   if(state.testEntities[stateProgress.amount].testView == TestView.SpeakTestView)
                                     SpeakTestView(contextPage: context, wordEntity: state.testEntities[stateProgress.amount].wordEntity, onComplete: (){
                                       context
                                           .read<ProgressCubit>()
-                                          .increase();
+                                          .increase(context, state.listEntites);
                                     },),
                                   if(state.testEntities[stateProgress.amount].testView == TestView.WriteTestView)
                                     WriteTestView(contextPage: context, wordEntity: state.testEntities[stateProgress.amount].wordEntity, onComplete: () {
                                       context
                                           .read<ProgressCubit>()
-                                          .increase();
+                                          .increase(context, state.listEntites);
                                     },),
                                 ],
                               ],

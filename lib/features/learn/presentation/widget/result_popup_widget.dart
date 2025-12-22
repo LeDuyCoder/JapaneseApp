@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:japaneseapp/core/Module/word.dart';
 import 'package:japaneseapp/features/learn/domain/entities/word_entity.dart';
 
 class ResultPopupWidget extends StatelessWidget {

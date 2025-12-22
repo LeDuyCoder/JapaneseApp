@@ -26,11 +26,12 @@ class TabHomeRepositoryImpl implements TabHomeRepository {
         'amountTopic': f.amountTopic,
       }).toList(),
     };
+
     try {
       final topicServer = await remote.fetchServerTopics(5);
       res['topicServer'] = topicServer;
     } catch (e) {
-      throw Exception();
+      throw Exception(e);
     }
     return res;
   }
