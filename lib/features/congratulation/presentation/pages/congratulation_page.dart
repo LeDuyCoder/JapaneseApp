@@ -14,6 +14,7 @@ import 'package:japaneseapp/features/congratulation/data/repositories/user_progr
 import 'package:japaneseapp/features/congratulation/domain/entities/word_entity.dart';
 import 'package:japaneseapp/features/congratulation/presentation/widgets/animated_loading_ads_dialog.dart';
 import 'package:japaneseapp/features/congratulation/presentation/widgets/animated_loading_widget.dart';
+import 'package:japaneseapp/features/congratulation/presentation/widgets/floating_image.dart';
 
 class CongratulationPage extends StatefulWidget {
   final int correctAnswer;
@@ -151,22 +152,22 @@ class _CongratulationPage extends State<CongratulationPage>
                                       ),
                                       Container(
                                         width:
-                                            MediaQuery.sizeOf(context).width /
-                                                1.1,
+                                        MediaQuery.sizeOf(context).width /
+                                            1.1,
                                         height: 80,
                                         decoration: BoxDecoration(
                                           color:
-                                              AppColors.grey.withOpacity(0.15),
+                                          AppColors.grey.withOpacity(0.15),
                                           borderRadius:
-                                              BorderRadius.circular(10),
+                                          BorderRadius.circular(10),
                                         ),
                                         padding: const EdgeInsets.symmetric(
                                             vertical: 10, horizontal: 15),
                                         child: Column(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                          MainAxisAlignment.center,
                                           crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                           children: [
                                             const Text(
                                               "Bài Học",
@@ -204,17 +205,17 @@ class _CongratulationPage extends State<CongratulationPage>
                                       ),
                                       Container(
                                         width:
-                                            MediaQuery.sizeOf(context).width /
-                                                1.1,
+                                        MediaQuery.sizeOf(context).width /
+                                            1.1,
                                         height: 130,
                                         decoration: BoxDecoration(
                                           color: AppColors.primary,
                                           borderRadius:
-                                              BorderRadius.circular(10),
+                                          BorderRadius.circular(10),
                                         ),
                                         child: Column(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                          MainAxisAlignment.center,
                                           children: [
                                             Text(
                                               "+${state.expPlus}",
@@ -243,7 +244,7 @@ class _CongratulationPage extends State<CongratulationPage>
                                             horizontal: 20),
                                         child: Row(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
+                                          MainAxisAlignment.spaceBetween,
                                           children: [
                                             const Text(
                                               "Tiến Trình Level",
@@ -256,7 +257,7 @@ class _CongratulationPage extends State<CongratulationPage>
                                                 style: const TextStyle(
                                                     fontSize: 18,
                                                     fontWeight:
-                                                        FontWeight.bold)),
+                                                    FontWeight.bold)),
                                           ],
                                         ),
                                       ),
@@ -270,15 +271,15 @@ class _CongratulationPage extends State<CongratulationPage>
                                             builder: (context, child) {
                                               return LinearProgressIndicator(
                                                 borderRadius:
-                                                    const BorderRadius.all(
-                                                        Radius.circular(360)),
+                                                const BorderRadius.all(
+                                                    Radius.circular(360)),
                                                 value: _animationProcess.value,
                                                 backgroundColor: Colors.grey
                                                     .withOpacity(0.2),
                                                 valueColor:
-                                                    const AlwaysStoppedAnimation<
-                                                            Color>(
-                                                        AppColors.primary),
+                                                const AlwaysStoppedAnimation<
+                                                    Color>(
+                                                    AppColors.primary),
                                               );
                                             },
                                           ),
@@ -292,7 +293,7 @@ class _CongratulationPage extends State<CongratulationPage>
                                             horizontal: 20),
                                         child: Row(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
+                                          MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
                                               "Cấp ${state.level}",
@@ -313,7 +314,7 @@ class _CongratulationPage extends State<CongratulationPage>
                                       const SizedBox(height: 25),
                                       Row(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                        MainAxisAlignment.center,
                                         children: [
                                           if (state.expRankPlus > 0)
                                             Column(
@@ -332,7 +333,7 @@ class _CongratulationPage extends State<CongratulationPage>
                                                         return Text(
                                                           "+$value",
                                                           style:
-                                                              const TextStyle(
+                                                          const TextStyle(
                                                             color: Colors.black,
                                                             fontSize: 30,
                                                             fontFamily: "Itim",
@@ -342,23 +343,23 @@ class _CongratulationPage extends State<CongratulationPage>
                                                       },
                                                     ),
                                                     const SizedBox(width: 5),
-                                                    Image.asset(
-                                                      "assets/exp.png",
-                                                      width: 50,
-                                                      height: 50,
-                                                    ),
+                                                    const FloatingImage(
+                                                        pathImage: "assets/exp.png",
+                                                        width: 50,
+                                                        height: 50
+                                                    )
                                                   ],
                                                 ),
                                                 const Padding(
                                                   padding:
-                                                      EdgeInsets.only(top: 10),
+                                                  EdgeInsets.only(top: 10),
                                                   child: Text(
                                                     "Điểm Rank",
                                                     style: TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 20,
                                                         fontWeight:
-                                                            FontWeight.bold),
+                                                        FontWeight.bold),
                                                   ),
                                                 )
                                               ],
@@ -393,28 +394,23 @@ class _CongratulationPage extends State<CongratulationPage>
                                                       },
                                                     ),
                                                     const SizedBox(width: 5),
-                                                    SizedBox(
-                                                      width: 40,
-                                                      height: 50,
-                                                      child: Transform.scale(
-                                                        scale: 1,
-                                                        // tỷ lệ thu nhỏ ảnh bên trong
-                                                        child: Image.asset(
-                                                            "assets/kujicoin.png"),
-                                                      ),
-                                                    ),
+                                                    const FloatingImage(
+                                                        pathImage: "assets/kujicoin.png",
+                                                        width: 40,
+                                                        height: 50
+                                                    )
                                                   ],
                                                 ),
                                                 const Padding(
                                                   padding:
-                                                      EdgeInsets.only(top: 10),
+                                                  EdgeInsets.only(top: 10),
                                                   child: Text(
                                                     "kujicoin",
                                                     style: TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 20,
                                                         fontWeight:
-                                                            FontWeight.bold),
+                                                        FontWeight.bold),
                                                   ),
                                                 )
                                               ],
@@ -527,13 +523,13 @@ class _CongratulationPage extends State<CongratulationPage>
                                         },
                                         child: Container(
                                           width:
-                                              MediaQuery.sizeOf(context).width /
-                                                  1.1,
+                                          MediaQuery.sizeOf(context).width /
+                                              1.1,
                                           height: 60,
                                           decoration: BoxDecoration(
                                             color: AppColors.primary,
                                             borderRadius:
-                                                BorderRadius.circular(20),
+                                            BorderRadius.circular(20),
                                           ),
                                           padding: const EdgeInsets.symmetric(
                                               vertical: 10, horizontal: 15),
