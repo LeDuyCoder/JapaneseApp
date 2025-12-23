@@ -11,6 +11,8 @@ import 'package:japaneseapp/features/congratulation/data/datasource/user_progres
 import 'package:japaneseapp/features/congratulation/data/datasource/user_remote_datasource.dart';
 import 'package:japaneseapp/features/congratulation/data/repositories/user_progress_repository_impl.dart';
 import 'package:japaneseapp/features/congratulation/domain/entities/word_entity.dart';
+import 'package:japaneseapp/features/congratulation/presentation/widgets/animated_loading_ads_dialog.dart';
+import 'package:japaneseapp/features/congratulation/presentation/widgets/animated_loading_widget.dart';
 
 class CongratulationPage extends StatefulWidget {
   final int correctAnswer;
@@ -555,6 +557,12 @@ class _CongratulationPage extends State<CongratulationPage>
                 ),
               );
             }
+
+            if(state is CongratulationLoading){
+              return const AnimatedLoading();
+            }
+
+
             return Container(
               color: Colors.white,
             );
@@ -564,26 +572,7 @@ class _CongratulationPage extends State<CongratulationPage>
               showDialog(
                 context: context,
                 barrierDismissible: true,
-                builder: (context) {
-                  return AlertDialog(
-                    backgroundColor: Colors.white,
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Center(
-                          child: Image.asset("assets/character/hinh12.png", width: 200, height: 200),
-                        ),
-                        const Center(
-                          child: CircularProgressIndicator(
-                            color: AppColors.primary,
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                      ],
-                    ),
-                  );
-                },
+                builder: (_) => const AnimatedLoadingAdsDialog(),
               );
             }
             else{
