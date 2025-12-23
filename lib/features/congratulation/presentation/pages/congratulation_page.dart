@@ -11,6 +11,8 @@ import 'package:japaneseapp/features/congratulation/data/datasource/user_progres
 import 'package:japaneseapp/features/congratulation/data/datasource/user_remote_datasource.dart';
 import 'package:japaneseapp/features/congratulation/data/repositories/user_progress_repository_impl.dart';
 import 'package:japaneseapp/features/congratulation/domain/entities/word_entity.dart';
+import 'package:japaneseapp/features/congratulation/presentation/widgets/animated_loading_ads_dialog.dart';
+import 'package:japaneseapp/features/congratulation/presentation/widgets/animated_loading_widget.dart';
 
 class CongratulationPage extends StatefulWidget {
   final int correctAnswer;
@@ -613,6 +615,58 @@ class _CongratulationPage extends State<CongratulationPage>
                 ),
               );
             }
+
+            if(state is CongratulationLoading){
+              return const AnimatedLoading();
+              // return Scaffold(
+              //   body: Container(
+              //     width: double.infinity,
+              //     height: double.infinity,
+              //     decoration: const BoxDecoration(
+              //       gradient: LinearGradient(
+              //         colors: [
+              //           Color(0xFFF5F7FA),
+              //           Color(0xFFE4ECF7),
+              //         ],
+              //         begin: Alignment.topCenter,
+              //         end: Alignment.bottomCenter,
+              //       ),
+              //     ),
+              //     child: Column(
+              //       mainAxisAlignment: MainAxisAlignment.center,
+              //       children: [
+              //         // Nhân vật
+              //         Image.asset(
+              //           "assets/character/hinh12.png",
+              //           width: 180,
+              //           height: 180,
+              //         ),
+              //
+              //         const SizedBox(height: 24),
+              //
+              //         // Loading
+              //         const CircularProgressIndicator(
+              //           strokeWidth: 3,
+              //           color: AppColors.primary,
+              //         ),
+              //
+              //         const SizedBox(height: 12),
+              //
+              //         // Text
+              //         Text(
+              //           "Đang Chấm Bài...",
+              //           style: TextStyle(
+              //             fontSize: 14,
+              //             color: Colors.grey.shade600,
+              //           ),
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              // );
+            }
+
+
             return Container(
               color: Colors.white,
             );
@@ -622,26 +676,7 @@ class _CongratulationPage extends State<CongratulationPage>
               showDialog(
                 context: context,
                 barrierDismissible: true,
-                builder: (context) {
-                  return AlertDialog(
-                    backgroundColor: Colors.white,
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Center(
-                          child: Image.asset("assets/character/hinh12.png", width: 200, height: 200),
-                        ),
-                        const Center(
-                          child: CircularProgressIndicator(
-                            color: AppColors.primary,
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                      ],
-                    ),
-                  );
-                },
+                builder: (_) => const AnimatedLoadingAdsDialog(),
               );
             }
             else{
