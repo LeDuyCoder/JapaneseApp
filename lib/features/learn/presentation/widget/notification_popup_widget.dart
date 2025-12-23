@@ -4,7 +4,8 @@ class NotificationPopupWidget extends StatelessWidget {
   final String imagePath;
   final String title;
   final String message;
-  final Function() onPressButton;
+  final bool isCorrect;
+  final Function(bool isCorrect) onPressButton;
 
   const NotificationPopupWidget({
     super.key,
@@ -12,7 +13,7 @@ class NotificationPopupWidget extends StatelessWidget {
     required this.message,
     required this.onPressButton,
     required this.imagePath,
-
+    required this.isCorrect,
   });
 
   @override
@@ -70,7 +71,7 @@ class NotificationPopupWidget extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: (){
                     Navigator.of(context).pop();
-                    onPressButton();
+                    onPressButton(isCorrect);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,

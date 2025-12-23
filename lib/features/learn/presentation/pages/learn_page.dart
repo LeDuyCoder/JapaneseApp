@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:japaneseapp/core/Theme/colors.dart';
+import 'package:japaneseapp/features/learn/bloc/elapsed_time_bloc.dart';
+import 'package:japaneseapp/features/learn/bloc/elapsed_time_event.dart';
 import 'package:japaneseapp/features/learn/bloc/learn_bloc.dart';
 import 'package:japaneseapp/features/learn/bloc/learn_event.dart';
 import 'package:japaneseapp/features/learn/bloc/learn_state.dart';
@@ -30,14 +32,25 @@ class LearnPage extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-        create: (_) => LearnBloc(
-          LearnRepositoryImpl(
-            dataSource: LearnLocalDataSourceImpl(),
+    return MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (_) => LearnBloc(
+              LearnRepositoryImpl(
+                dataSource: LearnLocalDataSourceImpl(),
+              ),
+            )..add(StartLearningEvent(nameTopic)),
           ),
-        )..add(StartLearningEvent(nameTopic)),
+
+          BlocProvider(
+            create: (_) => ElapsedTimeBloc()
+              ..add(StartTimer()),
+          ),
+        ],
         child: BlocConsumer<LearnBloc, LearnState>(
             builder: (context, state){
+              final elapsed = context.read<ElapsedTimeBloc>().state.elapsed;
+
               return Scaffold(
                 body: BlocProvider(
                   create: (_) => ProgressCubit(amountQuestion),
@@ -82,7 +95,7 @@ class LearnPage extends StatelessWidget{
                                 ),
                                 if(state is LearnGenerated)...[
                                   if(state.testEntities[stateProgress.amount].testView == TestView.CombinationTestView)
-                                    CombinationTestView(contextPage: context, listWords: state.listEntites, onComplete: (){
+                                    CombinationTestView(contextPage: context, listWords: state.listEntites, onComplete: (isCorrect){
                                       showModalBottomSheet(
                                         context: context,
                                         isScrollControlled: true,
@@ -91,12 +104,13 @@ class LearnPage extends StatelessWidget{
                                           return NotificationPopupWidget(
                                             title: 'Chúc Mừng',
                                             message: 'Bạn vừa hoàn thành xuất sắc bài nối từ',
-                                            onPressButton: () {
+                                            onPressButton: (isCorrect) {
                                               context
                                                   .read<ProgressCubit>()
-                                                  .increase(context, state.listEntites);
+                                                  .increase(context, isCorrect, state.listEntites, context.read<ElapsedTimeBloc>().state.elapsed);
                                             },
                                             imagePath: 'assets/character/hinh10.png',
+                                            isCorrect: isCorrect,
 
                                           );
                                         },
@@ -104,38 +118,38 @@ class LearnPage extends StatelessWidget{
                                     },),
                                   if(state.testEntities[stateProgress.amount].testView == TestView.ListenTestView)
                                     ListenTestView(
-                                        onComplete: (){
+                                        onComplete: (isCorrect){
                                           context
                                               .read<ProgressCubit>()
-                                              .increase(context, state.listEntites);
+                                              .increase(context, isCorrect, state.listEntites, context.read<ElapsedTimeBloc>().state.elapsed);
                                         },
                                         contextPage: context,
                                         wordEntity: state.testEntities[stateProgress.amount].wordEntity,
                                         wordEntities: state.listEntites
                                     ),
                                   if(state.testEntities[stateProgress.amount].testView == TestView.ChoseTestView)
-                                    ChoseTestView(contextPage: context, listWords: state.listEntites, word: state.testEntities[stateProgress.amount].wordEntity, onComplete: () {
+                                    ChoseTestView(contextPage: context, listWords: state.listEntites, word: state.testEntities[stateProgress.amount].wordEntity, onComplete: (isCorrect) {
                                       context
                                           .read<ProgressCubit>()
-                                          .increase(context, state.listEntites);
+                                          .increase(context, isCorrect, state.listEntites, context.read<ElapsedTimeBloc>().state.elapsed);
                                     },),
                                   if(state.testEntities[stateProgress.amount].testView == TestView.SortTestView)
-                                    SortTestView(onComplete: (){
+                                    SortTestView(onComplete: (isCorrect){
                                       context
                                           .read<ProgressCubit>()
-                                          .increase(context, state.listEntites);
+                                          .increase(context, isCorrect, state.listEntites, context.read<ElapsedTimeBloc>().state.elapsed);
                                     }, contextPage: context, wordEntity: state.testEntities[stateProgress.amount].wordEntity, wordEntities: state.listEntites, typeTest: Sorts.values[Random().nextInt(Sorts.values.length)]),
                                   if(state.testEntities[stateProgress.amount].testView == TestView.SpeakTestView)
-                                    SpeakTestView(contextPage: context, wordEntity: state.testEntities[stateProgress.amount].wordEntity, onComplete: (){
+                                    SpeakTestView(contextPage: context, wordEntity: state.testEntities[stateProgress.amount].wordEntity, onComplete: (isCorrect){
                                       context
                                           .read<ProgressCubit>()
-                                          .increase(context, state.listEntites);
+                                          .increase(context, isCorrect, state.listEntites, context.read<ElapsedTimeBloc>().state.elapsed);
                                     },),
                                   if(state.testEntities[stateProgress.amount].testView == TestView.WriteTestView)
-                                    WriteTestView(contextPage: context, wordEntity: state.testEntities[stateProgress.amount].wordEntity, onComplete: () {
+                                    WriteTestView(contextPage: context, wordEntity: state.testEntities[stateProgress.amount].wordEntity, onComplete: (isCorrect) {
                                       context
                                           .read<ProgressCubit>()
-                                          .increase(context, state.listEntites);
+                                          .increase(context, isCorrect, state.listEntites, context.read<ElapsedTimeBloc>().state.elapsed);
                                     },),
                                 ],
                               ],

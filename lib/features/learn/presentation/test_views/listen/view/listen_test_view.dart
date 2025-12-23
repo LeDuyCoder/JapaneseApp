@@ -12,7 +12,7 @@ import 'package:japaneseapp/features/learn/presentation/widget/check_button.dart
 
 class ListenTestView extends StatefulWidget implements BaseTestView{
 
-  final VoidCallback onComplete;
+  final Function(bool isCorrect) onComplete;
   final BuildContext contextPage;
 
   final WordEntity wordEntity;
@@ -21,7 +21,7 @@ class ListenTestView extends StatefulWidget implements BaseTestView{
   const ListenTestView({super.key, required this.onComplete, required this.contextPage, required this.wordEntity, required this.wordEntities});
 
   @override
-  VoidCallback? get onTestComplete => onComplete;
+  VoidCallback? get onTestComplete => onComplete(false);
 
   @override
   State<StatefulWidget> createState() => _ListenTestView();

@@ -12,7 +12,7 @@ import 'package:japaneseapp/features/learn/presentation/widget/result_popup_widg
 
 
 class ListenTestCubit extends Cubit<ListenTestState> {
-  final VoidCallback onComplete;
+  final Function(bool isCorrect) onComplete;
 
   GoogleTTSService googleTTSService = GoogleTTSService();
   final FlutterTts _flutterTts = FlutterTts();
@@ -96,7 +96,7 @@ class ListenTestCubit extends Cubit<ListenTestState> {
   }
 
   /// Kiểm tra đáp án
-  void checkAnswer(BuildContext context, VoidCallback onComplete) {
+  void checkAnswer(BuildContext context, Function(bool isCorrect) onComplete) {
     final answer = state.userAnswer.join();
     final correct = state.currentWord.word;
 
@@ -109,7 +109,7 @@ class ListenTestCubit extends Cubit<ListenTestState> {
             isCorrect: answer == correct,
             wordEntity: state.currentWord,
             onPressButton: (){
-              onComplete();
+              onComplete(answer == correct);
             },
             tryAgain: false
         );
