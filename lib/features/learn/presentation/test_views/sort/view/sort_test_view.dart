@@ -12,7 +12,7 @@ import 'package:japaneseapp/features/learn/presentation/widget/box_text_widget.d
 import 'package:japaneseapp/features/learn/presentation/widget/check_button.dart';
 
 class SortTestView extends StatelessWidget implements BaseTestView {
-  final VoidCallback onComplete;
+  final Function(bool isCorrect) onComplete;
   final BuildContext contextPage;
 
   final WordEntity wordEntity;
@@ -22,7 +22,7 @@ class SortTestView extends StatelessWidget implements BaseTestView {
   const SortTestView({super.key, required this.onComplete, required this.contextPage, required this.wordEntity, required this.wordEntities, required this.typeTest});
 
   @override
-  VoidCallback get onTestComplete => onComplete;
+  VoidCallback get onTestComplete => onComplete(false);
 
   @override
   Widget build(BuildContext context) {
@@ -216,7 +216,7 @@ class SortTestView extends StatelessWidget implements BaseTestView {
                           CheckButton(
                               enabled: state.userAnswer.isNotEmpty,
                               onTap: (){
-                                context.read<SortTestCubit>().checkAnswer(context, onComplete);
+                                context.read<SortTestCubit>().checkAnswer(context, onComplete: (bool isCorrect) { onComplete(isCorrect); });
                               }
                           )
                         ],

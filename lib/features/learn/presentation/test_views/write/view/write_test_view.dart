@@ -16,7 +16,7 @@ import 'package:japaneseapp/features/learn/presentation/widget/check_button.dart
 
 class WriteTestView extends StatelessWidget implements BaseTestView{
 
-  final VoidCallback onComplete;
+  final Function(bool isCorrect) onComplete;
   final BuildContext contextPage;
 
   final WordEntity wordEntity;
@@ -99,7 +99,9 @@ class WriteTestView extends StatelessWidget implements BaseTestView{
                                           return CheckButton(
                                             enabled: value.text.isNotEmpty,
                                             onTap: () {
-                                              context.read<WriteTestCubit>().checkAnwser(context, textEditingController.text, wordEntity, onComplete);
+                                              context.read<WriteTestCubit>().checkAnwser(context, textEditingController.text, wordEntity, onComplete: (isCorrect){
+                                                onComplete(isCorrect);
+                                              });
                                             },
                                           );
                                         },
@@ -145,5 +147,5 @@ class WriteTestView extends StatelessWidget implements BaseTestView{
   }
 
   @override
-  VoidCallback? get onTestComplete => onComplete;
+  VoidCallback? get onTestComplete => onComplete(false);
 }

@@ -102,7 +102,7 @@ class SortTestCubit extends Cubit<SortTestState>{
     ));
   }
 
-  void checkAnswer(BuildContext context, VoidCallback onComplete) {
+  void checkAnswer(BuildContext context, {required Function(bool isCorrect) onComplete}) {
     String answer = state.userAnswer.join();
     String correct = state.wordEntity.word;
 
@@ -131,7 +131,7 @@ class SortTestCubit extends Cubit<SortTestState>{
             isCorrect: answer == correct,
             wordEntity: state.wordEntity,
             onPressButton: (){
-              onComplete();
+              onComplete(answer == correct);
             },
             tryAgain: false
         );

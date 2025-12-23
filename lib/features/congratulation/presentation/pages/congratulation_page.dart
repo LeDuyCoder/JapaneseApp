@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:japaneseapp/core/Theme/colors.dart';
+import 'package:japaneseapp/core/utils/duration_formatter.dart';
 import 'package:japaneseapp/features/ads/presentation/cubit/AdsCubit.dart';
 import 'package:japaneseapp/features/congratulation/bloc/congratulation_bloc.dart';
 import 'package:japaneseapp/features/congratulation/bloc/congratulation_event.dart';
@@ -18,14 +19,17 @@ class CongratulationPage extends StatefulWidget {
   final int correctAnswer;
   final int inCorrectAnswer;
   final int totalQuestion;
+  final Duration elapsed;
   final List<WordEntity> words;
 
   CongratulationPage(
       {super.key,
-      required this.correctAnswer,
-      required this.inCorrectAnswer,
-      required this.totalQuestion,
-      required this.words});
+        required this.correctAnswer,
+        required this.inCorrectAnswer,
+        required this.totalQuestion,
+        required this.words,
+        required this.elapsed
+      });
 
   @override
   State<StatefulWidget> createState() => _CongratulationPage();
@@ -158,13 +162,13 @@ class _CongratulationPage extends State<CongratulationPage>
                                         ),
                                         padding: const EdgeInsets.symmetric(
                                             vertical: 10, horizontal: 15),
-                                        child: const Column(
+                                        child: Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Text(
+                                            const Text(
                                               "Bài Học",
                                               style: TextStyle(
                                                 color: Colors.black,
@@ -174,7 +178,7 @@ class _CongratulationPage extends State<CongratulationPage>
                                             ),
                                             Row(
                                               children: [
-                                                Text(
+                                                const Text(
                                                   "Thời gian hoàn thành: ",
                                                   style: TextStyle(
                                                     color: Colors.grey,
@@ -183,8 +187,8 @@ class _CongratulationPage extends State<CongratulationPage>
                                                   ),
                                                 ),
                                                 Text(
-                                                  "00:25",
-                                                  style: TextStyle(
+                                                  DurationFormatter.format(widget.elapsed),
+                                                  style: const TextStyle(
                                                     color: AppColors.primary,
                                                     fontFamily: "itim",
                                                     fontSize: 16,

@@ -6,9 +6,9 @@ import 'package:japaneseapp/features/learn/presentation/widget/result_popup_widg
 import 'combination_test_state.dart';
 
 class CombinationTestCubit extends Cubit<CombinationTestState> {
-  final VoidCallback onComplete;
+  final Function(bool isCorrect) onComplete;
 
-  CombinationTestCubit(List<WordEntity> words, this.onComplete)
+  CombinationTestCubit(List<WordEntity> words, {required this.onComplete})
       : super(_init(words));
 
   static CombinationTestState _init(List<WordEntity> words) {
@@ -49,7 +49,7 @@ class CombinationTestCubit extends Cubit<CombinationTestState> {
       ));
 
       if(state.completes.length == 4){
-        onComplete();
+        onComplete(true);
       }
     }else{
       showModalBottomSheet(
