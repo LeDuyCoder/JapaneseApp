@@ -519,64 +519,6 @@ class _CongratulationPage extends State<CongratulationPage>
                                             Navigator.pop(context);
                                           }
                                         },
-
-                                        // onTap: () async {
-                                        //   // 1️⃣ Hiển thị popup hỏi người dùng
-                                        //   bool watchAd =
-                                        //
-                                        //   // 2️⃣ Nếu đồng ý xem quảng cáo
-                                        //   if (watchAd) {
-                                        //     if (_isInterstitialAdReady) {
-                                        //       _interstitialAd.show();
-                                        //       _interstitialAd.fullScreenContentCallback = FullScreenContentCallback(
-                                        //         onAdDismissedFullScreenContent: (ad) {
-                                        //           ad.dispose();
-                                        //           _loadInterstitialAd(); // tải lại cho lần sau
-                                        //
-                                        //           // Nhân đôi tiền hoặc exp sau khi xem xong quảng cáo
-                                        //           setState(() {
-                                        //             coin *= 2;
-                                        //             expRank *= 2;
-                                        //           });
-                                        //         },
-                                        //         onAdFailedToShowFullScreenContent: (ad, error) {
-                                        //           ad.dispose();
-                                        //         },
-                                        //       );
-                                        //     } else {
-                                        //       // Quảng cáo chưa sẵn sàng → thông báo
-                                        //       ScaffoldMessenger.of(context).showSnackBar(
-                                        //         const SnackBar(content: Text("Quảng cáo chưa sẵn sàng!")),
-                                        //       );
-                                        //     }
-                                        //   }
-                                        //
-                                        //   // 3️⃣ Tiếp tục logic bình thường
-                                        //   final List<word> filteredWords = widget.listWordsTest.where((word wordCheck) {
-                                        //     final int wrongCount = widget.listWordsWrong.where((wordWrongCheck) => wordWrongCheck == wordCheck).length;
-                                        //     return wrongCount < 2;
-                                        //   }).toList();
-                                        //
-                                        //   final List<Map<String, dynamic>> dataUpdate = filteredWords.map((word wordUP) {
-                                        //     return {
-                                        //       "dataUpdate": {"level": wordUP.level < 28 ? wordUP.level + 1 : wordUP.level},
-                                        //       "word": wordUP.vocabulary,
-                                        //     };
-                                        //   }).toList();
-                                        //
-                                        //   final db = LocalDbService.instance;
-                                        //   for (final data in dataUpdate) {
-                                        //     await db.vocabularyDao.update(
-                                        //       "words",
-                                        //       data["dataUpdate"],
-                                        //       "word = '${data["word"]}' and topic = '${widget.topic}'",
-                                        //     );
-                                        //   }
-                                        //
-                                        //   // Điều hướng tiếp theo
-                                        //   Navigator.pop(context);
-                                        //   widget.reload();
-                                        // },
                                         child: Container(
                                           width:
                                               MediaQuery.sizeOf(context).width /
