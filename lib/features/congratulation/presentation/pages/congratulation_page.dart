@@ -618,52 +618,6 @@ class _CongratulationPage extends State<CongratulationPage>
 
             if(state is CongratulationLoading){
               return const AnimatedLoading();
-              // return Scaffold(
-              //   body: Container(
-              //     width: double.infinity,
-              //     height: double.infinity,
-              //     decoration: const BoxDecoration(
-              //       gradient: LinearGradient(
-              //         colors: [
-              //           Color(0xFFF5F7FA),
-              //           Color(0xFFE4ECF7),
-              //         ],
-              //         begin: Alignment.topCenter,
-              //         end: Alignment.bottomCenter,
-              //       ),
-              //     ),
-              //     child: Column(
-              //       mainAxisAlignment: MainAxisAlignment.center,
-              //       children: [
-              //         // Nhân vật
-              //         Image.asset(
-              //           "assets/character/hinh12.png",
-              //           width: 180,
-              //           height: 180,
-              //         ),
-              //
-              //         const SizedBox(height: 24),
-              //
-              //         // Loading
-              //         const CircularProgressIndicator(
-              //           strokeWidth: 3,
-              //           color: AppColors.primary,
-              //         ),
-              //
-              //         const SizedBox(height: 12),
-              //
-              //         // Text
-              //         Text(
-              //           "Đang Chấm Bài...",
-              //           style: TextStyle(
-              //             fontSize: 14,
-              //             color: Colors.grey.shade600,
-              //           ),
-              //         ),
-              //       ],
-              //     ),
-              //   ),
-              // );
             }
 
 
