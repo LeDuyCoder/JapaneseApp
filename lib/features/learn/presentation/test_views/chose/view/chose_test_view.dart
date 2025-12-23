@@ -11,7 +11,7 @@ import 'package:japaneseapp/features/learn/presentation/widget/chose_word_widget
 
 class ChoseTestView extends StatelessWidget implements BaseTestView{
 
-  final VoidCallback onComplete;
+  final Function(bool isCorrect) onComplete;
   final BuildContext contextPage;
 
   final List<WordEntity> listWords;
@@ -20,7 +20,7 @@ class ChoseTestView extends StatelessWidget implements BaseTestView{
   const ChoseTestView({super.key, required this.contextPage, required this.onComplete, required this.listWords, required this.word});
 
   @override
-  VoidCallback get onTestComplete => onComplete;
+  VoidCallback get onTestComplete => onComplete(false);
 
   String getDataFromType(Choses type, WordEntity wordEntity){
     switch(type){
@@ -101,7 +101,9 @@ class ChoseTestView extends StatelessWidget implements BaseTestView{
                     ),
                     SizedBox(height: 20,),
                     CheckButton(enabled: state.chosen != null, onTap: (){
-                      context.read<ChoseTestCubit>().checkAnswer(context, onComplete);
+                      context.read<ChoseTestCubit>().checkAnswer(context, onComplete: (isCorrect){
+                        onComplete(isCorrect);
+                      });
                     })
                   ],
                 ),

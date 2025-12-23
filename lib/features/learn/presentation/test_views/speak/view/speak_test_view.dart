@@ -10,7 +10,7 @@ import 'package:japaneseapp/features/learn/presentation/test_views/speak/cubit/s
 
 class SpeakTestView extends StatelessWidget implements BaseTestView{
 
-  final VoidCallback onComplete;
+  final Function(bool isCorrect) onComplete;
   final BuildContext contextPage;
 
   final WordEntity wordEntity;
@@ -22,7 +22,7 @@ class SpeakTestView extends StatelessWidget implements BaseTestView{
     final double size = MediaQuery.sizeOf(context).width * 0.3;
 
     return BlocProvider(
-      create: (_) => SpeakTestCubit(wordEntity, onTestComplete),
+      create: (_) => SpeakTestCubit(wordEntity, onComplete),
       child: BlocBuilder<SpeakTestCubit, SpeakTestState>(
           builder: (context, state){
             return Container(
@@ -125,6 +125,6 @@ class SpeakTestView extends StatelessWidget implements BaseTestView{
   }
 
   @override
-  VoidCallback get onTestComplete => onComplete;
+  VoidCallback get onTestComplete => onComplete(false);
 
 }

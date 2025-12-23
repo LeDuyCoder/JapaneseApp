@@ -18,7 +18,7 @@ class SpeakTestCubit extends Cubit<SpeakTestState> {
   final SpeechToText _speech = SpeechToText();
   final KanaKit kanaKit = KanaKit();
 
-  final VoidCallback onComplete;
+  final Function(bool isCorrect) onComplete;
 
   SpeakTestCubit(WordEntity wordEntity, this.onComplete)
       : super(SpeakTestState.initial(wordEntity));
@@ -113,7 +113,7 @@ class SpeakTestCubit extends Cubit<SpeakTestState> {
             isCorrect: isCorrect,
             wordEntity: state.wordEntity,
             onPressButton: (){
-              onComplete();
+              onComplete(isCorrect);
             },
             tryAgain: false
         );

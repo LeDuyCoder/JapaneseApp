@@ -10,7 +10,7 @@ import 'package:japaneseapp/features/learn/presentation/test_views/combination/c
 import 'package:japaneseapp/features/learn/presentation/widget/chose_colume_widget.dart';
 
 class CombinationTestView extends StatefulWidget implements BaseTestView{
-  final VoidCallback onComplete;
+  final Function(bool isCorrect) onComplete;
   final BuildContext contextPage;
 
   final List<WordEntity> listWords;
@@ -18,7 +18,7 @@ class CombinationTestView extends StatefulWidget implements BaseTestView{
   CombinationTestView({super.key, required this.onComplete, required this.contextPage, required this.listWords});
 
   @override
-  VoidCallback? get onTestComplete => onComplete;
+  VoidCallback? get onTestComplete => onComplete(false);
 
   @override
   State<StatefulWidget> createState() {
@@ -32,7 +32,7 @@ class _CombinationTestView extends State<CombinationTestView>{
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => CombinationTestCubit(widget.listWords, widget.onComplete),
+      create: (_) => CombinationTestCubit(widget.listWords, onComplete: (bool isCorrect) { widget.onComplete(isCorrect); },),
       child: BlocBuilder<CombinationTestCubit, CombinationTestState>(
         builder: (context, state){
           return Container(

@@ -36,7 +36,7 @@ class ChoseTestCubit extends Cubit<ChoseTestState> {
     emit(state.copyWith(chosen: null));
   }
 
-  void checkAnswer(BuildContext context, VoidCallback onComplete){
+  void checkAnswer(BuildContext context, {required Function(bool) onComplete}){
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -46,7 +46,7 @@ class ChoseTestCubit extends Cubit<ChoseTestState> {
             isCorrect: state.currentWord == state.chosen!,
             wordEntity: state.currentWord,
             onPressButton: (){
-              onComplete();
+              onComplete(state.currentWord == state.chosen!);
             },
             tryAgain: false
         );

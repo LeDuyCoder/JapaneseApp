@@ -15,7 +15,7 @@ class WriteTestCubit extends Cubit<WriteTestState>{
   }
 
 
-  void checkAnwser(BuildContext context, String answer, WordEntity wordEntity, VoidCallback onComplete){
+  void checkAnwser(BuildContext context, String answer, WordEntity wordEntity, {required Function(bool isCorrect) onComplete}){
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -25,7 +25,7 @@ class WriteTestCubit extends Cubit<WriteTestState>{
             isCorrect: answer == wordEntity.word,
             wordEntity: state.wordEntity,
             onPressButton: (){
-              onComplete();
+              onComplete(answer == wordEntity.word);
             },
             tryAgain: false
         );
