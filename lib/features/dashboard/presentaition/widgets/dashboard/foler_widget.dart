@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:japaneseapp/core/Service/Local/local_db_service.dart';
 import 'package:japaneseapp/core/Theme/colors.dart';
+import 'package:japaneseapp/features/manager_topic/presentation/pages/manager_topic_page.dart';
 
 class FolderWidget extends StatelessWidget{
 
@@ -139,28 +140,25 @@ class FolderWidget extends StatelessWidget{
       padding: EdgeInsets.only(left: 5, right: 5),
       child: GestureDetector(
         onTap: (){
-          // Navigator.push(
-          //   context,
-          //   PageRouteBuilder(
-          //     pageBuilder: (context, animation, secondaryAnimation) => folderManagerScreen(
-          //       idFolder: idFolder,
-          //       nameFolder: nameFolder,
-          //       reloadDashBoard: () {
-          //         reloadDashboard();
-          //       },
-          //     ),
-          //     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          //       const begin = Offset(0.0, 1.0);
-          //       const end = Offset.zero;
-          //       const curve = Curves.ease;
-          //       final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-          //       return SlideTransition(
-          //         position: animation.drive(tween),
-          //         child: child,
-          //       );
-          //     },
-          //   ),
-          // );
+          Navigator.push(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) => ManagerTopicPage(
+                idFolder: idFolder,
+                nameFolder: nameFolder,
+              ),
+              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                const begin = Offset(0.0, 1.0);
+                const end = Offset.zero;
+                const curve = Curves.ease;
+                final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                return SlideTransition(
+                  position: animation.drive(tween),
+                  child: child,
+                );
+              },
+            ),
+          );
         },
         child: Container(
             width: 250,
