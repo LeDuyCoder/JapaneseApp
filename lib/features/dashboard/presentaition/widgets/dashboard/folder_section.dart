@@ -3,7 +3,9 @@ import 'package:japaneseapp/features/dashboard/presentaition/widgets/dashboard/f
 
 class FolderSection extends StatelessWidget {
   final List<Map<String,dynamic>> folders;
-  const FolderSection({required this.folders});
+  final VoidCallback reloadDashboard;
+
+  const FolderSection({required this.folders, required this.reloadDashboard});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +18,7 @@ class FolderSection extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         children: [
           for (var f in folders)
-            FolderWidget(idFolder: f["id"], nameFolder: f["namefolder"]!, reloadDashboard: (){}, dateCreated: f["datefolder"], amountTopic: f["amountTopic"],),
+            FolderWidget(idFolder: f["id"], nameFolder: f["namefolder"]!, dateCreated: f["datefolder"], amountTopic: f["amountTopic"],  reloadDashboard: reloadDashboard)
         ],
       ),
     );

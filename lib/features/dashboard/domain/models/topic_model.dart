@@ -22,9 +22,9 @@ class TopicEntity extends Equatable {
   factory TopicEntity.fromJson(Map<String, dynamic> json) {
     return TopicEntity(
       id: json['id'],
-      name: json['name'],
+      name: json['name'] ?? json['nameTopic'],
       owner: json['owner'],
-      count: json['count'],
+      count: json['count'] ?? json['word_count'],
     );
   }
 

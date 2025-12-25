@@ -15,5 +15,4 @@ class TabHomeLocalDataSource {
 
   Future<bool> hasTopicName(String name) => db.topicDao.hasTopicName(name);
 
-// methods to insert topic, folder etc moved here
 }

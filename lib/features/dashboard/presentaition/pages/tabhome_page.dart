@@ -47,7 +47,7 @@ class TabHomePage extends StatelessWidget {
                       child: ListView(
                         children: [
                           AppSection(user: state.userModel,),
-                          SizedBox(height: 10,),
+                          const SizedBox(height: 10,),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
@@ -78,13 +78,15 @@ class TabHomePage extends StatelessWidget {
                               )
                             ],
                           ),
-                          SizedBox(height: 10,),
+                          const SizedBox(height: 10,),
                           if(state.folders.isNotEmpty)
-                            FolderSection(folders: state.folders,)
+                            FolderSection(folders: state.folders, reloadDashboard: () {
+                              context.read<TabHomeBloc>().add(FetchTabHomeData());
+                            },)
                           else
                             NoFolderSection(),
 
-                          SizedBox(height: 10,),
+                          const SizedBox(height: 10,),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
