@@ -10,6 +10,7 @@ import 'package:japaneseapp/features/dashboard/presentaition/pages/dictionary_pa
 import 'package:japaneseapp/features/dashboard/presentaition/pages/tabhome_page.dart';
 import 'package:japaneseapp/features/dashboard/presentaition/widgets/dashboard/add_topic_dialog.dart';
 import 'package:japaneseapp/features/dictionary/presentation/pages/dictionary_page.dart';
+import 'package:japaneseapp/features/manager_topic/presentation/pages/add_folder_page.dart';
 
 class DashboardPage extends StatefulWidget {
   final Function(Locale _locale) changeLanguage;
@@ -139,12 +140,12 @@ class _DashboardPageState extends State<DashboardPage> {
               ),
               const SizedBox(height: 10),
               GestureDetector(
-                onTap: () {
+                onTap: () async {
                   Navigator.pop(context);
-                  Navigator.push(
+                  await Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => Container(),//addFolderScreen(reloadScreen: () {}),
+                      builder: (_) => const AddFolderPage(),//addFolderScreen(reloadScreen: () {}),
                     ),
                   );
                 },

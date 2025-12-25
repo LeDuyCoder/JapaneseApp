@@ -7,4 +7,5 @@ abstract class FolderRepository {
   Future<void> deleteFolder(int folderId);
   Future<void> addTopicToFolder(int folderId, String topicId);
   Future<void> addFolder(String folderName);
+  Future<bool> isFolderAlreadyExists(String folderName);
 }

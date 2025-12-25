@@ -50,4 +50,9 @@ class FolderRepositoryImpl implements FolderRepository {
   Future<void> addFolder(String folderName) {
     return db.folderDao.insertFolder(folderName);
   }
+
+  @override
+  Future<bool> isFolderAlreadyExists(String folderName) {
+    return db.folderDao.hasFolderName(folderName);
+  }
 }
