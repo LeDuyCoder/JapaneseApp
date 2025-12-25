@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:japaneseapp/core/Screen/addFolderScreen.dart';
-import 'package:japaneseapp/core/Screen/charactersScreen.dart';
 import 'package:japaneseapp/core/Screen/profileScreen.dart';
 import 'package:japaneseapp/core/Theme/colors.dart';
 import 'package:japaneseapp/core/generated/app_localizations.dart';
-import 'package:japaneseapp/features/dashboard/bloc/tab_bloc.dart';
+import 'package:japaneseapp/features/dashboard/presentaition/cubit/tab_cubit.dart';
+import 'package:japaneseapp/features/dashboard/presentaition/cubit/tab_state.dart';
 import 'package:japaneseapp/features/dashboard/presentaition/pages/dictionary_page_provider.dart';
 import 'package:japaneseapp/features/dashboard/presentaition/pages/tabhome_page.dart';
 import 'package:japaneseapp/features/dashboard/presentaition/widgets/dashboard/add_topic_dialog.dart';
-import 'package:japaneseapp/features/dictionary/presentation/pages/dictionary_page.dart';
 import 'package:japaneseapp/features/manager_topic/presentation/pages/add_folder_page.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -47,16 +45,17 @@ class _DashboardPageState extends State<DashboardPage> {
 
     return BlocProvider(
       create: (_) => TabCubit(),
-      child: BlocBuilder<TabCubit, int>(
+      child: BlocBuilder<TabCubit, TabState>(
         builder: (context, currentIndex) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (_pageController.hasClients) {
-              _pageController.jumpToPage(currentIndex);
+              _pageController.jumpToPage(currentIndex.index);
             }
           });
-
+          print(currentIndex.reloadKey);
           return Scaffold(
             body: PageView(
+              key: ValueKey(currentIndex.reloadKey),
               controller: _pageController,
               physics: const NeverScrollableScrollPhysics(),
               children: screens,
@@ -64,7 +63,9 @@ class _DashboardPageState extends State<DashboardPage> {
             floatingActionButton: FloatingActionButton(
               backgroundColor: Colors.red,
               shape: const CircleBorder(side: BorderSide(color: Colors.white, width: 5)),
-              onPressed: () => _showBottomMenu(context),
+              onPressed: () => _showBottomMenu(context, (){
+                context.read<TabCubit>().resetTab();
+              }),
               child: const Icon(Icons.add, size: 35, color: Colors.white),
             ),
             floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -77,11 +78,11 @@ class _DashboardPageState extends State<DashboardPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    _buildNavItem(context, Icons.home, "Home", 0, currentIndex),
-                    _buildNavItem(context, Icons.menu_book, "Dictionary", 1, currentIndex),
+                    _buildNavItem(context, Icons.home, "Home", 0, currentIndex.index),
+                    _buildNavItem(context, Icons.menu_book, "Dictionary", 1, currentIndex.index),
                     const SizedBox(width: 40),
-                    _buildNavItem(context, Icons.translate, "Characters", 2, currentIndex),
-                    _buildNavItem(context, Icons.person, "Profile", 3, currentIndex),
+                    _buildNavItem(context, Icons.translate, "Characters", 2, currentIndex.index),
+                    _buildNavItem(context, Icons.person, "Profile", 3, currentIndex.index),
                   ],
                 ),
               ),
@@ -107,7 +108,7 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
   
-  void _showBottomMenu(BuildContext context) {
+  void _showBottomMenu(BuildContext context, void Function()? reloadScreen) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -148,6 +149,9 @@ class _DashboardPageState extends State<DashboardPage> {
                       builder: (_) => const AddFolderPage(),//addFolderScreen(reloadScreen: () {}),
                     ),
                   );
+                  if(reloadScreen != null) {
+                    reloadScreen();
+                  }
                 },
                 child: _bottomItem(context, Icons.folder_open, AppLocalizations.of(context)!.add_folder),
               ),
