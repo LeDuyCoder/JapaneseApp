@@ -35,7 +35,7 @@ class TabHomePage extends StatelessWidget {
           builder: (context, state) {
             if (state is TabHomeLoading) {
               return LoadingIndicator();
-            }//LoadingIndicator();
+            }
             if (state is TabHomeLoaded) {
               return Container(
                 color: AppColors.backgroundPrimary,
