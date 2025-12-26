@@ -18,6 +18,7 @@ import 'package:japaneseapp/features/dashboard/presentaition/widgets/dashboard/f
 import 'package:japaneseapp/features/dashboard/presentaition/widgets/dashboard/loading_indicator.dart';
 import 'package:japaneseapp/features/dashboard/presentaition/widgets/dashboard/no_folder_section.dart';
 import 'package:japaneseapp/features/dashboard/presentaition/widgets/dashboard/topic_section.dart';
+import 'package:japaneseapp/features/manager_topic/presentation/pages/all_folder_page.dart';
 
 class TabHomePage extends StatelessWidget {
   @override
@@ -58,7 +59,7 @@ class TabHomePage extends StatelessWidget {
                                   Navigator.push(
                                     context,
                                     PageRouteBuilder(
-                                      pageBuilder: (context, animation, secondaryAnimation) => Container(),//allFolderScreen(),
+                                      pageBuilder: (context, animation, secondaryAnimation) => AllFolderPage(),//allFolderScreen(),
                                       transitionsBuilder: (context, animation, secondaryAnimation, child) {
                                         const begin = Offset(1.0, 0.0);
                                         const end = Offset.zero;

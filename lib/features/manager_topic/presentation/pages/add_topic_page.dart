@@ -1,10 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:japaneseapp/core/service/Local/local_db_service.dart';
-import 'package:japaneseapp/features/manager_topic/bloc/add_topic_bloc.dart';
-import 'package:japaneseapp/features/manager_topic/bloc/add_topic_event.dart';
-import 'package:japaneseapp/features/manager_topic/bloc/add_topic_state.dart';
+import 'package:japaneseapp/features/manager_topic/bloc/bloc/add_topic_bloc.dart';
+import 'package:japaneseapp/features/manager_topic/bloc/event/add_topic_event.dart';
+import 'package:japaneseapp/features/manager_topic/bloc/state/add_topic_state.dart';
 import 'package:japaneseapp/features/manager_topic/data/repositories/folder_repository_impl.dart';
 import 'package:japaneseapp/features/manager_topic/domain/entities/topic_entity.dart';
 import 'package:japaneseapp/features/manager_topic/presentation/widgets/no_topic_widget.dart';
