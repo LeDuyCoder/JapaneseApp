@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:japaneseapp/core/Theme/colors.dart';
 import 'package:japaneseapp/core/service/Local/local_db_service.dart';
-import 'package:japaneseapp/features/manager_topic/bloc/add_folder_bloc.dart';
-import 'package:japaneseapp/features/manager_topic/bloc/add_folder_event.dart';
-import 'package:japaneseapp/features/manager_topic/bloc/add_folder_state.dart';
+import 'package:japaneseapp/features/manager_topic/bloc/bloc/add_folder_bloc.dart';
+import 'package:japaneseapp/features/manager_topic/bloc/event/add_folder_event.dart';
+import 'package:japaneseapp/features/manager_topic/bloc/state/add_folder_state.dart';
 import 'package:japaneseapp/features/manager_topic/data/repositories/folder_repository_impl.dart';
 import 'package:japaneseapp/features/manager_topic/presentation/widgets/bottom_sheet_success_widget.dart';
 

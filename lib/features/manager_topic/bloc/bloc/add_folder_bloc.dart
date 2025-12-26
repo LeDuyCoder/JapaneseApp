@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:japaneseapp/features/manager_topic/bloc/add_folder_event.dart';
-import 'package:japaneseapp/features/manager_topic/bloc/add_folder_state.dart';
+import 'package:japaneseapp/features/manager_topic/bloc/event/add_folder_event.dart';
+import 'package:japaneseapp/features/manager_topic/bloc/state/add_folder_state.dart';
 import 'package:japaneseapp/features/manager_topic/domain/repositories/folder_repository.dart';
 
 class AddFolderBloc extends Bloc<AddFolderEvent, AddFolderState>{

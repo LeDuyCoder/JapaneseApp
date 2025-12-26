@@ -6,16 +6,12 @@ import 'ScoreService.dart';
 
 class UserService extends BaseService {
 
-  /// Add new user
   Future<void> addUser(String idUser, String name) async {
-
     try {
       await postForm('/controller/user/addUser.php', {
         'idUser': idUser,
         'name': name,
       });
-
-      // Add initial score for new user
       final scoreService = ScoreService();
       await scoreService.addScore(idUser, 0);
     } catch (e) {
@@ -35,8 +31,7 @@ class UserService extends BaseService {
       throw Exception('Invalid coin data format');
     }
   }
-  
-  /// Get user coins
+
   Future<int> getCoin(String idUser) async {
     final data = await postForm('/controller/user/getCoin.php', {
       'idUser': idUser,
@@ -49,7 +44,6 @@ class UserService extends BaseService {
     }
   }
 
-  /// Add coins to user
   Future<void> addCoin(String idUser, int coin) async {
     await postForm('/controller/user/addCoin.php', {
       'idUser': idUser,
@@ -66,7 +60,6 @@ class UserService extends BaseService {
   }
 
   Future<void> updateFrameUser(String idUser, String idFrame) async{
-    print(idFrame);
     await postForm('/controller/user/updateAvatarFrame.php', {
       'idUser': idUser,
       if(idFrame != '')

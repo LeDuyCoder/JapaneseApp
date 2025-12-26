@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:japaneseapp/features/manager_topic/bloc/add_topic_event.dart';
-import 'package:japaneseapp/features/manager_topic/bloc/add_topic_state.dart';
+import 'package:japaneseapp/features/manager_topic/bloc/event/add_topic_event.dart';
+import 'package:japaneseapp/features/manager_topic/bloc/state/add_topic_state.dart';
 import 'package:japaneseapp/features/manager_topic/domain/entities/topic_entity.dart';
 import 'package:japaneseapp/features/manager_topic/domain/repositories/folder_repository.dart';
 
