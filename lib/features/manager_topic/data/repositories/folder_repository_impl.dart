@@ -1,4 +1,6 @@
+import 'package:intl/intl.dart';
 import 'package:japaneseapp/core/service/Local/local_db_service.dart';
+import 'package:japaneseapp/features/manager_topic/domain/entities/folder_entity.dart';
 import 'package:japaneseapp/features/manager_topic/domain/entities/topic_entity.dart';
 import 'package:japaneseapp/features/manager_topic/domain/repositories/folder_repository.dart';
 
@@ -54,5 +56,24 @@ class FolderRepositoryImpl implements FolderRepository {
   @override
   Future<bool> isFolderAlreadyExists(String folderName) {
     return db.folderDao.hasFolderName(folderName);
+  }
+
+  @override
+  Future<List<FolderEntity>> getAllFolders() async {
+    var foldersData = await db.folderDao.getAllFolders();
+    final formatter = DateFormat('dd/MM/yyyy hh:mm a');
+    List<FolderEntity> folders = [];
+    for (var e in foldersData) {
+
+      folders.add(
+        FolderEntity(
+          id: e["id"],
+          name: e["namefolder"],
+          createdAt: formatter.parse(e["datefolder"]),
+          amountTopic: e["amountTopic"],
+        ),
+      );
+    }
+    return folders;
   }
 }

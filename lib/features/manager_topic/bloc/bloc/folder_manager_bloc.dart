@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:japaneseapp/features/manager_topic/bloc/folder_manager_event.dart';
-import 'package:japaneseapp/features/manager_topic/bloc/folder_manager_state.dart';
+import 'package:japaneseapp/features/manager_topic/bloc/event/folder_manager_event.dart';
+import 'package:japaneseapp/features/manager_topic/bloc/state/folder_manager_state.dart';
 import 'package:japaneseapp/features/manager_topic/domain/usecase/delete_folder.dart';
 import 'package:japaneseapp/features/manager_topic/domain/usecase/get_topics_in_folder.dart';
 import 'package:japaneseapp/features/manager_topic/domain/usecase/remove_topic_from_folder.dart';
