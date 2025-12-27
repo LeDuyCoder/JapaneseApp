@@ -30,7 +30,7 @@ class _settingFeatureLearn extends State<settingFeatureLearn>{
               thickness: 1,
             ),
             ListTile(
-              title: Text("Luyện Nói", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+              title: const Text("Luyện Nói", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
               subtitle: Text("Tính năng luyện đọc từ vựng"),
               trailing: Switch(
                 value: SplashScreen.featureState.readTesting,

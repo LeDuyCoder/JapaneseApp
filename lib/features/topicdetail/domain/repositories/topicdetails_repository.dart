@@ -2,6 +2,6 @@ import 'package:japaneseapp/features/topicdetail/domain/entities/word_entity.dar
 
 abstract class TopicDetailsRepository {
   Future<void> openQuizCard(WordEntity);
-  Future<List<WordEntity>> loadTopicDetails(String nameTopic);
-  Future<void> removeTopic(String nameTopic);
+  Future<List<WordEntity>> loadTopicDetails(String idTopic);
+  Future<void> removeTopic(String idTopic);
 }

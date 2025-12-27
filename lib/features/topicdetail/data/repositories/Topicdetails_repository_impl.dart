@@ -8,8 +8,8 @@ class TopicdetailsRepositoryImpl implements TopicDetailsRepository{
   TopicdetailsRepositoryImpl({required this.dataSource});
 
   @override
-  Future<List<WordModel>> loadTopicDetails(String nameTopic) {
-    return dataSource.loadTopicDetails(nameTopic);
+  Future<List<WordModel>> loadTopicDetails(String idTopic) {
+    return dataSource.loadTopicDetails(idTopic);
   }
 
   @override
@@ -18,7 +18,7 @@ class TopicdetailsRepositoryImpl implements TopicDetailsRepository{
   }
 
   @override
-  Future<void> removeTopic(String nameTopic) {
-    return dataSource.removeTopic(nameTopic);
+  Future<void> removeTopic(String idTopic) {
+    return dataSource.removeTopic(idTopic);
   }
 }

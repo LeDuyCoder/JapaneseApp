@@ -9,9 +9,9 @@ abstract class LearnLocalDataSource {
 
 class LearnLocalDataSourceImpl implements LearnLocalDataSource {
   @override
-  Future<List<WordModel>> loadWordsFromTopic(String topicName) async {
+  Future<List<WordModel>> loadWordsFromTopic(String topicId) async {
     final db = LocalDbService.instance;
-    List<Map<String, dynamic>> dataWords = await db.topicDao.getAllWordbyTopic(topicName);
+    List<Map<String, dynamic>> dataWords = await db.topicDao.getAllWordbyTopic(topicId);
 
     List<WordModel> dataWordsModel = dataWords.map((e) => WordModel.fromJson(e)).toList();
     List<WordModel> dataWordsResults = [];

@@ -25,10 +25,10 @@ import 'package:japaneseapp/features/learn/presentation/widget/notification_popu
 import 'package:japaneseapp/features/learn/presentation/widget/quit_tab.dart';
 
 class LearnPage extends StatelessWidget{
-  final String nameTopic;
+  final String idTopic;
   static const int amountQuestion = 5;
 
-  const LearnPage({super.key, required this.nameTopic});
+  const LearnPage({super.key, required this.idTopic});
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +39,7 @@ class LearnPage extends StatelessWidget{
               LearnRepositoryImpl(
                 dataSource: LearnLocalDataSourceImpl(),
               ),
-            )..add(StartLearningEvent(nameTopic)),
+            )..add(StartLearningEvent(idTopic)),
           ),
 
           BlocProvider(

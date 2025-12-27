@@ -11,9 +11,9 @@ class topicServerWidget extends StatefulWidget{
   final String owner;
   final int amount;
   final double? width;
-  final Function(String id) showBottomShetDownload;
+  final Function(String id) onTap;
 
-  const topicServerWidget({super.key, required this.name, required this.owner, required this.amount, required this.id , this.width, required this.showBottomShetDownload});
+  const topicServerWidget({super.key, required this.name, required this.owner, required this.amount, required this.id , this.width, required this.onTap});
 
   @override
   State<StatefulWidget> createState() => _topicServerWidget();
@@ -32,7 +32,7 @@ class _topicServerWidget extends State<topicServerWidget>{
     return GestureDetector(
       onTap: () async {
         if(!(await hastTopic(widget.id))){
-          widget.showBottomShetDownload(widget.id);
+          widget.onTap(widget.id);
         }
       },
       child: Ink(

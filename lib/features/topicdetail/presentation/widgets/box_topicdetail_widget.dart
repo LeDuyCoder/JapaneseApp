@@ -12,9 +12,10 @@ import 'package:japaneseapp/features/congratulation/domain/entities/word_entity.
 
 class BoxTopicDetailWidget extends StatelessWidget{
   final String topicName;
+  final String topicId;
   final List<WordModel> words;
 
-  const BoxTopicDetailWidget({super.key, required this.words, required this.topicName});
+  const BoxTopicDetailWidget({super.key, required this.words, required this.topicName, required this.topicId});
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +59,7 @@ class BoxTopicDetailWidget extends StatelessWidget{
           SizedBox(height: 20,),
           GestureDetector(
             onTapUp: (event) {
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>LearnPage(nameTopic: topicName)));
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>LearnPage(idTopic: topicId)));
             },
             child: Container(
               width: MediaQuery.sizeOf(context).width,

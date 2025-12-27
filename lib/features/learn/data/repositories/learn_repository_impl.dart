@@ -8,8 +8,8 @@ class LearnRepositoryImpl implements LearnRepository{
   LearnRepositoryImpl({required this.dataSource});
 
   @override
-  Future<List<WordEntity>> loadWordsFromTopic(String topicName) async {
-    return dataSource.loadWordsFromTopic(topicName);
+  Future<List<WordEntity>> loadWordsFromTopic(String topicId) async {
+    return dataSource.loadWordsFromTopic(topicId);
   }
 
 
