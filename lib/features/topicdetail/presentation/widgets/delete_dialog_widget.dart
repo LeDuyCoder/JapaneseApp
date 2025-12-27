@@ -6,8 +6,9 @@ import 'package:japaneseapp/core/Theme/colors.dart';
 
 class DeleteDialogWidget extends StatelessWidget{
   final String nameTopic;
+  final String idTopic;
 
-  const DeleteDialogWidget({super.key, required this.nameTopic});
+  const DeleteDialogWidget({super.key, required this.nameTopic, required this.idTopic});
 
 
   @override
@@ -69,8 +70,8 @@ class DeleteDialogWidget extends StatelessWidget{
                         GestureDetector(
                           onTap: () async {
                             final db = LocalDbService.instance;
-                            db.databseDao.deleteData("topic", "name = '${nameTopic}'");
-                            db.databseDao.deleteData("words", "topic = '${nameTopic}'");
+                            db.databseDao.deleteData("topic", "name = '$nameTopic'");
+                            db.databseDao.deleteData("words", "topic = '$idTopic'");
                             Navigator.pop(context);
                             Navigator.pop(context);
                             Navigator.pop(context);

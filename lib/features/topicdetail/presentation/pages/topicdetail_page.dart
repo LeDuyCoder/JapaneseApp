@@ -48,7 +48,7 @@ class TopicDetailPage extends StatelessWidget{
           TopicdetailsRepositoryImpl(
             dataSource: TopicdetailsLocalDatasourceImpl(),
           ),
-        )..add(LoadTopicDetailEvent(nameTopic)),
+        )..add(LoadTopicDetailEvent(idTopic)),
         child: BlocConsumer<TopicdetailBloc, TopicDetailState>(
             builder: (context, state){
               return Scaffold(
@@ -138,7 +138,7 @@ class TopicDetailPage extends StatelessWidget{
                           barrierDismissible: true,
                           context: context,
                           builder: (BuildContext context) {
-                            return MenuDialogWidget(topicName: nameTopic, amountWord: (state is TopicDetailLoaded) ? state.words.length : 0);
+                            return MenuDialogWidget(topicName: nameTopic, amountWord: (state is TopicDetailLoaded) ? state.words.length : 0, topicId: idTopic,);
                           },
                         );
                       },
@@ -160,7 +160,7 @@ class TopicDetailPage extends StatelessWidget{
                             child: BoxTopicDetailLoadingWidget(),
                           ),
                         if(state is TopicDetailLoaded)
-                          BoxTopicDetailWidget(words: state.words, topicName: nameTopic,),
+                          BoxTopicDetailWidget(words: state.words, topicName: nameTopic, topicId: idTopic,),
                       ],
                     ),
                   ),

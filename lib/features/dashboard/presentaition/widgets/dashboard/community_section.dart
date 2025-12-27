@@ -2,12 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:japaneseapp/core/Theme/colors.dart';
 import 'package:japaneseapp/core/Widget/topicServerWidget.dart';
+import 'package:japaneseapp/features/community_topic/presentation/pages/dowload_community_topic_page.dart';
 import 'package:japaneseapp/features/dashboard/domain/models/topic_model.dart';
 import 'package:japaneseapp/features/dashboard/presentaition/widgets/tabhome/bottom_sheet_dowload_pulic.dart';
 
 class CommunitySection extends StatelessWidget{
   final List<dynamic> data;
-  const CommunitySection({super.key, required this.data});
+  final Function() refechState;
+
+  const CommunitySection({super.key, required this.data, required this.refechState});
 
   @override
   Widget build(BuildContext context) {
@@ -65,15 +68,10 @@ class CommunitySection extends StatelessWidget{
                   owner: topicServer.owner ?? '',
                   amount: topicServer.count??0,
                   id: topicServer.id,
-                  showBottomShetDownload: (String id) {
-                    showModalBottomSheet(
-                      context: context,
-                      backgroundColor: Colors.transparent,
-                      builder: (_) => BottomSheetDownloadPublic(
-                        id: id,
-                        nameTopic: topicServer.name,
-                      ),
-                    );
+                  onTap: (String id) async {
+                    await Navigator.push(context, MaterialPageRoute(builder: (context) => DowloadCommunityTopicPage(topicId: id)));
+                    refechState();
+
                   },
                 ),
 

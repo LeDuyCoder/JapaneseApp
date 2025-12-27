@@ -11,8 +11,6 @@ class TopicService extends BaseService {
     );
 
     if (data["topics"] is List) {
-      print(data["topics"]);
-      print("check 3");
       final List<TopicModule> topics = (data["topics"] as List)
           .map((jsonItem) => TopicModule.fromJson(jsonItem as Map<String, dynamic>))
           .toList();
@@ -30,12 +28,17 @@ class TopicService extends BaseService {
         queryParams: {'nameTopic': keyword});
 
     if (data["data"] is List) {
-      final List<TopicModule> topics = (data["data"] as List)
-          .map((jsonItem) => TopicModule.fromJson(jsonItem as Map<String, dynamic>))
-          .toList()
-          .cast<TopicModule>(); // ép kiểu rõ ràng sang List<topic>
+      if((data["data"] as List).isEmpty){
+        print("cm chung may");
+        return [];
+      }else{
+        final List<TopicModule> topics = (data["data"] as List)
+            .map((jsonItem) => TopicModule.fromJson(jsonItem as Map<String, dynamic>))
+            .toList()
+            .cast<TopicModule>(); // ép kiểu rõ ràng sang List<topic>
 
-      return topics;
+        return topics;
+      }
     } else {
       throw Exception('Dữ liệu trả về không hợp lệ');
     }
@@ -52,7 +55,6 @@ class TopicService extends BaseService {
       }
       return null;
     } catch (e) {
-      //print('Lỗi khi kết nối đến server: $e');
       return null;
     }
   }

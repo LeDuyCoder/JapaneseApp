@@ -5,6 +5,7 @@ import 'package:japaneseapp/core/Screen/allTopicScreen.dart';
 import 'package:japaneseapp/core/Screen/seeMoreTopic.dart';
 import 'package:japaneseapp/core/Theme/colors.dart';
 import 'package:japaneseapp/core/generated/app_localizations.dart';
+import 'package:japaneseapp/features/community_topic/presentation/pages/search_community_topic_page.dart';
 import 'package:japaneseapp/features/dashboard/bloc/tabhome_bloc.dart';
 import 'package:japaneseapp/features/dashboard/bloc/tabhome_event.dart';
 import 'package:japaneseapp/features/dashboard/bloc/tabhome_state.dart';
@@ -94,11 +95,11 @@ class TabHomePage extends StatelessWidget {
                               Text(AppLocalizations.of(context)!.dashboard_comunication, style: TextStyle(color: AppColors.textPrimary, fontSize: 18, fontFamily: ""),),
                               SizedBox(width: 80,),
                               GestureDetector(
-                                onTap: (){
-                                  Navigator.push(
+                                onTap: () async {
+                                  await Navigator.push(
                                     context,
                                     PageRouteBuilder(
-                                      pageBuilder: (context, animation, secondaryAnimation) => Container(),//seeMoreTopic(reloadScreen: (){}),
+                                      pageBuilder: (context, animation, secondaryAnimation) => SearchCommunityTopicPage(),//seeMoreTopic(reloadScreen: (){}),
                                       transitionsBuilder: (context, animation, secondaryAnimation, child) {
                                         const begin = Offset(1.0, 0.0);
                                         const end = Offset.zero;
@@ -113,18 +114,21 @@ class TabHomePage extends StatelessWidget {
                                       },
                                     ),
                                   );
+                                  context.read<TabHomeBloc>().add(FetchTabHomeData());
                                 },
-                                child: Text(AppLocalizations.of(context)!.dashboard_comunication_seemore, style: TextStyle(fontFamily: "", color: AppColors.primary, fontSize: 18),),
+                                child: Text(AppLocalizations.of(context)!.dashboard_comunication_seemore, style: const TextStyle(fontFamily: "", color: AppColors.primary, fontSize: 18),),
                               )
                             ],
                           ),
                           SizedBox(height: 10,),
-                          CommunitySection(data: state.topicServer,),
+                          CommunitySection(data: state.topicServer, refechState: () {
+                            context.read<TabHomeBloc>().add(FetchTabHomeData());
+                          },),
                           SizedBox(height: 10,),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              Text(AppLocalizations.of(context)!.dashboard_topic, style: TextStyle(color: AppColors.textPrimary, fontSize: 20, fontFamily: ""),),
+                              Text(AppLocalizations.of(context)!.dashboard_topic, style: const TextStyle(color: AppColors.textPrimary, fontSize: 20, fontFamily: ""),),
                               const SizedBox(width: 80,),
                               GestureDetector(
                                 onTap: () {

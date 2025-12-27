@@ -3,7 +3,7 @@ import 'package:japaneseapp/features/bookmark/domain/entities/word_entity.dart';
 abstract class TopicDetailEvent {}
 
 class LoadTopicDetailEvent extends TopicDetailEvent {
-  final String nameTopic;
+  final String idTopic;
 
-  LoadTopicDetailEvent(this.nameTopic);
+  LoadTopicDetailEvent(this.idTopic);
 }

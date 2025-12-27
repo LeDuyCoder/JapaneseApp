@@ -4,7 +4,6 @@ import 'package:japaneseapp/core/module/word_module.dart';
 
 import 'package:japaneseapp/core/service/Local/local_db_service.dart';
 import 'package:japaneseapp/core/service/Server/ServiceLocator.dart';
-import 'package:japaneseapp/features/topicdetail/domain/entities/word_entity.dart';
 import 'package:japaneseapp/features/topicdetail/domain/entities/topic_entity.dart';
 
 abstract class TopicPrivacyRemoteDataSource{
@@ -16,7 +15,7 @@ class TopicPrivacyRemoteDataSourceImpl implements TopicPrivacyRemoteDataSource{
 
   Future<bool> pulicTopic(String idTopic, String nameTopic) async{
     final db = LocalDbService.instance;
-    List<Map<String, dynamic>> data = await db.topicDao.getAllWordbyTopic(nameTopic);
+    List<Map<String, dynamic>> data = await db.topicDao.getAllWordbyTopic(idTopic);
     User user = FirebaseAuth.instance.currentUser!;
 
     TopicEntity TopicPulic = new TopicEntity(id: idTopic, name: nameTopic, owner: user.providerData[0].displayName, count: 0);

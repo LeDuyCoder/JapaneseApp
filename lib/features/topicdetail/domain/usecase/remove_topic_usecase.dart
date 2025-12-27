@@ -5,7 +5,7 @@ class removeTopicUsecase {
 
   removeTopicUsecase(this.repository);
 
-  Future<void> call(String topicName) async {
-    return await repository.removeTopic(topicName);
+  Future<void> call(String topicId) async {
+    return await repository.removeTopic(topicId);
   }
 }

@@ -27,7 +27,7 @@ class _topicWidget extends State<TopicWidget>{
     double progressComplited = 0.0;
 
     final db = LocalDbService.instance;
-    List<Map<String, dynamic>> dataWords = await db.topicDao.getAllWordbyTopic(widget.nameTopic);
+    List<Map<String, dynamic>> dataWords = await db.topicDao.getAllWordbyTopic(widget.id);
     List<Map<String, dynamic>> dataTopic = await db.topicDao.getAllTopicByName(widget.nameTopic);
     if(dataWords.isNotEmpty) {
       for (Map<String, dynamic> word in dataWords) {
@@ -156,55 +156,5 @@ class _topicWidget extends State<TopicWidget>{
       return const Center();
 
     });
-  }
-}
-
-
-class _CircularProgressPainter extends CustomPainter {
-  final double progress;
-  final Color backgroundColor;
-  final Color progressColor;
-
-  _CircularProgressPainter({
-    required this.progress,
-    required this.backgroundColor,
-    required this.progressColor,
-  });
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    Paint backgroundPaint = Paint()
-      ..color = backgroundColor
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 8.0
-      ..strokeCap = StrokeCap.round;
-
-    Paint progressPaint = Paint()
-      ..color = progressColor
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 8.0
-      ..strokeCap = StrokeCap.round;
-
-    Offset center = Offset(size.width / 2, size.height / 2);
-    double radius = size.width / 2 - 8;
-
-    // Vẽ đường tròn nền
-    canvas.drawCircle(center, radius, backgroundPaint);
-
-    // Vẽ đường tiến trình
-    double startAngle = -3.14 / 2;
-    double sweepAngle = 2 * 3.14 * progress;
-    canvas.drawArc(
-      Rect.fromCircle(center: center, radius: radius),
-      startAngle,
-      sweepAngle,
-      false,
-      progressPaint,
-    );
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return true;
   }
 }

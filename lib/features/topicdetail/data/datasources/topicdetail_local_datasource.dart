@@ -4,14 +4,14 @@ import 'package:japaneseapp/features/topicdetail/data/models/word_model.dart';
 abstract class TopicdetailsLocalDatasource{
   Future<List<WordModel>> loadTopicDetails(String nameTopic);
   Future<void> openQuizCard(WordEntity);
-  Future<void> removeTopic(String nameTopic);
+  Future<void> removeTopic(String idTopic);
 }
 
 class TopicdetailsLocalDatasourceImpl implements TopicdetailsLocalDatasource{
   @override
-  Future<List<WordModel>> loadTopicDetails(String nameTopic) async {
+  Future<List<WordModel>> loadTopicDetails(String idTopic) async {
     final db = LocalDbService.instance;
-    List<Map<String, dynamic>> dataWords = await db.topicDao.getAllWordbyTopic(nameTopic);
+    List<Map<String, dynamic>> dataWords = await db.topicDao.getAllWordbyTopic(idTopic);
 
     List<WordModel> dataWordsModel = dataWords.map((e) => WordModel.fromJson(e)).toList();
 
@@ -26,7 +26,7 @@ class TopicdetailsLocalDatasourceImpl implements TopicdetailsLocalDatasource{
   }
 
   @override
-  Future<void> removeTopic(String nameTopic) {
+  Future<void> removeTopic(String idTopic) {
     // TODO: implement removeTopic
     throw UnimplementedError();
   }
