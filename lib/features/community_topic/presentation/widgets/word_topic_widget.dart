@@ -2,6 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:japaneseapp/features/community_topic/domain/entities/word_entity.dart';
 
+/// `WordTopicWidget` là widget dùng để hiển thị
+/// thông tin của **một từ vựng** trong topic.
+///
+/// Widget này nhận dữ liệu từ [WordEntity]
+/// và chịu trách nhiệm render nội dung tương ứng
+/// (ví dụ: từ vựng, nghĩa, cách đọc, v.v.).
 class WordTopicWidget extends StatelessWidget{
   final WordEntity wordEntity;
 

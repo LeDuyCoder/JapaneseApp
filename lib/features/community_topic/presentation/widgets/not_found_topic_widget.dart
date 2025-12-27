@@ -2,6 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:japaneseapp/core/Theme/colors.dart';
 
+/// `NotFoundTopicWidget` là widget dùng để hiển thị
+/// trạng thái **không tìm thấy topic**.
+///
+/// Widget này thường được sử dụng khi:
+/// - Kết quả tìm kiếm rỗng
+/// - Không có dữ liệu topic để hiển thị
+///
+/// UI có thể bao gồm icon, text thông báo
+/// hoặc nút hành động (retry, quay lại, v.v.).
 class NotFoundTopicWidget extends StatelessWidget{
   @override
   Widget build(BuildContext context) {

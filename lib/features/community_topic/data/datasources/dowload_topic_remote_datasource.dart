@@ -4,7 +4,37 @@ import 'package:japaneseapp/features/community_topic/domain/entities/community_t
 import 'package:japaneseapp/features/community_topic/domain/entities/dowload_topic_entity.dart';
 import 'package:japaneseapp/features/community_topic/domain/entities/word_entity.dart';
 
+/// Remote data source dùng để xử lý **Download Topic**.
+///
+/// Lớp này chịu trách nhiệm:
+/// - Gọi API lấy dữ liệu topic và danh sách từ vựng
+/// - Mapping dữ liệu sang các entity domain
+/// - Lưu topic và word vào local database
+///
+/// Data source này thường được sử dụng trong
+/// `DownloadTopicRepository` implementation.
 class DowloadTopicRemoteDataSource{
+
+  /// Tải dữ liệu đầy đủ của một topic để phục vụ download.
+  ///
+  /// [topicId] là ID định danh duy nhất của topic.
+  ///
+  /// Quy trình xử lý:
+  /// - Gọi API lấy danh sách word theo topic
+  /// - Gọi API lấy thông tin topic
+  /// - Mapping dữ liệu sang:
+  ///   - [CommunityTopicEntity]
+  ///   - [WordEntity]
+  /// - Kiểm tra topic đã tồn tại trong local database hay chưa
+  ///
+  /// Trả về:
+  /// - `Future<DowloadTopicEntity>` chứa toàn bộ dữ liệu topic
+  ///
+  /// Có thể throw exception nếu:
+  /// - Topic không tồn tại
+  /// - Lỗi network
+  /// - Lỗi database local
+  /// - Lỗi parse dữ liệu
   Future<DowloadTopicEntity> loadDowloadTopicEntity(String topicId) async {
     LocalDbService db = LocalDbService.instance;
 
@@ -36,7 +66,24 @@ class DowloadTopicRemoteDataSource{
         wordEntities: wordEntities
     );
   }
-  
+
+  /// Thực hiện download và lưu topic về local database.
+  ///
+  /// [topic] là entity chứa toàn bộ dữ liệu topic
+  /// và danh sách từ vựng cần được lưu.
+  ///
+  /// Quy trình xử lý:
+  /// - Lưu thông tin topic vào bảng topic
+  /// - Mapping danh sách word sang dạng Map
+  /// - Insert dữ liệu word vào local database
+  ///
+  /// Trả về:
+  /// - `Future<void>` khi quá trình lưu hoàn tất
+  ///
+  /// Có thể throw exception nếu:
+  /// - Không đủ bộ nhớ
+  /// - Lỗi ghi database
+  /// - Dữ liệu không hợp lệ
   Future<void> dowload(DowloadTopicEntity topic) async{
     LocalDbService db = LocalDbService.instance;
     db.topicDao.insertTopicID(

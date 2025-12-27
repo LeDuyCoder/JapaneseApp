@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:japaneseapp/features/community_topic/presentation/widgets/floating_image.dart';
 
-import 'package:flutter/material.dart';
-import 'package:japaneseapp/features/community_topic/presentation/widgets/floating_image.dart';
-
+/// `DownloadWidget` là widget dùng để hiển thị
+/// **màn hình download topic**.
+///
+/// Widget này quản lý trạng thái thông qua
+/// [_DownloadWidgetState], nơi xử lý animation
+/// và tiến trình download.
 class DownloadWidget extends StatefulWidget {
   const DownloadWidget({super.key});
 
@@ -11,8 +14,13 @@ class DownloadWidget extends StatefulWidget {
   State<DownloadWidget> createState() => _DownloadWidgetState();
 }
 
-class _DownloadWidgetState extends State<DownloadWidget>
-    with SingleTickerProviderStateMixin {
+/// State của [DownloadWidget], chịu trách nhiệm
+/// hiển thị **màn hình đang download topic**
+/// với animation tiến trình (progress).
+///
+/// State này sử dụng [SingleTickerProviderStateMixin]
+/// để cung cấp `vsync` cho [AnimationController].
+class _DownloadWidgetState extends State<DownloadWidget> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _progressAnimation;
 

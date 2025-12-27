@@ -5,6 +5,19 @@ import 'package:japaneseapp/core/Theme/colors.dart';
 import 'package:japaneseapp/features/community_topic/domain/entities/community_topic_entity.dart';
 import 'package:japaneseapp/features/community_topic/presentation/pages/dowload_community_topic_page.dart';
 
+/// `CommunityTopicWidget` là widget dùng để hiển thị
+/// **một topic cộng đồng** trong danh sách.
+///
+/// Widget thể hiện các thông tin:
+/// - Tên topic
+/// - Tác giả (user)
+/// - Số lượng từ vựng
+/// - Trạng thái đã tải hay chưa
+///
+/// Khi người dùng nhấn vào widget:
+/// - Nếu topic **chưa tồn tại trong máy**
+///   → điều hướng sang màn hình download topic
+/// - Sau khi download xong → gọi `reloadState` để cập nhật UI
 class CommunityTopicWidget extends StatefulWidget{
 
   final CommunityTopicEntity communityTopicEntity;
@@ -19,13 +32,18 @@ class CommunityTopicWidget extends StatefulWidget{
   State<StatefulWidget> createState() => _topicServerWidget();
 }
 
+/// State của [CommunityTopicWidget].
+///
+/// Chịu trách nhiệm:
+/// - Xử lý sự kiện tap
+/// - Điều hướng sang màn hình download topic
+/// - Render UI topic
 class _topicServerWidget extends State<CommunityTopicWidget>{
 
   Future<bool> hastTopic(String id) async {
     final db = LocalDbService.instance;
     return await db.topicDao.hasTopicID(id);
   }
-
 
   @override
   Widget build(BuildContext context) {

@@ -1,6 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:japaneseapp/features/community_topic/presentation/widgets/floating_image.dart';
 
+/// `DowloadSucessWidget` là widget dùng để hiển thị
+/// **trạng thái download topic thành công**.
+///
+/// Widget này thường được sử dụng sau khi
+/// [DowloadTopicBloc] emit state [DowloadTopicSucces].
+///
+/// UI bao gồm:
+/// - Hình ảnh minh họa thành công
+/// - Thông báo tải xuống thành công
+/// - Nút hành động để quay lại và xem topic
 class DowloadSucessWidget extends StatelessWidget{
   const DowloadSucessWidget({super.key});
 
