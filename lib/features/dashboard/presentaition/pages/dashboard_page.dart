@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:japaneseapp/core/Screen/profileScreen.dart';
 import 'package:japaneseapp/core/Theme/colors.dart';
 import 'package:japaneseapp/core/generated/app_localizations.dart';
+import 'package:japaneseapp/features/character/presentation/pages/character_page.dart';
 import 'package:japaneseapp/features/dashboard/presentaition/cubit/tab_cubit.dart';
 import 'package:japaneseapp/features/dashboard/presentaition/cubit/tab_state.dart';
 import 'package:japaneseapp/features/dashboard/presentaition/pages/dictionary_page_provider.dart';
@@ -38,8 +39,8 @@ class _DashboardPageState extends State<DashboardPage> {
   Widget build(BuildContext context) {
     final List<Widget> screens = [
       TabHomePage(),
-      DictionaryPageProvider(),
-      Container(),
+      const DictionaryPageProvider(),
+      CharacterPage(),
       profileScreen(changeLanguage: widget.changeLanguage),
     ];
 
