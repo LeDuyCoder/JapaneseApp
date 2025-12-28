@@ -10,7 +10,6 @@ class WordModel extends WordEntity{
   });
 
   factory WordModel.fromJson(Map<String, dynamic> json) {
-    print(json);
     return WordModel(
       word: json['word'],
       mean: json['mean'],
