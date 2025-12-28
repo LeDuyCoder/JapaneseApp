@@ -24,13 +24,15 @@ class TopicSection extends StatelessWidget{
           child:  data.isNotEmpty
               ? Column(
               children: [
-                for (Map<String, dynamic> topicLocal in data)
+                for (final topicLocal in data.take(5))
                   TopicWidget(
                     id: topicLocal["id"],
                     nameTopic: topicLocal["name"],
                     owner: topicLocal["user"],
                     reloadDashBoard: () {
-                      contextDashboard.read<TabHomeBloc>().add(FetchTabHomeData());
+                      contextDashboard
+                          .read<TabHomeBloc>()
+                          .add(FetchTabHomeData());
                     },
                   ),
               ]
