@@ -95,7 +95,6 @@ class FolderDao {
       GROUP BY topic.id, topic.name, topic.user;
 
     ''', [folderID]);
-    print(result);
     return result.map((e) => TopicEntity.fromJson(e)).toList();
   }
 

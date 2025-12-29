@@ -19,7 +19,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 4,
+      version: 5,
       onCreate: _createDB,
       onUpgrade: _updateDB,
     );
@@ -125,6 +125,21 @@ class DatabaseHelper {
             acquired_at DATETIME DEFAULT CURRENT_TIMESTAMP
         );
         ''');
+    }
+    if(oldVersion < 5){
+      await db.execute('''
+        UPDATE words
+        SET topic = (
+          SELECT topic.id
+          FROM topic
+          WHERE topic.name = words.topic
+        )
+        WHERE EXISTS (
+          SELECT 1
+          FROM topic
+          WHERE topic.name = words.topic
+        );
+      ''');
     }
   }
 

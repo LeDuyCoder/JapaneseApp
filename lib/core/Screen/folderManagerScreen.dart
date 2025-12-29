@@ -192,55 +192,7 @@
 //                                   },),
 //                                 )
 //                             else
-//                               Container(
-//                                 width: MediaQuery.sizeOf(context).width,
-//                                 height: MediaQuery.sizeOf(context).height - AppBar().preferredSize.height - 100,
-//                                 child: Column(
-//                                   crossAxisAlignment: CrossAxisAlignment.center,
-//                                   children: [
-//                                     Container(
-//                                       width: MediaQuery.sizeOf(context).width - 50,
-//                                       height: 280,
-//                                       decoration: const BoxDecoration(
-//                                         borderRadius: BorderRadius.all(Radius.circular(20)),
-//                                         color: Color.fromRGBO(221, 221, 221, 0.4),
-//                                       ),
-//                                       child: Column(
-//                                         mainAxisAlignment: MainAxisAlignment.center,
-//                                         children: [
-//                                           Image.asset("assets/StickyNode.png", width: 80,),
-//                                           SizedBox(height: 10,),
-//                                           Text(AppLocalizations.of(context)!.folderManager_nodata_title, style: TextStyle(fontSize: 20),),
-//                                           SizedBox(height: 20,),
-//                                           GestureDetector(
-//                                             onTap: (){
-//                                               _showScreenAddTopic();
-//                                             },
-//                                             child: Container(
-//                                                 width: 200,
-//                                                 height: 50,
-//                                                 decoration: const BoxDecoration(
-//                                                     color: AppColors.primary,
-//                                                     borderRadius: BorderRadius.all(Radius.circular(10))
-//                                                 ),
-//                                                 child: Column(
-//                                                   crossAxisAlignment: CrossAxisAlignment.center,
-//                                                   mainAxisAlignment: MainAxisAlignment.center,
-//                                                   children: [
-//                                                     Text(AppLocalizations.of(context)!.folderManager_nodata_button, style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 18),),
-//                                                   ],
-//                                                 )
-//                                             ),
-//                                           )
-//
-//                                         ],
-//                                       ),
-//                                     )
-//
-//
-//                                   ],
-//                                 )
-//                               )
+
 //                           ],
 //                         ),
 //                       ),

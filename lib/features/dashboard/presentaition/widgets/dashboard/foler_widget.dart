@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:japaneseapp/core/Service/Local/local_db_service.dart';
 import 'package:japaneseapp/core/Theme/colors.dart';
+import 'package:japaneseapp/features/manager_topic/presentation/pages/manager_topic_page.dart';
 
 class FolderWidget extends StatelessWidget{
-
   final String nameFolder;
   final String dateCreated;
   final int idFolder;
@@ -135,76 +135,121 @@ class FolderWidget extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(left: 5, right: 5),
-      child: GestureDetector(
-        onTap: (){
-          // Navigator.push(
-          //   context,
-          //   PageRouteBuilder(
-          //     pageBuilder: (context, animation, secondaryAnimation) => folderManagerScreen(
-          //       idFolder: idFolder,
-          //       nameFolder: nameFolder,
-          //       reloadDashBoard: () {
-          //         reloadDashboard();
-          //       },
-          //     ),
-          //     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          //       const begin = Offset(0.0, 1.0);
-          //       const end = Offset.zero;
-          //       const curve = Curves.ease;
-          //       final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-          //       return SlideTransition(
-          //         position: animation.drive(tween),
-          //         child: child,
-          //       );
-          //     },
-          //   ),
-          // );
-        },
+    final theme = Theme.of(context);
+
+    return Container(
+      height: 150,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 10),
         child: Container(
-            width: 250,
-            height: 140,
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.all(Radius.circular(20)),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey,
-                  offset: Offset(0, 2),
-                  blurRadius: 5,
-                )
-              ]
-            ),
-            child: Padding(
-              padding: EdgeInsets.only(left: 10, top: 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(nameFolder, style: TextStyle(color: AppColors.textSecond, fontSize: 18, fontWeight: FontWeight.bold),),
-                  Divider(
-                    color: Colors.grey, // Màu của đường kẻ
-                    thickness: 1,
-                    indent: 0,
-                    endIndent: 5,// Độ dày
+          width: 280,
+          child: GestureDetector(
+            onTap: () async {
+              await Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) =>
+                      ManagerTopicPage(
+                        idFolder: idFolder,
+                        nameFolder: nameFolder,
+                      ),
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) {
+                    final tween = Tween(
+                      begin: const Offset(0, 1),
+                      end: Offset.zero,
+                    ).chain(CurveTween(curve: Curves.easeOutCubic));
+
+                    return SlideTransition(
+                      position: animation.drive(tween),
+                      child: child,
+                    );
+                  },
+                ),
+              );
+              reloadDashboard();
+            },
+            child: Container(
+              width: 240,
+              height: 100,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(22),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 5,
+                    spreadRadius: 2,
+                    offset: const Offset(0, 0),
                   ),
-                  Text(dateCreated, style: const TextStyle(color: AppColors.textSecond),),
-                  SizedBox(height: 10,),
-                  Container(
-                    width: 70,
-                    height: 30,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: AppColors.primary,
-                    ),
-                    child: Center(
-                      child: Text("${amountTopic} chủ đề", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),),
-                    )
-                  )
                 ],
-              )
-            )
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(Icons.folder, size: 28, color: Colors.black.withOpacity(0.3),),
+                        SizedBox(width: 10),
+                        Text(
+                          nameFolder,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        )
+                      ],
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      dateCreated,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurface.withOpacity(0.6),
+                      ),
+                    ),
+                    Divider(
+                      color: Colors.black.withOpacity(0.2),
+                      height: 20,
+                    ),
+                    const Spacer(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.primary.withOpacity(0.12),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            '$amountTopic chủ đề',
+                            style: theme.textTheme.labelMedium?.copyWith(
+                              color: AppColors.primary,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+
+                        /// Icon
+                        Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          size: 16,
+                          color:
+                          theme.colorScheme.onSurface.withOpacity(0.4),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
         ),
       ),
     );

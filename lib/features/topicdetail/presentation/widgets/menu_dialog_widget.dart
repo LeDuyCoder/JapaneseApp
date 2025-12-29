@@ -4,10 +4,11 @@ import 'package:japaneseapp/core/generated/app_localizations.dart';
 import 'package:japaneseapp/features/topicdetail/presentation/widgets/delete_dialog_widget.dart';
 
 class MenuDialogWidget extends StatelessWidget{
+  final String topicId;
   final String topicName;
   final int amountWord;
 
-  const MenuDialogWidget({super.key, required this.topicName, required this.amountWord});
+  const MenuDialogWidget({super.key, required this.topicName, required this.amountWord, required this.topicId});
 
 
 
@@ -77,7 +78,7 @@ class MenuDialogWidget extends StatelessWidget{
                             barrierDismissible: true,
                             context: context,
                             builder: (BuildContext context) {
-                              return DeleteDialogWidget(nameTopic: topicName);
+                              return DeleteDialogWidget(nameTopic: topicName, idTopic: topicId,);
                             },
                           );
                           

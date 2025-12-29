@@ -13,7 +13,7 @@ class TopicdetailBloc extends Bloc<TopicDetailEvent, TopicDetailState> {
   Future<void> _onLoad(LoadTopicDetailEvent event, Emitter emit) async {
     emit(TopicDetailLoading());
     await Future.delayed(const Duration(seconds: 2));
-    final topicDetails = await repo.loadTopicDetails(event.nameTopic);
+    final topicDetails = await repo.loadTopicDetails(event.idTopic);
     emit(TopicDetailLoaded(words: topicDetails));
   }
 

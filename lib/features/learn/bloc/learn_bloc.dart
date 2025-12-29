@@ -20,7 +20,7 @@ class LearnBloc extends Bloc<LearnEvent, LearnState>{
 
   Future<void> _onStartLearn(StartLearningEvent event, Emitter emit) async {
     emit(LearnGeneratation());
-    List<WordEntity> wordEntitiesData = await repository.loadWordsFromTopic(event.topicName);
+    List<WordEntity> wordEntitiesData = await repository.loadWordsFromTopic(event.topicId);
     GenerateTestUsecase generateTestUsecase = GenerateTestUsecase(LearnPage.amountQuestion, wordEntities: List<WordEntity>.from(wordEntitiesData));
     List<TestEntity> listTest = generateTestUsecase.generate(List<WordEntity>.from(wordEntitiesData));
     emit(LearnGenerated(listTest, wordEntitiesData));

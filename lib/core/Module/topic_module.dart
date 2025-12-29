@@ -2,14 +2,15 @@ import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class TopicModule extends Equatable {
+  String? userId;
   String? owner;
   int? count;
   final String id, name;
 
-  TopicModule({required this.id, required this.name, this.owner, this.count});
+  TopicModule({required this.id, required this.name, this.owner, this.count, this.userId});
 
   @override
-  List<Object?> get props => [id, name, owner, count];
+  List<Object?> get props => [id, name, owner, count, userId];
 
   Map<String, dynamic> toJson() {
     return {
@@ -17,6 +18,7 @@ class TopicModule extends Equatable {
       'name': name,
       'owner': owner,
       'count': count,
+      'user_id': userId,
     };
   }
 
@@ -35,6 +37,7 @@ class TopicModule extends Equatable {
       name: json['nameTopic'] ?? json["name"],
       owner: json['user_name'] ?? json["owner"],
       count: json['word_count'] ?? json["count"],
+      userId: json['user_id'],
     );
   }
 
