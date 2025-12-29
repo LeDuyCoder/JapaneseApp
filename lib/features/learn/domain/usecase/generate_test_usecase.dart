@@ -49,36 +49,38 @@ class GenerateTestUsecase{
     return tests;
   }
 
-  List<TestEntity> generateOfCharacterTest(List<CharacterEntity> listCharacter) {
+  List<TestEntity> generateOfCharacterTest(
+      List<CharacterEntity> listCharacter,
+      ) {
     const int amountQuestion = 5;
 
     final List<TestView> testViews = [];
     final List<TestEntity> tests = [];
     final random = Random();
 
+    if (listCharacter.isEmpty) return tests;
+
     int index = 0;
 
-    while (index < amountQuestion && listCharacter.isNotEmpty) {
+    while (index < amountQuestion) {
       final TestView testView = _randomCharacterTestView(random);
-
       if (index > 0 && testViews[index - 1] == testView) {
         continue;
       }
-
-      final int characterIndex = random.nextInt(listCharacter.length);
-      final CharacterEntity word = listCharacter.removeAt(characterIndex);
+      final CharacterEntity word =
+      listCharacter[index % listCharacter.length];
 
       tests.add(
         TestEntity(
           testView: testView,
           wordEntity: WordEntity(
-              word: word.character,
-              mean: word.romaji,
-              wayread: word.romaji,
-              topic: '',
-              level: word.level,
-              examples: word.examples,
-              pathImage: word.pathImage
+            word: word.character,
+            mean: word.romaji,
+            wayread: word.romaji,
+            topic: '',
+            level: word.level,
+            examples: word.examples,
+            pathImage: word.pathImage,
           ),
         ),
       );
@@ -89,6 +91,7 @@ class GenerateTestUsecase{
 
     return tests;
   }
+
 
   TestView _randomCharacterTestView(Random random) {
     const allowedViews = [

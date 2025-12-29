@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:japaneseapp/core/Theme/colors.dart';
 import 'package:japaneseapp/features/character/presentation/widgets/floating_image.dart';
+import 'package:japaneseapp/features/congratulation/domain/enum/type_congratulation.dart';
 import 'package:japaneseapp/features/learn/bloc/elapsed_time_bloc.dart';
 import 'package:japaneseapp/features/learn/bloc/elapsed_time_event.dart';
 import 'package:japaneseapp/features/learn/bloc/learn_bloc.dart';
@@ -26,9 +27,9 @@ import 'package:japaneseapp/features/learn/presentation/widget/quit_tab.dart';
 class LearnCharacterPage extends StatelessWidget{
   final TypeTest type;
   final int setLevel;
-  final int maxQuestion = 5;
+  int maxQuestion;
 
-  const LearnCharacterPage({super.key, required this.type, required this.setLevel});
+  LearnCharacterPage({super.key, required this.type, required this.setLevel, this.maxQuestion = 4});
 
   @override
   Widget build(BuildContext context) {
@@ -81,6 +82,7 @@ class LearnCharacterPage extends StatelessWidget{
                           return Container(
                               width: MediaQuery.sizeOf(context).width,
                               height: MediaQuery.sizeOf(context).height,
+                              color: Colors.white,
                               child: Column(
                                 children: [
                                   SizedBox(height: 20,),
@@ -125,7 +127,7 @@ class LearnCharacterPage extends StatelessWidget{
                                             onPressButton: (isCorrect) {
                                               context
                                                   .read<ProgressCubit>()
-                                                  .increase(context, isCorrect, state.listEntites, context.read<ElapsedTimeBloc>().state.elapsed);
+                                                  .increase(context, isCorrect, state.listEntites, context.read<ElapsedTimeBloc>().state.elapsed, TypeCongratulation.character);
                                             },
                                             imagePath: 'assets/character/hinh10.png',
                                             isCorrect: isCorrect,
@@ -138,13 +140,13 @@ class LearnCharacterPage extends StatelessWidget{
                                     ChoseTestView(contextPage: context, listWords: state.listEntites, word: state.testEntities[stateProgress.amount].wordEntity, onComplete: (isCorrect) {
                                       context
                                           .read<ProgressCubit>()
-                                          .increase(context, isCorrect, state.listEntites, context.read<ElapsedTimeBloc>().state.elapsed);
+                                          .increase(context, isCorrect, state.listEntites, context.read<ElapsedTimeBloc>().state.elapsed, TypeCongratulation.character);
                                     },),
                                   if(state.testEntities[stateProgress.amount].testView == TestView.WriteTestView)
                                     WriteTestView(contextPage: context, wordEntity: state.testEntities[stateProgress.amount].wordEntity, onComplete: (isCorrect) {
                                       context
                                           .read<ProgressCubit>()
-                                          .increase(context, isCorrect, state.listEntites, context.read<ElapsedTimeBloc>().state.elapsed);
+                                          .increase(context, isCorrect, state.listEntites, context.read<ElapsedTimeBloc>().state.elapsed, TypeCongratulation.character);
                                     }, isCharracter: true,),
                                 ],
                               )

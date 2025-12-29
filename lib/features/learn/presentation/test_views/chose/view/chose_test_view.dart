@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:japaneseapp/features/learn/domain/entities/word_entity.dart';
 import 'package:japaneseapp/features/learn/presentation/test_views/base_test_view.dart';
@@ -51,6 +52,7 @@ class ChoseTestView extends StatelessWidget implements BaseTestView{
           builder: (context, state){
             return Container(
               width: MediaQuery.sizeOf(context).width,
+              color: Colors.white,
               child: SingleChildScrollView(
                 scrollDirection: Axis.vertical,
                 child: Column(

@@ -12,6 +12,7 @@ import 'package:japaneseapp/features/congratulation/data/datasource/user_progres
 import 'package:japaneseapp/features/congratulation/data/datasource/user_remote_datasource.dart';
 import 'package:japaneseapp/features/congratulation/data/repositories/user_progress_repository_impl.dart';
 import 'package:japaneseapp/features/congratulation/domain/entities/word_entity.dart';
+import 'package:japaneseapp/features/congratulation/domain/enum/type_congratulation.dart';
 import 'package:japaneseapp/features/congratulation/presentation/widgets/animated_loading_ads_dialog.dart';
 import 'package:japaneseapp/features/congratulation/presentation/widgets/animated_loading_widget.dart';
 import 'package:japaneseapp/features/congratulation/presentation/widgets/floating_image.dart';
@@ -21,6 +22,7 @@ class CongratulationPage extends StatefulWidget {
   final int inCorrectAnswer;
   final int totalQuestion;
   final Duration elapsed;
+  final TypeCongratulation type;
   final List<WordEntity> words;
 
   CongratulationPage(
@@ -29,7 +31,8 @@ class CongratulationPage extends StatefulWidget {
         required this.inCorrectAnswer,
         required this.totalQuestion,
         required this.words,
-        required this.elapsed
+        required this.elapsed,
+        required this.type
       });
 
   @override
@@ -75,7 +78,7 @@ class _CongratulationPage extends State<CongratulationPage>
           widget.inCorrectAnswer,
           widget.totalQuestion)
         ..add(CongratulationStarted(
-            widget.correctAnswer, widget.inCorrectAnswer, widget.words)),
+            widget.correctAnswer, widget.inCorrectAnswer, widget.words, widget.type)),
       child: BlocConsumer<CongratulationBloc, CongratulationState>(
           builder: (context, state) {
             final bloc = context.read<CongratulationBloc>();

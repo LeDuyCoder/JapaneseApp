@@ -6,6 +6,7 @@ class ProgressInitial extends ProgressState{
   ProgressInitial({required this.amount});
 
   ProgressInitial copyWith({int? amount}){
+    print(amount);
     return ProgressInitial(amount: amount??this.amount);
   }
 }

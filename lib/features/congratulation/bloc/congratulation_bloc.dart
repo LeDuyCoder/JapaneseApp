@@ -3,11 +3,16 @@ import 'dart:math';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:japaneseapp/core/Service/Local/dao/VocabularyDao.dart';
 import 'package:japaneseapp/core/service/check_in/check_in_local_data_source.dart';
-import 'package:japaneseapp/core/service/check_in/check_in_status.dart';
 import 'package:japaneseapp/core/service/check_in/check_in_use_case.dart';
 import 'package:japaneseapp/features/ads/services/ad_result.dart';
 import 'package:japaneseapp/features/ads/services/rewarded_ad_service_impl.dart';
-import 'package:japaneseapp/features/congratulation/data/repositories/vocabulary_repository.dart';
+import 'package:japaneseapp/features/congratulation/data/datasource/character_local_datasource.dart';
+import 'package:japaneseapp/features/congratulation/data/repositories/character_repository_impl.dart';
+import 'package:japaneseapp/features/congratulation/domain/entities/character_enity.dart';
+import 'package:japaneseapp/features/congratulation/domain/entities/word_entity.dart';
+import 'package:japaneseapp/features/congratulation/domain/enum/type_congratulation.dart';
+import 'package:japaneseapp/features/congratulation/domain/repositories/character_repository.dart';
+import 'package:japaneseapp/features/congratulation/domain/repositories/vocabulary_repository.dart';
 import 'package:japaneseapp/features/congratulation/data/repositories/vocabulary_repository_impl.dart';
 import 'package:japaneseapp/features/congratulation/domain/usecases/check_in_feature_use_case.dart';
 import 'package:japaneseapp/features/congratulation/domain/usecases/update_vocabulary_progress_usecase.dart';
@@ -84,8 +89,34 @@ class CongratulationBloc extends Bloc<CongratulationEvent, CongratulationState>{
     int coin = rewardCalculator.calcCoin(correctAnswer, totalQuestions);
     int expPlus = rewardCalculator.calcLevelExp(progress.level, progress.nextExp - progress.exp);
 
-    VocabularyRepository vocabularyRepository = VocabularyRepositoryImpl(VocabularyDao());
-    await UpdateVocabularyProgressUseCase(vocabularyRepository).execute(event.words);
+    if(event.type == TypeCongratulation.vocabulary) {
+      VocabularyRepository vocabularyRepository = VocabularyRepositoryImpl(
+          VocabularyDao());
+      await UpdateVocabularyProgressUseCase(vocabularyRepository).execute(
+          event.words);
+    }
+
+    if(event.type == TypeCongratulation.character){
+      CharacterRepository characterRepository = CharacterRepositoryImpl(
+        characterLocalDatasource: CharacterLocalDatasource()
+      );
+      List<WordEntity> wordEntities = event.words;
+      List<CharacterEntity> characters = [];
+      for(WordEntity wordEntity in wordEntities){
+        characters.add(
+            CharacterEntity(
+                character: wordEntity.word,
+                romaji: wordEntity.wayread,
+                examples: wordEntity.examples ?? [],
+                pathImage: wordEntity.pathImage ?? "",
+                level: wordEntity.level
+            )
+        );
+      }
+
+      characterRepository.updateProgressCharacterDB(event.typeTest.name, characters);
+      characterRepository.updateProgressCharacterSharedFile(event.typeTest.name, 1);
+    }
 
     await repo.saveProgress(CalculateLevelUseCase().call(current: progress, gainedExp: expPlus));
     await repo.addCoin(coin);

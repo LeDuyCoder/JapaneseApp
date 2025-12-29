@@ -50,7 +50,8 @@ class ListCharacterPage extends StatelessWidget{
                             final prefs = await SharedPreferences.getInstance();
                             Navigator.push(context, MaterialPageRoute(builder: (ctx)=>LearnCharacterPage(
                                 type: type=="hiragana"?TypeTest.hiragana:TypeTest.katakana,
-                                setLevel: jsonDecode(prefs.getString(type)!)["levelSet"]
+                                setLevel: jsonDecode(prefs.getString(type)!)["levelSet"],
+                                maxQuestion: jsonDecode(prefs.getString(type)!)["levelSet"] == 0 ? 4 : 5,
                             )));
                           },
                           child: Container(

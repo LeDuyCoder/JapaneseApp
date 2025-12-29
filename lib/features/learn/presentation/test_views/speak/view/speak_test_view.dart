@@ -26,6 +26,7 @@ class SpeakTestView extends StatelessWidget implements BaseTestView{
       child: BlocBuilder<SpeakTestCubit, SpeakTestState>(
           builder: (context, state){
             return Container(
+              color: Colors.white,
               width: MediaQuery.sizeOf(context).width,
               child: SingleChildScrollView(
                 scrollDirection: Axis.vertical,

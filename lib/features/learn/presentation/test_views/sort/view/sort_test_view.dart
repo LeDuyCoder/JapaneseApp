@@ -32,6 +32,7 @@ class SortTestView extends StatelessWidget implements BaseTestView {
           builder: (context, state){
             return Container(
               width: MediaQuery.sizeOf(context).width,
+              color: Colors.white,
               child: SingleChildScrollView(
                 scrollDirection: Axis.vertical,
                 child: Stack(

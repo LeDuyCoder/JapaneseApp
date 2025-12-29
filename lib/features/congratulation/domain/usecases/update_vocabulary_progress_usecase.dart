@@ -1,4 +1,4 @@
-import 'package:japaneseapp/features/congratulation/data/repositories/vocabulary_repository.dart';
+import 'package:japaneseapp/features/congratulation/domain/repositories/vocabulary_repository.dart';
 
 import 'package:japaneseapp/features/congratulation/domain/entities/word_entity.dart';
 
