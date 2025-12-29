@@ -23,8 +23,18 @@ class LoadCharactersTesUsecase{
       dataFlatten.addAll(dataJsonCharacters[typeIndex][i]);
     }
 
+    List<List<String>> dataCharacterLearn = [];
+
+    if(setLevel == 0){
+      dataCharacterLearn.add(dataJsonCharacters[type == TypeTest.hiragana ? 2 : 3][0]);
+    }else {
+      for (var i = 0; i < (setLevel <= 24 ? setLevel : 24); i++) {
+        dataCharacterLearn.add(dataJsonCharacters[type == TypeTest.hiragana ? 2 : 3][i]);
+      }
+    }
+
     // 3️⃣ duyệt dataCharacter
-    for (final test in dataJsonCharacters[type == TypeTest.katakana ? 2 : 3]) {
+    for (final test in dataCharacterLearn) {
       for (final value in test) {
         final charData = dataFlatten[value];
         if (charData == null) continue;
@@ -45,12 +55,14 @@ class LoadCharactersTesUsecase{
             character: charData["text"],
             romaji: charData["romaji"],
             examples: examples,
-            pathImage: charData["image"],
+            pathImage: charData["image"]??"",
             level: charData["level"],
           ),
         );
       }
     }
+
+
 
     return listCharacters;
   }

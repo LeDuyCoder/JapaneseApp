@@ -43,4 +43,9 @@ class WordEntity extends Equatable{
       level: json['level'],
     );
   }
+
+  @override
+  String toString() {
+    return "$word - $mean - $wayread - $level, ";
+  }
 }

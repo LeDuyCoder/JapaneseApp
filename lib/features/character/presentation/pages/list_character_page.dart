@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,10 +13,14 @@ import 'package:japaneseapp/features/character/data/repositories/character_repos
 import 'package:japaneseapp/features/character/presentation/widgets/box_character_combo_widget.dart';
 import 'package:japaneseapp/features/character/presentation/widgets/box_character_single_widget.dart';
 import 'package:japaneseapp/features/character/presentation/widgets/floating_image.dart';
+import 'package:japaneseapp/features/learn/domain/enum/type_test.dart';
+import 'package:japaneseapp/features/learn/presentation/pages/learn_character_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ListCharacterPage extends StatelessWidget{
   final String type;
   final List<Map<String, dynamic>> rowData;
+
 
   const ListCharacterPage({super.key, required this.type, required this.rowData});
 
@@ -40,11 +46,12 @@ class ListCharacterPage extends StatelessWidget{
                       ),
                       Center(
                         child: GestureDetector(
-                          onTap: (){
-                            // Navigator.push(context, MaterialPageRoute(builder: (ctx)=>learnCharactersScreen(typeCharacter: widget.type, contextScreen: ctx, loadScreen: () {
-                            //   reloadScreen();
-                            // },)));
-                            //Navigator.push(context, MaterialPageRoute(builder: (ctx)=>congraculationChacterScreen(listWordsTest: [], listWordsWrong: [], timeTest: 1000, topic: '', reload: () {  },)));
+                          onTap: () async {
+                            final prefs = await SharedPreferences.getInstance();
+                            Navigator.push(context, MaterialPageRoute(builder: (ctx)=>LearnCharacterPage(
+                                type: type=="hiragana"?TypeTest.hiragana:TypeTest.katakana,
+                                setLevel: jsonDecode(prefs.getString(type)!)["levelSet"]
+                            )));
                           },
                           child: Container(
                             width: MediaQuery

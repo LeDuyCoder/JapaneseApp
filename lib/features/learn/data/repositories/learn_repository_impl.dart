@@ -11,8 +11,4 @@ class LearnRepositoryImpl implements LearnRepository{
   Future<List<WordEntity>> loadWordsFromTopic(String topicId) async {
     return dataSource.loadWordsFromTopic(topicId);
   }
-
-
-
-
 }

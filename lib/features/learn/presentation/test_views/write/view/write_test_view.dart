@@ -16,13 +16,14 @@ import 'package:japaneseapp/features/learn/presentation/widget/check_button.dart
 
 class WriteTestView extends StatelessWidget implements BaseTestView{
 
+  final bool isCharracter;
   final Function(bool isCorrect) onComplete;
   final BuildContext contextPage;
 
   final WordEntity wordEntity;
   final GlobalKey<CustomKeyboardState> _keyboardKey = GlobalKey();
 
-  WriteTestView({super.key, required this.onComplete, required this.contextPage, required this.wordEntity});
+  WriteTestView({super.key, required this.onComplete, required this.contextPage, required this.wordEntity, required this.isCharracter});
 
   double getResponsiveSize(BuildContext context, String text) {
     double baseSize = MediaQuery.of(context).size.width * 0.2;
@@ -47,70 +48,75 @@ class WriteTestView extends StatelessWidget implements BaseTestView{
                     child: Column(
                       children: [
                         Container(
-                            width: MediaQuery.sizeOf(context).width,
-                            child: Column(
-                              children: [
-                                SingleChildScrollView(
-                                  scrollDirection: Axis.vertical,
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        width: MediaQuery.of(context).size.width,
-                                        child: Center(
-                                          child: AutoSizeText(
-                                            textAlign: TextAlign.center,
-                                            state.wordEntity.word,
-                                            style: TextStyle(fontSize: getResponsiveSize(context, state.wordEntity.word)),
+                          color: Colors.white,
+                          width: MediaQuery.sizeOf(context).width,
+                          child: Column(
+                            children: [
+                              SingleChildScrollView(
+                                scrollDirection: Axis.vertical,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      child: Center(
+                                        child: isCharracter ?
+                                            Container(
+                                              width: 300,
+                                              child: Image.asset("assets/${wordEntity.pathImage}"),
+                                            ) : AutoSizeText(
+                                          textAlign: TextAlign.center,
+                                          state.wordEntity.word,
+                                          style: TextStyle(fontSize: getResponsiveSize(context, state.wordEntity.word)),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(height: 10),
+                                    Container(
+                                      width: MediaQuery.of(context).size.width * 0.8,
+                                      height: MediaQuery.of(context).size.width * 0.10,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        border: Border.all(color: Colors.black, width: 1.0),
+                                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                                      ),
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(horizontal: 10),
+                                        child: TextField(
+                                          //focusNode: textFieldFocusNode,
+                                          onTap: (){
+                                            _keyboardKey.currentState?.showKeyboard();
+                                          },
+                                          readOnly: true,
+                                          controller: textEditingController,
+                                          decoration: InputDecoration(
+                                            icon: Icon(Icons.draw),
+                                            border: InputBorder.none,
+                                            hintText: AppLocalizations.of(context)!.learn_write_input,
+                                            hintStyle: TextStyle(color: Colors.grey),
                                           ),
                                         ),
                                       ),
-                                      SizedBox(height: 10),
-                                      Container(
-                                        width: MediaQuery.of(context).size.width * 0.8,
-                                        height: MediaQuery.of(context).size.width * 0.10,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          border: Border.all(color: Colors.black, width: 1.0),
-                                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                                        ),
-                                        child: Padding(
-                                          padding: EdgeInsets.symmetric(horizontal: 10),
-                                          child: TextField(
-                                            //focusNode: textFieldFocusNode,
-                                            onTap: (){
-                                              _keyboardKey.currentState?.showKeyboard();
-                                            },
-                                            readOnly: true,
-                                            controller: textEditingController,
-                                            decoration: InputDecoration(
-                                              icon: Icon(Icons.draw),
-                                              border: InputBorder.none,
-                                              hintText: AppLocalizations.of(context)!.learn_write_input,
-                                              hintStyle: TextStyle(color: Colors.grey),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 50),
-                                      ValueListenableBuilder<TextEditingValue>(
-                                        valueListenable: textEditingController,
-                                        builder: (context, value, _) {
-                                          return CheckButton(
-                                            enabled: value.text.isNotEmpty,
-                                            onTap: () {
-                                              context.read<WriteTestCubit>().checkAnwser(context, textEditingController.text, wordEntity, onComplete: (isCorrect){
-                                                onComplete(isCorrect);
-                                              });
-                                            },
-                                          );
-                                        },
-                                      )
-                                    ],
-                                  ),
+                                    ),
+                                    const SizedBox(height: 50),
+                                    ValueListenableBuilder<TextEditingValue>(
+                                      valueListenable: textEditingController,
+                                      builder: (context, value, _) {
+                                        return CheckButton(
+                                          enabled: value.text.isNotEmpty,
+                                          onTap: () {
+                                            context.read<WriteTestCubit>().checkAnwser(context, textEditingController.text, wordEntity, onComplete: (isCorrect){
+                                              onComplete(isCorrect);
+                                            });
+                                          },
+                                        );
+                                      },
+                                    )
+                                  ],
                                 ),
-                              ],
-                            )
+                              ),
+                            ],
+                          )
                         ),
                       ],
                     ),

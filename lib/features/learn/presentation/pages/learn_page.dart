@@ -150,7 +150,7 @@ class LearnPage extends StatelessWidget{
                                       context
                                           .read<ProgressCubit>()
                                           .increase(context, isCorrect, state.listEntites, context.read<ElapsedTimeBloc>().state.elapsed);
-                                    },),
+                                    }, isCharracter: false,),
                                 ],
                               ],
                             ),
