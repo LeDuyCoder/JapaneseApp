@@ -37,7 +37,7 @@ class _topicWidget extends State<TopicWidget>{
     }
 
     List<dynamic> dataResult = [
-      dataWords.isNotEmpty ? progressComplited / (28*dataWords.length) : 0.0,
+      dataWords.isNotEmpty ? progressComplited / (28*dataWords.length) * 100 : 0.0,
       sumComplitted,
       dataWords.length,
       dataTopic[0]["user"]

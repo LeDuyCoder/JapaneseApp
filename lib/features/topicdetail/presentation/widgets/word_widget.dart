@@ -149,14 +149,14 @@ class WordWidget extends StatelessWidget{
                     },
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 12.0),
-                      child: (wordItem.level / 2) >= 100.0
+                      child: ((wordItem.level / 27) * 100) >= 100.0
                           ? Text(
                         AppLocalizations.of(context)!.listword_Screen_Learned,
                         textAlign: TextAlign.center,
                         style: TextStyle(color: AppColors.textSucessState),
                       )
                           : Text(
-                        "${(wordItem.level / 2)}%",
+                        "${((wordItem.level / 27) * 100).toStringAsFixed(2)}%",
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                           color: AppColors.textSecond,
