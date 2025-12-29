@@ -1,4 +1,6 @@
 import 'package:japaneseapp/features/congratulation/domain/entities/word_entity.dart';
+import 'package:japaneseapp/features/congratulation/domain/enum/type_congratulation.dart';
+import 'package:japaneseapp/features/learn/domain/enum/type_test.dart';
 
 /// Lớp cơ sở (base class) cho tất cả các event
 /// được sử dụng trong [CongratulationBloc].
@@ -27,9 +29,18 @@ class CongratulationStarted extends CongratulationEvent {
   /// dùng để cập nhật tiến trình học từ vựng
   final List<WordEntity> words;
 
+  /// Loại congratylation để hiện
+  /// [TypeCongratulation] - vocabylary, character
+  final TypeCongratulation type;
+
+  ///than số khi truyền type congratulation là character
+  ///mục đích:
+  /// - tính toán và tăng tiếng trình trong database, sharedfile
+  TypeTest typeTest;
+
   /// Khởi tạo [CongratulationStarted] với kết quả làm bài
   /// và danh sách từ vựng liên quan.
-  CongratulationStarted(this.correctAnswers, this.incorrectAnsers, this.words);
+  CongratulationStarted(this.correctAnswers, this.incorrectAnsers, this.words, this.type, {this.typeTest = TypeTest.hiragana});
 }
 
 /// Event được phát khi người dùng chọn xem quảng cáo Rewarded

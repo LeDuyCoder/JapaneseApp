@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:japaneseapp/features/learn/domain/entities/character_entity.dart';
 import 'package:japaneseapp/features/learn/domain/entities/test_entity.dart';
 import 'package:japaneseapp/features/learn/domain/entities/word_entity.dart';
 
@@ -13,7 +14,7 @@ enum TestView{
 }
 
 class GenerateTestUsecase{
-  final List<WordEntity> wordEntities;
+  final List<WordEntity>? wordEntities;
   int amountQuestion = 5;
 
   GenerateTestUsecase(this.amountQuestion, {required this.wordEntities});
@@ -48,4 +49,57 @@ class GenerateTestUsecase{
     return tests;
   }
 
+  List<TestEntity> generateOfCharacterTest(
+      List<CharacterEntity> listCharacter,
+      ) {
+    const int amountQuestion = 5;
+
+    final List<TestView> testViews = [];
+    final List<TestEntity> tests = [];
+    final random = Random();
+
+    if (listCharacter.isEmpty) return tests;
+
+    int index = 0;
+
+    while (index < amountQuestion) {
+      final TestView testView = _randomCharacterTestView(random);
+      if (index > 0 && testViews[index - 1] == testView) {
+        continue;
+      }
+      final CharacterEntity word =
+      listCharacter[index % listCharacter.length];
+
+      tests.add(
+        TestEntity(
+          testView: testView,
+          wordEntity: WordEntity(
+            word: word.character,
+            mean: word.romaji,
+            wayread: word.romaji,
+            topic: '',
+            level: word.level,
+            examples: word.examples,
+            pathImage: word.pathImage,
+          ),
+        ),
+      );
+
+      testViews.add(testView);
+      index++;
+    }
+
+    return tests;
+  }
+
+
+  TestView _randomCharacterTestView(Random random) {
+    const allowedViews = [
+      TestView.ChoseTestView,
+      TestView.WriteTestView,
+      TestView.CombinationTestView,
+    ];
+
+    return allowedViews[random.nextInt(allowedViews.length)];
+  }
 }

@@ -5,14 +5,10 @@ import 'package:japaneseapp/features/learn/domain/repositories/learn_repository.
 class LearnRepositoryImpl implements LearnRepository{
   final LearnLocalDataSourceImpl dataSource;
 
-  LearnRepositoryImpl({required this.dataSource});
+  LearnRepositoryImpl(this.dataSource);
 
   @override
   Future<List<WordEntity>> loadWordsFromTopic(String topicId) async {
     return dataSource.loadWordsFromTopic(topicId);
   }
-
-
-
-
 }

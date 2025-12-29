@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:japaneseapp/features/learn/domain/entities/character_example.dart';
 
 class WordEntity extends Equatable{
   final String word;
@@ -7,12 +8,17 @@ class WordEntity extends Equatable{
   final String topic;
   final int level;
 
-  WordEntity({
+  final List<CharacterExample>? examples;
+  final String? pathImage;
+
+  const WordEntity({
     required this.word,
     required this.mean,
     required this.wayread,
     required this.topic,
     required this.level,
+    this.examples,
+    this.pathImage
   });
 
   @override
@@ -36,5 +42,10 @@ class WordEntity extends Equatable{
       topic: json['topic'],
       level: json['level'],
     );
+  }
+
+  @override
+  String toString() {
+    return "$word - $mean - $wayread - $level, ";
   }
 }

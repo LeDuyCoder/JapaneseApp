@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:japaneseapp/core/Theme/colors.dart';
+import 'package:japaneseapp/features/congratulation/domain/enum/type_congratulation.dart';
 import 'package:japaneseapp/features/learn/bloc/elapsed_time_bloc.dart';
 import 'package:japaneseapp/features/learn/bloc/elapsed_time_event.dart';
 import 'package:japaneseapp/features/learn/bloc/learn_bloc.dart';
@@ -37,7 +38,7 @@ class LearnPage extends StatelessWidget{
           BlocProvider(
             create: (_) => LearnBloc(
               LearnRepositoryImpl(
-                dataSource: LearnLocalDataSourceImpl(),
+                LearnLocalDataSourceImpl(),
               ),
             )..add(StartLearningEvent(idTopic)),
           ),
@@ -107,7 +108,7 @@ class LearnPage extends StatelessWidget{
                                             onPressButton: (isCorrect) {
                                               context
                                                   .read<ProgressCubit>()
-                                                  .increase(context, isCorrect, state.listEntites, context.read<ElapsedTimeBloc>().state.elapsed);
+                                                  .increase(context, isCorrect, state.listEntites, context.read<ElapsedTimeBloc>().state.elapsed, TypeCongratulation.vocabulary);
                                             },
                                             imagePath: 'assets/character/hinh10.png',
                                             isCorrect: isCorrect,
@@ -121,7 +122,7 @@ class LearnPage extends StatelessWidget{
                                         onComplete: (isCorrect){
                                           context
                                               .read<ProgressCubit>()
-                                              .increase(context, isCorrect, state.listEntites, context.read<ElapsedTimeBloc>().state.elapsed);
+                                              .increase(context, isCorrect, state.listEntites, context.read<ElapsedTimeBloc>().state.elapsed, TypeCongratulation.vocabulary);
                                         },
                                         contextPage: context,
                                         wordEntity: state.testEntities[stateProgress.amount].wordEntity,
@@ -131,26 +132,26 @@ class LearnPage extends StatelessWidget{
                                     ChoseTestView(contextPage: context, listWords: state.listEntites, word: state.testEntities[stateProgress.amount].wordEntity, onComplete: (isCorrect) {
                                       context
                                           .read<ProgressCubit>()
-                                          .increase(context, isCorrect, state.listEntites, context.read<ElapsedTimeBloc>().state.elapsed);
+                                          .increase(context, isCorrect, state.listEntites, context.read<ElapsedTimeBloc>().state.elapsed, TypeCongratulation.vocabulary);
                                     },),
                                   if(state.testEntities[stateProgress.amount].testView == TestView.SortTestView)
                                     SortTestView(onComplete: (isCorrect){
                                       context
                                           .read<ProgressCubit>()
-                                          .increase(context, isCorrect, state.listEntites, context.read<ElapsedTimeBloc>().state.elapsed);
+                                          .increase(context, isCorrect, state.listEntites, context.read<ElapsedTimeBloc>().state.elapsed, TypeCongratulation.vocabulary);
                                     }, contextPage: context, wordEntity: state.testEntities[stateProgress.amount].wordEntity, wordEntities: state.listEntites, typeTest: Sorts.values[Random().nextInt(Sorts.values.length)]),
                                   if(state.testEntities[stateProgress.amount].testView == TestView.SpeakTestView)
                                     SpeakTestView(contextPage: context, wordEntity: state.testEntities[stateProgress.amount].wordEntity, onComplete: (isCorrect){
                                       context
                                           .read<ProgressCubit>()
-                                          .increase(context, isCorrect, state.listEntites, context.read<ElapsedTimeBloc>().state.elapsed);
+                                          .increase(context, isCorrect, state.listEntites, context.read<ElapsedTimeBloc>().state.elapsed, TypeCongratulation.vocabulary);
                                     },),
                                   if(state.testEntities[stateProgress.amount].testView == TestView.WriteTestView)
                                     WriteTestView(contextPage: context, wordEntity: state.testEntities[stateProgress.amount].wordEntity, onComplete: (isCorrect) {
                                       context
                                           .read<ProgressCubit>()
-                                          .increase(context, isCorrect, state.listEntites, context.read<ElapsedTimeBloc>().state.elapsed);
-                                    },),
+                                          .increase(context, isCorrect, state.listEntites, context.read<ElapsedTimeBloc>().state.elapsed, TypeCongratulation.vocabulary);
+                                    }, isCharracter: false,),
                                 ],
                               ],
                             ),

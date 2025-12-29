@@ -1,5 +1,5 @@
 import 'package:japaneseapp/core/Service/Local/dao/VocabularyDao.dart';
-import 'package:japaneseapp/features/congratulation/data/repositories/vocabulary_repository.dart';
+import 'package:japaneseapp/features/congratulation/domain/repositories/vocabulary_repository.dart';
 
 /// Triển khai (implementation) của [VocabularyRepository].
 ///

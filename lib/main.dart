@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:japaneseapp/core/Config/dataJson.dart';
 import 'package:japaneseapp/core/Service/FunctionService.dart';
 import 'package:japaneseapp/core/DI/auth_injection.dart';
 import 'package:japaneseapp/features/ads/data/datasources/ads_counter_local_ds.dart';
@@ -13,6 +14,7 @@ import 'package:japaneseapp/features/ads/data/repositories/ads_policy_repository
 import 'package:japaneseapp/features/ads/domain/usecases/should_show_rewarded_ad.dart';
 import 'package:japaneseapp/features/ads/presentation/cubit/AdsCubit.dart';
 import 'package:japaneseapp/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:japaneseapp/features/character/data/datasource/character_datasource.dart';
 import 'package:japaneseapp/features/splash/presentation/splash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'core/Listener/NetworkListener.dart';
@@ -54,6 +56,10 @@ void main() async {
   initAuthFeature();
 
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+  CharacterDatasource characterDatasource = CharacterDatasource();
+  var data = await characterDatasource.loadCharacters(type: "hiragana", rawData: dataJson.instance.data[0]);
+
 
   runApp(
     MultiBlocProvider(

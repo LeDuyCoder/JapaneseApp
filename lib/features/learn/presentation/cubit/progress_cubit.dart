@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:japaneseapp/features/congratulation/domain/enum/type_congratulation.dart';
 import 'package:japaneseapp/features/congratulation/presentation/pages/congratulation_page.dart';
+import 'package:japaneseapp/features/learn/domain/enum/type_test.dart';
 import 'package:japaneseapp/features/learn/presentation/cubit/progress_state.dart';
 
 import 'package:japaneseapp/features/congratulation/domain/entities/word_entity.dart';
@@ -20,7 +22,7 @@ class ProgressCubit extends Cubit<ProgressInitial>{
     }
   }
 
-  void increase(BuildContext context, bool isCorrect, List words, Duration elapsed){
+  void increase(BuildContext context, bool isCorrect, List words, Duration elapsed, TypeCongratulation type){
     if(state.amount < maxQuestion-1){
       calculateCorrectAnswer(isCorrect);
       emit(state.copyWith(amount: state.amount+1));
@@ -30,6 +32,7 @@ class ProgressCubit extends Cubit<ProgressInitial>{
         correctAnswer: correctAnswer,
         inCorrectAnswer: inCorrectAnswer,
         totalQuestion: maxQuestion,
+        type: type,
         words: words.map((word) => WordEntity.fromJson(word.toJson())).toList(),
         elapsed: elapsed,
       ),));

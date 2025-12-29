@@ -1,0 +1,4 @@
+enum TypeTest{
+  hiragana,
+  katakana
+}

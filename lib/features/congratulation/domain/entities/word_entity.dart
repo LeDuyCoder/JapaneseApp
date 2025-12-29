@@ -1,3 +1,6 @@
+
+import 'package:japaneseapp/features/congratulation/domain/entities/character_example.dart';
+
 /// Entity đại diện cho **một từ vựng** trong ứng dụng.
 ///
 /// [WordEntity] được sử dụng ở tầng **domain** để mô tả
@@ -26,6 +29,9 @@ class WordEntity {
   /// Level hiện tại của từ vựng
   final int level;
 
+  final List<CharacterExample>? examples;
+  final String? pathImage;
+
   /// Khởi tạo một [WordEntity] với đầy đủ thông tin.
   WordEntity({
     required this.word,
@@ -33,6 +39,8 @@ class WordEntity {
     required this.wayread,
     required this.topic,
     required this.level,
+    this.examples,
+    this.pathImage
   });
 
   /// Chuyển [WordEntity] thành Map (JSON).
