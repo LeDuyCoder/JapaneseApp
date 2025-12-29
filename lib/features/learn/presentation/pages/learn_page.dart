@@ -37,7 +37,7 @@ class LearnPage extends StatelessWidget{
           BlocProvider(
             create: (_) => LearnBloc(
               LearnRepositoryImpl(
-                dataSource: LearnLocalDataSourceImpl(),
+                LearnLocalDataSourceImpl(),
               ),
             )..add(StartLearningEvent(nameTopic)),
           ),
