@@ -14,6 +14,7 @@ import 'package:japaneseapp/features/ads/data/repositories/ads_policy_repository
 import 'package:japaneseapp/features/ads/domain/usecases/should_show_rewarded_ad.dart';
 import 'package:japaneseapp/features/ads/presentation/cubit/AdsCubit.dart';
 import 'package:japaneseapp/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:japaneseapp/features/auth/presentation/pages/logout/logout_cubit.dart';
 import 'package:japaneseapp/features/character/data/datasource/character_datasource.dart';
 import 'package:japaneseapp/features/splash/presentation/splash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -67,7 +68,6 @@ void main() async {
         BlocProvider<AuthBloc>(
           create: (_) => GetIt.I<AuthBloc>(),
         ),
-
         BlocProvider<AdsCubit>(
           create: (_) => AdsCubit(
             CheckAndShowRewardedAd(
@@ -77,6 +77,9 @@ void main() async {
             ),
           ),
         ),
+        BlocProvider<LogoutCubit>(
+          create: (_) => LogoutCubit(),
+        )
       ],
       child: const MyApp(),
     ),

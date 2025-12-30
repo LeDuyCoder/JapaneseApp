@@ -5,6 +5,7 @@ import 'package:japaneseapp/core/Theme/colors.dart';
 import 'package:japaneseapp/core/generated/app_localizations.dart';
 import 'package:japaneseapp/core/utils/number_formatter.dart';
 import 'package:japaneseapp/features/character/presentation/widgets/floating_image.dart';
+import 'package:japaneseapp/features/navigator_hub/presentation/setting_page.dart';
 import 'package:japaneseapp/features/profile/bloc/profile_bloc.dart';
 import 'package:japaneseapp/features/profile/bloc/profile_event.dart';
 import 'package:japaneseapp/features/profile/bloc/profile_state.dart';
@@ -415,7 +416,7 @@ class ProfilePage extends StatelessWidget{
                                 Navigator.push(
                                   context,
                                   PageRouteBuilder(
-                                    pageBuilder: (context, animation, secondaryAnimation) => Container(),
+                                    pageBuilder: (context, animation, secondaryAnimation) => const SettingPage(),
                                     transitionsBuilder: (context, animation, secondaryAnimation, child) {
                                       const begin = Offset(1.0, 0.0);
                                       const end = Offset.zero;
