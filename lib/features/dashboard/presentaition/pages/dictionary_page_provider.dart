@@ -20,4 +20,5 @@ class DictionaryPageProvider extends StatelessWidget {
       child: DictionaryPage(),
     );
   }
+
 }
