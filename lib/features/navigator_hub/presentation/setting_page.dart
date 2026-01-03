@@ -16,6 +16,9 @@ import 'package:japaneseapp/features/rank/presentation/pages/rank_page.dart';
 import 'package:japaneseapp/features/rank/presentation/pages/rank_summary_page.dart';
 import 'package:japaneseapp/features/rank/presentation/pages/rank_up_screen.dart';
 import 'package:japaneseapp/features/splash/presentation/splash_screen.dart';
+import 'package:japaneseapp/features/synchronize/bloc/synchronize_event.dart';
+import 'package:japaneseapp/features/synchronize/presentation/pages/dowload_synchronize_page.dart';
+import 'package:japaneseapp/features/synchronize/presentation/pages/push_synchronize_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 class SettingPage extends StatefulWidget{
 
@@ -132,42 +135,42 @@ class _SettingPage extends State<SettingPage>{
                               );
                             }
                         ),
-                        SizedBox(height: 20,),
+                        const SizedBox(height: 20,),
                         Divider(
                           color: Colors.grey[300],
                           thickness: 1,
                         ),
-                        ListTile(
-                            leading: Icon(Icons.language, color: Colors.black,),
-                            title: Text(AppLocalizations.of(context)!.setting_language_title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
-                            subtitle: Text(AppLocalizations.of(context)!.setting_language_content),
-                            trailing: Icon(Icons.arrow_forward_ios, color: Colors.black,),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                PageRouteBuilder(
-                                  pageBuilder: (context, animation, secondaryAnimation) => Container(),
-                                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                    const begin = Offset(-1.0, 0.0);
-                                    const end = Offset.zero;
-                                    const curve = Curves.ease;
-                                    final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-                                    return SlideTransition(
-                                      position: animation.drive(tween),
-                                      child: child,
-                                    );
-                                  },
-                                ),
-                              );
-                            }
-                        ),
+                        // ListTile(
+                        //     leading: Icon(Icons.language, color: Colors.black,),
+                        //     title: Text(AppLocalizations.of(context)!.setting_language_title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                        //     subtitle: Text(AppLocalizations.of(context)!.setting_language_content),
+                        //     trailing: Icon(Icons.arrow_forward_ios, color: Colors.black,),
+                        //     onTap: () {
+                        //       Navigator.push(
+                        //         context,
+                        //         PageRouteBuilder(
+                        //           pageBuilder: (context, animation, secondaryAnimation) => Container(),
+                        //           transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                        //             const begin = Offset(-1.0, 0.0);
+                        //             const end = Offset.zero;
+                        //             const curve = Curves.ease;
+                        //             final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                        //             return SlideTransition(
+                        //               position: animation.drive(tween),
+                        //               child: child,
+                        //             );
+                        //           },
+                        //         ),
+                        //       );
+                        //     }
+                        // ),
                         ListTile(
                             leading: Icon(Icons.sync, color: Colors.black,),
                             title: Text(AppLocalizations.of(context)!.setting_async_title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
                             subtitle: Text(AppLocalizations.of(context)!.setting_async_content),
                             trailing: Icon(Icons.arrow_forward_ios, color: Colors.black,),
                             onTap: () async {
-
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => const PushSynchronizePage()));
                             }
                         ),
                         ListTile(
@@ -176,7 +179,7 @@ class _SettingPage extends State<SettingPage>{
                             subtitle: Text(AppLocalizations.of(context)!.setting_downloadAsync_content),
                             trailing: Icon(Icons.arrow_forward_ios, color: Colors.black,),
                             onTap: () async {
-
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => const DownSynchronizePage()));
                             }
                         ),
                         Divider(
@@ -243,7 +246,7 @@ class _SettingPage extends State<SettingPage>{
             )
           ),
           if(isLoading)
-            Container(
+            SizedBox(
               width: MediaQuery.sizeOf(context).width,
               height: MediaQuery.sizeOf(context).height,
               child: Center(

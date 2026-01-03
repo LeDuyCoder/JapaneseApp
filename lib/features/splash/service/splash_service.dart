@@ -49,8 +49,7 @@ class SplashService {
   }
 
   static Future<void> showNoInternetDialog(
-      BuildContext context, Function retry)
-  async {
+      BuildContext context, Function retry) async {
     return showDialog(
       context: context,
       barrierDismissible: false,

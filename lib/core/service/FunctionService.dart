@@ -17,9 +17,6 @@ class FunctionService{
     return DateTime(year, month, day);
   }
 
-
-  FunctionService(){}
-
   Future<void> _resetCheckInStreak(SharedPreferences prefs, String today) async {
     prefs.setString("lastCheckIn", today);
     prefs.setStringList("checkInHistoryTreak", [today]);
@@ -81,6 +78,76 @@ class FunctionService{
   static Future<int> getTopicComplite() async {
     final db = LocalDbService.instance;
     return (await db.topicDao.countCompletedTopics());
+  }
+
+   static Future<void> restoreSharedPreferences(
+      SharedPreferences prefs,
+      Map<String, dynamic> dataPrefs,
+      ) async {
+    for (final entry in dataPrefs.entries) {
+      final key = entry.key;
+      final value = entry.value;
+
+      if (value is int) {
+        await prefs.setInt(key, value);
+      } else if (value is double) {
+        await prefs.setDouble(key, value);
+      } else if (value is bool) {
+        await prefs.setBool(key, value);
+      } else if (value is String) {
+        await prefs.setString(key, value);
+      } else if (value is List) {
+        // Chỉ support List<String> cho SharedPreferences
+        await prefs.setStringList(
+          key,
+          value.map((e) => e.toString()).toList(),
+        );
+      }
+    }
+  }
+
+  static Future<void> asynchronyData() async {
+    final db = LocalDbService.instance;
+    final prefs = await SharedPreferences.getInstance();
+
+    try {
+      final userDoc = FirebaseFirestore.instance
+          .collection("datas")
+          .doc(FirebaseAuth.instance.currentUser!.uid);
+
+      final docSnapshot = await userDoc.get();
+
+      if (!docSnapshot.exists) {
+        await db.preferencesService.initDefaults();
+        return;
+      }
+
+      final data = docSnapshot.data();
+      if (data == null || data["data"] == null) {
+        await db.preferencesService.initDefaults();
+        return;
+      }
+
+      final Map<String, dynamic> dataMap =
+      Map<String, dynamic>.from(data["data"]);
+
+      /// --- 1. Restore SQLite ---
+      final String sqliteData = dataMap["sqlite"] ?? "";
+      if (sqliteData.isNotEmpty) {
+        await db.syncDao.importSynchronyData(sqliteData);
+      }
+
+      /// --- 2. Restore SharedPreferences (ALL KEYS) ---
+      final Map<String, dynamic> dataPrefs =
+      Map<String, dynamic>.from(dataMap["prefs"] ?? {});
+
+      await restoreSharedPreferences(prefs, dataPrefs);
+
+      print("✅ UpdateAsynchronyData: dữ liệu đã được khôi phục thành công.");
+    } catch (e, st) {
+      print("❌ Error retrieving data: $e");
+      debugPrintStack(stackTrace: st);
+    }
   }
 
   static Future<bool> synchronyData() async {

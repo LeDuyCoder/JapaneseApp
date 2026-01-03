@@ -58,10 +58,6 @@ void main() async {
 
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
-  CharacterDatasource characterDatasource = CharacterDatasource();
-  var data = await characterDatasource.loadCharacters(type: "hiragana", rawData: dataJson.instance.data[0]);
-
-
   runApp(
     MultiBlocProvider(
       providers: [
