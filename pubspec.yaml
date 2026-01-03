@@ -129,8 +129,6 @@ flutter:
     - assets/sound/
     - assets/storyset/
     - assets/achivement/
-    - assets/achivement/dayStreak/
-    - assets/achivement/finish/
     - assets/katakana/
     - assets/hiragana/
     - assets/animation/

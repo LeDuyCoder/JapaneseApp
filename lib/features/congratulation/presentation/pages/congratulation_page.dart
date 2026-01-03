@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:japaneseapp/core/Theme/colors.dart';
 import 'package:japaneseapp/core/utils/duration_formatter.dart';
+import 'package:japaneseapp/features/achivement/domain/service/evaluators/effect_reward.dart';
 import 'package:japaneseapp/features/ads/presentation/cubit/AdsCubit.dart';
 import 'package:japaneseapp/features/congratulation/bloc/congratulation_bloc.dart';
 import 'package:japaneseapp/features/congratulation/bloc/congratulation_event.dart';
@@ -68,6 +69,16 @@ class _CongratulationPage extends State<CongratulationPage>
     _controllerProcess.forward(from: 0); // bắt đầu lại từ 0 mỗi lần gọi
   }
 
+  Future<void> _showEffectsSequentially(
+      BuildContext context,
+      List<EffectReward> rewards,
+      ) async {
+    for (final reward in rewards) {
+      if (!context.mounted) return;
+      await reward.showEffectReward(context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -76,8 +87,9 @@ class _CongratulationPage extends State<CongratulationPage>
               UserProgressLocalDataSource(), UserRemoteDatasource()),
           widget.correctAnswer,
           widget.inCorrectAnswer,
-          widget.totalQuestion)
-        ..add(CongratulationStarted(
+          widget.totalQuestion,
+          widget.elapsed
+        )..add(CongratulationStarted(
             widget.correctAnswer, widget.inCorrectAnswer, widget.words, widget.type)),
       child: BlocConsumer<CongratulationBloc, CongratulationState>(
           builder: (context, state) {
@@ -570,7 +582,13 @@ class _CongratulationPage extends State<CongratulationPage>
               color: Colors.white,
             );
           },
-          listener: (context, state) {
+          listener: (context, state) async {
+            if(state is CongratulationLoaded){
+              if(state.effectRewards.isNotEmpty){
+                _showEffectsSequentially(context, state.effectRewards);
+              }
+            }
+
             if(state is CongratulationLoadingAds){
               showDialog(
                 context: context,

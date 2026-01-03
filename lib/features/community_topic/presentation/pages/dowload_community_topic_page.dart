@@ -147,9 +147,14 @@ class DowloadCommunityTopicPage extends StatelessWidget{
               color: CupertinoColors.white,
             );
           },
-          listener: (context, state){}
+          listener: (context, state){
+            if(state is DowloadTopicLoadState){
+              if(state.effectReward != null){
+                state.effectReward!.showEffectReward(context);
+              }
+            }
+          }
       ),
     );
   }
-
 }
