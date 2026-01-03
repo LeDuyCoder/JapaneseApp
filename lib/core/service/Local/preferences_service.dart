@@ -21,12 +21,36 @@ class PreferencesService {
       await prefs.setStringList("achivement", []);
     }
 
+    if(!prefs.containsKey("timeLearn")){
+      await prefs.setInt("timeLearn", 0);
+    }
+
+    if(!prefs.containsKey("wordsRemember")){
+      await prefs.setStringList("wordsRemember", []);
+    }
+
+    if(!prefs.containsKey("amountTop")){
+      await prefs.setInt("amountTop", 0);
+    }
+
+    if(!prefs.containsKey("timeLearnFast")){
+      await prefs.setInt("timeLearnFast", 0);
+    }
+
+    if(!prefs.containsKey("topicDowload")){
+      await prefs.setInt("topicDowload", 0);
+    }
+
     if (!prefs.containsKey("hiragana")) {
       await prefs.setString("hiragana", jsonEncode({"levelSet": 0, "level": 0}));
     }
 
     if (!prefs.containsKey("katakana")) {
       await prefs.setString("katakana", jsonEncode({"levelSet": 0, "level": 0}));
+    }
+
+    if(!prefs.containsKey("perrior_rank")){
+      await prefs.setString("perrior_rank", "");
     }
   }
 }

@@ -1,3 +1,4 @@
+import 'package:japaneseapp/features/achivement/domain/service/evaluators/effect_reward.dart';
 import 'package:japaneseapp/features/community_topic/domain/entities/dowload_topic_entity.dart';
 
 /// Lớp cơ sở (abstract) cho tất cả các state
@@ -19,8 +20,9 @@ class DowloadTopicWaiting extends DowloadTopicState{}
 /// và trước khi thực hiện download.
 class DowloadTopicLoadState extends DowloadTopicState{
   final DowloadTopicEntity dowloadTopicEntity;
+  final EffectReward? effectReward;
 
-  DowloadTopicLoadState({required this.dowloadTopicEntity});
+  DowloadTopicLoadState(this.effectReward, {required this.dowloadTopicEntity});
 }
 
 /// State biểu thị **đang thực hiện download topic**.

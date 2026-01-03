@@ -17,154 +17,14 @@ class FunctionService{
     return DateTime(year, month, day);
   }
 
-  RewardedAd? _rewardedAd;
-  bool _isRewardedAdReady = false;
 
+  FunctionService(){}
 
-  FunctionService(){
-    _loadRewardedAd();
-  }
-
-  void _loadRewardedAd() {
-    RewardedAd.load(
-      adUnitId: Config.admodRewardId, // phải lấy đúng ID RewardedAd
-      request: const AdRequest(),
-      rewardedAdLoadCallback: RewardedAdLoadCallback(
-        onAdLoaded: (ad) {
-          print("RewardedAd loaded");
-          _rewardedAd = ad;
-          _isRewardedAdReady = true;
-        },
-        onAdFailedToLoad: (error) {
-          print("RewardedAd failed to load: $error");
-          _rewardedAd = null;
-          _isRewardedAdReady = false;
-        },
-      ),
-    );
-  }
-
-  void _showRewardedAd(SharedPreferences prefs, String today) {
-    if (_isRewardedAdReady && _rewardedAd != null) {
-      _rewardedAd!.fullScreenContentCallback = FullScreenContentCallback(
-        onAdDismissedFullScreenContent: (ad) {
-          print("RewardedAd dismissed");
-          ad.dispose();
-          _loadRewardedAd(); // load lại quảng cáo sau khi đóng
-        },
-        onAdFailedToShowFullScreenContent: (ad, error) {
-          print("RewardedAd failed to show: $error");
-          ad.dispose();
-          _loadRewardedAd();
-        },
-      );
-
-      _rewardedAd!.show(
-        onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
-        },
-      );
-
-      _rewardedAd = null;
-      _isRewardedAdReady = false;
-    } else {
-      print("RewardedAd chưa sẵn sàng");
-    }
-  }
-
-
-  Future<void> showRewardAdSheet(
-      BuildContext context,
-      VoidCallback onWatchAd,
-      SharedPreferences prefs,
-      String today,
-      ) async
-  {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (BuildContext ctx) {
-        return Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Icon + tiêu đề
-              const Row(
-                children: [
-                  CircleAvatar(
-                    radius: 22,
-                    backgroundColor: Colors.orange,
-                    child: Icon(Icons.local_fire_department, color: Colors.white, size: 28),
-                  ),
-                  SizedBox(width: 12),
-                  Text(
-                    "Khôi phục chuỗi học",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 16),
-
-              // Nội dung
-              const Text(
-                "Bạn có thể xem quảng cáo để khôi phục lại chuỗi học hôm nay. "
-                    "Nếu không, chuỗi sẽ bị reset.",
-                textAlign: TextAlign.start,
-                style: TextStyle(fontSize: 16, color: Colors.black87),
-              ),
-
-              const SizedBox(height: 24),
-
-              // Nút hành động
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton.icon(
-                    onPressed: () async {
-                      await _resetCheckInStreak(prefs, today);
-                      Navigator.pop(context);
-                    },
-                    icon: const Icon(Icons.close, color: Colors.red),
-                    label: const Text("Huỷ"),
-                  ),
-                  const SizedBox(width: 12),
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      Navigator.pop(ctx);
-                      onWatchAd();
-                    },
-                    icon: const Icon(Icons.play_circle_fill),
-                    label: const Text("Xem quảng cáo"),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.orange,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-
-
-  // Hàm reset chuỗi điểm danh
   Future<void> _resetCheckInStreak(SharedPreferences prefs, String today) async {
     prefs.setString("lastCheckIn", today);
     prefs.setStringList("checkInHistoryTreak", [today]);
   }
 
-  // Hàm tiếp tục chuỗi điểm danh (chỉ thêm nếu chưa có)
   static Future<void> _continueCheckInStreak(SharedPreferences prefs, String today) async {
     List<String> streak = prefs.getStringList("checkInHistoryTreak") ?? [];
     if (!streak.contains(today)) {
@@ -195,16 +55,8 @@ class FunctionService{
 
     // Tính khoảng cách ngày giữa hôm nay và lần check-in trước
     DateTime lastCheckDate = FunctionService.parseDateManual(lastCheck);
-    int daysDifference = now.difference(lastCheckDate).inDays;
 
-    // Nếu khoảng cách > 1 ngày, reset streak
-    if (daysDifference == 2) {
-      showRewardAdSheet(ctx, (){
-        _showRewardedAd(prefs, today);
-      }, prefs, today);
-    } else {
-      await _continueCheckInStreak(prefs, today);
-    }
+    await _continueCheckInStreak(prefs, today);
 
     // Đánh dấu thành tựu nếu điểm danh vào sáng sớm
     if (now.hour >= 0 && now.hour < 2) {
@@ -282,7 +134,7 @@ class FunctionService{
 
     // 24h = 86400000 ms
     if (now - lastBackup > 43200000) {
-      await synchronyData(); // Hàm backup bạn đã có
+      await synchronyData();
       await prefs.setInt("lastBackup", now);
       print("Đã backup sau 24h!");
     } else {

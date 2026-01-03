@@ -27,10 +27,6 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   late AnimationController _controller;
   late Animation<double> _animation;
   late AudioPlayer _audioPlayer;
-  AppUpdateInfo? _updateInfo;
-
-  bool _isLoading = true;
-
   @override
   void initState() {
     super.initState();

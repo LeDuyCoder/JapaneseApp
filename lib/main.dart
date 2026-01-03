@@ -120,7 +120,6 @@ class _MyApp extends State<MyApp>{
         title: 'Flutter Demo',
         navigatorKey: navigatorKey,
         builder: (context, child) {
-          // init listener ở đây để toàn app đều nhận
           NetworkListener().init();
           return child!;
         },

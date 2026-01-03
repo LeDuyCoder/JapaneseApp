@@ -1,3 +1,6 @@
+import 'package:japaneseapp/features/achivement/domain/service/evaluators/achivement_rule.dart';
+import 'package:japaneseapp/features/achivement/domain/service/evaluators/effect_reward.dart';
+
 /// Lớp cơ sở (base class) cho tất cả các state
 /// được sử dụng trong [CongratulationBloc].
 ///
@@ -52,10 +55,14 @@ class CongratulationLoaded extends CongratulationState {
   /// Số exp level được cộng thêm
   final int expPlus;
 
+  final List<EffectReward> effectRewards;
+
+
   /// Khởi tạo [CongratulationLoaded] với:
   /// - Thông tin tiến trình người dùng
   /// - Phần thưởng nhận được
   CongratulationLoaded(
+      this.effectRewards,
       this.coinPlus,
       this.expRankPlus,
       this.expPlus, {

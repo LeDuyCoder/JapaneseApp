@@ -4,6 +4,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:japaneseapp/core/Service/Local/dao/VocabularyDao.dart';
 import 'package:japaneseapp/core/service/check_in/check_in_local_data_source.dart';
 import 'package:japaneseapp/core/service/check_in/check_in_use_case.dart';
+import 'package:japaneseapp/features/achivement/data/datasource/achivements_local_datasource.dart';
+import 'package:japaneseapp/features/achivement/data/repositories/achievement_local_repository.dart';
+import 'package:japaneseapp/features/achivement/domain/service/achievement_evaluator.dart';
+import 'package:japaneseapp/features/achivement/domain/service/evaluators/effect_reward.dart';
+import 'package:japaneseapp/features/achivement/domain/service/evaluators/time_range_rule.dart';
+import 'package:japaneseapp/features/achivement/domain/service/evaluators/total_learn_time_rule.dart';
+import 'package:japaneseapp/features/achivement/domain/usecase/fast_learn_usecase.dart';
+import 'package:japaneseapp/features/achivement/domain/usecase/time_range_usecase.dart';
+import 'package:japaneseapp/features/achivement/domain/usecase/total_learn_time_usecase.dart';
 import 'package:japaneseapp/features/ads/services/ad_result.dart';
 import 'package:japaneseapp/features/ads/services/rewarded_ad_service_impl.dart';
 import 'package:japaneseapp/features/congratulation/data/datasource/character_local_datasource.dart';
@@ -52,6 +61,8 @@ class CongratulationBloc extends Bloc<CongratulationEvent, CongratulationState>{
   /// Tổng số câu hỏi
   final int totalQuestions;
 
+  final Duration elapsed;
+
   /// Service phát âm thanh (ví dụ: âm thanh hoàn thành)
   AudioPlayerService audioPlayerService = AudioPlayerService();
 
@@ -65,7 +76,7 @@ class CongratulationBloc extends Bloc<CongratulationEvent, CongratulationState>{
   /// Đăng ký các event:
   /// - [CongratulationStarted] để load dữ liệu ban đầu
   /// - [ShowAdsRewardEvent] để xử lý xem quảng cáo nhận thưởng
-  CongratulationBloc(this.repo, this.correctAnswer, this.incorrtAnswer, this.totalQuestions) : super(CongratulationInitial()){
+  CongratulationBloc(this.repo, this.correctAnswer, this.incorrtAnswer, this.totalQuestions, this.elapsed) : super(CongratulationInitial()){
     on<CongratulationStarted>(_onLoad);
     on<ShowAdsRewardEvent>(_onShowAdsReward);
   }
@@ -84,6 +95,7 @@ class CongratulationBloc extends Bloc<CongratulationEvent, CongratulationState>{
   Future<void> _onLoad(CongratulationStarted event, Emitter emit) async {
     emit(CongratulationLoading());
     UserProgress progress = await repo.getProgress();
+    List<EffectReward> effectRewards = [];
 
     int expRankPlus = rewardCalculator.calcExpRank(correct: correctAnswer, incorrect: incorrtAnswer, total: totalQuestions);
     int coin = rewardCalculator.calcCoin(correctAnswer, totalQuestions);
@@ -93,7 +105,11 @@ class CongratulationBloc extends Bloc<CongratulationEvent, CongratulationState>{
       VocabularyRepository vocabularyRepository = VocabularyRepositoryImpl(
           VocabularyDao());
       await UpdateVocabularyProgressUseCase(vocabularyRepository).execute(
-          event.words);
+          event.words).then((reward){
+            if(reward != null){
+              effectRewards.add(reward);
+            }
+      });
     }
 
     if(event.type == TypeCongratulation.character){
@@ -128,8 +144,31 @@ class CongratulationBloc extends Bloc<CongratulationEvent, CongratulationState>{
 
     CheckInFeatureUseCase(useCase).execute();
 
+    TimeRangeUsecase timeRangeUsecase = TimeRangeUsecase();
+    DateTime now = DateTime.now();
+    if(now.hour >= 5 && now.hour < 6){
+      await timeRangeUsecase.callAchievementOne()
+          .then((reward) {
+        if (reward != null) effectRewards.add(reward);
+      });
+    }
+    else if(now.hour >= 0 && now.hour < 5){
+      await timeRangeUsecase.callAchievementTwo()
+          .then((reward) {
+        if (reward != null) effectRewards.add(reward);
+      });
+    }
+    if(elapsed.inSeconds <= 10){
+       await FastLearnUsecase().call().then((reward){
+         if (reward != null) effectRewards.add(reward);
+       });
+    }
+    await TotalLearnTimeUsecase().call(elapsed.inMinutes).then((reward){
+      if (reward != null) effectRewards.add(reward);
+    });
+
     await audioPlayerService.play("sound/completed.mp3");
-    emit(CongratulationLoaded(coin, expRankPlus, expPlus, level: progress.level, exp: progress.exp, nextExp: progress.nextExp));
+    emit(CongratulationLoaded(effectRewards, coin, expRankPlus, expPlus, level: progress.level, exp: progress.exp, nextExp: progress.nextExp));
   }
 
   /// Xử lý sự kiện [ShowAdsRewardEvent].
@@ -151,7 +190,7 @@ class CongratulationBloc extends Bloc<CongratulationEvent, CongratulationState>{
 
     if(watched == AdResult.watched){
       repo.addCoin(event.coin);
-      emit(CongratulationLoaded(event.coin * 2, event.expPlus, event.expRankPlus, level: progress.level, exp: progress.exp, nextExp: progress.nextExp));
+      emit(CongratulationLoaded([], event.coin * 2, event.expPlus, event.expRankPlus, level: progress.level, exp: progress.exp, nextExp: progress.nextExp));
     }
   }
 }

@@ -1,3 +1,5 @@
+import 'package:japaneseapp/features/achivement/domain/service/evaluators/effect_reward.dart';
+import 'package:japaneseapp/features/achivement/domain/usecase/remember_word_usecase.dart';
 import 'package:japaneseapp/features/congratulation/domain/repositories/vocabulary_repository.dart';
 
 import 'package:japaneseapp/features/congratulation/domain/entities/word_entity.dart';
@@ -30,7 +32,9 @@ class UpdateVocabularyProgressUseCase {
   ///
   /// Thường được gọi sau khi người dùng
   /// hoàn thành bài học hoặc bài kiểm tra.
-  Future<void> execute(List<WordEntity> words) async {
+  Future<EffectReward?> execute(List<WordEntity> words) async {
+    EffectReward effectReward;
+
     for (final word in words) {
       final nextLevel = word.level < 28 ? word.level + 1 : word.level;
 
@@ -39,6 +43,15 @@ class UpdateVocabularyProgressUseCase {
         topic: word.topic,
         level: nextLevel,
       );
+
+      if(word.level == 28){
+        await RememberWordUseccase().call(word.word).then((reward){
+          if(reward !=null){
+            effectReward = reward;
+          }
+        });
+      }
     }
+    return null;
   }
 }
