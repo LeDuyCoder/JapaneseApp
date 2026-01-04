@@ -26,13 +26,13 @@ class ReadnotificationDao {
   }
 
   /// Lấy danh sách tất cả id thông báo đã đọc
-  Future<List<int>> getAllReadNotificationIds() async {
+  Future<List> getAllReadNotificationIds() async {
     final db = await _dbHelper.database;
     final List<Map<String, dynamic>> result = await db.query(
       tableName,
       columns: [columnNotificationId],
     );
-    return result.map((e) => e[columnNotificationId] as int).toList();
+    return result.map((e) => e[columnNotificationId]).toList();
   }
 
   /// Kiểm tra một thông báo đã đọc chưa

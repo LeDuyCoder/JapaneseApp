@@ -6,6 +6,7 @@ import 'package:japaneseapp/core/service/Local/local_db_service.dart';
 import 'package:japaneseapp/core/service/Server/ServiceLocator.dart';
 import 'package:japaneseapp/core/Theme/colors.dart';
 import 'package:japaneseapp/features/dashboard/domain/models/user_model.dart';
+import 'package:japaneseapp/features/notification/presentation/pages/notification_page.dart';
 import 'package:japaneseapp/features/rank/presentation/pages/rank_page.dart';
 import 'package:japaneseapp/features/shop/presentation/pages/shop_page.dart';
 
@@ -82,8 +83,7 @@ class _FeatureScreen extends State<FeatureScreen>{
                     Navigator.of(context).push(
                       PageRouteBuilder(
                         transitionDuration: const Duration(milliseconds: 400),
-                        pageBuilder: (context, animation, secondaryAnimation) =>
-                            Container(),//notificationsScreen(),
+                        pageBuilder: (context, animation, secondaryAnimation) => NotificationPage(userId: FirebaseAuth.instance.currentUser!.uid),
                         transitionsBuilder: (context, animation, secondaryAnimation, child) {
                           var scaleTween = Tween<double>(begin: 0.5, end: 1.0)
                               .chain(CurveTween(curve: Curves.elasticOut)); // bật nhẹ
@@ -102,10 +102,10 @@ class _FeatureScreen extends State<FeatureScreen>{
                   },
                 ),
                 ListTile(
-                    leading: Icon(FontAwesome.ranking_star_solid, color: Colors.black,),
+                    leading: const Icon(FontAwesome.ranking_star_solid, color: Colors.black,),
                     title: const Text("Bảng xếp hạng", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
                     subtitle: const Text("Danh sách đua top tuần"),
-                    trailing: Icon(Icons.arrow_forward_ios, color: Colors.black,),
+                    trailing: const Icon(Icons.arrow_forward_ios, color: Colors.black,),
                     onTap: (){
                       Navigator.push(
                         context,
