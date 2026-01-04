@@ -2,13 +2,9 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:in_app_update/in_app_update.dart';
 import 'package:japaneseapp/core/Service/Local/local_db_service.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:japaneseapp/core/screen/controllScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:japaneseapp/core/Screen/SetUpLanguage.dart';
-import 'package:japaneseapp/core/Screen/controllScreen.dart';
 import 'package:japaneseapp/core/Utilities/NetworkUtils.dart';
 import 'package:japaneseapp/core/State/FeatureState.dart';
 import 'package:japaneseapp/features/splash/service/splash_service.dart';
@@ -91,9 +87,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     await widget.changeLanguage(Locale(sharedPreferences.getString("language") ?? "vi"));
 
-    final Widget nextScreen = sharedPreferences.containsKey("language")
-        ? controllScreen(changeLanguage: widget.changeLanguage)
-        : setUpLanguage(changeLanguage: widget.changeLanguage);
+    final Widget nextScreen = controllScreen(changeLanguage: widget.changeLanguage);
 
     if (mounted) {
       Navigator.push(

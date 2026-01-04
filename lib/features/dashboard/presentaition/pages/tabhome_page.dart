@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:japaneseapp/core/Screen/allFolderScreen.dart';
-import 'package:japaneseapp/core/Screen/allTopicScreen.dart';
-import 'package:japaneseapp/core/Screen/seeMoreTopic.dart';
 import 'package:japaneseapp/core/Theme/colors.dart';
 import 'package:japaneseapp/core/generated/app_localizations.dart';
 import 'package:japaneseapp/features/community_topic/presentation/pages/search_community_topic_page.dart';

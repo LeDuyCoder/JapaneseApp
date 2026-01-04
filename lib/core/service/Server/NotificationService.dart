@@ -1,5 +1,6 @@
-import '../../module/notification.dart';
-import '../BaseService.dart';
+
+import 'package:japaneseapp/core/module/notification.dart';
+import 'package:japaneseapp/core/service/BaseService.dart';
 
 class Notificationservice extends BaseService {
 
