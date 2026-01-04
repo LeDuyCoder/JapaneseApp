@@ -22,7 +22,7 @@ class LearnBloc extends Bloc<LearnEvent, LearnState>{
     emit(LearnGeneratation());
     List<WordEntity> wordEntitiesData = await repository.loadWordsFromTopic(event.topicId);
     GenerateTestUsecase generateTestUsecase = GenerateTestUsecase(LearnPage.amountQuestion, wordEntities: List<WordEntity>.from(wordEntitiesData));
-    List<TestEntity> listTest = generateTestUsecase.generate(List<WordEntity>.from(wordEntitiesData));
+    List<TestEntity> listTest = await generateTestUsecase.generate(List<WordEntity>.from(wordEntitiesData));
     emit(LearnGenerated(listTest, wordEntitiesData));
   }
 

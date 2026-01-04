@@ -2,21 +2,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:icons_plus/icons_plus.dart';
-import 'package:japaneseapp/core/Screen/settingFeatureLearn.dart';
 import 'package:japaneseapp/core/State/FeatureState.dart';
 import 'package:japaneseapp/core/Theme/colors.dart';
 import 'package:japaneseapp/core/generated/app_localizations.dart';
 import 'package:japaneseapp/features/achivement/presentation/pages/achivement_page.dart';
 import 'package:japaneseapp/features/auth/presentation/pages/logout/logout_cubit.dart';
 import 'package:japaneseapp/features/auth/presentation/pages/logout/logout_state.dart';
+import 'package:japaneseapp/features/navigator_hub/presentation/setting_feature_learn_page.dart';
 import 'package:japaneseapp/features/navigator_hub/presentation/widgets/error_bottom_sheet_widget.dart';
 import 'package:japaneseapp/features/navigator_hub/presentation/widgets/no_internet_bottom_sheet_widget.dart';
-import 'package:japaneseapp/features/rank/domain/usecase/show_summary_rank.dart';
 import 'package:japaneseapp/features/rank/presentation/pages/rank_page.dart';
-import 'package:japaneseapp/features/rank/presentation/pages/rank_summary_page.dart';
-import 'package:japaneseapp/features/rank/presentation/pages/rank_up_screen.dart';
 import 'package:japaneseapp/features/splash/presentation/splash_screen.dart';
-import 'package:japaneseapp/features/synchronize/bloc/synchronize_event.dart';
 import 'package:japaneseapp/features/synchronize/presentation/pages/dowload_synchronize_page.dart';
 import 'package:japaneseapp/features/synchronize/presentation/pages/push_synchronize_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -187,11 +183,11 @@ class _SettingPage extends State<SettingPage>{
                           thickness: 1,
                         ),
                         ListTile(
-                          title: Text("Đồng Hồ", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
-                          subtitle: Text("mở giao điện xem thời gian trên dashboard"),
+                          title: const Text("Đồng Hồ", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                          subtitle: const Text("mở giao điện xem thời gian trên dashboard"),
                           trailing: Switch(
                             value: SplashScreen.featureState.timerView,
-                            activeColor: AppColors.primary,       // màu của nút (thumb) khi bật
+                            activeColor: AppColors.primary,
                             onChanged: (bool value) async {
                               setState(() {
                                 SplashScreen.featureState.setStateFeture(KeyFeature.timerView, value);
@@ -200,11 +196,11 @@ class _SettingPage extends State<SettingPage>{
                           ),
                         ),
                         ListTile(
-                            title: Text("Tính Năng Học", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
-                            subtitle: Text("Thiết lập tính năng học tập"),
-                            trailing: Icon(Icons.arrow_forward_ios, color: Colors.black,),
+                            title: const Text("Tính Năng Học", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                            subtitle: const Text("Thiết lập tính năng học tập"),
+                            trailing: const Icon(Icons.arrow_forward_ios, color: Colors.black,),
                             onTap: () async {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => settingFeatureLearn()));
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingFeatureLearnPage()));
                             }
                         ),
                         Divider(

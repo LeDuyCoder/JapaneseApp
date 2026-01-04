@@ -1,10 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:japaneseapp/core/DTO/UserDTO.dart';
-import 'package:japaneseapp/core/Screen/featureScreen.dart';
 import 'package:japaneseapp/core/Theme/colors.dart';
 import 'package:japaneseapp/features/dashboard/domain/models/user_model.dart';
+import 'package:japaneseapp/features/navigator_hub/presentation/feature_screen.dart';
 
 class AppSection extends StatelessWidget {
   final UserModel? user;
@@ -43,11 +42,11 @@ class AppSection extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () {
-              // Navigator.push(
-              //     context,
-              //     MaterialPageRoute(
-              //         builder: (context) => featureScreen(userModel: user!, reload: () {},
-              //         )));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => FeatureScreen(userModel: user!, reload: () {},
+                      )));
             },
             child: SizedBox(
               width: 80,

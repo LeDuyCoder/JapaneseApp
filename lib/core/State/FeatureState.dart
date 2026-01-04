@@ -22,9 +22,9 @@ class FeatureState {
   Future<bool> setStateFeture(KeyFeature key, bool value) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     if(key == KeyFeature.timerView){
-      this.timerView = value;
+      timerView = value;
     }else if(key == KeyFeature.readTesting){
-      this.readTesting = value;
+      readTesting = value;
     }
 
     sharedPreferences.setString("feature", this.toJsonString());

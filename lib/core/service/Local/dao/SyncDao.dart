@@ -1,6 +1,7 @@
 import 'dart:convert';
+
 import 'package:archive/archive.dart';
-import 'package:sqflite/sqflite.dart';
+
 import '../database_helper.dart';
 
 class SyncDao {
@@ -29,7 +30,7 @@ class SyncDao {
 
     final jsonStr = jsonEncode(allData);
     final compressed = GZipEncoder().encode(utf8.encode(jsonStr) as List<int>);
-    return base64Encode(compressed);
+    return base64Encode(compressed!);
   }
 
   Future<void> importData(String encodedData) async {
@@ -102,7 +103,7 @@ class SyncDao {
     final compressed = GZipEncoder().encode(utf8.encode(jsonStr) as List<int>);
 
     // Base64 để lưu vào Firestore
-    return base64Encode(compressed);
+    return base64Encode(compressed!);
   }
 
   Future<void> importSynchronyData(String encodedData) async {

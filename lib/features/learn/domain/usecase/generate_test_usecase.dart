@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:japaneseapp/features/learn/domain/entities/character_entity.dart';
 import 'package:japaneseapp/features/learn/domain/entities/test_entity.dart';
 import 'package:japaneseapp/features/learn/domain/entities/word_entity.dart';
+import 'package:japaneseapp/features/splash/presentation/splash_screen.dart';
 
 enum TestView{
   ListenTestView,
@@ -19,21 +20,28 @@ class GenerateTestUsecase{
 
   GenerateTestUsecase(this.amountQuestion, {required this.wordEntities});
 
-  TestView _randomTestView(){
+  Future<TestView> _randomTestView(bool isReadingTest) async {
     final random = Random();
-    int index = random.nextInt(TestView.values.length);
-    return TestView.values[index];
+
+    final values = isReadingTest
+        ? TestView.values
+        : TestView.values
+        .where((e) => e != TestView.SpeakTestView)
+        .toList();
+
+    return values[random.nextInt(values.length)];
   }
 
-  List<TestEntity> generate(List<WordEntity> listWords) {
+
+  Future<List<TestEntity>> generate(List<WordEntity> listWords) async {
     final List<TestView> testViews = [];
     final List<TestEntity> tests = [];
     final random = Random();
-
+    bool isReadingTest = SplashScreen.featureState.readTesting;
     int index = 0;
 
     while (index < amountQuestion && listWords.isNotEmpty) {
-      final testView = _randomTestView();
+      final testView = await _randomTestView(isReadingTest);
 
       if (index > 0 && testViews[index - 1] == testView) {
         continue;
@@ -51,7 +59,8 @@ class GenerateTestUsecase{
 
   List<TestEntity> generateOfCharacterTest(
       List<CharacterEntity> listCharacter,
-      ) {
+      )
+  {
     const int amountQuestion = 5;
 
     final List<TestView> testViews = [];

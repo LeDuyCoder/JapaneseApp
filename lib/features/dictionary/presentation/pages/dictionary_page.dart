@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:icons_plus/icons_plus.dart';
-import 'package:japaneseapp/core/Screen/WordbookScreen.dart';
 import 'package:japaneseapp/core/Theme/colors.dart';
 import 'package:japaneseapp/core/generated/app_localizations.dart';
 import 'package:japaneseapp/features/bookmark/presentation/pages/bookmark_page.dart';

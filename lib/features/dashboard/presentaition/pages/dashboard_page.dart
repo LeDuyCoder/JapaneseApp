@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:japaneseapp/core/Screen/profileScreen.dart';
 import 'package:japaneseapp/core/Theme/colors.dart';
 import 'package:japaneseapp/core/generated/app_localizations.dart';
 import 'package:japaneseapp/features/character/presentation/pages/character_page.dart';
@@ -11,6 +10,7 @@ import 'package:japaneseapp/features/dashboard/presentaition/pages/tabhome_page.
 import 'package:japaneseapp/features/dashboard/presentaition/widgets/dashboard/add_topic_dialog.dart';
 import 'package:japaneseapp/features/manager_topic/presentation/pages/add_folder_page.dart';
 import 'package:japaneseapp/features/profile/presentation/pages/profile_page.dart';
+import 'package:japaneseapp/features/word/presentation/pages/word_page.dart';
 
 class DashboardPage extends StatefulWidget {
   final Function(Locale _locale) changeLanguage;
@@ -131,13 +131,12 @@ class _DashboardPageState extends State<DashboardPage> {
                 decoration: BoxDecoration(color: Colors.black, borderRadius: BorderRadius.circular(2)),
               ),
               GestureDetector(
-                onTap: () {
+                onTap: () async {
                   Navigator.pop(context);
-                  showDialog(
-                    barrierDismissible: false,
-                    context: context,
-                    builder: (context) => AddTopicDialog(),
-                  );
+                  await Navigator.push(context, MaterialPageRoute(builder: (context) => const WordPage()));
+                  if(reloadScreen != null) {
+                    reloadScreen();
+                  }
                 },
                 child: _bottomItem(context, Icons.menu_book, AppLocalizations.of(context)!.add_course),
               ),
