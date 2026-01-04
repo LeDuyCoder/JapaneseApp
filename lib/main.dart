@@ -109,28 +109,37 @@ class _MyApp extends State<MyApp>{
 
     //showNotification();
     return MaterialApp(
-        locale: _locale,
-        debugShowCheckedModeBanner: false,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        title: 'Flutter Demo',
-        navigatorKey: navigatorKey,
-        builder: (context, child) {
-          NetworkListener().init();
-          return child!;
-        },
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: AppColors.backgroundPrimary),
-          useMaterial3: true,
-        ),
-        home: WillPopScope(
-          onWillPop: (){
-            return Future.value(false);
-          },
-          child: SplashScreen(changeLanguage: _changeLanguage,),
-        )
+      locale: _locale,
+      debugShowCheckedModeBanner: false,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      title: 'Flutter Demo',
+      navigatorKey: navigatorKey,
+      builder: (context, child) {
+        NetworkListener().init();
 
+        final mediaQuery = MediaQuery.of(context);
+
+        return MediaQuery(
+          data: mediaQuery.copyWith(
+            textScaleFactor: 1.0, // 🔥 FIX CỨNG FONT SCALE
+          ),
+          child: child!,
+        );
+      },
+      theme: ThemeData(
+        fontFamily: 'Inter',
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: AppColors.backgroundPrimary,
+        ),
+        useMaterial3: true,
+      ),
+      home: WillPopScope(
+        onWillPop: () async => false,
+        child: SplashScreen(changeLanguage: _changeLanguage),
+      ),
     );
+
   }
 
 }
