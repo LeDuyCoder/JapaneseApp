@@ -2,7 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:japaneseapp/core/Utilities/SnackbarUtils.dart';
+import 'package:japaneseapp/core/ui/snackbar/app_snackbar.dart';
 import '../../../../core/generated/app_localizations.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
@@ -27,13 +27,13 @@ class _RegisterPageState extends State<RegisterPage> {
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthAuthenticated) {
-            SnackBarUtil.success(context, "Đăng Kí Thành Công");
+            AppSnackBar.show(context, message: "Đăng Kí Thành Công", type: AppSnackBarType.success);
             Future.delayed(const Duration(seconds: 2), () {
               Navigator.pop(context);
               Navigator.pop(context);
             });
           } else if (state is AuthFailure) {
-            SnackBarUtil.error(context, state.message.split(":")[1].trim());
+            AppSnackBar.show(context, message: state.message.split(":")[1].trim(), type: AppSnackBarType.error);
           }
         },
         child: BlocBuilder<AuthBloc, AuthState>(
@@ -171,17 +171,17 @@ class _RegisterPageState extends State<RegisterPage> {
                           onTap: (){
                             FocusScope.of(context).unfocus();
                             if (_emailController.text.trim().isEmpty) {
-                              SnackBarUtil.warning(context, "Vui lòng nhập email.");
+                              AppSnackBar.show(context, message: "Vui lòng nhập email.", type: AppSnackBarType.warning);
                             } else if (!_emailController.text.contains('@')) {
-                              SnackBarUtil.error(context, "Email không hợp lệ.");
+                              AppSnackBar.show(context, message: "Email không hợp lệ.", type: AppSnackBarType.warning);
                             } else if (_passwordController.text.isEmpty) {
-                              SnackBarUtil.warning(context, "Vui lòng nhập mật khẩu.");
+                              AppSnackBar.show(context, message: "Vui lòng nhập mật khẩu.", type: AppSnackBarType.error);
                             } else if (_passwordController.text.length < 6) {
-                              SnackBarUtil.warning(context, "Mật khẩu phải có ít nhất 6 ký tự.");
+                              AppSnackBar.show(context, message: "Mật khẩu phải có ít nhất 6 ký tự.", type: AppSnackBarType.error);
                             } else if (_repasswordController.text.isEmpty) {
-                              SnackBarUtil.warning(context, "Vui lòng nhập lại mật khẩu để xác nhận.");
+                              AppSnackBar.show(context, message: "Vui lòng nhập lại mật khẩu để xác nhận.", type: AppSnackBarType.error);
                             } else if (_passwordController.text != _repasswordController.text) {
-                              SnackBarUtil.error(context, "Mật khẩu xác nhận không khớp.");
+                              AppSnackBar.show(context, message: "Mật khẩu xác nhận không khớp", type: AppSnackBarType.error);
                             } else {
                               // ✅ Gửi event đăng ký
                               context.read<AuthBloc>().add(

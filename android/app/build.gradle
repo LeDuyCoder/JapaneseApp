@@ -34,7 +34,7 @@ android {
         applicationId = "kiradev.studio.japaneseapp"
         minSdk = 23
         targetSdk = 35
-        versionCode = 17
+        versionCode = 19
         versionName = flutter.versionName
     }
 

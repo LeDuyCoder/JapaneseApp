@@ -114,6 +114,20 @@ class SyncDao {
       "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%';",
     );
 
+    await db.execute('''
+        UPDATE words
+        SET topic = (
+          SELECT topic.id
+          FROM topic
+          WHERE topic.name = words.topic
+        )
+        WHERE EXISTS (
+          SELECT 1
+          FROM topic
+          WHERE topic.name = words.topic
+        );
+      ''');
+
     for (var table in tables) {
       final tableName = table['name'] as String;
       await db.delete(tableName);

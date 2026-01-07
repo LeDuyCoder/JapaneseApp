@@ -532,7 +532,10 @@ class _CongratulationPage extends State<CongratulationPage>
                                                 );
                                               },
                                             );
-                                          }else{
+                                          }
+                                          else{
+                                            Navigator.pop(context);
+                                            Navigator.pop(context);
                                             Navigator.pop(context);
                                           }
                                         },

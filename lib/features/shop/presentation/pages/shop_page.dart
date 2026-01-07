@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:japaneseapp/core/Theme/colors.dart';
-import 'package:japaneseapp/core/Utilities/NumberFormatter.dart';
+import 'package:japaneseapp/core/utils/number_formatter.dart';
 import 'package:japaneseapp/features/dashboard/domain/models/user_model.dart';
 import 'package:japaneseapp/features/shop/data/datasources/frame_avatar_service.dart';
 import 'package:japaneseapp/features/shop/domain/entities/shop_item.dart';

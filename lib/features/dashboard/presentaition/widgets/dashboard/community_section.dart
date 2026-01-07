@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:japaneseapp/core/Theme/colors.dart';
-import 'package:japaneseapp/core/Widget/topicServerWidget.dart';
 import 'package:japaneseapp/features/community_topic/presentation/pages/dowload_community_topic_page.dart';
 import 'package:japaneseapp/features/dashboard/domain/models/topic_model.dart';
+import 'package:japaneseapp/features/dashboard/presentaition/widgets/dashboard/topic_server_widget.dart';
 
 class CommunitySection extends StatelessWidget{
   final List<dynamic> data;
@@ -45,7 +45,7 @@ class CommunitySection extends StatelessWidget{
                       const Icon(Icons.folder, color: AppColors.grey, size: 50,),
                       const Text("Không có dữ liệu", style: TextStyle(fontFamily: "" ,color: AppColors.textPrimary, fontSize: 20, fontWeight: FontWeight.bold),),
                       Padding(
-                        padding: EdgeInsets.only(left: 50, right: 50),
+                        padding: const EdgeInsets.only(left: 50, right: 50),
                         child: Text("Hiện tại không có thư mục nào. Hãy đăng thư mục đầu tiên của bạn",
                           textAlign: TextAlign.center,
                           style: TextStyle(

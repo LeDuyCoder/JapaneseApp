@@ -18,7 +18,7 @@ import 'package:japaneseapp/features/auth/presentation/pages/logout/logout_cubit
 import 'package:japaneseapp/features/character/data/datasource/character_datasource.dart';
 import 'package:japaneseapp/features/splash/presentation/splash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'core/Listener/NetworkListener.dart';
+import 'core/service/NetworkListener.dart';
 import 'core/Theme/colors.dart';
 import 'firebase_options.dart';
 import 'core/generated/app_localizations.dart';

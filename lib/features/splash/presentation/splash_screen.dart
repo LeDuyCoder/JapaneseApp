@@ -4,8 +4,8 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:japaneseapp/core/Service/Local/local_db_service.dart';
 import 'package:japaneseapp/core/screen/controllScreen.dart';
+import 'package:japaneseapp/core/utils/network_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:japaneseapp/core/Utilities/NetworkUtils.dart';
 import 'package:japaneseapp/core/State/FeatureState.dart';
 import 'package:japaneseapp/features/splash/service/splash_service.dart';
 
@@ -76,7 +76,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   }
 
   Future<void> _checkInternetAndNavigate() async {
-    if (await NetworkUtils.hasNetwork()) {
+    if (await NetworkUtils.hasInternet()) {
       _navigateToNextScreen();
     } else {
       SplashService.showNoInternetDialog(context, _checkInternetAndNavigate);

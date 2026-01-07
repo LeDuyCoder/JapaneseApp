@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:in_app_update/in_app_update.dart';
 import 'package:japaneseapp/core/Service/Server/ServiceLocator.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:japaneseapp/core/Utilities/NetworkUtils.dart';
 
 class SplashService {
   static Future<void> playIntro(AudioPlayer player) async {

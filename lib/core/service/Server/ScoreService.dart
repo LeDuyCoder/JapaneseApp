@@ -1,4 +1,6 @@
-import '../../Utilities/WeekUtils.dart';
+
+import 'package:japaneseapp/core/utils/week_utils.dart';
+
 import '../BaseService.dart';
 
 class ScoreService extends BaseService {

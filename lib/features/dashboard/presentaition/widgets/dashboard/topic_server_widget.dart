@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:japaneseapp/core/Theme/colors.dart';
+import 'package:japaneseapp/core/service/Local/local_db_service.dart';
 
-import '../Service/Local/local_db_service.dart';
 
 class topicServerWidget extends StatefulWidget{
 

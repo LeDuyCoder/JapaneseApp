@@ -1,4 +1,4 @@
-import 'package:japaneseapp/core/constants/pref_keys.dart';
+import 'package:japaneseapp/core/config/pref_keys.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CheckInLocalDataSource {

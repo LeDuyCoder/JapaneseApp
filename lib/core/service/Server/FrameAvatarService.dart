@@ -1,9 +1,6 @@
-import 'dart:collection';
-
 import 'package:japaneseapp/core/DTO/FrameDTO.dart';
 import 'package:japaneseapp/core/Service/Local/local_db_service.dart';
 
-import '../../Utilities/WeekUtils.dart';
 import '../BaseService.dart';
 
 class FrameAvatarService extends BaseService {

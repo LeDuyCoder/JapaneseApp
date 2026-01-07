@@ -36,7 +36,6 @@ class FunctionService{
     DateTime now = DateTime.now();
     String today = "${now.day.toString().padLeft(2, '0')}/${now.month.toString().padLeft(2, '0')}/${now.year.toString()}";
 
-    // Lấy danh sách check-in lịch sử, nếu null thì tạo danh sách mới
     List<String> days = prefs.getStringList("checkInHistory") ?? [];
     if (!days.contains(today)) {
       days.add(today);
@@ -50,30 +49,9 @@ class FunctionService{
       return;
     }
 
-    // Tính khoảng cách ngày giữa hôm nay và lần check-in trước
-    DateTime lastCheckDate = FunctionService.parseDateManual(lastCheck);
-
     await _continueCheckInStreak(prefs, today);
-
-    // Đánh dấu thành tựu nếu điểm danh vào sáng sớm
-    if (now.hour >= 0 && now.hour < 2) {
-      await setAchivement("cudemhockhuya");
-    }
-
-    if(now.hour >= 4 && now.hour < 6){
-      await setAchivement("trithucdaysom");
-    }
   }
 
-  static Future<void> setAchivement(String achivement) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    List<String> Achivements = prefs.getStringList("achivement")!;
-    if(!Achivements.contains(achivement)) {
-      Achivements.add(achivement);
-      prefs.setStringList("achivement", Achivements);
-    }
-  }
 
   static Future<int> getTopicComplite() async {
     final db = LocalDbService.instance;
@@ -143,7 +121,6 @@ class FunctionService{
 
       await restoreSharedPreferences(prefs, dataPrefs);
 
-      print("✅ UpdateAsynchronyData: dữ liệu đã được khôi phục thành công.");
     } catch (e, st) {
       print("❌ Error retrieving data: $e");
       debugPrintStack(stackTrace: st);

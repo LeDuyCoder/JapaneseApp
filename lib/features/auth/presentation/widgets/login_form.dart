@@ -7,8 +7,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:japaneseapp/core/Service/Server/ServiceLocator.dart';
 import 'package:japaneseapp/core/Service/Local/local_db_service.dart';
 import 'package:japaneseapp/core/Theme/colors.dart';
-import 'package:japaneseapp/core/Utilities/SnackbarUtils.dart';
 import 'package:japaneseapp/core/generated/app_localizations.dart';
+import 'package:japaneseapp/core/ui/snackbar/app_snackbar.dart';
 import 'package:japaneseapp/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:japaneseapp/features/auth/presentation/bloc/auth_event.dart';
 import 'package:japaneseapp/features/auth/presentation/bloc/auth_state.dart';
@@ -48,14 +48,14 @@ class _LoginFormState extends State<LoginForm> {
       if (user != null) {
         await _updateAsynchronyData();
         await _addUser();
-        SnackBarUtil.success(context, "Đăng nhập Google thành công");
+        AppSnackBar.show(context, message: "Đăng nhập Google thành công", type: AppSnackBarType.success);
         Future.delayed(const Duration(seconds: 2), () {
           Navigator.of(context).pushReplacementNamed('/home');
         });
       }
       return user;
     } catch (e) {
-      SnackBarUtil.error(context, "Lỗi đăng nhập Google: $e");
+      AppSnackBar.show(context, message: "Lỗi đăng nhập Google", type: AppSnackBarType.error);
       return null;
     }
   }
@@ -109,12 +109,12 @@ class _LoginFormState extends State<LoginForm> {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthAuthenticated) {
-          SnackBarUtil.success(context, "Đăng nhập thành công");
+          AppSnackBar.show(context, message: "Đăng nhập thành công.", type: AppSnackBarType.success);
           Future.delayed(const Duration(seconds: 2), () {
             Navigator.of(context).pushReplacementNamed('/home');
           });
         } else if (state is AuthFailure) {
-          SnackBarUtil.error(context, state.message);
+          AppSnackBar.show(context, message: state.message, type: AppSnackBarType.error);
         }
       },
       child: Padding(

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:japaneseapp/core/Theme/colors.dart';
-import 'package:japaneseapp/core/Widget/JapaneseClockText.dart';
 import 'package:japaneseapp/core/generated/app_localizations.dart';
 import 'package:japaneseapp/features/community_topic/presentation/pages/search_community_topic_page.dart';
 import 'package:japaneseapp/features/dashboard/bloc/tabhome_bloc.dart';
@@ -17,6 +16,7 @@ import 'package:japaneseapp/features/dashboard/presentaition/widgets/dashboard/f
 import 'package:japaneseapp/features/dashboard/presentaition/widgets/dashboard/loading_indicator.dart';
 import 'package:japaneseapp/features/dashboard/presentaition/widgets/dashboard/no_folder_section.dart';
 import 'package:japaneseapp/features/dashboard/presentaition/widgets/dashboard/topic_section.dart';
+import 'package:japaneseapp/features/dashboard/presentaition/widgets/japanese_clock_text.dart';
 import 'package:japaneseapp/features/local_topic/presentation/pages/all_topic_page.dart';
 import 'package:japaneseapp/features/manager_topic/presentation/pages/all_folder_page.dart';
 import 'package:japaneseapp/features/splash/presentation/splash_screen.dart';
