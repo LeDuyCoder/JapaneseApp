@@ -98,7 +98,7 @@ class _BoxCardWordWidgetState extends State<BoxCardWordWidget>
         boxShadow: const [
           BoxShadow(
             color: Colors.grey,
-            blurRadius: 20,
+            blurRadius: 8,
             spreadRadius: 2,
             offset: Offset(0, 0),
           ),
@@ -140,7 +140,7 @@ class _BoxCardWordWidgetState extends State<BoxCardWordWidget>
         boxShadow: const [
           BoxShadow(
             color: Colors.grey,
-            blurRadius: 20,
+            blurRadius: 8,
             spreadRadius: 2,
             offset: Offset(0, 0),
           ),

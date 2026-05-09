@@ -4,6 +4,7 @@ import 'package:japaneseapp/core/Theme/colors.dart';
 import 'package:japaneseapp/core/generated/app_localizations.dart';
 import 'package:japaneseapp/features/congratulation/presentation/pages/congratulation_page.dart';
 import 'package:japaneseapp/features/learn/presentation/pages/learn_page.dart';
+import 'package:japaneseapp/features/learn/presentation/pages/learn_word_page.dart';
 import 'package:japaneseapp/features/topicdetail/data/models/word_model.dart';
 import 'package:japaneseapp/features/topicdetail/domain/entities/word_entity.dart';
 import 'package:japaneseapp/features/topicdetail/presentation/pages/chose_type_page.dart';
@@ -74,7 +75,12 @@ class BoxTopicDetailWidget extends StatelessWidget{
                     height: MediaQuery.sizeOf(context).width*0.5,
                     imagePath: "assets/character/hinh12.png",
                     title: "Học từ",
-                    onTap: (){}
+                    onTap: (){
+
+                      List<Map<String, dynamic>> wordsData = words.map((word) => word.toJson()).toList();
+
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => LearnWordPage(words: wordsData, topicName: topicName,)));
+                    }
                 )
             ],
           ),
