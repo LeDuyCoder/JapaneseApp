@@ -7,9 +7,13 @@ import 'package:japaneseapp/features/learn/presentation/pages/learn_page.dart';
 import 'package:japaneseapp/features/topicdetail/data/models/word_model.dart';
 import 'package:japaneseapp/features/topicdetail/domain/entities/word_entity.dart';
 import 'package:japaneseapp/features/topicdetail/presentation/pages/chose_type_page.dart';
+import 'package:japaneseapp/features/topicdetail/presentation/widgets/box_card_word_widget.dart';
+import 'package:japaneseapp/features/topicdetail/presentation/widgets/box_feature_widget.dart';
 import 'package:japaneseapp/features/topicdetail/presentation/widgets/word_widget.dart';
 
 import 'package:japaneseapp/features/congratulation/domain/entities/word_entity.dart' as WordEntityCongratulation;
+
+import 'horizontal_card_scroller.dart';
 
 class BoxTopicDetailWidget extends StatelessWidget{
   final String topicName;
@@ -34,30 +38,47 @@ class BoxTopicDetailWidget extends StatelessWidget{
       child: Column(
         children: [
           const SizedBox(
-            height: 30,
+            height: 10,
           ),
           Text(topicName, style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold, fontFamily: "Item"),),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text("${amountWord} ${AppLocalizations.of(context)!.listword_Screen_AmountWord}", style: TextStyle(color: AppColors.textSecond.withOpacity(0.5), fontSize: 18, fontFamily: "Itim"),),
-              SizedBox(width: 30,),
-              Text("${amountComplited} ${AppLocalizations.of(context)!.listword_Screen_Learned}", style: TextStyle(color: AppColors.textSecond.withOpacity(0.5), fontSize: 18, fontFamily: "Itim"),)
+              Text("$amountWord ${AppLocalizations.of(context)!.listword_Screen_AmountWord}", style: TextStyle(color: AppColors.textSecond.withOpacity(0.5), fontSize: 18, fontFamily: "Itim"),),
+              const SizedBox(width: 30,),
+              Text("$amountComplited ${AppLocalizations.of(context)!.listword_Screen_Learned}", style: TextStyle(color: AppColors.textSecond.withOpacity(0.5), fontSize: 18, fontFamily: "Itim"),)
             ],
           ),
-          SizedBox(height: 20,),
-          Container(
-            margin:  EdgeInsets.only(left: 40, right: 30),
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                maxHeight: MediaQuery.sizeOf(context).height / 1.8,
-              ),
-              child: SingleChildScrollView(
-                child: WordWidget(wordEntitys: words, topicName: topicName, reloadScreenListWord: () {  },), // table hoặc column của bạn
-              ),
-            ),
+
+          const SizedBox(height: 5,),
+          HorizontalCardScroller(
+            children: [
+              for (WordModel word in words)
+                BoxCardWordWidget(wordModel: word),
+            ],
           ),
-          SizedBox(height: 20,),
+
+          const SizedBox(height: 20,),
+
+          Row(
+            children: [
+                BoxFeatureWidget(
+                    width: MediaQuery.sizeOf(context).width*0.4,
+                    height: MediaQuery.sizeOf(context).width*0.5,
+                    imagePath: "assets/character/hinh18.png",
+                    title: "Ghép thẻ",
+                    onTap: (){}
+                ),
+                BoxFeatureWidget(
+                    width: MediaQuery.sizeOf(context).width*0.4,
+                    height: MediaQuery.sizeOf(context).width*0.5,
+                    imagePath: "assets/character/hinh12.png",
+                    title: "Học từ",
+                    onTap: (){}
+                )
+            ],
+          ),
+
           GestureDetector(
             onTapUp: (event) {
               Navigator.push(context, MaterialPageRoute(builder: (context) => ChoseTypePage(words: words, name: topicName, idTopic: topicId,)));
@@ -79,7 +100,21 @@ class BoxTopicDetailWidget extends StatelessWidget{
                 ],
               ),
             ),
-          )
+          ),
+
+          const SizedBox(height: 20,),
+
+          Container(
+            margin:  EdgeInsets.only(left: 40, right: 30),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.sizeOf(context).height / 1.8,
+              ),
+              child: SingleChildScrollView(
+                child: WordWidget(wordEntitys: words, topicName: topicName, reloadScreenListWord: () {  },), // table hoặc column của bạn
+              ),
+            ),
+          ),
         ],
       ),
     );

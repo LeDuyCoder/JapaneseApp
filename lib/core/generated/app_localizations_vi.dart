@@ -276,7 +276,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get listword_Screen_bottomSheet_private_success_OK => 'OK';
 
   @override
-  String get listword_Screen_btn_learn => 'Học Ngay';
+  String get listword_Screen_btn_learn => 'Kiểm Tra';
 
   @override
   String get keyboard_handwriting_btn_space => 'Khoảng trắng';
