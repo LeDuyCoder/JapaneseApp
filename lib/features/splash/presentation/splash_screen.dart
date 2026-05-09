@@ -35,10 +35,10 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       CurvedAnimation(parent: _controller, curve: Curves.easeOutBack),
     );
 
-    FirebaseAnalytics.instance.logEvent(
-      name: 'app_open_custom',
-      parameters: {'screen': 'SplashScreen'},
-    );
+    // FirebaseAnalytics.instance.logEvent(
+    //   name: 'app_open_custom',
+    //   parameters: {'screen': 'SplashScreen'},
+    // );
 
     _initializeApp();
 

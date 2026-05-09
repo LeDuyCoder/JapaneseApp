@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:japaneseapp/core/Config/dataJson.dart';
 import 'package:japaneseapp/core/Service/FunctionService.dart';
 import 'package:japaneseapp/core/DI/auth_injection.dart';
 import 'package:japaneseapp/features/ads/data/datasources/ads_counter_local_ds.dart';
@@ -15,9 +14,9 @@ import 'package:japaneseapp/features/ads/domain/usecases/should_show_rewarded_ad
 import 'package:japaneseapp/features/ads/presentation/cubit/AdsCubit.dart';
 import 'package:japaneseapp/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:japaneseapp/features/auth/presentation/pages/logout/logout_cubit.dart';
-import 'package:japaneseapp/features/character/data/datasource/character_datasource.dart';
 import 'package:japaneseapp/features/splash/presentation/splash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'core/service/NetworkListener.dart';
 import 'core/Theme/colors.dart';
 import 'firebase_options.dart';
@@ -26,37 +25,45 @@ import 'core/generated/app_localizations.dart';
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
-  await dotenv.load(fileName: '.env');
-
   WidgetsFlutterBinding.ensureInitialized();
-  // Set full screen mode
+
+  // ✅ dotenv FIRST
+  await dotenv.load(fileName: '.env');
+  //
+  // Fullscreen
   SystemChrome.setEnabledSystemUIMode(
     SystemUiMode.manual,
     overlays: [SystemUiOverlay.top],
   );
-
-  await MobileAds.instance.initialize();
-  TtsGoogle.init(apiKey: dotenv.env["API_KEY_GOOGLE_TTS"]!,);
-
+  //
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
     ),
   );
-
+  //
+  // // Ads
+  //
+  await MobileAds.instance.initialize();
+  //
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
+  //
+  // // TTS
+  TtsGoogle.init(
+    apiKey: dotenv.env["API_KEY_GOOGLE_TTS"]!,
+  );
+  //
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  //
   initAuthFeature();
+  //
+  final sharedPreferences = await SharedPreferences.getInstance();
 
-  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
   runApp(
     MultiBlocProvider(
@@ -69,13 +76,13 @@ void main() async {
             CheckAndShowRewardedAd(
               AdsPolicyRepositoryImpl(
                 AdsCounterLocalDataSource(sharedPreferences),
-              )
+              ),
             ),
           ),
         ),
         BlocProvider<LogoutCubit>(
           create: (_) => LogoutCubit(),
-        )
+        ),
       ],
       child: const MyApp(),
     ),
@@ -86,14 +93,25 @@ class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   @override
-  State<StatefulWidget> createState() => _MyApp();
-
+  State<MyApp> createState() => _MyAppState();
 }
 
-class _MyApp extends State<MyApp>{
-
+class _MyAppState extends State<MyApp> {
   Locale _locale = const Locale('vi');
 
+  late final NetworkListener _networkListener;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // ✅ FIX: move out of build
+    FunctionService.checkAndBackup();
+
+    // ✅ FIX: init once
+    _networkListener = NetworkListener();
+    _networkListener.init();
+  }
 
   void _changeLanguage(Locale newLocale) {
     setState(() {
@@ -101,32 +119,27 @@ class _MyApp extends State<MyApp>{
     });
   }
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-
-    FunctionService.checkAndBackup();
-
-    //showNotification();
     return MaterialApp(
       locale: _locale,
       debugShowCheckedModeBanner: false,
+      navigatorKey: navigatorKey,
+
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      title: 'Flutter Demo',
-      navigatorKey: navigatorKey,
-      builder: (context, child) {
-        NetworkListener().init();
 
+      builder: (context, child) {
         final mediaQuery = MediaQuery.of(context);
 
         return MediaQuery(
           data: mediaQuery.copyWith(
-            textScaleFactor: 1.0, // 🔥 FIX CỨNG FONT SCALE
+            textScaler: const TextScaler.linear(1.0),
           ),
           child: child!,
         );
       },
+
       theme: ThemeData(
         fontFamily: 'Inter',
         colorScheme: ColorScheme.fromSeed(
@@ -134,13 +147,14 @@ class _MyApp extends State<MyApp>{
         ),
         useMaterial3: true,
       ),
+
+
       home: WillPopScope(
         onWillPop: () async => false,
-        child: SplashScreen(changeLanguage: _changeLanguage),
+        child: Scaffold(
+          body: SplashScreen(changeLanguage: _changeLanguage)
+        ),
       ),
     );
-
   }
-
 }
-

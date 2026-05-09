@@ -12,6 +12,7 @@ import 'package:japaneseapp/features/learn/bloc/learn_event.dart';
 import 'package:japaneseapp/features/learn/bloc/learn_state.dart';
 import 'package:japaneseapp/features/learn/data/datasources/learn_local_datasource.dart';
 import 'package:japaneseapp/features/learn/data/repositories/learn_repository_impl.dart';
+import 'package:japaneseapp/features/learn/domain/entities/word_entity.dart';
 import 'package:japaneseapp/features/learn/domain/usecase/generate_test_usecase.dart';
 import 'package:japaneseapp/features/learn/presentation/cubit/progress_cubit.dart';
 import 'package:japaneseapp/features/learn/presentation/cubit/progress_state.dart';
@@ -27,9 +28,10 @@ import 'package:japaneseapp/features/learn/presentation/widget/quit_tab.dart';
 
 class LearnPage extends StatelessWidget{
   final String idTopic;
+  final List<WordEntity> characterEntities;
   static const int amountQuestion = 5;
 
-  const LearnPage({super.key, required this.idTopic});
+  const LearnPage({super.key, required this.idTopic, this.characterEntities = const [],});
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +39,7 @@ class LearnPage extends StatelessWidget{
         providers: [
           BlocProvider(
             create: (_) => LearnBloc(
+              wordsEntities: characterEntities,
               LearnRepositoryImpl(
                 LearnLocalDataSourceImpl(),
               ),

@@ -14,6 +14,38 @@
       },
       "oauth_client": [
         {
+          "client_id": "720695532060-gsh8h7o3gtekqph30u524gbh3trnv5ct.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "kiradev.studio.japaneseapp",
+            "certificate_hash": "e61d65bbd40c0421d22aca149b7b9a25b52f0ae0"
+          }
+        },
+        {
+          "client_id": "720695532060-k4lpepo1mamd482bs5o7j99jhlvc1bt7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "kiradev.studio.japaneseapp",
+            "certificate_hash": "bcaee92188031449fa20350fb543b62a089f595f"
+          }
+        },
+        {
+          "client_id": "720695532060-rp5jnghati27piq0vfg37mmbo3plmrih.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "kiradev.studio.japaneseapp",
+            "certificate_hash": "c91000106688ee29cc8e8a4606d5f14caf876cb6"
+          }
+        },
+        {
+          "client_id": "720695532060-ti2lkeo17lardki7hr5jra14rcdjgrab.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "kiradev.studio.japaneseapp",
+            "certificate_hash": "73ed8ab76a1f68ef4539906b37d6fcc71de8abf3"
+          }
+        },
+        {
           "client_id": "720695532060-c6g62anc14mavl3hqun3it476q44pl5r.apps.googleusercontent.com",
           "client_type": 3
         }

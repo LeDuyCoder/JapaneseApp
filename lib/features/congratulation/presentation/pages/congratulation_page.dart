@@ -475,58 +475,70 @@ class _CongratulationPage extends State<CongratulationPage>
 
                                                       /// 👇 ACTIONS – luôn nằm ngang
                                                       Row(
-                                                        mainAxisAlignment: MainAxisAlignment.end,
                                                         children: [
-                                                          ElevatedButton.icon(
-                                                            style: ElevatedButton.styleFrom(
+
+                                                          /// BUTTON HỦY
+                                                          Expanded(
+                                                            child: ElevatedButton.icon(
+                                                              style: ElevatedButton.styleFrom(
                                                                 backgroundColor: Colors.grey.shade300,
                                                                 foregroundColor: Colors.black,
                                                                 shape: RoundedRectangleBorder(
                                                                   borderRadius: BorderRadius.circular(12),
                                                                 ),
                                                                 padding: const EdgeInsets.symmetric(
-                                                                  horizontal: 20,
                                                                   vertical: 12,
-                                                                )
+                                                                ),
+                                                              ),
+                                                              onPressed: () async {
+
+                                                                await blocCubit.tryShowRewarded();
+
+                                                                Navigator.pop(context);
+                                                                Navigator.pop(context);
+                                                                Navigator.pop(context);
+                                                              },
+                                                              icon: const Icon(Icons.close),
+                                                              label: const FittedBox(
+                                                                child: Text("Hủy"),
+                                                              ),
                                                             ),
-                                                            onPressed: () async {
-
-                                                              await blocCubit.tryShowRewarded();
-
-                                                              Navigator.pop(context);
-                                                              Navigator.pop(context);
-                                                              Navigator.pop(context);
-                                                            },
-                                                            icon: const Icon(Icons.close),
-                                                            label: const Text("Hủy"),
                                                           ),
+
                                                           const SizedBox(width: 12),
-                                                          ElevatedButton.icon(
-                                                            style: ElevatedButton.styleFrom(
-                                                              backgroundColor: Colors.amber.shade700,
-                                                              foregroundColor: Colors.white,
-                                                              shape: RoundedRectangleBorder(
-                                                                borderRadius: BorderRadius.circular(12),
+
+                                                          /// BUTTON QUẢNG CÁO
+                                                          Expanded(
+                                                            child: ElevatedButton.icon(
+                                                              style: ElevatedButton.styleFrom(
+                                                                backgroundColor: Colors.amber.shade700,
+                                                                foregroundColor: Colors.white,
+                                                                shape: RoundedRectangleBorder(
+                                                                  borderRadius: BorderRadius.circular(12),
+                                                                ),
+                                                                padding: const EdgeInsets.symmetric(
+                                                                  vertical: 12,
+                                                                ),
                                                               ),
-                                                              padding: const EdgeInsets.symmetric(
-                                                                horizontal: 20,
-                                                                vertical: 12,
+                                                              onPressed: () {
+                                                                bloc.add(
+                                                                  ShowAdsRewardEvent(
+                                                                    state.coinPlus,
+                                                                    state.expRankPlus,
+                                                                    state.expPlus,
+                                                                  ),
+                                                                );
+
+                                                                loadingAds = true;
+                                                              },
+                                                              icon: const Icon(Icons.play_circle_fill),
+                                                              label: const FittedBox(
+                                                                child: Text("Xem Quảng Cáo"),
                                                               ),
                                                             ),
-                                                            onPressed: (){
-                                                              bloc.add(ShowAdsRewardEvent(
-                                                                  state.coinPlus,
-                                                                  state.expRankPlus,
-                                                                  state.expPlus
-                                                              ));
-
-                                                              loadingAds = true;
-                                                            },
-                                                            icon: const Icon(Icons.play_circle_fill),
-                                                            label: const Text("Xem Quảng Cáo"),
-                                                          )
+                                                          ),
                                                         ],
-                                                      ),
+                                                      )
                                                     ],
                                                   ),
                                                 );
