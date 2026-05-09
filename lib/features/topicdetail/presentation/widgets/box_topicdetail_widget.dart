@@ -6,6 +6,7 @@ import 'package:japaneseapp/features/congratulation/presentation/pages/congratul
 import 'package:japaneseapp/features/learn/presentation/pages/learn_page.dart';
 import 'package:japaneseapp/features/topicdetail/data/models/word_model.dart';
 import 'package:japaneseapp/features/topicdetail/domain/entities/word_entity.dart';
+import 'package:japaneseapp/features/topicdetail/presentation/pages/chose_type_page.dart';
 import 'package:japaneseapp/features/topicdetail/presentation/widgets/word_widget.dart';
 
 import 'package:japaneseapp/features/congratulation/domain/entities/word_entity.dart' as WordEntityCongratulation;
@@ -59,7 +60,7 @@ class BoxTopicDetailWidget extends StatelessWidget{
           SizedBox(height: 20,),
           GestureDetector(
             onTapUp: (event) {
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>LearnPage(idTopic: topicId)));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => ChoseTypePage(words: words, name: topicName, idTopic: topicId,)));
             },
             child: Container(
               width: MediaQuery.sizeOf(context).width,
@@ -69,13 +70,12 @@ class BoxTopicDetailWidget extends StatelessWidget{
                 color: AppColors.primary,
                 borderRadius: BorderRadius.circular(40),
               ),
-              child:
-              Row(
+              child: Row(
                 children: [
-                  SizedBox(width: 20,),
-                  Icon(Icons.play_arrow, color: AppColors.white, size: 25,),
-                  SizedBox(width: 10,),
-                  Text(AppLocalizations.of(context)!.listword_Screen_btn_learn, style: TextStyle(color: AppColors.white, fontSize: 20, fontWeight: FontWeight.bold),)
+                  const SizedBox(width: 20,),
+                  const Icon(Icons.play_arrow, color: AppColors.white, size: 25,),
+                  const SizedBox(width: 10,),
+                  Text(AppLocalizations.of(context)!.listword_Screen_btn_learn, style: const TextStyle(color: AppColors.white, fontSize: 20, fontWeight: FontWeight.bold),)
                 ],
               ),
             ),

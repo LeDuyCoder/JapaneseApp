@@ -1,9 +1,12 @@
+import 'package:japaneseapp/core/enums/user_role.dart';
+
 class UserModel {
   final String idUser;
   final String nameUser;
   int coin;
   String urlFrame;
   String urlAvatar;
+  UserRole role;
 
   UserModel({
     required this.idUser,
@@ -11,6 +14,7 @@ class UserModel {
     required this.coin,
     required this.urlFrame,
     required this.urlAvatar,
+    required this.role
   });
 
   /// Tạo object từ JSON
@@ -21,6 +25,7 @@ class UserModel {
       coin: json['coin'] is int ? json['coin'] : int.tryParse(json['coin'].toString()) ?? 0,
       urlFrame: json['urlFrame'] ?? '',
       urlAvatar: json['urlAvatar'] ?? '',
+      role: UserRole.fromString(json['role'] ?? '')
     );
   }
 
@@ -32,11 +37,19 @@ class UserModel {
       'coin': coin,
       'urlFrame': urlFrame,
       'urlAvatar': urlAvatar,
+      'role': role
     };
   }
 
   @override
   String toString() {
-    return "Coin: $coin";
+    return 'User('
+        'idUser: $idUser, '
+        'nameUser: $nameUser, '
+        'coin: $coin, '
+        'urlFrame: $urlFrame, '
+        'urlAvatar: $urlAvatar, '
+        'role: $role'
+        ')';
   }
 }

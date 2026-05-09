@@ -60,6 +60,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '720695532060',
     projectId: 'japaneseapplearning',
     storageBucket: 'japaneseapplearning.firebasestorage.app',
+    androidClientId: '720695532060-gsh8h7o3gtekqph30u524gbh3trnv5ct.apps.googleusercontent.com',
     iosClientId: '720695532060-uu9gut9uln382k0p6293cejc3ui4f5o7.apps.googleusercontent.com',
     iosBundleId: 'kiradev.studio.japaneseapp',
   );

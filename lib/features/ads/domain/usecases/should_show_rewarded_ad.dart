@@ -1,5 +1,8 @@
 import 'package:japaneseapp/features/ads/domain/repositories/ads_policy_repository.dart';
 import 'package:japaneseapp/features/ads/services/interstitial_ad_service_impl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../../core/enums/user_role.dart';
 
 /// UseCase dùng để **kiểm tra và hiển thị quảng cáo Rewarded**
 /// dựa trên chính sách quảng cáo hiện tại.
@@ -40,12 +43,16 @@ class CheckAndShowRewardedAd {
   /// - `true` nếu quảng cáo đã được hiển thị
   /// - `false` nếu không hiển thị quảng cáo
   Future<bool> call() async {
-    await policyRepo.increaseCounter();
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    UserRole role = UserRole.fromString(sharedPreferences.getString("Role") ?? "MEMBER");
+    if(role == UserRole.member) {
+      await policyRepo.increaseCounter();
 
-    if (await policyRepo.shouldShowRewardedAd()) {
-      await InterstitialAdServiceImpl().show();
-      await policyRepo.resetCounter();
-      return true;
+      if (await policyRepo.shouldShowRewardedAd()) {
+        await InterstitialAdServiceImpl().show();
+        await policyRepo.resetCounter();
+        return true;
+      }
     }
     return false;
   }

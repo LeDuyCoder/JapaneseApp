@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:japaneseapp/core/Service/Local/dao/VocabularyDao.dart';
+import 'package:japaneseapp/core/enums/user_role.dart';
 import 'package:japaneseapp/core/service/check_in/check_in_local_data_source.dart';
 import 'package:japaneseapp/core/service/check_in/check_in_use_case.dart';
 import 'package:japaneseapp/features/achivement/data/datasource/achivements_local_datasource.dart';
@@ -185,12 +186,12 @@ class CongratulationBloc extends Bloc<CongratulationEvent, CongratulationState>{
   Future<void> _onShowAdsReward(ShowAdsRewardEvent event, Emitter emit) async {
     emit(CongratulationLoadingAds());
     AdResult watched = await RewardedAdServiceImpl().show();
-    print("check watched ad result: $watched");
     UserProgress progress = await repo.getProgress();
 
     if(watched == AdResult.watched){
       repo.addCoin(event.coin);
       emit(CongratulationLoaded([], event.coin * 2, event.expPlus, event.expRankPlus, level: progress.level, exp: progress.exp, nextExp: progress.nextExp));
     }
+
   }
 }

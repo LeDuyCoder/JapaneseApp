@@ -12,15 +12,16 @@ import 'package:japaneseapp/features/learn/presentation/pages/learn_page.dart';
 
 class LearnBloc extends Bloc<LearnEvent, LearnState>{
   final LearnRepositoryImpl repository;
+  final List<WordEntity> wordsEntities;
 
-  LearnBloc(this.repository) : super(LearnInitial()) {
+  LearnBloc(this.repository, {this.wordsEntities = const []}) : super(LearnInitial()) {
     on<StartLearningEvent>(_onStartLearn);
     on<StartLearningCharacterEvent>(_onStartLearnCharacter);
   }
 
   Future<void> _onStartLearn(StartLearningEvent event, Emitter emit) async {
     emit(LearnGeneratation());
-    List<WordEntity> wordEntitiesData = await repository.loadWordsFromTopic(event.topicId);
+    List<WordEntity> wordEntitiesData = wordsEntities.isEmpty ? await repository.loadWordsFromTopic(event.topicId) : wordsEntities;
     GenerateTestUsecase generateTestUsecase = GenerateTestUsecase(LearnPage.amountQuestion, wordEntities: List<WordEntity>.from(wordEntitiesData));
     List<TestEntity> listTest = await generateTestUsecase.generate(List<WordEntity>.from(wordEntitiesData));
     emit(LearnGenerated(listTest, wordEntitiesData));
