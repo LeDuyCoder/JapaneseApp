@@ -16,6 +16,7 @@ class LearnWordPage extends StatefulWidget{
   }) : words = words
       .map((e) => WordEntity.fromJson(e))
       .toList();
+
   @override
   State<StatefulWidget> createState() => _LearnWordPage();
 
