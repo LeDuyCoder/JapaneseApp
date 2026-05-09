@@ -88,7 +88,7 @@ class RankSummaryPage extends StatelessWidget{
                         LeaderboardSection(leaderboardEntity: state.summaryRankEntity.leaderboardEntity),
                         const SizedBox(height: 32),
 
-                        if(state.summaryRankEntity.rankEntity.userEntity.rank <= 3)...[
+                        if(state.summaryRankEntity.rankEntity.userEntity.rank <= 3 && state.summaryRankEntity.rankEntity.userEntity.score > 100)...[
                           const Row(
                             children: [
                               Expanded(

@@ -24,7 +24,9 @@ class RankDatasource{
          UserLeaderboardEnity(
              userId: user["user_id"],
              userName: user["user_name"],
-             score: user["score"]
+             score: user["score"],
+             urlFrameAvater: user["frame_url"] ?? "",
+             urlAvatar: user["avatar_url"] ?? ""
          )
        );
      }

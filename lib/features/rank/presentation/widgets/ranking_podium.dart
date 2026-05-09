@@ -72,10 +72,30 @@ class _PodiumItem extends StatelessWidget {
         Stack(
           alignment: Alignment.topCenter,
           children: [
-            CircleAvatar(
-              backgroundColor: Colors.red.withOpacity(0.1),
-              radius: isChampion ? 34 : 30,
-              child: Text(NameFormatter.formatName(user?.userName ?? "N/a")),
+            Stack(
+              alignment: Alignment.center, // ⭐ QUAN TRỌNG
+              children: [
+                user!.urlAvatar.isEmpty
+                    ? CircleAvatar(
+                  radius: isChampion ? 34 : 30,
+                  backgroundColor: Colors.red.withOpacity(0.1),
+                  child: Text(
+                    NameFormatter.formatName(user?.userName ?? "N/A"),
+                  ),
+                )
+                    : CircleAvatar(
+                  radius: isChampion ? 34 : 30,
+                  backgroundColor: Colors.red.withOpacity(0.1),
+                  backgroundImage: NetworkImage(user!.urlAvatar),
+                ),
+
+                if (user!.urlFrameAvater.isNotEmpty)
+                  CircleAvatar(
+                    radius: isChampion ? 38 : 34, // 🔥 FRAME LUÔN LỚN HƠN AVATAR
+                    backgroundColor: Colors.transparent,
+                    backgroundImage: NetworkImage(user!.urlFrameAvater),
+                  ),
+              ],
             ),
             Positioned(
               right: 0,

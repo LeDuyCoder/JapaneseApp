@@ -77,10 +77,28 @@ class _RankItem extends StatelessWidget {
 
           const SizedBox(width: 12),
           /// AVATAR
-          CircleAvatar(
-            radius: 22,
-            backgroundColor: Colors.red.withOpacity(0.2),
-            child: Text(formatName(user.userName)),
+          Stack(
+            alignment: Alignment.center, // ⭐ QUAN TRỌNG
+            children: [
+              user.urlAvatar.isEmpty
+                  ? CircleAvatar(
+                    radius: 22,
+                    backgroundColor: Colors.red.withOpacity(0.2),
+                    child: Text(formatName(user.userName)),
+                  )
+                  : CircleAvatar(
+                radius: 22,
+                backgroundColor: Colors.red.withOpacity(0.1),
+                backgroundImage: NetworkImage(user!.urlAvatar),
+              ),
+
+              if (user.urlFrameAvater.isNotEmpty)
+                CircleAvatar(
+                  radius: 25,
+                  backgroundColor: Colors.transparent,
+                  backgroundImage: NetworkImage(user!.urlFrameAvater),
+                ),
+            ],
           ),
           const SizedBox(width: 12),
           /// NAME + POINT

@@ -88,6 +88,7 @@ dependencies:
   firebase_auth: ^6.4.0
   cloud_firestore: ^6.3.0
   firebase_analytics: ^12.3.0
+  in_app_review: ^2.0.11
 
 
 

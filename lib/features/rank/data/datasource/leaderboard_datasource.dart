@@ -13,7 +13,9 @@ class LeaderboardDatasource{
         UserLeaderboardEnity(
             userId: entity["user_id"],
             userName: entity["user_name"],
-            score: entity["score"]
+            score: entity["score"],
+            urlFrameAvater: entity["frame_url"] ?? "",
+            urlAvatar: entity["avatar_url"] ?? ""
         )
       );
     }

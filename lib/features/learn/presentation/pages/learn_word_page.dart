@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:japaneseapp/features/learn/domain/entities/word_entity.dart';
 import 'package:japaneseapp/features/learn/presentation/cubit/learn_word_cubit.dart';
 import 'package:japaneseapp/features/learn/presentation/cubit/learn_word_state.dart';
@@ -23,6 +24,14 @@ class LearnWordPage extends StatefulWidget{
 }
 
 class _LearnWordPage extends State<LearnWordPage>{
+
+  final InAppReview inAppReview = InAppReview.instance;
+
+  Future<void> requestReview() async {
+    if (await inAppReview.isAvailable()) {
+      inAppReview.requestReview(); // ⭐ popup native của Google
+    }
+  }
 
   Widget buildStatItem({
     required String value,
@@ -269,10 +278,13 @@ class _LearnWordPage extends State<LearnWordPage>{
                         completeCard(
                             rememberedWords: state.knownWords.length,
                             reviewWords: state.unknownWords.length,
-                            onReplay: (){
+                            onReplay: () async {
+                              await requestReview();
                               context.read<LearnWordCubit>().replay();
                             },
-                            onReviewUnKnow: (){
+                            onReviewUnKnow: () async {
+                              await requestReview();
+
                               List<Map<String, dynamic>> wordsReview = state.unknownWords.map((word) => word.toJson()).toList();
 
                               Navigator.pop(context);

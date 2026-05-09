@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:japaneseapp/features/learn/presentation/cubit/quick_match_cubit.dart';
 import 'package:japaneseapp/features/learn/domain/entities/word_entity.dart';
 import 'package:japaneseapp/features/learn/presentation/widget/card_widget.dart';
@@ -23,6 +24,14 @@ class QuickMatchPage extends StatefulWidget{
 }
 
 class _QuickMatchPage extends State<QuickMatchPage>{
+
+  final InAppReview inAppReview = InAppReview.instance;
+
+  Future<void> requestReview() async {
+    if (await inAppReview.isAvailable()) {
+      inAppReview.requestReview(); // ⭐ popup native của Google
+    }
+  }
 
   Widget _infoItem({
     required String value,
@@ -136,7 +145,8 @@ class _QuickMatchPage extends State<QuickMatchPage>{
                     state.listCompletes.length >= 5
                       ? Expanded(
                         child: GestureDetector(
-                          onTap: (){
+                          onTap: () async {
+                            await requestReview();
                             Navigator.pop(context);
                           },
                           child: Container(
