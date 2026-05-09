@@ -5,6 +5,7 @@ import 'package:japaneseapp/core/generated/app_localizations.dart';
 import 'package:japaneseapp/features/congratulation/presentation/pages/congratulation_page.dart';
 import 'package:japaneseapp/features/learn/presentation/pages/learn_page.dart';
 import 'package:japaneseapp/features/learn/presentation/pages/learn_word_page.dart';
+import 'package:japaneseapp/features/learn/presentation/pages/quick_match_page.dart';
 import 'package:japaneseapp/features/topicdetail/data/models/word_model.dart';
 import 'package:japaneseapp/features/topicdetail/domain/entities/word_entity.dart';
 import 'package:japaneseapp/features/topicdetail/presentation/pages/chose_type_page.dart';
@@ -68,7 +69,14 @@ class BoxTopicDetailWidget extends StatelessWidget{
                     height: MediaQuery.sizeOf(context).width*0.5,
                     imagePath: "assets/character/hinh18.png",
                     title: "Ghép thẻ",
-                    onTap: (){}
+                    onTap: (){
+                      final safeWords = words.length > 5 ? words.sublist(0, 5) : words;
+
+                      List<Map<String, dynamic>> wordEntities =
+                      safeWords.map((word) => word.toJson()).toList();
+
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => QuickMatchPage(words: wordEntities, topicId: topicId,)));
+                    }
                 ),
                 BoxFeatureWidget(
                     width: MediaQuery.sizeOf(context).width*0.4,
