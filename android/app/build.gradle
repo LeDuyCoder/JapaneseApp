@@ -34,7 +34,7 @@ android {
         applicationId = "kiradev.studio.japaneseapp"
         minSdk = 23
         targetSdk = 35
-        versionCode = 19
+        versionCode = 22
         versionName = flutter.versionName
     }
 
@@ -71,8 +71,8 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.release
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
 

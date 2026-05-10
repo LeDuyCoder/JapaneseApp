@@ -146,7 +146,8 @@ class _LearnWordPage extends State<LearnWordPage>{
 
           const SizedBox(height: 30),
 
-          SizedBox(
+          if(reviewWords > 0)
+            SizedBox(
             width: double.infinity,
             height: 62,
             child: OutlinedButton(
@@ -185,6 +186,7 @@ class _LearnWordPage extends State<LearnWordPage>{
               ),
             ),
           ),
+
           const SizedBox(height: 10),
           SizedBox(
             width: double.infinity,
@@ -198,9 +200,9 @@ class _LearnWordPage extends State<LearnWordPage>{
                 ),
                 elevation: 0,
               ),
-              child: const Text(
-                '🌸  Học lại từ đầu',
-                style: TextStyle(
+              child: Text(
+                reviewWords == 0 ? 'Quay Lại' : '🌸  Học lại từ đầu',
+                style: const TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
@@ -208,10 +210,6 @@ class _LearnWordPage extends State<LearnWordPage>{
               ),
             ),
           ),
-
-
-
-
         ],
       ),
     );
@@ -280,7 +278,11 @@ class _LearnWordPage extends State<LearnWordPage>{
                             reviewWords: state.unknownWords.length,
                             onReplay: () async {
                               await requestReview();
-                              context.read<LearnWordCubit>().replay();
+                              if(state.unknownWords.isNotEmpty) {
+                                context.read<LearnWordCubit>().replay();
+                              }else{
+                                Navigator.pop(context);
+                              }
                             },
                             onReviewUnKnow: () async {
                               await requestReview();

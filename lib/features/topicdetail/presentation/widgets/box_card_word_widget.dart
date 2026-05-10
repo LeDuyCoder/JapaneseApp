@@ -118,7 +118,7 @@ class _BoxCardWordWidgetState extends State<BoxCardWordWidget>
           const SizedBox(height: 10),
 
           Text(
-            widget.wordModel.word,
+            widget.wordModel.wayread,
             style: const TextStyle(
               fontSize: 28,
               color: Colors.black87,

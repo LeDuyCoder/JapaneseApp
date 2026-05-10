@@ -122,7 +122,7 @@ class _SwipeWordCardState extends State<SwipeWordCard>
                       borderRadius: BorderRadius.circular(100),
                     ),
                     child: Text(
-                      widget.word,
+                      widget.hira,
                       maxLines: 1,
                       style: const TextStyle(
                         color: Colors.red,
